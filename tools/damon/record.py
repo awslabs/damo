@@ -12,6 +12,7 @@ import subprocess
 import time
 
 import _damon
+import _paddr_layout
 
 def pidfd_open(pid):
     import ctypes
@@ -98,6 +99,8 @@ def set_argparser(parser):
             help='use pidfd type target id')
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
             default=1024*1024, help='length of record result buffer')
+    parser.add_argument('--numa_node', metavar='<node id>', type=int,
+            help='if target is \'paddr\', limit it to the numa node')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
             default='damon.data', help='output file path')
 
@@ -124,6 +127,15 @@ def default_paddr_region():
                 ret = [start, end]
     return ret
 
+def paddr_region_of(numa_node):
+    regions = []
+    paddr_ranges = _paddr_layout.paddr_ranges()
+    for r in paddr_ranges:
+        if r.nid == numa_node and r.name == 'System RAM':
+            regions.append([r.start, r.end])
+
+    return regions
+
 def main(args=None):
     global orig_attrs
     if not args:
@@ -142,12 +154,16 @@ def main(args=None):
     pidfd = args.pidfd
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
+    numa_node = args.numa_node
     target = args.target
 
     target_fields = target.split()
     if target == 'paddr':   # physical memory address space
         if not init_regions:
-            init_regions = [default_paddr_region()]
+            if numa_node:
+                init_regions = paddr_region_of(numa_node)
+            else:
+                init_regions = [default_paddr_region()]
         do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
     elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
             shell=True, executable='/bin/bash'):
