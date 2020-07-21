@@ -5,6 +5,7 @@ import argparse
 
 import record
 import report
+import schemes
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
     def _format_action(self, action):
@@ -25,6 +26,10 @@ parser_record = subparser.add_parser('record',
         help='record data accesses of the given target processes')
 record.set_argparser(parser_record)
 
+parser_schemes = subparser.add_parser('schemes',
+        help='apply operation schemes to the given target process')
+schemes.set_argparser(parser_schemes)
+
 parser_report = subparser.add_parser('report',
         help='report the recorded data accesses in the specified form')
 report.set_argparser(parser_report)
@@ -33,5 +38,7 @@ args = parser.parse_args()
 
 if args.command == 'record':
     record.main(args)
+elif args.command == 'schemes':
+    schemes.main(args)
 elif args.command == 'report':
     report.main(args)
