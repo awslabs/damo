@@ -11,6 +11,35 @@ import tempfile
 import _dist
 import _recfile
 
+def regions_intersect(r1, r2):
+    return not (r1.end <= r2.start or r2.end <= r1.start)
+
+def add_region(regions, region):
+    for r in regions:
+        if regions_intersect(r, region):
+            r.nr_accesses += region.nr_accesses
+
+            new_regions = []
+            if region.start < r.start:
+                new_regions.append(
+                        _dist.Region(region.start, r.start, region.nr_accesses))
+            if r.end < region.end:
+                new_regions.append(
+                        _dist.Region(r.end, region.end, region.nr_accesses))
+
+            for new_r in new_regions:
+                add_region(regions, new_r)
+            return
+    regions.append(region)
+
+def aggregate_snapshots(snapshots):
+    new_snapshot = []   # list of workingset ([start, end, nr_accesses])
+    for snapshot in snapshots:
+        for region in snapshot:
+            add_region(new_snapshot, region)
+
+    return new_snapshot
+
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
@@ -23,6 +52,9 @@ def set_argparser(parser):
     parser.add_argument('--sz_thres', type=int, default=1,
             metavar='<size>',
             help='minimal size of region for treated as working set')
+    parser.add_argument('--work_time', type=int, default=1,
+            metavar='<micro-seconds>',
+            help='supposed time for each unit of the work')
     parser.add_argument('--sortby', '-s', choices=['time', 'size'],
             help='the metric to be used for the sort of the working set sizes')
     parser.add_argument('--plot', '-p', type=str, metavar='<file>',
@@ -43,20 +75,39 @@ def main(args=None):
     if args.sortby == 'time':
         wss_sort = False
 
+    start_time = 0
+    end_time = 0
     tid_pattern_map = {}
     with open(file_path, 'rb') as f:
         _recfile.set_fmt_version(f)
-        start_time = None
         while True:
             timebin = f.read(16)
             if len(timebin) != 16:
                 break
+
+            if start_time == 0:
+                start_time = _recfile.parse_time(timebin)
+            end_time = _recfile.parse_time(timebin)
+
             nr_tasks = struct.unpack('I', f.read(4))[0]
             for t in range(nr_tasks):
                 tid = _recfile.target_id(f)
                 if not tid in tid_pattern_map:
                     tid_pattern_map[tid] = []
                 tid_pattern_map[tid].append(_dist.access_patterns(f))
+    snapshot_time = (end_time - start_time) / (len(tid_pattern_map[tid]) - 1)
+    nr_shots_in_aggr = max(round(args.work_time * 1000 / snapshot_time), 1)
+
+    for tid in tid_pattern_map:
+        # Skip first 20 snapshots as regions may not adjusted yet.
+        snapshots = tid_pattern_map[tid][20:]
+
+        aggregated_snapshots = []
+        for i in range(0, len(snapshots), nr_shots_in_aggr):
+            to_aggregate = snapshots[i:
+                    min(i + nr_shots_in_aggr, len(snapshots))]
+            aggregated_snapshots.append(aggregate_snapshots(to_aggregate))
+        tid_pattern_map[tid] = aggregated_snapshots
 
     orig_stdout = sys.stdout
     if args.plot:
@@ -66,18 +117,17 @@ def main(args=None):
 
     print('# <percentile> <wss>')
     for tid in tid_pattern_map.keys():
-        # Skip first 20 snapshots as regions may not adjusted yet.
-        snapshots = tid_pattern_map[tid][20:]
+        snapshots = tid_pattern_map[tid]
         wss_dist = []
-        for snapshot in snapshots:
+        for idx, snapshot in enumerate(snapshots):
             wss = 0
-            for p in snapshot:
+            for r in snapshot:
                 # Ignore regions not fulfill working set conditions
-                if p[1] < args.acc_thres:
+                if r.nr_accesses < args.acc_thres:
                     continue
-                if p[0] < args.sz_thres:
+                if r.end - r.start < args.sz_thres:
                     continue
-                wss += p[0]
+                wss += r.end - r.start
             wss_dist.append(wss)
         if wss_sort:
             wss_dist.sort(reverse=False)

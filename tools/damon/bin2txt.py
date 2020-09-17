@@ -8,12 +8,6 @@ import sys
 
 import _recfile
 
-def parse_time(bindat):
-    "bindat should be 16 bytes"
-    sec = struct.unpack('l', bindat[0:8])[0]
-    nsec = struct.unpack('l', bindat[8:16])[0]
-    return sec * 1000000000 + nsec;
-
 def pr_region(f):
     saddr = struct.unpack('L', f.read(8))[0]
     eaddr = struct.unpack('L', f.read(8))[0]
@@ -52,7 +46,7 @@ def main(args=None):
             timebin = f.read(16)
             if len(timebin) != 16:
                 break
-            time = parse_time(timebin)
+            time = _recfile.parse_time(timebin)
             if not start_time:
                 start_time = time
                 print("start_time: ", start_time)

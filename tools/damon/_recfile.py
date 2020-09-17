@@ -21,3 +21,9 @@ def target_id(f):
         return struct.unpack('i', f.read(4))[0]
     else:
         return struct.unpack('L', f.read(8))[0]
+
+def parse_time(bindat):
+    "bindat should be 16 bytes"
+    sec = struct.unpack('l', bindat[0:8])[0]
+    nsec = struct.unpack('l', bindat[8:16])[0]
+    return sec * 1000000000 + nsec;
