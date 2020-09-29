@@ -14,10 +14,12 @@ import _recfile
 def regions_intersect(r1, r2):
     return not (r1.end <= r2.start or r2.end <= r1.start)
 
-def add_region(regions, region):
+def add_region(regions, region, nr_acc_to_add):
     for r in regions:
         if regions_intersect(r, region):
-            r.nr_accesses += region.nr_accesses
+            if not r in nr_acc_to_add:
+                nr_acc_to_add[r] = 0
+            nr_acc_to_add[r] = max(nr_acc_to_add[r], region.nr_accesses)
 
             new_regions = []
             if region.start < r.start:
@@ -28,15 +30,18 @@ def add_region(regions, region):
                         _dist.Region(r.end, region.end, region.nr_accesses))
 
             for new_r in new_regions:
-                add_region(regions, new_r)
+                add_region(regions, new_r, nr_acc_to_add)
             return
     regions.append(region)
 
 def aggregate_snapshots(snapshots):
     new_snapshot = []   # list of workingset ([start, end, nr_accesses])
     for snapshot in snapshots:
+        nr_acc_to_add = {}
         for region in snapshot:
-            add_region(new_snapshot, region)
+            add_region(new_snapshot, region, nr_acc_to_add)
+        for region in nr_acc_to_add:
+            region.nr_accesses += nr_acc_to_add[region]
 
     return new_snapshot
 
