@@ -109,7 +109,7 @@ def main(args=None):
             # time
             f.write(struct.pack('l', now // 1000000000))
             f.write(struct.pack('l', now % 1000000000))
-            now += args.aggregate_interval
+            now += args.aggregate_interval * 1000
 
             # nr_tasks
             nr_tasks = 0
