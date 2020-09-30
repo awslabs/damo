@@ -51,6 +51,9 @@ def set_argparser(parser):
     parser.add_argument('--range', '-r', type=int, nargs=3,
             metavar=('<start>', '<stop>', '<step>'),
             help='range of wss percentiles to print')
+    parser.add_argument('--exclude_samples', type=int, default=20,
+            metavar='<# samples>',
+            help='number of first samples to be excluded')
     parser.add_argument('--acc_thres', '-t', type=int, default=1,
             metavar='<# accesses>',
             help='minimal number of accesses for treated as working set')
@@ -104,8 +107,8 @@ def main(args=None):
     nr_shots_in_aggr = max(round(args.work_time * 1000 / snapshot_time), 1)
 
     for tid in tid_pattern_map:
-        # Skip first 20 snapshots as regions may not adjusted yet.
-        snapshots = tid_pattern_map[tid][20:]
+        # Skip first N snapshots as regions may not adjusted yet.
+        snapshots = tid_pattern_map[tid][args.exclude_samples:]
 
         aggregated_snapshots = []
         for i in range(0, len(snapshots), nr_shots_in_aggr):
