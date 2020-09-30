@@ -106,16 +106,17 @@ def main(args=None):
     snapshot_time = (end_time - start_time) / (len(tid_pattern_map[tid]) - 1)
     nr_shots_in_aggr = max(round(args.work_time * 1000 / snapshot_time), 1)
 
-    for tid in tid_pattern_map:
-        # Skip first N snapshots as regions may not adjusted yet.
-        snapshots = tid_pattern_map[tid][args.exclude_samples:]
+    if nr_shots_in_aggr > 1:
+        for tid in tid_pattern_map:
+            # Skip first N snapshots as regions may not adjusted yet.
+            snapshots = tid_pattern_map[tid][args.exclude_samples:]
 
-        aggregated_snapshots = []
-        for i in range(0, len(snapshots), nr_shots_in_aggr):
-            to_aggregate = snapshots[i:
-                    min(i + nr_shots_in_aggr, len(snapshots))]
-            aggregated_snapshots.append(aggregate_snapshots(to_aggregate))
-        tid_pattern_map[tid] = aggregated_snapshots
+            aggregated_snapshots = []
+            for i in range(0, len(snapshots), nr_shots_in_aggr):
+                to_aggregate = snapshots[i:
+                        min(i + nr_shots_in_aggr, len(snapshots))]
+                aggregated_snapshots.append(aggregate_snapshots(to_aggregate))
+            tid_pattern_map[tid] = aggregated_snapshots
 
     orig_stdout = sys.stdout
     if args.plot:
