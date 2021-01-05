@@ -17,13 +17,6 @@ class PaddrRange:
         self.state = state
         self.name = name
 
-    def interleaved(self, prange):
-        if self.end <= prange.start:
-            return None
-        if prange.end <= self.start:
-            return None
-        return [max(self.start, prange.start), min(self.end, prange.end)]
-
     def __str__(self):
         return '%x-%x, nid %s, state %s, name %s' % (self.start, self.end,
                 self.nid, self.state, self.name)
