@@ -12,7 +12,7 @@ Getting Started
 ===============
 
 Follow below commands to monitor and visualize the access pattern of your
-workload. ::
+workload.
 
     $ git clone https://github.com/sjp38/linux -b damon/master
     /* build the kernel with CONFIG_DAMON=y, install, reboot */
@@ -29,19 +29,19 @@ Kernel
 
 You should first ensure your system is running on a kernel built with
 ``CONFIG_DAMON``, ``CONFIG_DAMON_VADDR``, ``CONFIG_DAMON_PADDR``, and
-``CONFIG_DAMON_DBGFS``..
+``CONFIG_DAMON_DBGFS``.
 
 
 Debugfs
 -------
 
 Because DAMO is using the debugfs interface of DAMON, you should ensure debugfs
-is mounted.  Mount it manually as below::
+is mounted.  Mount it manually as below:
 
     # mount -t debugfs none /sys/kernel/debug/
 
 or append below line to your ``/etc/fstab`` file so that your system can
-automatically mount debugfs from next booting::
+automatically mount debugfs from next booting:
 
     debugfs /sys/kernel/debug debugfs defaults 0 0
 
@@ -50,7 +50,7 @@ Recording Data Access Patterns
 ==============================
 
 Below commands record memory access pattern of a program and save the
-monitoring results in a file. ::
+monitoring results in a file.
 
     $ git clone https://github.com/sjp38/masim
     $ cd masim; make; ./masim ./configs/zigzag.cfg &
@@ -95,7 +95,7 @@ accessed for >=60 seconds in your workload to be swapped out.
     $ damo schemes -c my_thp_scheme <pid of your workload>
 
 
-[1] https://damonitor.github.io/doc/html/latest/admin-guide/mm/damon/start.html#visualizing-recorded-patterns
-[2] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html
-[3] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html
+[1] https://damonitor.github.io/doc/html/latest/admin-guide/mm/damon/start.html#visualizing-recorded-patterns  
+[2] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html  
+[3] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html  
 [4] https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html
