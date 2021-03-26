@@ -11,11 +11,12 @@ Recording Data Access Pattern
 =============================
 
 The ``record`` subcommand records the data access pattern of target workloads
-in a file (``./damon.data`` by default).  You can specify the target with 1)
-the command for execution of the monitoring target process, 2) pid of running
-target process, or 3) the special keyword, 'paddr', if you want to monitor the
-system's physical memory address space.  Below example shows a command target
-usage:
+in a file (``./damon.data`` by default).  Note that the file will owned by
+``root`` but have ``644`` permission, so anyone could read it.  You can specify
+the target with 1) the command for execution of the monitoring target process,
+2) pid of running target process, or 3) the special keyword, 'paddr', if you
+want to monitor the system's physical memory address space.  Below example
+shows a command target usage:
 
     # cd <kernel>/tools/damon/
     # damo record "sleep 5"
