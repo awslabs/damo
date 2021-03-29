@@ -13,12 +13,3 @@ please base your work on 'next'.
 
 [1] https://www.kernel.org/doc/html/latest/process/index.html
 [2] https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
-
-Security Events
-===============
-
-If you find a security issue and report the issue or contribute a fix for that,
-please send it vial email to only sjpark@amazon.de, with preferred embargo
-date.  We will review that, finalize the embargo due, and let you know the due.
-After that, we will handle the event (release a fix for the issue is applied
-version) by the due.
