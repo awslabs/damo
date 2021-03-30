@@ -41,6 +41,10 @@ You can further tune this by setting the monitoring attributes.  To know about
 the monitoring attributes in detail, please refer to the
 :doc:`/vm/damon/design`.
 
+Note that the ``record`` subcommand executes the target command as a root.
+Therefore, the user could execute arbitrary commands with root permission.
+Hence, sysadmins should allow only trusted users to use ``damo``.
+
 
 Analyzing Data Access Pattern
 =============================
