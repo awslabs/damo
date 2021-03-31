@@ -1,10 +1,4 @@
-This document describes detailed usage of `damo`.  The tool provides a
-subcommands based interface. Every subcommand provides -h option, which
-provides the minimal usage of it. Currently, the tool supports two subcommands,
-record and report.
-
-Below example commands assume you set $PATH to point tools/damon/ of the
-development tree for brevity. It is not mandatory for use of damo, though.
+This document describes the detailed usage of `damo`.
 
 
 Prerequisites
@@ -15,14 +9,17 @@ Kernel
 
 You should first ensure your system is running on a kernel built with
 ``CONFIG_DAMON``, ``CONFIG_DAMON_VADDR``, ``CONFIG_DAMON_PADDR``, and
-``CONFIG_DAMON_DBGFS``.
+``CONFIG_DAMON_DBGFS``.  Also, you should ensure the kernel has DAMON
+monitoring results reporting feature.  You can check this by seeing if
+``<debugfs>/damon/record`` file exists or not, after debugfs is mounted.  The
+file should be there.
 
 
 Debugfs
 -------
 
-Because DAMO is using the debugfs interface of DAMON, you should ensure debugfs
-is mounted.  Mount it manually as below:
+Because `damo` is using the debugfs interface of DAMON, you should ensure
+debugfs is mounted.  You can do the mounting manually as below:
 
     # mount -t debugfs none /sys/kernel/debug/
 
@@ -31,6 +28,16 @@ automatically mount debugfs from next booting:
 
     debugfs /sys/kernel/debug debugfs defaults 0 0
 
+
+Overview
+========
+
+`damo` provides a subcommands based interface. Every subcommand provides
+`-h` option, which provides the minimal usage of it. Currently, the tool
+supports two subcommands, record and report.
+
+Below example commands assume you set $PATH to point this directory for
+brevity.  It is not mandatory, though.
 
 Recording Data Access Pattern
 =============================

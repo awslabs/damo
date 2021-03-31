@@ -1,5 +1,5 @@
-DAMON User Space Tool
-=====================
+DAMO: DAMon Operator
+====================
 
 This directory contains a user space tool for DAMON[1], namely ``damo``.  Using
 the tool, you can monitor the data access patterns of your system and make data
@@ -11,14 +11,17 @@ access-aware memory management optimizations.
 Getting Started
 ===============
 
-Follow below commands to monitor and visualize the access pattern of your
-workload.
+Follow below instructions and commands to monitor and visualize the access
+pattern of your workload.
 
     $ git clone https://github.com/sjp38/linux -b damon/master
     /* build the kernel with CONFIG_DAMON_*=y, install, reboot */
     $ mount -t debugfs none /sys/kernel/debug/
     $ ./damo record $(pidof <your workload>)
     $ ./damo report heats --heatmap access_pattern.png
+
+Below sections further provide quick introductions for `damo`'s major features.
+For more detailed usage, please refer to [USAGE.md](USAGE.md) file.
 
 
 Recording Data Access Patterns
@@ -29,7 +32,7 @@ monitoring results in a file.
 
     $ git clone https://github.com/sjp38/masim
     $ cd masim; make; ./masim ./configs/zigzag.cfg &
-    $ sudo damo record -o damon.data $(pidof masim)
+    $ sudo ./damo record -o damon.data $(pidof masim)
 
 The first two lines of the commands get an artificial memory access generator
 program and runs it in the background.  It will repeatedly access two 100 MiB
@@ -58,25 +61,20 @@ image files.
 You can show the images in a web page [1].  Those made with other realistic
 workloads are also available [2,3,4].
 
+[1] https://damonitor.github.io/doc/html/latest/admin-guide/mm/damon/start.html#visualizing-recorded-patterns  
+[2] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html  
+[3] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html  
+[4] https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html
+
 
 Data Access Pattern Aware Memory Management
 ===========================================
 
 Below three commands make every memory region of size >=4K that doesn't
-accessed for >=60 seconds in your workload to be swapped out.
+accessed for >=60 seconds in your workload to be swapped out.  By doing this,
+you can make your workload more memory efficient with near-zero performance
+overhead.
 
     $ echo "#min-size max-size min-acc max-acc min-age max-age action" > scheme
     $ echo "4K        max      0       0       60s     max     pageout" >> scheme
     $ damo schemes -c my_thp_scheme <pid of your workload>
-
-
-Detailed Usage
-==============
-
-For detailed usage of the tool, please refer to [USAGE.md](USAGE.md) file.
-
-
-[1] https://damonitor.github.io/doc/html/latest/admin-guide/mm/damon/start.html#visualizing-recorded-patterns  
-[2] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html  
-[3] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html  
-[4] https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html
