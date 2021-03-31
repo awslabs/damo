@@ -8,6 +8,17 @@ access-aware memory management optimizations.
 [1] https://damonitor.github.io
 
 
+Demo Video
+==========
+
+Please click below thumbnail to show the short demo video.
+
+[![DAMON: a demo for the Kernel Summit 2020](
+http://img.youtube.com/vi/l63eqbVBZRY/0.jpg)](
+http://www.youtube.com/watch?v=l63eqbVBZRY
+"DAMON: a demo for the Kernel Summit 2020")
+
+
 Getting Started
 ===============
 
