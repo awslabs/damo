@@ -7,6 +7,31 @@ Below example commands assume you set $PATH to point tools/damon/ of the
 development tree for brevity. It is not mandatory for use of damo, though.
 
 
+Prerequisites
+=============
+
+Kernel
+------
+
+You should first ensure your system is running on a kernel built with
+``CONFIG_DAMON``, ``CONFIG_DAMON_VADDR``, ``CONFIG_DAMON_PADDR``, and
+``CONFIG_DAMON_DBGFS``.
+
+
+Debugfs
+-------
+
+Because DAMO is using the debugfs interface of DAMON, you should ensure debugfs
+is mounted.  Mount it manually as below:
+
+    # mount -t debugfs none /sys/kernel/debug/
+
+or append below line to your ``/etc/fstab`` file so that your system can
+automatically mount debugfs from next booting:
+
+    debugfs /sys/kernel/debug debugfs defaults 0 0
+
+
 Recording Data Access Pattern
 =============================
 
