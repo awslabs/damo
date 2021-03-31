@@ -15,7 +15,7 @@ Follow below commands to monitor and visualize the access pattern of your
 workload.
 
     $ git clone https://github.com/sjp38/linux -b damon/master
-    /* build the kernel with CONFIG_DAMON=y, install, reboot */
+    /* build the kernel with CONFIG_DAMON_*=y, install, reboot */
     $ mount -t debugfs none /sys/kernel/debug/
     $ ./damo record $(pidof <your workload>)
     $ ./damo report heats --heatmap access_pattern.png
