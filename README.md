@@ -95,6 +95,12 @@ accessed for >=60 seconds in your workload to be swapped out.
     $ damo schemes -c my_thp_scheme <pid of your workload>
 
 
+Detailed Usage
+==============
+
+For detailed usage of the tool, please refer to [USAGE.md](USAGE.md) file.
+
+
 [1] https://damonitor.github.io/doc/html/latest/admin-guide/mm/damon/start.html#visualizing-recorded-patterns  
 [2] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html  
 [3] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html  
