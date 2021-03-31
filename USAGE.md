@@ -43,7 +43,9 @@ the monitoring attributes in detail, please refer to the
 
 Note that the ``record`` subcommand executes the target command as a root.
 Therefore, the user could execute arbitrary commands with root permission.
-Hence, sysadmins should allow only trusted users to use ``damo``.
+Hence, sysadmins should allow only trusted users to use ``damo``.  This is same
+to ``schemes`` subcommand that mentioned below.  Please take care for that,
+either.
 
 
 Analyzing Data Access Pattern
