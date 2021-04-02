@@ -9,7 +9,7 @@ import sys
 import tempfile
 
 import _dist
-import _recfile
+import _parse_damon_result
 
 def regions_intersect(r1, r2):
     return not (r1.end <= r2.start or r2.end <= r1.start)
@@ -86,23 +86,16 @@ def main(args=None):
     start_time = 0
     end_time = 0
     tid_pattern_map = {}
-    with open(file_path, 'rb') as f:
-        _recfile.set_fmt_version(f)
-        while True:
-            timebin = f.read(16)
-            if len(timebin) != 16:
-                break
 
-            if start_time == 0:
-                start_time = _recfile.parse_time(timebin)
-            end_time = _recfile.parse_time(timebin)
+    result = _parse_damon_result.record_to_damon_result(file_path)
+    start_time = result.start_time
+    for snapshot in result.snapshots:
+        end_time = snapshot.monitored_time
+        tid = snapshot.target_id
+        if not tid in tid_pattern_map:
+            tid_pattern_map[tid] = []
+        tid_pattern_map[tid].append(snapshot.regions)
 
-            nr_tasks = struct.unpack('I', f.read(4))[0]
-            for t in range(nr_tasks):
-                tid = _recfile.target_id(f)
-                if not tid in tid_pattern_map:
-                    tid_pattern_map[tid] = []
-                tid_pattern_map[tid].append(_dist.access_patterns(f))
     snapshot_time = (end_time - start_time) / (len(tid_pattern_map[tid]) - 1)
     nr_shots_in_aggr = max(round(args.work_time * 1000 / snapshot_time), 1)
 
