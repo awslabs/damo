@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import os
-import struct
 import subprocess
 
 def plot_dist(data_file, output_file, xlabel, ylabel):
