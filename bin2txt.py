@@ -5,7 +5,7 @@ import argparse
 import os
 import sys
 
-import _read_record
+import _parse_damon_result
 
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
@@ -23,7 +23,7 @@ def main(args=None):
         print('input file (%s) is not exist' % file_path)
         exit(1)
 
-    result = _read_record.record_to_damon_result(file_path)
+    result = _parse_damon_result.record_to_damon_result(file_path)
     if not result:
         print('no monitoring result in the file')
     print('start_time: ', result.start_time)
