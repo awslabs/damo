@@ -36,6 +36,14 @@ then
 	exit 1
 fi
 
+../damo report heats > heats_after
+diff heats_before heats_after
+if [ $? -ne 0 ]
+then
+	echo "report-heats FAIL"
+	exit 1
+fi
+
 rm *_after
 
 echo "PASS"
