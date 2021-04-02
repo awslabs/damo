@@ -23,12 +23,12 @@ def main(args=None):
         print('input file (%s) is not exist' % file_path)
         exit(1)
 
-    record = _read_record.read_record(file_path)
-    if not record:
-        print('no record in the file')
-    print('start_time: ', record.start_time)
-    for snapshot in record.snapshots:
-        print('rel time: %16d' % (snapshot.monitored_time - record.start_time))
+    result = _read_record.record_to_damon_result(file_path)
+    if not result:
+        print('no monitoring result in the file')
+    print('start_time: ', result.start_time)
+    for snapshot in result.snapshots:
+        print('rel time: %16d' % (snapshot.monitored_time - result.start_time))
         print('nr_tasks:  1')
         print('target_id: ', snapshot.target_id)
         print('nr_regions: ', len(snapshot.regions))

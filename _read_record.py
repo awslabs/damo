@@ -2,7 +2,7 @@
 
 import struct
 
-class Region:
+class DAMONRegion:
     start = None
     end = None
     nr_accesses = None
@@ -12,7 +12,7 @@ class Region:
         self.end = end
         self.nr_accesses = nr_accesses
 
-class Snapshot:
+class DAMONSnapshot:
     monitored_time = None
     target_id = None
     regions = None
@@ -22,7 +22,7 @@ class Snapshot:
         self.target_id = target_id
         self.regions = []
 
-class Record:
+class DAMONResult:
     start_time = None
     snapshots = None
 
@@ -30,8 +30,8 @@ class Record:
         self.start_time = start_time
         self.snapshots = []
 
-def read_record(file_path):
-    record = None
+def record_to_damon_result(file_path):
+    result = None
 
     with open(file_path, 'rb') as f:
         # read record format version
@@ -49,21 +49,21 @@ def read_record(file_path):
             sec = struct.unpack('l', timebin[0:8])[0]
             nsec = struct.unpack('l', timebin[8:16])[0]
             time = sec * 1000000000 + nsec
-            if not record:
-                record = Record(time)
+            if not result:
+                result = DAMONResult(time)
             nr_tasks = struct.unpack('I', f.read(4))[0]
             for t in range(nr_tasks):
                 if fmt_version == 1:
                     target_id = struct.unpack('i', f.read(4))[0]
                 else:
                     target_id = struct.unpack('L', f.read(8))[0]
-                snapshot = Snapshot(time, target_id)
+                snapshot = DAMONSnapshot(time, target_id)
                 nr_regions = struct.unpack('I', f.read(4))[0]
                 for r in range(nr_regions):
                     start_addr = struct.unpack('L', f.read(8))[0]
                     end_addr = struct.unpack('L', f.read(8))[0]
                     nr_accesses = struct.unpack('I', f.read(4))[0]
-                    region = Region(start_addr, end_addr, nr_accesses)
+                    region = DAMONRegion(start_addr, end_addr, nr_accesses)
                     snapshot.regions.append(region)
-                record.snapshots.append(snapshot)
-    return record
+                result.snapshots.append(snapshot)
+    return result
