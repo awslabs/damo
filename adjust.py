@@ -6,8 +6,7 @@
 import argparse
 import struct
 
-import _dist
-import _recfile
+import _parse_damon_result
 
 def regions_intersect(r1, r2):
     return not (r1.end <= r2.start or r2.end <= r1.start)
@@ -21,11 +20,11 @@ def add_region(regions, region, nr_acc_to_add):
 
             new_regions = []
             if region.start < r.start:
-                new_regions.append(
-                        _dist.Region(region.start, r.start, region.nr_accesses))
+                new_regions.append(_parse_damon_result.DAMONRegion(
+                    region.start, r.start, region.nr_accesses))
             if r.end < region.end:
-                new_regions.append(
-                        _dist.Region(r.end, region.end, region.nr_accesses))
+                new_regions.append(_parse_damon_result.DAMONRegion(
+                        r.end, region.end, region.nr_accesses))
 
             for new_r in new_regions:
                 add_region(regions, new_r, nr_acc_to_add)
@@ -62,23 +61,15 @@ def main(args=None):
     start_time = 0
     end_time = 0
     tid_pattern_map = {}
-    with open(file_path, 'rb') as f:
-        _recfile.set_fmt_version(f)
-        while True:
-            timebin = f.read(16)
-            if len(timebin) != 16:
-                break
 
-            if start_time == 0:
-                start_time = _recfile.parse_time(timebin)
-            end_time = _recfile.parse_time(timebin)
-
-            nr_tasks = struct.unpack('I', f.read(4))[0]
-            for t in range(nr_tasks):
-                tid = _recfile.target_id(f)
-                if not tid in tid_pattern_map:
-                    tid_pattern_map[tid] = []
-                tid_pattern_map[tid].append(_dist.access_patterns(f))
+    result = _parse_damon_result.record_to_damon_result(file_path)
+    start_time = result.start_time
+    for snapshot in result.snapshots:
+        end_time = snapshot.monitored_time
+        tid = snapshot.target_id
+        if not tid in tid_pattern_map:
+            tid_pattern_map[tid] = []
+        tid_pattern_map[tid].append(snapshot.regions)
 
     aggr_int = (end_time - start_time) / (len(tid_pattern_map[tid]) - 1)
     nr_shots_in_aggr = max(round(args.aggregate_interval * 1000 / aggr_int), 1)
@@ -103,7 +94,7 @@ def main(args=None):
     with open(args.output, 'wb') as f:
         # version
         f.write(b'damon_recfmt_ver')
-        f.write(struct.pack('i', _recfile.fmt_version))
+        f.write(struct.pack('i', 2))
 
         for snapshot_idx in range(max_nr_snapshots):
             # time
@@ -123,10 +114,7 @@ def main(args=None):
                 if len(snapshots) <= snapshot_idx:
                     continue
 
-                if _recfile.fmt_version == 1:
-                    f.write(struct.pack('i', tid))
-                else:
-                    f.write(struct.pack('L', tid))
+                f.write(struct.pack('L', tid))
 
                 regions = snapshots[snapshot_idx]
                 f.write(struct.pack('I', len(regions)))
