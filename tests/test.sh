@@ -36,6 +36,14 @@ then
 	exit 1
 fi
 
+../damo report heats --guide > heats_guide_after
+diff heats_guide_before heats_guide_after
+if [ $? -ne 0 ]
+then
+	echo "report-heats-guide FAIL"
+	exit 1
+fi
+
 ../damo report heats > heats_after
 diff heats_before heats_after
 if [ $? -ne 0 ]
