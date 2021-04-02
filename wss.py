@@ -23,11 +23,11 @@ def add_region(regions, region, nr_acc_to_add):
 
             new_regions = []
             if region.start < r.start:
-                new_regions.append(
-                        _dist.Region(region.start, r.start, region.nr_accesses))
+                new_regions.append(_parse_damon_result.DAMONRegion(
+                    region.start, r.start, region.nr_accesses))
             if r.end < region.end:
-                new_regions.append(
-                        _dist.Region(r.end, region.end, region.nr_accesses))
+                new_regions.append(_parse_damon_result.DAMONRegion(
+                    r.end, region.end, region.nr_accesses))
 
             for new_r in new_regions:
                 add_region(regions, new_r, nr_acc_to_add)
