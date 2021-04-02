@@ -14,12 +14,10 @@ Format of the text is:
 
 import argparse
 import os
-import struct
 import subprocess
 import sys
 import tempfile
 
-import _recfile
 import _parse_damon_result
 
 class HeatSample:
@@ -56,18 +54,13 @@ def pr_samples(samples, time_idx, time_unit, region_unit):
 def to_idx(value, min_, unit):
     return (value - min_) // unit
 
-def read_task_heats(f, tid, aunit, amin, amax):
-    tid_ = _recfile.target_id(f)
-    nr_regions = struct.unpack('I', f.read(4))[0]
-    if tid_ != tid:
-        f.read(20 * nr_regions)
-        return None
+def read_task_heats(snapshot, aunit, amin, amax):
+    tid_ = snapshot.target_id
     samples = []
-    for i in range(nr_regions):
-        saddr = struct.unpack('L', f.read(8))[0]
-        eaddr = struct.unpack('L', f.read(8))[0]
-        eaddr = min(eaddr, amax - 1)
-        heat = struct.unpack('I', f.read(4))[0]
+    for r in snapshot.regions:
+        saddr = r.start
+        eaddr = min(r.end, amax - 1)
+        heat = r.nr_accesses
 
         if eaddr <= amin:
             continue
@@ -85,11 +78,6 @@ def read_task_heats(f, tid, aunit, amin, amax):
             samples.append(sample)
     return samples
 
-def parse_time(bindat):
-    sec = struct.unpack('l', bindat[0:8])[0]
-    nsec = struct.unpack('l', bindat[8:16])[0]
-    return sec * 1000000000 + nsec
-
 def apply_samples(target_samples, samples, start_time, end_time, aunit, amin):
     for s in samples:
         sample = HeatSample(s.space_idx,
@@ -100,24 +88,22 @@ def apply_samples(target_samples, samples, start_time, end_time, aunit, amin):
         else:
             target_samples[idx].merge(sample)
 
-def __pr_heats(f, tid, tunit, tmin, tmax, aunit, amin, amax):
+def __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax):
     heat_samples = [None] * ((amax - amin) // aunit)
 
     start_time = 0
     end_time = 0
     last_flushed = -1
-    while True:
+
+    for snapshot in damon_result.snapshots:
+        if snapshot.target_id != tid:
+            continue
         start_time = end_time
-        timebin = f.read(16)
-        if (len(timebin)) != 16:
-            break
-        end_time = parse_time(timebin)
-        nr_tasks = struct.unpack('I', f.read(4))[0]
+        end_time = snapshot.monitored_time
         samples_set = {}
-        for t in range(nr_tasks):
-            samples = read_task_heats(f, tid, aunit, amin, amax)
-            if samples:
-                samples_set[tid] = samples
+        samples = read_task_heats(snapshot, aunit, amin, amax)
+        if samples:
+            samples_set[tid] = samples
         if not tid in samples_set:
             continue
         if start_time >= tmax:
@@ -138,8 +124,7 @@ def __pr_heats(f, tid, tunit, tmin, tmax, aunit, amin, amax):
             et = min(end_time, tmin + (idx + 1) * tunit)
             apply_samples(heat_samples, samples_set[tid], st, et, aunit, amin)
 
-def pr_heats(args):
-    binfile = args.input
+def pr_heats(args, damon_result):
     tid = args.tid
     tres = args.tres
     tmin = args.tmin
@@ -153,9 +138,7 @@ def pr_heats(args):
     tmax = tmin + tunit * tres
     amax = amin + aunit * ares
 
-    with open(binfile, 'rb') as f:
-        _recfile.set_fmt_version(f)
-        __pr_heats(f, tid, tunit, tmin, tmax, aunit, amin, amax)
+    __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax)
 
 class GuideInfo:
     tid = None
@@ -345,7 +328,7 @@ def main(args=None):
             tmp_file = open(tmp_path, 'w')
             sys.stdout = tmp_file
 
-        pr_heats(args)
+        pr_heats(args, damon_result)
 
         if args.heatmap:
             sys.stdout = orig_stdout
