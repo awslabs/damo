@@ -4,12 +4,11 @@
 "Print out distribution of the number of regions in the given record"
 
 import argparse
-import struct
 import sys
 import tempfile
 
 import _dist
-import _recfile
+import _parse_damon_result
 
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
@@ -38,19 +37,11 @@ def main(args=None):
         nr_regions_sort = False
 
     tid_pattern_map = {}
-    with open(file_path, 'rb') as f:
-        _recfile.set_fmt_version(f)
-        start_time = None
-        while True:
-            timebin = f.read(16)
-            if len(timebin) != 16:
-                break
-            nr_tasks = struct.unpack('I', f.read(4))[0]
-            for t in range(nr_tasks):
-                tid = _recfile.target_id(f)
-                if not tid in tid_pattern_map:
-                    tid_pattern_map[tid] = []
-                tid_pattern_map[tid].append(_dist.access_patterns(f))
+    result = _parse_damon_result.record_to_damon_result(file_path)
+    for snapshot in result.snapshots:
+        if not snapshot.target_id in tid_pattern_map:
+            tid_pattern_map[snapshot.target_id] = []
+        tid_pattern_map[snapshot.target_id].append(snapshot.regions)
 
     orig_stdout = sys.stdout
     if args.plot:
