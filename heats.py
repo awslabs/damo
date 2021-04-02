@@ -20,6 +20,7 @@ import sys
 import tempfile
 
 import _recfile
+import _parse_damon_result
 
 class HeatSample:
     space_idx = None
@@ -218,62 +219,54 @@ def overlapping_regions(regions1, regions2):
             overlap_regions.append(r1)
     return overlap_regions
 
-def get_guide_info(binfile):
-    "Read file, return the set of guide information objects of the data"
+def get_guide_info(damon_result):
+    "return the set of guide information for the moitoring result"
     guides = {}
-    with open(binfile, 'rb') as f:
-        _recfile.set_fmt_version(f)
-        while True:
-            timebin = f.read(16)
-            if len(timebin) != 16:
-                break
-            monitor_time = parse_time(timebin)
-            nr_tasks = struct.unpack('I', f.read(4))[0]
-            for t in range(nr_tasks):
-                tid = _recfile.target_id(f)
-                nr_regions = struct.unpack('I', f.read(4))[0]
-                if not tid in guides:
-                    guides[tid] = GuideInfo(tid, monitor_time)
-                guide = guides[tid]
-                guide.end_time = monitor_time
+    for snapshot in damon_result.snapshots:
+        monitor_time = snapshot.monitored_time
+        tid = snapshot.target_id
+        if not tid in guides:
+            guides[tid] = GuideInfo(tid, monitor_time)
+        guide = guides[tid]
+        guide.end_time = monitor_time
 
-                last_addr = None
-                gaps = []
-                for r in range(nr_regions):
-                    saddr = struct.unpack('L', f.read(8))[0]
-                    eaddr = struct.unpack('L', f.read(8))[0]
-                    f.read(4)
+        last_addr = None
+        gaps = []
+        for r in snapshot.regions:
+            saddr = r.start
+            eaddr = r.end
 
-                    if not guide.lowest_addr or saddr < guide.lowest_addr:
-                        guide.lowest_addr = saddr
-                    if not guide.highest_addr or eaddr > guide.highest_addr:
-                        guide.highest_addr = eaddr
+            if not guide.lowest_addr or saddr < guide.lowest_addr:
+                guide.lowest_addr = saddr
+            if not guide.highest_addr or eaddr > guide.highest_addr:
+                guide.highest_addr = eaddr
 
-                    if not last_addr:
-                        last_addr = eaddr
-                        continue
-                    if last_addr != saddr:
-                        gaps.append([last_addr, saddr])
-                    last_addr = eaddr
+            if not last_addr:
+                last_addr = eaddr
+                continue
+            if last_addr != saddr:
+                gaps.append([last_addr, saddr])
+            last_addr = eaddr
 
-                if not guide.gaps:
-                    guide.gaps = gaps
-                else:
-                    guide.gaps = overlapping_regions(guide.gaps, gaps)
+        if not guide.gaps:
+            guide.gaps = gaps
+        else:
+            guide.gaps = overlapping_regions(guide.gaps, gaps)
+
     return sorted(list(guides.values()), key=lambda x: x.total_space(),
                     reverse=True)
 
-def pr_guide(binfile):
-    for guide in get_guide_info(binfile):
+def pr_guide(damon_result):
+    for guide in get_guide_info(damon_result):
         print(guide)
 
 def region_sort_key(region):
     return region[1] - region[0]
 
-def set_missed_args(args):
+def set_missed_args(args, damon_result):
     if args.tid and args.tmin and args.tmax and args.amin and args.amax:
         return
-    guides = get_guide_info(args.input)
+    guides = get_guide_info(damon_result)
     guide = guides[0]
     if not args.tid:
         args.tid = guide.tid
@@ -340,10 +333,12 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
+    damon_result = _parse_damon_result.record_to_damon_result(args.input)
+
     if args.guide:
-        pr_guide(args.input)
+        pr_guide(damon_result)
     else:
-        set_missed_args(args)
+        set_missed_args(args, damon_result)
         orig_stdout = sys.stdout
         if args.heatmap:
             tmp_path = tempfile.mkstemp()[1]
