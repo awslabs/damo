@@ -47,6 +47,8 @@ def aggregate_snapshots(snapshots):
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
+    parser.add_argument('--input_type', choices=['record', 'perf_script'],
+            default='record', help='input file\'s type')
     parser.add_argument('--range', '-r', type=int, nargs=3,
             metavar=('<start>', '<stop>', '<step>'),
             help='range of wss percentiles to print')
@@ -86,7 +88,14 @@ def main(args=None):
     end_time = 0
     tid_pattern_map = {}
 
-    result = _parse_damon_result.record_to_damon_result(file_path)
+    if args.input_type == 'record':
+        result = _parse_damon_result.record_to_damon_result(file_path)
+    elif args.input_type == 'perf_script':
+        result = _parse_damon_result.perf_script_to_damon_result(file_path)
+    else:
+        print('unknown input file type')
+        exit(1)
+
     start_time = result.start_time
     for snapshot in result.snapshots:
         end_time = snapshot.monitored_time

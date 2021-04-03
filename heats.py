@@ -291,6 +291,8 @@ def plot_heatmap(data_file, output_file):
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
+    parser.add_argument('--input_type', choices=['record', 'perf_script'],
+            default='record', help='input file\'s type')
     parser.add_argument('--tid', metavar='<id>', type=int,
             help='target id')
     parser.add_argument('--tres', metavar='<resolution>', type=int,
@@ -316,7 +318,14 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    damon_result = _parse_damon_result.record_to_damon_result(args.input)
+    if args.input_type == 'record':
+        damon_result = _parse_damon_result.record_to_damon_result(args.input)
+    elif args.input_type == 'perf_script':
+        damon_result = _parse_damon_result.perf_script_to_damon_result(
+                args.input)
+    else:
+        print('unknown input type')
+        exit(1)
 
     if args.guide:
         pr_guide(damon_result)

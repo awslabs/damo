@@ -13,6 +13,8 @@ import _parse_damon_result
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
+    parser.add_argument('--input_type', choices=['record', 'perf_script'],
+            default='record', help='input file\'s type')
     parser.add_argument('--range', '-r', type=int, nargs=3,
             metavar=('<start>', '<stop>', '<step>'),
             help='range of percentiles to print')
@@ -37,7 +39,14 @@ def main(args=None):
         nr_regions_sort = False
 
     tid_pattern_map = {}
-    result = _parse_damon_result.record_to_damon_result(file_path)
+    if args.input_type == 'record':
+        result = _parse_damon_result.record_to_damon_result(file_path)
+    elif args.input_type == 'perf_script':
+        result = _parse_damon_result.perf_script_to_damon_result(file_path)
+    else:
+        print('unknown input file type')
+        exit(1)
+
     for snapshot in result.snapshots:
         if not snapshot.target_id in tid_pattern_map:
             tid_pattern_map[snapshot.target_id] = []
