@@ -8,6 +8,8 @@ import sys
 import _parse_damon_result
 
 def set_argparser(parser):
+    parser.add_argument('--perf_script', action='store_true', default=False,
+            help='input is a perf script output')
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
 
@@ -23,7 +25,11 @@ def main(args=None):
         print('input file (%s) is not exist' % file_path)
         exit(1)
 
-    result = _parse_damon_result.record_to_damon_result(file_path)
+    if not args.perf_script:
+        result = _parse_damon_result.record_to_damon_result(file_path)
+    else:
+        result = _parse_damon_result.perf_script_to_damon_result(file_path)
+
     if not result:
         print('no monitoring result in the file')
     print('start_time: ', result.start_time)
