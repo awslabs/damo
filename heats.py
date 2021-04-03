@@ -54,8 +54,7 @@ def pr_samples(samples, time_idx, time_unit, region_unit):
 def to_idx(value, min_, unit):
     return (value - min_) // unit
 
-def read_task_heats(snapshot, aunit, amin, amax):
-    tid_ = snapshot.target_id
+def heats_in(snapshot, aunit, amin, amax):
     samples = []
     for r in snapshot.regions:
         saddr = r.start
@@ -101,7 +100,7 @@ def __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax):
         start_time = end_time
         end_time = snapshot.monitored_time
         samples_set = {}
-        samples = read_task_heats(snapshot, aunit, amin, amax)
+        samples = heats_in(snapshot, aunit, amin, amax)
         if samples:
             samples_set[tid] = samples
         if not tid in samples_set:
