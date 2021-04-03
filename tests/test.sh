@@ -11,6 +11,15 @@ then
 	exit 1
 fi
 
+../damo report raw --perf_script -i perf_script_output \
+	> raw_perf_script_after
+diff raw_perf_script_before raw_perf_script_after
+if [ $? -ne 0 ]
+then
+	echo "report-raw --perf_script FAIL"
+	exit 1
+fi
+
 ../damo report wss -r 1 101 1 > wss_after
 diff wss_before wss_after
 if [ $? -ne 0 ]
