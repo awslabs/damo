@@ -90,7 +90,7 @@ def perf_script_to_damon_result(perf_script_file):
             continue
         if fields[4] != 'damon:damon_aggregated:':
             continue
-        time = float(fields[3][:-1])
+        time = int(float(fields[3][:-1]) * 1000000)
         if not result:
             result = DAMONResult(time)
 
