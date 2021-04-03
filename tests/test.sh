@@ -12,7 +12,7 @@ then
 fi
 echo "report-raw PASS"
 
-../damo report raw --perf_script -i perf_script_output \
+../damo report raw --input_type perf_script -i perf_script_output \
 	> raw_perf_script_after
 diff raw_perf_script_before raw_perf_script_after
 if [ $? -ne 0 ]
