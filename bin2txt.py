@@ -32,6 +32,8 @@ def main(args=None):
 
     if not result:
         print('no monitoring result in the file')
+        exit(1)
+
     print('start_time: ', result.start_time)
     for snapshot in result.snapshots:
         print('rel time: %16d' % (snapshot.monitored_time - result.start_time))
