@@ -68,3 +68,46 @@ def record_to_damon_result(file_path):
                     snapshot.regions.append(region)
                 result.snapshots.append(snapshot)
     return result
+
+def perf_script_to_damon_result(perf_script_file):
+    result = None
+    nr_read_regions = 0
+
+    with open(perf_script_file, 'r') as f:
+        content = f.read().split('\n')
+
+    for line in content:
+        '''
+        example line is as below:
+
+        kdamond.0  4452 [000] 82877.315633: damon:damon_aggregated: \
+                target_id=18446623435582458880 nr_regions=17 \
+                140731667070976-140731668037632: 0
+        '''
+
+        fields = line.strip().split()
+        if len(fields) != 9:
+            continue
+        if fields[4] != 'damon:damon_aggregated:':
+            continue
+        time = float(fields[3][:-1])
+        if not result:
+            result = DAMONResult(time)
+
+        target_id = int(fields[5].split('=')[1])
+        nr_regions = int(fields[6].split('=')[1])
+        addrs = [int(x) for x in fields[7][:-1].split('-')]
+        nr_accesses = int(fields[8])
+
+        if nr_read_regions == 0:
+            snapshot = DAMONSnapshot(time, target_id)
+            result.snapshots.append(snapshot)
+
+        snapshot = result.snapshots[-1]
+        snapshot.regions.append(DAMONRegion(addrs[0], addrs[1], nr_accesses))
+
+        nr_read_regions += 1
+        if nr_read_regions == nr_regions:
+            nr_read_regions = 0
+
+    return result
