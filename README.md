@@ -29,7 +29,11 @@ pattern of your workload.
     /* build the kernel with CONFIG_DAMON_*=y, install, reboot */
     $ mount -t debugfs none /sys/kernel/debug/
     $ ./damo record $(pidof <your workload>)
-    $ ./damo report heats --heatmap access_pattern.png
+    $ ./damo report heats --plot_ascii --ascii_color emotion
+
+The last command will show the access pattern of your workload, like below:
+
+![masim zigzag heatmap in ascii](for_doc/masim_zigzag_heatmap_ascii.png)
 
 Below sections further provide quick introductions for `damo`'s major features.
 For more detailed usage, please refer to [USAGE.md](USAGE.md) file.
