@@ -68,6 +68,18 @@ then
 fi
 echo "report-heats PASS"
 
+if perf script -l | grep -q damon
+then
+	perf script report damon -i perf.data heatmap > perf_heatmap_after
+	diff -q perf_heatmap_before perf_heatmap_after
+	if [ $? -ne 0 ]
+	then
+		echo "perf-damon-heatmap FAIL"
+		exit 1
+	fi
+	echo "perf-damon-heatmap PASS"
+fi
+
 rm *_after
 
 echo "PASS"
