@@ -104,7 +104,14 @@ def pr_heats(args, damon_result):
             [tres, ares])
     for row in pixels:
         for pixel in row:
-            print('%s\t%s\t%s' % (pixel.time - tmin, pixel.addr - amin, pixel.heat))
+            time = pixel.time
+            addr = pixel.addr
+            if not args.abs_time:
+                time -= tmin
+            if not args.abs_addr:
+                addr -= amin
+
+            print('%s\t%s\t%s' % (time, addr, pixel.heat))
 
 class GuideInfo:
     tid = None
@@ -259,6 +266,7 @@ def set_argparser(parser):
             default='damon.data', help='input file name')
     parser.add_argument('--input_type', choices=['record', 'perf_script'],
             default='record', help='input file\'s type')
+
     parser.add_argument('--tid', metavar='<id>', type=int,
             help='target id')
     parser.add_argument('--tres', metavar='<resolution>', type=int,
@@ -273,6 +281,11 @@ def set_argparser(parser):
             help='minimal space address of the output')
     parser.add_argument('--amax', metavar='<address>', type=lambda x: int(x,0),
             help='maximum space address of the output')
+    parser.add_argument('--abs_time', action='store_true', default=False,
+            help='display absolute time in output')
+    parser.add_argument('--abs_addr', action='store_true', default=False,
+            help='display absolute address in output')
+
     parser.add_argument('--guide', action='store_true',
             help='print a guidance for the min/max/resolution settings')
     parser.add_argument('--heatmap', metavar='<file>', type=str,
