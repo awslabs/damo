@@ -375,6 +375,11 @@ def main(args=None):
         print('unknown input type')
         exit(1)
 
+    # Use 80x50 resolution as default for ascii plot
+    if args.plot_ascii and args.tres == 500 and args.ares == 500:
+        args.tres = 40
+        args.ares = 80
+
     if args.guide:
         pr_guide(damon_result)
     else:
