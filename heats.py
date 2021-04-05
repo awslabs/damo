@@ -83,6 +83,64 @@ def heat_pixels_from_snapshots(snapshots, time_range, addr_range, resols):
             time_idx += 1
     return pixels
 
+def format_sz(number, sz_bytes):
+    if sz_bytes:
+        return '%d' % number
+
+    if number > 1<<40:
+        return '%.3f TiB' % (number / (1<<40))
+    if number > 1<<30:
+        return '%.3f GiB' % (number / (1<<30))
+    if number > 1<<20:
+        return '%.3f MiB' % (number / (1<<20))
+    if number > 1<<10:
+        return '%.3f KiB' % (number / (1<<10))
+    return '%d B' % number
+
+def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
+    highest_heat = None
+    lowest_heat = None
+    for snapshot in pixels:
+        for pixel in snapshot:
+            if not highest_heat or highest_heat < pixel.heat:
+                highest_heat = pixel.heat
+            if not lowest_heat or lowest_heat > pixel.heat:
+                lowest_heat = pixel.heat
+    if not highest_heat or lowest_heat:
+        return
+    heat_unit = (highest_heat + 1 - lowest_heat) / 9
+
+    colorsets = {
+        'gray':[
+            [232] * 10,
+            [237, 239, 241, 243, 245, 247, 249, 251, 253, 255]],
+        'flame':[
+            [232, 1, 1, 2, 3, 3, 20, 21,26, 27, 27],
+            [239, 235, 237, 239, 243, 245, 247, 249, 251, 255]],
+        'emotion':[
+            [232, 234, 20, 21, 26, 2, 3, 1, 1, 1],
+            [239, 235, 237, 239, 243, 245, 247, 249, 251, 255]],
+        }
+    colors = colorsets[colorset]
+    for snapshot in pixels:
+        chars = []
+        for pixel in snapshot:
+            heat = int((pixel.heat - lowest_heat) / heat_unit)
+            heat = min(heat, len(colors[0]) - 1)
+            bg = colors[0][heat]
+            fg = colors[1][heat]
+            chars.append(u'\u001b[48;5;%dm\u001b[38;5;%dm%d' %
+                    (bg, fg, heat))
+        print(''.join(chars) + u'\u001b[0m')
+    color_samples = [u'\u001b[48;5;%dm\u001b[38;5;%dm %d ' %
+            (colors[0][i], colors[1][i], i) for i in range(10)]
+    print('# temparature:', ''.join(color_samples) + u'\u001b[0m')
+    print('# x-axis: space (%d-%d: %s)' % (addr_range[0], addr_range[1],
+        format_sz(addr_range[1] - addr_range[0], False)))
+    print('# y-axis: time (%d-%d: %fs)' % (time_range[0], time_range[1],
+        (time_range[1] - time_range[0]) / 1000000000))
+    print('# resolution: %dx%d' % (len(pixels[1]), len(pixels)))
+
 def pr_heats(args, damon_result):
     tid = args.tid
     tres = args.tres
@@ -102,6 +160,12 @@ def pr_heats(args, damon_result):
     snapshots = [s for s in damon_result.snapshots if s.target_id == tid]
     pixels = heat_pixels_from_snapshots(snapshots, [tmin, tmax], [amin, amax],
             [tres, ares])
+
+    if args.plot_ascii:
+        heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax], [tres, ares],
+                args.ascii_color)
+        return
+
     for row in pixels:
         for pixel in row:
             time = pixel.time
@@ -290,6 +354,11 @@ def set_argparser(parser):
             help='print a guidance for the min/max/resolution settings')
     parser.add_argument('--heatmap', metavar='<file>', type=str,
             help='heatmap image file to create')
+    parser.add_argument('--plot_ascii', action='store_true',
+            help='visualize in ascii art')
+    parser.add_argument('--ascii_color',
+            choices=['gray', 'flame', 'emotion'], default='gray',
+            help='color theme for temparatures')
 
 def main(args=None):
     if not args:
