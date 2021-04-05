@@ -34,6 +34,7 @@ pattern of your workload.
 The last command will show the access pattern of your workload, like below:
 
 ![masim zigzag heatmap in ascii](for_doc/masim_zigzag_heatmap_ascii.png)
+![masim stairs heatmap in ascii](for_doc/masim_stairs_heatmap_ascii.png)
 
 Below sections further provide quick introductions for `damo`'s major features.
 For more detailed usage, please refer to [USAGE.md](USAGE.md) file.
