@@ -20,108 +20,68 @@ import tempfile
 
 import _parse_damon_result
 
-class HeatSample:
-    space_idx = None
-    sz_time_space = None
+class HeatPixel:
+    time = None
+    addr = None
     heat = None
 
-    def __init__(self, space_idx, sz_time_space, heat):
-        if sz_time_space < 0:
-            raise RuntimeError()
-        self.space_idx = space_idx
-        self.sz_time_space = sz_time_space
+    def __init__(self, time, addr, heat):
+        self.time = time
+        self.addr = addr
         self.heat = heat
 
-    def total_heat(self):
-        return self.heat * self.sz_time_space
+def add_heats(snapshot, duration, pixels, time_unit, space_unit, addr_range):
+    """Add heats in a monitoring 'snapshot' of specific time 'duration' to
+    the corresponding heats 'pixels'.
+    """
+    pixel_sz = time_unit * space_unit
 
-    def merge(self, sample):
-        "sample must have a space idx that same to self"
-        heat_sum = self.total_heat() + sample.total_heat()
-        self.heat = heat_sum / (self.sz_time_space + sample.sz_time_space)
-        self.sz_time_space += sample.sz_time_space
-
-def pr_samples(samples, time_idx, time_unit, region_unit):
-    display_time = time_idx * time_unit
-    for idx, sample in enumerate(samples):
-        display_addr = idx * region_unit
-        if not sample:
-            print("%s\t%s\t%s" % (display_time, display_addr, 0.0))
+    for region in snapshot.regions:
+        start = max(region.start, addr_range[0])
+        end = min(region.end, addr_range[1])
+        if start >= end:
             continue
-        print("%s\t%s\t%s" % (display_time, display_addr, sample.total_heat() /
-            time_unit / region_unit))
 
-def to_idx(value, min_, unit):
-    return (value - min_) // unit
+        fraction_start = start
+        addr_idx = int((fraction_start - addr_range[0]) / space_unit)
+        while fraction_start < end:
+            fraction_end = min((addr_idx + 1) * space_unit + addr_range[0],
+                    end)
+            heat = region.nr_accesses * duration * (
+                    fraction_end - fraction_start)
 
-def heats_in(snapshot, aunit, amin, amax):
-    samples = []
-    for r in snapshot.regions:
-        saddr = r.start
-        eaddr = min(r.end, amax - 1)
-        heat = r.nr_accesses
+            pixel = pixels[addr_idx]
+            heat += pixel.heat * pixel_sz
+            pixel.heat = heat / pixel_sz
 
-        if eaddr <= amin:
-            continue
-        if saddr >= amax:
-            continue
-        saddr = max(amin, saddr)
-        eaddr = min(amax, eaddr)
+            fraction_start = fraction_end
+            addr_idx += 1
 
-        sidx = to_idx(saddr, amin, aunit)
-        eidx = to_idx(eaddr - 1, amin, aunit)
-        for idx in range(sidx, eidx + 1):
-            sa = max(amin + idx * aunit, saddr)
-            ea = min(amin + (idx + 1) * aunit, eaddr)
-            sample = HeatSample(idx, (ea - sa), heat)
-            samples.append(sample)
-    return samples
+def heat_pixels_from_snapshots(snapshots, time_range, addr_range, resols):
+    """Get heat pixels for monitoring snapshots."""
+    time_unit = (time_range[1] - time_range[0]) / float(resols[0])
+    space_unit = (addr_range[1] - addr_range[0]) / float(resols[1])
 
-def apply_samples(target_samples, samples, start_time, end_time, aunit, amin):
-    for s in samples:
-        sample = HeatSample(s.space_idx,
-                s.sz_time_space * (end_time - start_time), s.heat)
-        idx = sample.space_idx
-        if not target_samples[idx]:
-            target_samples[idx] = sample
-        else:
-            target_samples[idx].merge(sample)
+    pixels = [[HeatPixel(int(time_range[0] + i * time_unit),
+                    int(addr_range[0] + j * space_unit), 0.0)
+            for j in range(resols[1])] for i in range(resols[0])]
 
-def __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax):
-    heat_samples = [None] * ((amax - amin) // aunit)
+    if len(snapshots) < 2:
+        return pixels
 
-    start_time = 0
-    end_time = 0
-    last_flushed = -1
+    for idx, shot in enumerate(snapshots[1:]):
+        start = snapshots[idx].monitored_time
+        end = min(shot.monitored_time, time_range[1])
 
-    for snapshot in damon_result.snapshots:
-        if snapshot.target_id != tid:
-            continue
-        start_time = end_time
-        end_time = snapshot.monitored_time
-        samples_set = {}
-        samples = heats_in(snapshot, aunit, amin, amax)
-        if samples:
-            samples_set[tid] = samples
-        if not tid in samples_set:
-            continue
-        if start_time >= tmax:
-            continue
-        if end_time <= tmin:
-            continue
-        start_time = max(start_time, tmin)
-        end_time = min(end_time, tmax)
-
-        sidx = to_idx(start_time, tmin, tunit)
-        eidx = to_idx(end_time - 1, tmin, tunit)
-        for idx in range(sidx, eidx + 1):
-            if idx != last_flushed:
-                pr_samples(heat_samples, idx, tunit, aunit)
-                heat_samples = [None] * ((amax - amin) // aunit)
-                last_flushed = idx
-            st = max(start_time, tmin + idx * tunit)
-            et = min(end_time, tmin + (idx + 1) * tunit)
-            apply_samples(heat_samples, samples_set[tid], st, et, aunit, amin)
+        fraction_start = start
+        time_idx = int((fraction_start - time_range[0]) / time_unit)
+        while fraction_start < end:
+            fraction_end = min((time_idx + 1) * time_unit + time_range[0], end)
+            add_heats(shot, fraction_end - fraction_start, pixels[time_idx],
+                    time_unit, space_unit, addr_range)
+            fraction_start = fraction_end
+            time_idx += 1
+    return pixels
 
 def pr_heats(args, damon_result):
     tid = args.tid
@@ -137,7 +97,14 @@ def pr_heats(args, damon_result):
     tmax = tmin + tunit * tres
     amax = amin + aunit * ares
 
-    __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax)
+    # __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax)
+
+    snapshots = [s for s in damon_result.snapshots if s.target_id == tid]
+    pixels = heat_pixels_from_snapshots(snapshots, [tmin, tmax], [amin, amax],
+            [tres, ares])
+    for row in pixels:
+        for pixel in row:
+            print('%s\t%s\t%s' % (pixel.time - tmin, pixel.addr - amin, pixel.heat))
 
 class GuideInfo:
     tid = None
