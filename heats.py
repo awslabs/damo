@@ -139,7 +139,10 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
         format_sz(addr_range[1] - addr_range[0], False)))
     print('# y-axis: time (%d-%d: %fs)' % (time_range[0], time_range[1],
         (time_range[1] - time_range[0]) / 1000000000))
-    print('# resolution: %dx%d' % (len(pixels[1]), len(pixels)))
+    print('# resolution: %dx%d (%s and %.3fs for each character)' % (
+        len(pixels[1]), len(pixels),
+        format_sz((addr_range[1] - addr_range[0]) / len(pixels[1]), False),
+        (time_range[1] - time_range[0]) / len(pixels) / 1000000000))
 
 def pr_heats(args, damon_result):
     tid = args.tid
