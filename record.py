@@ -57,6 +57,13 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
         cleanup_exit(old_attrs, -3)
     while not _damon.is_damon_running():
         time.sleep(1)
+
+    perf_pipe = None
+    if not _damon.debugfs_record:
+        perf_pipe = subprocess.Popen(
+                'perf record -e damon:damon_aggregated -a -o \'%s\'' %
+                (attrs.rfile_path + '.perf.data'),
+                shell=True, executable='/bin/bash')
     print('Press Ctrl+C to stop')
     if is_target_cmd:
         p.wait()
@@ -68,6 +75,13 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
 
     if pidfd:
         os.close(fd)
+
+    if perf_pipe:
+        perf_pipe.send_signal(signal.SIGINT)
+        perf_pipe.wait()
+        subprocess.call('perf script -i \'%s\' > \'%s\'' %
+                (attrs.rfile_path + '.perf.data', attrs.rfile_path),
+                shell=True, executable='/bin/bash')
     cleanup_exit(old_attrs, 0)
 
 def cleanup_exit(orig_attrs, exit_code):
