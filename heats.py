@@ -134,7 +134,7 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
         print(''.join(chars) + u'\u001b[0m')
     color_samples = [u'\u001b[48;5;%dm\u001b[38;5;%dm %d ' %
             (colors[0][i], colors[1][i], i) for i in range(10)]
-    print('# temparature:', ''.join(color_samples) + u'\u001b[0m')
+    print('# temperature:', ''.join(color_samples) + u'\u001b[0m')
     print('# x-axis: space (%d-%d: %s)' % (addr_range[0], addr_range[1],
         format_sz(addr_range[1] - addr_range[0], False)))
     print('# y-axis: time (%d-%d: %fs)' % (time_range[0], time_range[1],
@@ -358,7 +358,7 @@ def set_argparser(parser):
             help='visualize in ascii art')
     parser.add_argument('--ascii_color',
             choices=['gray', 'flame', 'emotion'], default='gray',
-            help='color theme for temparatures')
+            help='color theme for temperatures')
 
 def main(args=None):
     if not args:
