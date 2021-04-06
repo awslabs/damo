@@ -24,7 +24,7 @@ def set_target(tid, init_regions=[]):
     if rc:
         return rc
 
-    if not os.path.exists(debugfs_init_regions):
+    if not debugfs_init_regions:
         return 0
 
     if tid == 'paddr':
@@ -80,10 +80,13 @@ class Attrs:
                 shell=True, executable='/bin/bash')
         if ret:
             return ret
-        ret = subprocess.call('echo %s > %s' % (self.record_str(),
-            debugfs_record), shell=True, executable='/bin/bash')
-        if ret:
-            return ret
+        if debugfs_record:
+            ret = subprocess.call('echo %s > %s' % (self.record_str(),
+                debugfs_record), shell=True, executable='/bin/bash')
+            if ret:
+                return ret
+        if not debugfs_schemes:
+            return 0
         return subprocess.call('echo %s > %s' % (
             self.schemes.replace('\n', ' '), debugfs_schemes), shell=True,
             executable='/bin/bash')
@@ -93,17 +96,22 @@ def current_attrs():
         attrs = f.read().split()
     attrs = [int(x) for x in attrs]
 
-    with open(debugfs_record, 'r') as f:
-        rattrs = f.read().split()
-    attrs.append(int(rattrs[0]))
-    attrs.append(rattrs[1])
+    if debugfs_record:
+        with open(debugfs_record, 'r') as f:
+            rattrs = f.read().split()
+        attrs.append(int(rattrs[0]))
+        attrs.append(rattrs[1])
+    else:
+        attrs += [None, None]
 
-    with open(debugfs_schemes, 'r') as f:
-        schemes = f.read()
-
-    # The last two fields in each line are statistics.  Remove those.
-    schemes = [' '.join(x.split()[:-2]) for x in schemes.strip().split('\n')]
-    attrs.append('\n'.join(schemes))
+    if debugfs_schemes:
+        with open(debugfs_schemes, 'r') as f:
+            schemes = f.read()
+        # The last two fields in each line are statistics.  Remove those.
+        schemes = [' '.join(x.split()[:-2]) for x in schemes.strip().split('\n')]
+        attrs.append('\n'.join(schemes))
+    else:
+        attrs.append(None)
 
     return Attrs(*attrs)
 
@@ -128,10 +136,17 @@ def chk_update_debugfs(debugfs):
         exit(1)
 
     for f in [debugfs_attrs, debugfs_record, debugfs_schemes,
-            debugfs_target_ids, debugfs_monitor_on]:
+            debugfs_target_ids, debugfs_init_regions, debugfs_monitor_on]:
         if not os.path.isfile(f):
-            print("damon debugfs file (%s) not found" % f)
-            exit(1)
+            if f == debugfs_record:
+                debugfs_record = None
+            elif f == debugfs_schemes:
+                debugfs_schemes = None
+            elif f == debugfs_init_regions:
+                debugfs_init_regions = None
+            else:
+                print("damon debugfs file (%s) not found" % f)
+                exit(1)
 
 def cmd_args_to_attrs(args):
     "Generate attributes with specified arguments"
