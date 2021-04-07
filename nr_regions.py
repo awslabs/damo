@@ -44,10 +44,11 @@ def main(args=None):
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
-    for snapshot in result.snapshots:
-        if not snapshot.target_id in tid_pattern_map:
-            tid_pattern_map[snapshot.target_id] = []
-        tid_pattern_map[snapshot.target_id].append(snapshot.regions)
+    for snapshots in result.snapshots.values():
+        for snapshot in snapshots:
+            if not snapshot.target_id in tid_pattern_map:
+                tid_pattern_map[snapshot.target_id] = []
+            tid_pattern_map[snapshot.target_id].append(snapshot.regions)
 
     orig_stdout = sys.stdout
     if args.plot:
