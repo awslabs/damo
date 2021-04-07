@@ -70,8 +70,8 @@ def heat_pixels_from_snapshots(snapshots, time_range, addr_range, resols):
         return pixels
 
     for idx, shot in enumerate(snapshots[1:]):
-        start = snapshots[idx].monitored_time
-        end = min(shot.monitored_time, time_range[1])
+        start = shot.start_time
+        end = min(shot.end_time, time_range[1])
 
         fraction_start = start
         time_idx = int((fraction_start - time_range[0]) / time_unit)
@@ -160,7 +160,7 @@ def pr_heats(args, damon_result):
 
     # __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax)
 
-    snapshots = [s for s in damon_result.snapshots if s.target_id == tid]
+    snapshots = damon_result.snapshots[tid]
     pixels = heat_pixels_from_snapshots(snapshots, [tmin, tmax], [amin, amax],
             [tres, ares])
 
@@ -245,36 +245,37 @@ def overlapping_regions(regions1, regions2):
 def get_guide_info(damon_result):
     "return the set of guide information for the moitoring result"
     guides = {}
-    for snapshot in damon_result.snapshots:
-        monitor_time = snapshot.monitored_time
-        tid = snapshot.target_id
-        if not tid in guides:
-            guides[tid] = GuideInfo(tid, monitor_time)
-        guide = guides[tid]
-        guide.end_time = monitor_time
+    for snapshots in damon_result.snapshots.values():
+        for snapshot in snapshots:
+            monitor_time = snapshot.end_time
+            tid = snapshot.target_id
+            if not tid in guides:
+                guides[tid] = GuideInfo(tid, monitor_time)
+            guide = guides[tid]
+            guide.end_time = monitor_time
 
-        last_addr = None
-        gaps = []
-        for r in snapshot.regions:
-            saddr = r.start
-            eaddr = r.end
+            last_addr = None
+            gaps = []
+            for r in snapshot.regions:
+                saddr = r.start
+                eaddr = r.end
 
-            if not guide.lowest_addr or saddr < guide.lowest_addr:
-                guide.lowest_addr = saddr
-            if not guide.highest_addr or eaddr > guide.highest_addr:
-                guide.highest_addr = eaddr
+                if not guide.lowest_addr or saddr < guide.lowest_addr:
+                    guide.lowest_addr = saddr
+                if not guide.highest_addr or eaddr > guide.highest_addr:
+                    guide.highest_addr = eaddr
 
-            if not last_addr:
+                if not last_addr:
+                    last_addr = eaddr
+                    continue
+                if last_addr != saddr:
+                    gaps.append([last_addr, saddr])
                 last_addr = eaddr
-                continue
-            if last_addr != saddr:
-                gaps.append([last_addr, saddr])
-            last_addr = eaddr
 
-        if not guide.gaps:
-            guide.gaps = gaps
-        else:
-            guide.gaps = overlapping_regions(guide.gaps, gaps)
+            if not guide.gaps:
+                guide.gaps = gaps
+            else:
+                guide.gaps = overlapping_regions(guide.gaps, gaps)
 
     return sorted(list(guides.values()), key=lambda x: x.total_space(),
                     reverse=True)
