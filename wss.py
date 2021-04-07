@@ -88,12 +88,9 @@ def main(args=None):
     end_time = 0
     tid_pattern_map = {}
 
-    if args.input_type == 'record':
-        result = _parse_damon_result.record_to_damon_result(file_path)
-    elif args.input_type == 'perf_script':
-        result = _parse_damon_result.perf_script_to_damon_result(file_path)
-    else:
-        print('unknown input file type')
+    result = _parse_damon_result.parse_damon_result(file_path, args.input_type)
+    if not result:
+        print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
     start_time = result.start_time

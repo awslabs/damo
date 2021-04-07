@@ -369,13 +369,10 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    if args.input_type == 'record':
-        damon_result = _parse_damon_result.record_to_damon_result(args.input)
-    elif args.input_type == 'perf_script':
-        damon_result = _parse_damon_result.perf_script_to_damon_result(
-                args.input)
-    else:
-        print('unknown input type')
+    damon_result = _parse_damon_result.parse_damon_result(
+            args.input, args.input_type)
+    if not damon_result:
+        print('monitoring result file (%s) parsing failed' % args.input)
         exit(1)
 
     # Use 80x50 resolution as default for ascii plot

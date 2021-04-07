@@ -111,3 +111,12 @@ def perf_script_to_damon_result(perf_script_file):
             nr_read_regions = 0
 
     return result
+
+def parse_damon_result(result_file, file_type):
+    if file_type == 'record':
+        return record_to_damon_result(result_file)
+    elif file_type == 'perf_script':
+        return perf_script_to_damon_result(result_file)
+    else:
+        print('unknown result file type: %s' % file_type)
+        return None

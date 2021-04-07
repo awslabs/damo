@@ -39,12 +39,9 @@ def main(args=None):
         nr_regions_sort = False
 
     tid_pattern_map = {}
-    if args.input_type == 'record':
-        result = _parse_damon_result.record_to_damon_result(file_path)
-    elif args.input_type == 'perf_script':
-        result = _parse_damon_result.perf_script_to_damon_result(file_path)
-    else:
-        print('unknown input file type')
+    result = _parse_damon_result.parse_damon_result(file_path, args.input_type)
+    if not result:
+        print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
     for snapshot in result.snapshots:

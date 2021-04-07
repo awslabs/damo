@@ -62,7 +62,10 @@ def main(args=None):
     end_time = 0
     tid_pattern_map = {}
 
-    result = _parse_damon_result.record_to_damon_result(file_path)
+    result = _parse_damon_result.parse_damon_result(file_path, 'record')
+    if not result:
+        print('monitoring result file (%s) parsing failed' % file_path)
+        exit(1)
     start_time = result.start_time
     for snapshot in result.snapshots:
         end_time = snapshot.monitored_time
