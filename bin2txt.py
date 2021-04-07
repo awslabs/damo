@@ -34,16 +34,26 @@ def main(args=None):
         print('no monitoring result in the file')
         exit(1)
 
-    print('start_time: ', result.start_time)
-    for snapshot in result.snapshots:
-        print('rel time: %16d' % (snapshot.monitored_time - result.start_time))
-        print('nr_tasks:  1')
-        print('target_id: ', snapshot.target_id)
-        print('nr_regions: ', len(snapshot.regions))
-        for r in snapshot.regions:
-            print("%012x-%012x(%10d):\t%d" %
-                    (r.start, r.end, r.end - r.start, r.nr_accesses))
-        print()
+    for snapshots in result.snapshots.values():
+        if len(snapshots) == 0:
+            continue
+
+        base_time = snapshots[0].end_time
+        print('base_time_absolute: %s\n' % base_time)
+
+        for snapshot in snapshots:
+            print('monitoring_start:    %16d' %
+                (snapshot.start_time - base_time))
+            print('monitoring_end:      %16d' %
+                (snapshot.end_time - base_time))
+            print('monitoring_duration: %16d' %
+                (snapshot.end_time - snapshot.start_time))
+            print('target_id:', snapshot.target_id)
+            print('nr_regions:', len(snapshot.regions))
+            for r in snapshot.regions:
+                print("%012x-%012x(%10d):\t%d" %
+                        (r.start, r.end, r.end - r.start, r.nr_accesses))
+            print()
 
 if __name__ == '__main__':
     main()
