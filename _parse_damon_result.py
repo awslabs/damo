@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import struct
+import subprocess
 
 class DAMONRegion:
     start = None
@@ -113,6 +114,17 @@ def perf_script_to_damon_result(perf_script_file):
     return result
 
 def parse_damon_result(result_file, file_type):
+    if not file_type:
+        output = subprocess.check_output('file -b \'%s\'' % result_file,
+                shell=True, executable='/bin/bash').decode().strip()
+        if output == 'data':
+            file_type = 'record'
+        elif output == 'ASCII text':
+            file_type = 'perf_script'
+        else:
+            print('cannot figure out the type of result file')
+            return None
+
     if file_type == 'record':
         return record_to_damon_result(result_file)
     elif file_type == 'perf_script':
