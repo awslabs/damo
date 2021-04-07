@@ -59,7 +59,7 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
         time.sleep(1)
 
     perf_pipe = None
-    if not _damon.debugfs_record:
+    if not _damon.feature_supported('record'):
         perf_pipe = subprocess.Popen(
                 'perf record -e damon:damon_aggregated -a -o \'%s\'' %
                 (attrs.rfile_path + '.perf.data'),

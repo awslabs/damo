@@ -115,6 +115,15 @@ def current_attrs():
 
     return Attrs(*attrs)
 
+def feature_supported(feature):
+    """Should be called after 'chk_update_debugfs()' called"""
+    if feature == 'record':
+        return debugfs_record != None
+    if feature == 'schemes':
+        return debugfs_schemes != None
+    if feature == 'init_regions':
+        return debugfs_init_regions != None
+
 def chk_update_debugfs(debugfs):
     global debugfs_attrs
     global debugfs_record
