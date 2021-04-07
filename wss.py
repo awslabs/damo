@@ -48,7 +48,7 @@ def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
     parser.add_argument('--input_type', choices=['record', 'perf_script'],
-            default='record', help='input file\'s type')
+            default=None, help='input file\'s type')
     parser.add_argument('--range', '-r', type=int, nargs=3,
             metavar=('<start>', '<stop>', '<step>'),
             help='range of wss percentiles to print')
