@@ -93,15 +93,17 @@ def main(args=None):
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
-    start_time = result.start_time
-    for snapshot in result.snapshots:
-        end_time = snapshot.monitored_time
-        tid = snapshot.target_id
-        if not tid in tid_pattern_map:
-            tid_pattern_map[tid] = []
-        tid_pattern_map[tid].append(snapshot.regions)
+    for snapshots in result.snapshots.values():
+        for snapshot in snapshots:
+            if start_time == 0:
+                start_time = snapshot.end_time
+            end_time = snapshot.end_time
+            tid = snapshot.target_id
+            if not tid in tid_pattern_map:
+                tid_pattern_map[tid] = []
+            tid_pattern_map[tid].append(snapshot.regions)
 
-    snapshot_time = (end_time - start_time) / (len(tid_pattern_map[tid]) - 1)
+    snapshot_time = (end_time - start_time) / (len(tid_pattern_map[tid]))
     nr_shots_in_aggr = max(round(args.work_time * 1000 / snapshot_time), 1)
 
     if nr_shots_in_aggr > 1:
