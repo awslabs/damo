@@ -34,14 +34,17 @@ def add_region(regions, region, nr_acc_to_add):
     regions.append(region)
 
 def aggregate_snapshots(snapshots):
-    new_snapshot = []   # list of workingset ([start, end, nr_accesses])
+    new_regions = []
     for snapshot in snapshots:
         nr_acc_to_add = {}
-        for region in snapshot:
-            add_region(new_snapshot, region, nr_acc_to_add)
+        for region in snapshot.regions:
+            add_region(new_regions, region, nr_acc_to_add)
         for region in nr_acc_to_add:
             region.nr_accesses += nr_acc_to_add[region]
 
+    new_snapshot = _parse_damon_result.DAMONSnapshot(snapshots[0].start_time,
+            snapshots[-1].end_time, snapshots[0].target_id)
+    new_snapshot.regions = new_regions
     return new_snapshot
 
 def set_argparser(parser):
@@ -84,39 +87,26 @@ def main(args=None):
     if args.sortby == 'time':
         wss_sort = False
 
-    start_time = 0
-    end_time = 0
-    tid_pattern_map = {}
-
     result = _parse_damon_result.parse_damon_result(file_path, args.input_type)
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
-    for snapshots in result.snapshots.values():
-        for snapshot in snapshots:
-            if start_time == 0:
-                start_time = snapshot.end_time
-            end_time = snapshot.end_time
-            tid = snapshot.target_id
-            if not tid in tid_pattern_map:
-                tid_pattern_map[tid] = []
-            tid_pattern_map[tid].append(snapshot.regions)
-
-    snapshot_time = (end_time - start_time) / (len(tid_pattern_map[tid]))
+    snapshot_time = (result.end_time - result.start_time) / result.nr_snapshots
     nr_shots_in_aggr = max(round(args.work_time * 1000 / snapshot_time), 1)
+    target_snapshots = result.snapshots
 
     if nr_shots_in_aggr > 1:
-        for tid in tid_pattern_map:
+        for tid in target_snapshots:
             # Skip first N snapshots as regions may not adjusted yet.
-            snapshots = tid_pattern_map[tid][args.exclude_samples:]
+            snapshots = target_snapshots[tid][args.exclude_samples:]
 
             aggregated_snapshots = []
             for i in range(0, len(snapshots), nr_shots_in_aggr):
                 to_aggregate = snapshots[i:
                         min(i + nr_shots_in_aggr, len(snapshots))]
                 aggregated_snapshots.append(aggregate_snapshots(to_aggregate))
-            tid_pattern_map[tid] = aggregated_snapshots
+            result.snapshots[tid] = aggregated_snapshots
 
     orig_stdout = sys.stdout
     if args.plot:
@@ -125,12 +115,12 @@ def main(args=None):
         sys.stdout = tmp_file
 
     print('# <percentile> <wss>')
-    for tid in tid_pattern_map.keys():
-        snapshots = tid_pattern_map[tid]
+    for tid in result.snapshots.keys():
+        snapshots = result.snapshots[tid]
         wss_dist = []
         for idx, snapshot in enumerate(snapshots):
             wss = 0
-            for r in snapshot:
+            for r in snapshot.regions:
                 # Ignore regions not fulfill working set conditions
                 if r.nr_accesses < args.acc_thres:
                     continue
