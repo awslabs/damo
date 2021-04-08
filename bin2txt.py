@@ -38,7 +38,7 @@ def main(args=None):
         if len(snapshots) == 0:
             continue
 
-        base_time = snapshots[0].end_time
+        base_time = snapshots[0].start_time
         print('base_time_absolute: %s\n' % base_time)
 
         for snapshot in snapshots:
