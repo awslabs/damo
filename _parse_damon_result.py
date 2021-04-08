@@ -164,7 +164,7 @@ def parse_damon_result(result_file, file_type):
 
             result.start_time = start_time - snapshot_time
             result.end_time = end_time
-            result.nr_snapshots = nr_snapshots
+            result.nr_snapshots = nr_snapshots + 1
 
         snapshots[0].start_time = snapshots[0].end_time - snapshot_time
 
