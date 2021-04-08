@@ -31,6 +31,15 @@ then
 fi
 echo "report-wss PASS"
 
+../damo report wss -r 1 101 1 --work_time 1000000 > wss_worktime_1s_after
+diff -q wss_worktime_1s_before wss_worktime_1s_after
+if [ $? -ne 0 ]
+then
+	echo "report-wss-worktime-1s FAIL"
+	exit 1
+fi
+echo "report-wss-wortime-1s PASS"
+
 ../adjust.py 1000000
 ../damo report raw -i damon.adjusted.data > aggr_1s_raw_after
 diff -q aggr_1s_raw_before aggr_1s_raw_after
