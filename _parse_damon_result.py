@@ -27,6 +27,9 @@ class DAMONSnapshot:
         self.regions = []
 
 class DAMONResult:
+    start_time = None
+    end_time = None
+    nr_snapshots = None
     snapshots = None    # {target: [snapshot]}
 
     def __init__(self):
@@ -64,7 +67,7 @@ def record_to_damon_result(file_path):
                     result.snapshots[target_id] = []
                 target_snapshots = result.snapshots[target_id]
                 if len(target_snapshots) == 0:
-                    start_time = -1
+                    start_time = None
                 else:
                     start_time = target_snapshots[-1].end_time
 
@@ -77,6 +80,7 @@ def record_to_damon_result(file_path):
                     region = DAMONRegion(start_addr, end_addr, nr_accesses)
                     snapshot.regions.append(region)
                 target_snapshots.append(snapshot)
+
     return result
 
 def perf_script_to_damon_result(perf_script_file):
@@ -110,7 +114,7 @@ def perf_script_to_damon_result(perf_script_file):
             result.snapshots[target_id] = []
         target_snapshots = result.snapshots[target_id]
         if len(target_snapshots) == 0:
-            start_time = -1
+            start_time = None
         else:
             start_time = target_snapshots[-1].end_time
 
@@ -144,9 +148,24 @@ def parse_damon_result(result_file, file_type):
             return None
 
     if file_type == 'record':
-        return record_to_damon_result(result_file)
+        result = record_to_damon_result(result_file)
     elif file_type == 'perf_script':
-        return perf_script_to_damon_result(result_file)
+        result = perf_script_to_damon_result(result_file)
     else:
         print('unknown result file type: %s' % file_type)
         return None
+
+    for snapshots in result.snapshots.values():
+        if not result.start_time:
+            end_time = snapshots[-1].end_time
+            start_time = snapshots[0].end_time
+            nr_snapshots = len(snapshots) - 1
+            snapshot_time = (end_time - start_time) / nr_snapshots
+
+            result.start_time = start_time - snapshot_time
+            result.end_time = end_time
+            result.nr_snapshots = nr_snapshots
+
+        snapshots[0].start_time = snapshots[0].end_time - snapshot_time
+
+    return result
