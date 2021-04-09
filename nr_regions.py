@@ -38,17 +38,10 @@ def main(args=None):
     if args.sortby == 'time':
         nr_regions_sort = False
 
-    tid_pattern_map = {}
     result = _parse_damon_result.parse_damon_result(file_path, args.input_type)
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
-
-    for snapshots in result.snapshots.values():
-        for snapshot in snapshots:
-            if not snapshot.target_id in tid_pattern_map:
-                tid_pattern_map[snapshot.target_id] = []
-            tid_pattern_map[snapshot.target_id].append(snapshot.regions)
 
     orig_stdout = sys.stdout
     if args.plot:
@@ -57,12 +50,13 @@ def main(args=None):
         sys.stdout = tmp_file
 
     print('# <percentile> <# regions>')
-    for tid in tid_pattern_map.keys():
+
+    for tid in result.snapshots.keys():
         # Skip firs 20 regions as those would not adaptively adjusted
-        snapshots = tid_pattern_map[tid][20:]
+        snapshots = result.snapshots[tid][20:]
         nr_regions_dist = []
         for snapshot in snapshots:
-            nr_regions_dist.append(len(snapshot))
+            nr_regions_dist.append(len(snapshot.regions))
         if nr_regions_sort:
             nr_regions_dist.sort(reverse=False)
 
