@@ -32,14 +32,17 @@ def add_region(regions, region, nr_acc_to_add):
     regions.append(region)
 
 def aggregate_snapshots(snapshots):
-    new_snapshot = []   # list of workingset ([start, end, nr_accesses])
+    new_regions = []
     for snapshot in snapshots:
         nr_acc_to_add = {}
-        for region in snapshot:
-            add_region(new_snapshot, region, nr_acc_to_add)
+        for region in snapshot.regions:
+            add_region(new_regions, region, nr_acc_to_add)
         for region in nr_acc_to_add:
             region.nr_accesses += nr_acc_to_add[region]
 
+    new_snapshot = _damon_result.DAMONSnapshot(snapshots[0].start_time,
+            snapshots[-1].end_time, snapshots[0].target_id)
+    new_snapshot.regions = new_regions
     return new_snapshot
 
 def set_argparser(parser):
@@ -60,41 +63,34 @@ def main(args=None):
 
     start_time = 0
     end_time = 0
-    tid_pattern_map = {}
 
     result = _damon_result.parse_damon_result(file_path, 'record')
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
-    for snapshots in result.snapshots.values():
-        for snapshot in snapshots:
-            if start_time == 0:
-                start_time = snapshot.end_time
-            end_time = snapshot.end_time
-            tid = snapshot.target_id
-            if not tid in tid_pattern_map:
-                tid_pattern_map[tid] = []
-            tid_pattern_map[tid].append(snapshot.regions)
+    snapshot_time = (result.end_time - result.start_time) / result.nr_snapshots
+    nr_shots_in_aggr = max(round(args.aggregate_interval * 1000 /
+        snapshot_time), 1)
+    target_snapshots = result.snapshots
 
-    aggr_int = (end_time - start_time) / (len(tid_pattern_map[tid]) - 1)
-    nr_shots_in_aggr = max(round(args.aggregate_interval * 1000 / aggr_int), 1)
-
-    for tid in tid_pattern_map:
+    for tid in target_snapshots:
         # Skip first 20 snapshots as regions may not adjusted yet.
-        snapshots = tid_pattern_map[tid][20:]
+        snapshots = target_snapshots[tid][20:]
+        if start_time == 0:
+            start_time = snapshots[0].start_time
 
         aggregated_snapshots = []
         for i in range(0, len(snapshots), nr_shots_in_aggr):
             to_aggregate = snapshots[i:
                     min(i + nr_shots_in_aggr, len(snapshots))]
             aggregated_snapshots.append(aggregate_snapshots(to_aggregate))
-        tid_pattern_map[tid] = aggregated_snapshots
+        target_snapshots[tid] = aggregated_snapshots
 
     now = start_time
     snapshot_idx = 0
     max_nr_snapshots = 0
-    for snapshots in tid_pattern_map.values():
+    for snapshots in target_snapshots.values():
         max_nr_snapshots = max(max_nr_snapshots, len(snapshots))
 
     with open(args.output, 'wb') as f:
@@ -110,19 +106,19 @@ def main(args=None):
 
             # nr_tasks
             nr_tasks = 0
-            for snapshots in tid_pattern_map.values():
+            for snapshots in target_snapshots.values():
                 if len(snapshots) > snapshot_idx:
                     nr_tasks += 1
             f.write(struct.pack('I', nr_tasks))
 
-            for tid in tid_pattern_map:
-                snapshots = tid_pattern_map[tid]
+            for tid in target_snapshots:
+                snapshots = target_snapshots[tid]
                 if len(snapshots) <= snapshot_idx:
                     continue
 
                 f.write(struct.pack('L', tid))
 
-                regions = snapshots[snapshot_idx]
+                regions = snapshots[snapshot_idx].regions
                 f.write(struct.pack('I', len(regions)))
                 for r in regions:
                     f.write(struct.pack('L', r.start))
