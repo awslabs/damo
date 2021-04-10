@@ -12,6 +12,8 @@ def set_argparser(parser):
             default='damon.data', help='input file name')
     parser.add_argument('--input_type', choices=['record', 'perf_script'],
             default=None, help='input file\'s type')
+    parser.add_argument('--duration', type=float, metavar='<seconds>', nargs=2,
+            help='start and end time offset for record to parse')
 
 def main(args=None):
     if not args:
@@ -25,7 +27,17 @@ def main(args=None):
         print('input file (%s) is not exist' % file_path)
         exit(1)
 
-    result = _damon_result.parse_damon_result(file_path, args.input_type)
+    if args.duration:
+        print('read start')
+        result, f, fmt_version = _damon_result.parse_damon_result_for(
+                file_path, args.input_type, None, None, args.duration[0])
+        print('now real read')
+        result, f, fmt_version = _damon_result.parse_damon_result_for(
+                file_path, args.input_type, f, fmt_version, args.duration[1])
+        f.close()
+    else:
+        result = _damon_result.parse_damon_result(file_path, args.input_type)
+
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
