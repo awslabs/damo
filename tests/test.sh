@@ -3,90 +3,47 @@
 BINDIR=$(dirname "$0")
 cd "$BINDIR" || exit 1
 
-../damo report raw > raw_after
-diff -q raw_before raw_after
-if [ $? -ne 0 ]
-then
-	echo "report-raw FAIL"
-	exit 1
-fi
-echo "report-raw PASS"
+do_test() {
+	cmd=$1
+	name=$2
 
-../damo report raw --input_type perf_script -i perf_script_output \
-	> raw_perf_script_after
-diff -q raw_perf_script_before raw_perf_script_after
-if [ $? -ne 0 ]
-then
-	echo "report-raw --perf_script FAIL"
-	exit 1
-fi
-echo "report-raw --perf_script PASS"
+	filename=$(echo "$name" | awk -F'report-' '{print $2}')
+	expected="$filename""_before"
+	result="$filename""_after"
 
-../damo report wss -r 1 101 1 > wss_after
-diff -q wss_before wss_after
-if [ $? -ne 0 ]
-then
-	echo "report-wss FAIL"
-	exit 1
-fi
-echo "report-wss PASS"
+	eval "$cmd" > "$result"
+	diff -q "$expected" "$result"
+	if [ $? -ne 0 ]
+	then
+		echo "$name FAIL"
+		exit 1
+	fi
+	echo "$name PASS"
+}
 
-../damo report wss -r 1 101 1 --work_time 1000000 > wss_worktime_1s_after
-diff -q wss_worktime_1s_before wss_worktime_1s_after
-if [ $? -ne 0 ]
-then
-	echo "report-wss-worktime-1s FAIL"
-	exit 1
-fi
-echo "report-wss-wortime-1s PASS"
+do_test "../damo report raw" "report-raw"
 
-../adjust.py 1000000
-../damo report raw -i damon.adjusted.data > aggr_1s_raw_after
-diff -q aggr_1s_raw_before aggr_1s_raw_after
-if [ $? -ne 0 ]
-then
-	echo "adjust FAIL"
-	exit 1
-fi
-echo "adjust PASS"
+do_test "../damo report raw --input_type perf_script -i perf_script_output" \
+	"report-raw_perf_script"
 
-../damo report nr_regions -r 1 101 1 > nr_regions_after
-diff -q nr_regions_before nr_regions_after
-if [ $? -ne 0 ]
-then
-	echo "report-nr_regions FAIL"
-	exit 1
-fi
-echo "report-nr_regions PASS"
+do_test "../damo report wss -r 1 101 1" "report-wss"
 
-../damo report heats --guide > heats_guide_after
-diff -q heats_guide_before heats_guide_after
-if [ $? -ne 0 ]
-then
-	echo "report-heats-guide FAIL"
-	exit 1
-fi
-echo "report-heats-guide PASS"
+do_test "../damo report wss -r 1 101 1 --work_time 1000000" \
+	"report-wss_worktime_1s"
 
-../damo report heats > heats_after
-diff -q heats_before heats_after
-if [ $? -ne 0 ]
-then
-	echo "report-heats FAIL"
-	exit 1
-fi
-echo "report-heats PASS"
+do_test "../adjust.py 1000000 && ../damo report raw -i damon.adjusted.data" \
+	"report-aggr_1s_raw"
+
+do_test "../damo report nr_regions -r 1 101 1" "report-nr_regions"
+
+do_test "../damo report heats --guide" "report-heats_guide"
+
+do_test "../damo report heats" "report-heats"
 
 if perf script -l | grep -q damon
 then
-	perf script report damon -i perf.data heatmap > perf_heatmap_after
-	diff -q perf_heatmap_before perf_heatmap_after
-	if [ $? -ne 0 ]
-	then
-		echo "perf-damon-heatmap FAIL"
-		exit 1
-	fi
-	echo "perf-damon-heatmap PASS"
+	do_test "perf script report damon -i perf.data heatmap" \
+		"report-perf_heatmap"
 fi
 
 rm *_after
