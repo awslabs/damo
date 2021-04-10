@@ -3,47 +3,48 @@
 BINDIR=$(dirname "$0")
 cd "$BINDIR" || exit 1
 
-do_test() {
+test_report() {
 	cmd=$1
-	name=$2
+	test_name=$2
 
-	filename=$(echo "$name" | awk -F'report-' '{print $2}')
-	expected="$filename""_before"
-	result="$filename""_after"
+	expected="$test_name""_before"
+	result="$test_name""_after"
 
 	eval "$cmd" > "$result"
 	diff -q "$expected" "$result"
 	if [ $? -ne 0 ]
 	then
-		echo "$name FAIL"
+		echo "report-$test_name FAIL"
 		exit 1
 	fi
-	echo "$name PASS"
+	echo "report-$test_name PASS"
 }
 
-do_test "../damo report raw" "report-raw"
+test_report "../damo report raw" "raw"
 
-do_test "../damo report raw --input_type perf_script -i perf_script_output" \
-	"report-raw_perf_script"
+test_report \
+	"../damo report raw --input_type perf_script -i perf_script_output" \
+	"raw_perf_script"
 
-do_test "../damo report wss -r 1 101 1" "report-wss"
+test_report "../damo report wss -r 1 101 1" "wss"
 
-do_test "../damo report wss -r 1 101 1 --work_time 1000000" \
-	"report-wss_worktime_1s"
+test_report "../damo report wss -r 1 101 1 --work_time 1000000" \
+	"wss_worktime_1s"
 
-do_test "../adjust.py 1000000 && ../damo report raw -i damon.adjusted.data" \
-	"report-aggr_1s_raw"
+test_report \
+	"../adjust.py 1000000 && ../damo report raw -i damon.adjusted.data" \
+	"aggr_1s_raw"
 
-do_test "../damo report nr_regions -r 1 101 1" "report-nr_regions"
+test_report "../damo report nr_regions -r 1 101 1" "nr_regions"
 
-do_test "../damo report heats --guide" "report-heats_guide"
+test_report "../damo report heats --guide" "heats_guide"
 
-do_test "../damo report heats" "report-heats"
+test_report "../damo report heats" "heats"
 
 if perf script -l | grep -q damon
 then
-	do_test "perf script report damon -i perf.data heatmap" \
-		"report-perf_heatmap"
+	test_report "perf script report damon -i perf.data heatmap" \
+		"perf_heatmap"
 fi
 
 rm *_after
