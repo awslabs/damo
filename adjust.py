@@ -61,9 +61,6 @@ def main(args=None):
 
     file_path = args.input
 
-    start_time = 0
-    end_time = 0
-
     result = _damon_result.parse_damon_result(file_path, 'record')
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
@@ -74,11 +71,16 @@ def main(args=None):
         snapshot_time), 1)
     target_snapshots = result.snapshots
 
+    start_time = 0
+    end_time = 0
+    nr_snapshots = int(max((result.nr_snapshots - 20), 0) / nr_shots_in_aggr)
+
     for tid in target_snapshots:
         # Skip first 20 snapshots as regions may not adjusted yet.
         snapshots = target_snapshots[tid][20:]
         if start_time == 0:
             start_time = snapshots[0].start_time
+            end_time = snapshots[-1].end_time
 
         aggregated_snapshots = []
         for i in range(0, len(snapshots), nr_shots_in_aggr):
@@ -87,43 +89,11 @@ def main(args=None):
             aggregated_snapshots.append(aggregate_snapshots(to_aggregate))
         target_snapshots[tid] = aggregated_snapshots
 
-    now = start_time
-    snapshot_idx = 0
-    max_nr_snapshots = 0
-    for snapshots in target_snapshots.values():
-        max_nr_snapshots = max(max_nr_snapshots, len(snapshots))
+    result.start_time = start_time
+    result.end_time = end_time
+    result.nr_snapshots = nr_snapshots
 
-    with open(args.output, 'wb') as f:
-        # version
-        f.write(b'damon_recfmt_ver')
-        f.write(struct.pack('i', 2))
-
-        for snapshot_idx in range(max_nr_snapshots):
-            # time
-            f.write(struct.pack('l', now // 1000000000))
-            f.write(struct.pack('l', now % 1000000000))
-            now += args.aggregate_interval * 1000
-
-            # nr_tasks
-            nr_tasks = 0
-            for snapshots in target_snapshots.values():
-                if len(snapshots) > snapshot_idx:
-                    nr_tasks += 1
-            f.write(struct.pack('I', nr_tasks))
-
-            for tid in target_snapshots:
-                snapshots = target_snapshots[tid]
-                if len(snapshots) <= snapshot_idx:
-                    continue
-
-                f.write(struct.pack('L', tid))
-
-                regions = snapshots[snapshot_idx].regions
-                f.write(struct.pack('I', len(regions)))
-                for r in regions:
-                    f.write(struct.pack('L', r.start))
-                    f.write(struct.pack('L', r.end))
-                    f.write(struct.pack('I', r.nr_accesses))
+    _damon_result.write_damon_record(result, args.output, 2)
 
 if __name__ == '__main__':
     main()
