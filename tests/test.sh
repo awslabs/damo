@@ -11,8 +11,7 @@ test_report() {
 	result="results/report-$test_name"
 
 	eval "$cmd" > "$result"
-	diff -q "$expected" "$result"
-	if [ $? -ne 0 ]
+	if ! diff -q "$expected" "$result"
 	then
 		echo "report-$test_name FAIL"
 		exit 1
