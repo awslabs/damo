@@ -159,7 +159,7 @@ def perf_script_to_damon_result(file_path, f, max_secs):
         f.close()
     return result, f
 
-def parse_damon_result(result_file, file_type):
+def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
     if not file_type:
         output = subprocess.check_output('file -b \'%s\'' % result_file,
                 shell=True, executable='/bin/bash').decode().strip()
@@ -173,13 +173,10 @@ def parse_damon_result(result_file, file_type):
 
     if file_type == 'record':
         result, f, fmt_version = record_to_damon_result(result_file,
-                None, None, None)
-        if not f.closed:
-            print('not closed!')
+                f, fmt_version, max_secs)
     elif file_type == 'perf_script':
-        result, f = perf_script_to_damon_result(result_file, None, None)
-        if not f.closed:
-            print('not closed!')
+        result, f = perf_script_to_damon_result(result_file, f, max_secs)
+        fmt_version = None
     else:
         print('unknown result file type: %s' % file_type)
         return None
@@ -197,6 +194,11 @@ def parse_damon_result(result_file, file_type):
 
         snapshots[0].start_time = snapshots[0].end_time - snapshot_time
 
+    return result, f, fmt_version
+
+def parse_damon_result(result_file, file_type):
+    result, f, fmt_version = parse_damon_result_for(result_file, file_type,
+            None, None, None)
     return result
 
 def write_damon_record(result, file_path, format_version):
