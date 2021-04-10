@@ -5,7 +5,7 @@ import argparse
 import os
 import sys
 
-import _parse_damon_result
+import _damon_result
 
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
@@ -25,7 +25,7 @@ def main(args=None):
         print('input file (%s) is not exist' % file_path)
         exit(1)
 
-    result = _parse_damon_result.parse_damon_result(file_path, args.input_type)
+    result = _damon_result.parse_damon_result(file_path, args.input_type)
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)

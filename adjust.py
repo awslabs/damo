@@ -6,7 +6,7 @@
 import argparse
 import struct
 
-import _parse_damon_result
+import _damon_result
 
 def regions_intersect(r1, r2):
     return not (r1.end <= r2.start or r2.end <= r1.start)
@@ -20,10 +20,10 @@ def add_region(regions, region, nr_acc_to_add):
 
             new_regions = []
             if region.start < r.start:
-                new_regions.append(_parse_damon_result.DAMONRegion(
+                new_regions.append(_damon_result.DAMONRegion(
                     region.start, r.start, region.nr_accesses))
             if r.end < region.end:
-                new_regions.append(_parse_damon_result.DAMONRegion(
+                new_regions.append(_damon_result.DAMONRegion(
                         r.end, region.end, region.nr_accesses))
 
             for new_r in new_regions:
@@ -62,7 +62,7 @@ def main(args=None):
     end_time = 0
     tid_pattern_map = {}
 
-    result = _parse_damon_result.parse_damon_result(file_path, 'record')
+    result = _damon_result.parse_damon_result(file_path, 'record')
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)

@@ -8,7 +8,7 @@ import sys
 import tempfile
 
 import _dist
-import _parse_damon_result
+import _damon_result
 
 def regions_intersect(r1, r2):
     return not (r1.end <= r2.start or r2.end <= r1.start)
@@ -22,10 +22,10 @@ def add_region(regions, region, nr_acc_to_add):
 
             new_regions = []
             if region.start < r.start:
-                new_regions.append(_parse_damon_result.DAMONRegion(
+                new_regions.append(_damon_result.DAMONRegion(
                     region.start, r.start, region.nr_accesses))
             if r.end < region.end:
-                new_regions.append(_parse_damon_result.DAMONRegion(
+                new_regions.append(_damon_result.DAMONRegion(
                     r.end, region.end, region.nr_accesses))
 
             for new_r in new_regions:
@@ -42,7 +42,7 @@ def aggregate_snapshots(snapshots):
         for region in nr_acc_to_add:
             region.nr_accesses += nr_acc_to_add[region]
 
-    new_snapshot = _parse_damon_result.DAMONSnapshot(snapshots[0].start_time,
+    new_snapshot = _damon_result.DAMONSnapshot(snapshots[0].start_time,
             snapshots[-1].end_time, snapshots[0].target_id)
     new_snapshot.regions = new_regions
     return new_snapshot
@@ -87,7 +87,7 @@ def main(args=None):
     if args.sortby == 'time':
         wss_sort = False
 
-    result = _parse_damon_result.parse_damon_result(file_path, args.input_type)
+    result = _damon_result.parse_damon_result(file_path, args.input_type)
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
