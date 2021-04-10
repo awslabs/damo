@@ -98,14 +98,16 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
 
     return result, f, fmt_version
 
-def perf_script_to_damon_result(perf_script_file):
+def perf_script_to_damon_result(file_path, f, max_secs):
     result = None
     nr_read_regions = 0
+    parse_start_time = None
 
-    with open(perf_script_file, 'r') as f:
-        content = f.read().split('\n')
+    if not f:
+        f = open(file_path, 'r')
 
-    for line in content:
+    for line in f:
+        line = line.strip()
         '''
         example line is as below:
 
@@ -122,6 +124,11 @@ def perf_script_to_damon_result(perf_script_file):
         end_time = int(float(fields[3][:-1]) * 1000000)
         if not result:
             result = DAMONResult()
+        if parse_start_time == None:
+            parse_start_time = end_time
+        elif max_secs and end_time - parse_start_time > max_secs:
+            f.seek(-1 * (len(line.encode()) + 1), 1)
+            break
 
         target_id = int(fields[5].split('=')[1])
 
@@ -148,7 +155,9 @@ def perf_script_to_damon_result(perf_script_file):
         if nr_read_regions == nr_regions:
             nr_read_regions = 0
 
-    return result
+    if not max_secs:
+        f.close()
+    return result, f
 
 def parse_damon_result(result_file, file_type):
     if not file_type:
@@ -168,7 +177,9 @@ def parse_damon_result(result_file, file_type):
         if not f.closed:
             print('not closed!')
     elif file_type == 'perf_script':
-        result = perf_script_to_damon_result(result_file)
+        result, f = perf_script_to_damon_result(result_file, None, None)
+        if not f.closed:
+            print('not closed!')
     else:
         print('unknown result file type: %s' % file_type)
         return None
