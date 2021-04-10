@@ -204,6 +204,7 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
 def parse_damon_result(result_file, file_type):
     result, f, fmt_version = parse_damon_result_for(result_file, file_type,
             None, None, None)
+    f.close()
     return result
 
 def write_damon_record(result, file_path, format_version):
