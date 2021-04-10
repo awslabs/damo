@@ -18,7 +18,7 @@ import subprocess
 import sys
 import tempfile
 
-import _parse_damon_result
+import _damon_result
 
 class HeatPixel:
     time = None
@@ -370,7 +370,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    damon_result = _parse_damon_result.parse_damon_result(
+    damon_result = _damon_result.parse_damon_result(
             args.input, args.input_type)
     if not damon_result:
         print('monitoring result file (%s) parsing failed' % args.input)
