@@ -35,10 +35,13 @@ class DAMONResult:
     def __init__(self):
         self.snapshots = {}
 
-def record_to_damon_result(file_path):
+def record_to_damon_result(file_path, f, fmt_version, max_secs):
     result = None
+    parse_start_time = None
 
-    with open(file_path, 'rb') as f:
+    if f == None:
+        f = open(file_path, 'rb')
+
         # read record format version
         mark = f.read(16)
         if mark == b'damon_recfmt_ver':
@@ -46,42 +49,54 @@ def record_to_damon_result(file_path):
         else:
             fmt_version = 0
             f.seek(0)
+    elif not fmt_version:
+        print('fmt_version is not given')
+        exit(1)
 
-        result = DAMONResult()
+    result = DAMONResult()
 
-        while True:
-            timebin = f.read(16)
-            if len(timebin) != 16:
-                break
-            sec = struct.unpack('l', timebin[0:8])[0]
-            nsec = struct.unpack('l', timebin[8:16])[0]
-            end_time = sec * 1000000000 + nsec
-            nr_tasks = struct.unpack('I', f.read(4))[0]
-            for t in range(nr_tasks):
-                if fmt_version == 1:
-                    target_id = struct.unpack('i', f.read(4))[0]
-                else:
-                    target_id = struct.unpack('L', f.read(8))[0]
+    while True:
+        timebin = f.read(16)
+        if len(timebin) != 16:
+            if not max_secs:
+                f.close()
+            break
+        sec = struct.unpack('l', timebin[0:8])[0]
+        nsec = struct.unpack('l', timebin[8:16])[0]
+        end_time = sec * 1000000000 + nsec
 
-                if not target_id in result.snapshots:
-                    result.snapshots[target_id] = []
-                target_snapshots = result.snapshots[target_id]
-                if len(target_snapshots) == 0:
-                    start_time = None
-                else:
-                    start_time = target_snapshots[-1].end_time
+        if not parse_start_time:
+            parse_start_time = end_time
+        elif max_secs and end_time - parse_start_time > max_secs * 1000000000:
+            f.seek(-16, 1)
+            break
 
-                snapshot = DAMONSnapshot(start_time, end_time, target_id)
-                nr_regions = struct.unpack('I', f.read(4))[0]
-                for r in range(nr_regions):
-                    start_addr = struct.unpack('L', f.read(8))[0]
-                    end_addr = struct.unpack('L', f.read(8))[0]
-                    nr_accesses = struct.unpack('I', f.read(4))[0]
-                    region = DAMONRegion(start_addr, end_addr, nr_accesses)
-                    snapshot.regions.append(region)
-                target_snapshots.append(snapshot)
+        nr_tasks = struct.unpack('I', f.read(4))[0]
+        for t in range(nr_tasks):
+            if fmt_version == 1:
+                target_id = struct.unpack('i', f.read(4))[0]
+            else:
+                target_id = struct.unpack('L', f.read(8))[0]
 
-    return result
+            if not target_id in result.snapshots:
+                result.snapshots[target_id] = []
+            target_snapshots = result.snapshots[target_id]
+            if len(target_snapshots) == 0:
+                start_time = None
+            else:
+                start_time = target_snapshots[-1].end_time
+
+            snapshot = DAMONSnapshot(start_time, end_time, target_id)
+            nr_regions = struct.unpack('I', f.read(4))[0]
+            for r in range(nr_regions):
+                start_addr = struct.unpack('L', f.read(8))[0]
+                end_addr = struct.unpack('L', f.read(8))[0]
+                nr_accesses = struct.unpack('I', f.read(4))[0]
+                region = DAMONRegion(start_addr, end_addr, nr_accesses)
+                snapshot.regions.append(region)
+            target_snapshots.append(snapshot)
+
+    return result, f, fmt_version
 
 def perf_script_to_damon_result(perf_script_file):
     result = None
@@ -148,7 +163,10 @@ def parse_damon_result(result_file, file_type):
             return None
 
     if file_type == 'record':
-        result = record_to_damon_result(result_file)
+        result, f, fmt_version = record_to_damon_result(result_file,
+                None, None, None)
+        if not f.closed:
+            print('not closed!')
     elif file_type == 'perf_script':
         result = perf_script_to_damon_result(result_file)
     else:
