@@ -58,7 +58,7 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
     while True:
         timebin = f.read(16)
         if len(timebin) != 16:
-            if not max_secs:
+            if max_secs == None:
                 f.close()
             break
         sec = struct.unpack('l', timebin[0:8])[0]
@@ -67,7 +67,8 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
 
         if not parse_start_time:
             parse_start_time = end_time
-        elif max_secs and end_time - parse_start_time > max_secs * 1000000000:
+        elif max_secs != None and (
+                end_time - parse_start_time > max_secs * 1000000000):
             f.seek(-16, 1)
             break
 
@@ -126,8 +127,10 @@ def perf_script_to_damon_result(file_path, f, max_secs):
             result = DAMONResult()
         if parse_start_time == None:
             parse_start_time = end_time
-        elif max_secs and end_time - parse_start_time > max_secs:
-            f.seek(-1 * (len(line.encode()) + 1), 1)
+        elif max_secs != None and (
+                end_time - parse_start_time > max_secs * 1000000):
+            # reverse seek of text file is not supported, we simply remove
+            # over-read line.
             break
 
         target_id = int(fields[5].split('=')[1])
@@ -155,7 +158,7 @@ def perf_script_to_damon_result(file_path, f, max_secs):
         if nr_read_regions == nr_regions:
             nr_read_regions = 0
 
-    if not max_secs:
+    if max_secs == None:
         f.close()
     return result, f
 
