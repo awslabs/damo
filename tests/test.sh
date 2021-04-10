@@ -7,8 +7,8 @@ test_report() {
 	cmd=$1
 	test_name=$2
 
-	expected="$test_name""_before"
-	result="$test_name""_after"
+	expected="expects/report-$test_name"
+	result="results/report-$test_name"
 
 	eval "$cmd" > "$result"
 	diff -q "$expected" "$result"
@@ -19,6 +19,8 @@ test_report() {
 	fi
 	echo "report-$test_name PASS"
 }
+
+mkdir -p results
 
 test_report "../damo report raw" "raw"
 
@@ -47,6 +49,6 @@ then
 		"perf_heatmap"
 fi
 
-rm *_after
+rm -fr results
 
 echo "PASS"
