@@ -169,3 +169,27 @@ def parse_damon_result(result_file, file_type):
         snapshots[0].start_time = snapshots[0].end_time - snapshot_time
 
     return result
+
+def write_damon_record(result, file_path, format_version):
+    with open(file_path, 'wb') as f:
+        f.write(b'damon_recfmt_ver')
+        f.write(struct.pack('i', format_version))
+
+        for snapshot_idx in range(result.nr_snapshots):
+            for tid in result.snapshots:
+                snapshot = result.snapshots[tid][snapshot_idx]
+                f.write(struct.pack('l', snapshot.end_time // 1000000000))
+                f.write(struct.pack('l', snapshot.end_time % 1000000000))
+
+                f.write(struct.pack('I', 1))
+
+                if format_version == 1:
+                    f.write(struct.pack('i', snapshot.target_id))
+                else:
+                    f.write(struct.pack('L', snapshot.target_id))
+
+                f.write(struct.pack('I', len(snapshot.regions)))
+                for region in snapshot.regions:
+                    f.write(struct.pack('L', region.start))
+                    f.write(struct.pack('L', region.end))
+                    f.write(struct.pack('I', region.nr_accesses))
