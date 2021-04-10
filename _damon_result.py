@@ -185,6 +185,8 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
         return None
 
     for snapshots in result.snapshots.values():
+        if len(snapshots) < 2:
+            break
         if not result.start_time:
             end_time = snapshots[-1].end_time
             start_time = snapshots[0].end_time
