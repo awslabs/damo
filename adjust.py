@@ -8,42 +8,6 @@ import struct
 
 import _damon_result
 
-def regions_intersect(r1, r2):
-    return not (r1.end <= r2.start or r2.end <= r1.start)
-
-def add_region(regions, region, nr_acc_to_add):
-    for r in regions:
-        if regions_intersect(r, region):
-            if not r in nr_acc_to_add:
-                nr_acc_to_add[r] = 0
-            nr_acc_to_add[r] = max(nr_acc_to_add[r], region.nr_accesses)
-
-            new_regions = []
-            if region.start < r.start:
-                new_regions.append(_damon_result.DAMONRegion(
-                    region.start, r.start, region.nr_accesses))
-            if r.end < region.end:
-                new_regions.append(_damon_result.DAMONRegion(
-                        r.end, region.end, region.nr_accesses))
-
-            for new_r in new_regions:
-                add_region(regions, new_r, nr_acc_to_add)
-            return
-    regions.append(region)
-
-def aggregate_snapshots(snapshots):
-    new_regions = []
-    for snapshot in snapshots:
-        nr_acc_to_add = {}
-        for region in snapshot.regions:
-            add_region(new_regions, region, nr_acc_to_add)
-        for region in nr_acc_to_add:
-            region.nr_accesses += nr_acc_to_add[region]
-
-    new_snapshot = _damon_result.DAMONSnapshot(snapshots[0].start_time,
-            snapshots[-1].end_time, snapshots[0].target_id)
-    new_snapshot.regions = new_regions
-    return new_snapshot
 
 def set_argparser(parser):
     parser.add_argument('aggregate_interval', type=int,
@@ -86,7 +50,8 @@ def main(args=None):
         for i in range(0, len(snapshots), nr_shots_in_aggr):
             to_aggregate = snapshots[i:
                     min(i + nr_shots_in_aggr, len(snapshots))]
-            aggregated_snapshots.append(aggregate_snapshots(to_aggregate))
+            aggregated_snapshots.append(
+                    _damon_result.aggregate_snapshots(to_aggregate))
         target_snapshots[tid] = aggregated_snapshots
 
     result.start_time = start_time
