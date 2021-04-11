@@ -69,7 +69,7 @@ def main(args=None):
     snapshot_time = (result.end_time - result.start_time) / result.nr_snapshots
     nr_shots_in_aggr = max(round(args.aggregate_interval * 1000 /
         snapshot_time), 1)
-    target_snapshots = result.snapshots
+    target_snapshots = result.target_snapshots
 
     start_time = 0
     end_time = 0

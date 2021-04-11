@@ -51,9 +51,9 @@ def main(args=None):
 
     print('# <percentile> <# regions>')
 
-    for tid in result.snapshots.keys():
+    for tid in result.target_snapshots.keys():
         # Skip firs 20 regions as those would not adaptively adjusted
-        snapshots = result.snapshots[tid][20:]
+        snapshots = result.target_snapshots[tid][20:]
         nr_regions_dist = []
         for snapshot in snapshots:
             nr_regions_dist.append(len(snapshot.regions))

@@ -46,7 +46,7 @@ def main(args=None):
         print('no monitoring result in the file')
         exit(1)
 
-    for snapshots in result.snapshots.values():
+    for snapshots in result.target_snapshots.values():
         if len(snapshots) == 0:
             continue
 
