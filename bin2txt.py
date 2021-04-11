@@ -6,6 +6,7 @@ import os
 import sys
 
 import _damon_result
+import _fmt_nr
 
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
@@ -14,6 +15,8 @@ def set_argparser(parser):
             default=None, help='input file\'s type')
     parser.add_argument('--duration', type=float, metavar='<seconds>', nargs=2,
             help='start and end time offset for record to parse')
+    parser.add_argument('--raw_number', action='store_true',
+            help='Use machine-friendly raw numbers')
 
 def main(args=None):
     if not args:
@@ -51,20 +54,27 @@ def main(args=None):
             continue
 
         base_time = snapshots[0].start_time
-        print('base_time_absolute: %s\n' % base_time)
+        print('base_time_absolute: %s\n' %
+                _fmt_nr.format_time(base_time, args.raw_number))
 
         for snapshot in snapshots:
-            print('monitoring_start:    %16d' %
-                (snapshot.start_time - base_time))
-            print('monitoring_end:      %16d' %
-                (snapshot.end_time - base_time))
-            print('monitoring_duration: %16d' %
-                (snapshot.end_time - snapshot.start_time))
+            print('monitoring_start:    %16s' %
+                    _fmt_nr.format_time(
+                        snapshot.start_time - base_time, args.raw_number))
+            print('monitoring_end:      %16s' %
+                    _fmt_nr.format_time(
+                        snapshot.end_time - base_time, args.raw_number))
+            print('monitoring_duration: %16s' %
+                    _fmt_nr.format_time(
+                        snapshot.end_time - snapshot.start_time,
+                        args.raw_number))
             print('target_id:', snapshot.target_id)
             print('nr_regions:', len(snapshot.regions))
             for r in snapshot.regions:
-                print("%012x-%012x(%10d):\t%d" %
-                        (r.start, r.end, r.end - r.start, r.nr_accesses))
+                print("%012x-%012x(%12s):\t%d" %
+                        (r.start, r.end,
+                            _fmt_nr.format_sz(r.end - r.start,
+                                args.raw_number), r.nr_accesses))
             print()
 
 if __name__ == '__main__':
