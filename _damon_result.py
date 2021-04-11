@@ -122,13 +122,13 @@ def perf_script_to_damon_result(file_path, f, max_secs):
             continue
         if fields[4] != 'damon:damon_aggregated:':
             continue
-        end_time = int(float(fields[3][:-1]) * 1000000)
+        end_time = int(float(fields[3][:-1]) * 1000000000)
         if not result:
             result = DAMONResult()
         if parse_start_time == None:
             parse_start_time = end_time
         elif max_secs != None and (
-                end_time - parse_start_time > max_secs * 1000000):
+                end_time - parse_start_time > max_secs * 1000000000):
             # reverse seek of text file is not supported, we simply remove
             # over-read line.
             break
