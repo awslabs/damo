@@ -33,7 +33,7 @@ test_report "../damo report wss -r 1 101 1 --work_time 1000000" \
 	"wss_worktime_1s"
 
 test_report \
-	"../adjust.py 1000000 && ../damo report raw -i damon.adjusted.data" \
+	"../damo adjust 1000000 && ../damo report raw -i damon.adjusted.data" \
 	"aggr_1s_raw"
 
 test_report "../damo report nr_regions -r 1 101 1" "nr_regions"
