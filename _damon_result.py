@@ -30,10 +30,10 @@ class DAMONResult:
     start_time = None
     end_time = None
     nr_snapshots = None
-    snapshots = None    # {target: [snapshot]}
+    target_snapshots = None    # {target_id: [snapshot]}
 
     def __init__(self):
-        self.snapshots = {}
+        self.target_snapshots = {}
 
 def record_to_damon_result(file_path, f, fmt_version, max_secs):
     result = None
@@ -79,9 +79,9 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
             else:
                 target_id = struct.unpack('L', f.read(8))[0]
 
-            if not target_id in result.snapshots:
-                result.snapshots[target_id] = []
-            target_snapshots = result.snapshots[target_id]
+            if not target_id in result.target_snapshots:
+                result.target_snapshots[target_id] = []
+            target_snapshots = result.target_snapshots[target_id]
             if len(target_snapshots) == 0:
                 start_time = None
             else:
@@ -135,9 +135,9 @@ def perf_script_to_damon_result(file_path, f, max_secs):
 
         target_id = int(fields[5].split('=')[1])
 
-        if not target_id in result.snapshots:
-            result.snapshots[target_id] = []
-        target_snapshots = result.snapshots[target_id]
+        if not target_id in result.target_snapshots:
+            result.target_snapshots[target_id] = []
+        target_snapshots = result.target_snapshots[target_id]
         if len(target_snapshots) == 0:
             start_time = None
         else:
@@ -184,7 +184,7 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
         print('unknown result file type: %s' % file_type)
         return None
 
-    for snapshots in result.snapshots.values():
+    for snapshots in result.target_snapshots.values():
         if len(snapshots) < 2:
             break
         if not result.start_time:
@@ -213,8 +213,8 @@ def write_damon_record(result, file_path, format_version):
         f.write(struct.pack('i', format_version))
 
         for snapshot_idx in range(result.nr_snapshots):
-            for tid in result.snapshots:
-                snapshot = result.snapshots[tid][snapshot_idx]
+            for tid in result.target_snapshots:
+                snapshot = result.target_snapshots[tid][snapshot_idx]
                 f.write(struct.pack('l', snapshot.end_time // 1000000000))
                 f.write(struct.pack('l', snapshot.end_time % 1000000000))
 

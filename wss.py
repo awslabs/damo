@@ -94,7 +94,7 @@ def main(args=None):
 
     snapshot_time = (result.end_time - result.start_time) / result.nr_snapshots
     nr_shots_in_aggr = max(round(args.work_time * 1000 / snapshot_time), 1)
-    target_snapshots = result.snapshots
+    target_snapshots = result.target_snapshots
 
     if nr_shots_in_aggr > 1:
         for tid in target_snapshots:
@@ -106,7 +106,7 @@ def main(args=None):
                 to_aggregate = snapshots[i:
                         min(i + nr_shots_in_aggr, len(snapshots))]
                 aggregated_snapshots.append(aggregate_snapshots(to_aggregate))
-            result.snapshots[tid] = aggregated_snapshots
+            result.target_snapshots[tid] = aggregated_snapshots
 
     orig_stdout = sys.stdout
     if args.plot:
@@ -115,8 +115,8 @@ def main(args=None):
         sys.stdout = tmp_file
 
     print('# <percentile> <wss>')
-    for tid in result.snapshots.keys():
-        snapshots = result.snapshots[tid]
+    for tid in result.target_snapshots.keys():
+        snapshots = result.target_snapshots[tid]
         wss_dist = []
         for idx, snapshot in enumerate(snapshots):
             wss = 0
