@@ -19,6 +19,7 @@ import sys
 import tempfile
 
 import _damon_result
+import _fmt_nr
 
 class HeatPixel:
     time = None
@@ -83,20 +84,6 @@ def heat_pixels_from_snapshots(snapshots, time_range, addr_range, resols):
             time_idx += 1
     return pixels
 
-def format_sz(number, sz_bytes):
-    if sz_bytes:
-        return '%d' % number
-
-    if number > 1<<40:
-        return '%.3f TiB' % (number / (1<<40))
-    if number > 1<<30:
-        return '%.3f GiB' % (number / (1<<30))
-    if number > 1<<20:
-        return '%.3f MiB' % (number / (1<<20))
-    if number > 1<<10:
-        return '%.3f KiB' % (number / (1<<10))
-    return '%d B' % number
-
 def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
     highest_heat = None
     lowest_heat = None
@@ -136,13 +123,15 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
             (colors[0][i], colors[1][i], i) for i in range(10)]
     print('# access_frequency:', ''.join(color_samples) + u'\u001b[0m')
     print('# x-axis: space (%d-%d: %s)' % (addr_range[0], addr_range[1],
-        format_sz(addr_range[1] - addr_range[0], False)))
-    print('# y-axis: time (%d-%d: %fs)' % (time_range[0], time_range[1],
-        (time_range[1] - time_range[0]) / 1000000000))
-    print('# resolution: %dx%d (%s and %.3fs for each character)' % (
+        _fmt_nr.format_sz(addr_range[1] - addr_range[0], False)))
+    print('# y-axis: time (%d-%d: %s)' % (time_range[0], time_range[1],
+        _fmt_nr.format_time(time_range[1] - time_range[0], False)))
+    print('# resolution: %dx%d (%s and %s for each character)' % (
         len(pixels[1]), len(pixels),
-        format_sz((addr_range[1] - addr_range[0]) / len(pixels[1]), False),
-        (time_range[1] - time_range[0]) / len(pixels) / 1000000000))
+        _fmt_nr.format_sz(
+            (addr_range[1] - addr_range[0]) / len(pixels[1]), False),
+        _fmt_nr.format_time(
+            (time_range[1] - time_range[0]) / len(pixels), False)))
 
 def pr_heats(args, damon_result):
     tid = args.tid
