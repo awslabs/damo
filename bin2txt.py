@@ -16,7 +16,7 @@ def set_argparser(parser):
     parser.add_argument('--duration', type=float, metavar='<seconds>', nargs=2,
             help='start and end time offset for record to parse')
     parser.add_argument('--raw_number', action='store_true',
-            help='Use machine-friendly raw numbers')
+            help='use machine-friendly raw numbers')
 
 def main(args=None):
     if not args:
