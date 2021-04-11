@@ -230,3 +230,40 @@ def write_damon_record(result, file_path, format_version):
                     f.write(struct.pack('L', region.start))
                     f.write(struct.pack('L', region.end))
                     f.write(struct.pack('I', region.nr_accesses))
+
+def regions_intersect(r1, r2):
+    return not (r1.end <= r2.start or r2.end <= r1.start)
+
+def add_region(regions, region, nr_acc_to_add):
+    for r in regions:
+        if regions_intersect(r, region):
+            if not r in nr_acc_to_add:
+                nr_acc_to_add[r] = 0
+            nr_acc_to_add[r] = max(nr_acc_to_add[r], region.nr_accesses)
+
+            new_regions = []
+            if region.start < r.start:
+                new_regions.append(DAMONRegion(
+                    region.start, r.start, region.nr_accesses))
+            if r.end < region.end:
+                new_regions.append(DAMONRegion(
+                        r.end, region.end, region.nr_accesses))
+
+            for new_r in new_regions:
+                add_region(regions, new_r, nr_acc_to_add)
+            return
+    regions.append(region)
+
+def aggregate_snapshots(snapshots):
+    new_regions = []
+    for snapshot in snapshots:
+        nr_acc_to_add = {}
+        for region in snapshot.regions:
+            add_region(new_regions, region, nr_acc_to_add)
+        for region in nr_acc_to_add:
+            region.nr_accesses += nr_acc_to_add[region]
+
+    new_snapshot = DAMONSnapshot(snapshots[0].start_time,
+            snapshots[-1].end_time, snapshots[0].target_id)
+    new_snapshot.regions = new_regions
+    return new_snapshot
