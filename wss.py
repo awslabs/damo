@@ -9,6 +9,7 @@ import tempfile
 
 import _dist
 import _damon_result
+import _fmt_nr
 
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
@@ -34,6 +35,8 @@ def set_argparser(parser):
             help='the metric to be used for the sort of the working set sizes')
     parser.add_argument('--plot', '-p', type=str, metavar='<file>',
             help='plot the distribution to an image file')
+    parser.add_argument('--raw_number', action='store_true',
+            help='use machine-friendly raw numbers')
 
 def main(args=None):
     if not args:
@@ -49,6 +52,7 @@ def main(args=None):
     wss_sort = True
     if args.sortby == 'time':
         wss_sort = False
+    raw_number = args.raw_number
 
     result = _damon_result.parse_damon_result(file_path, args.input_type)
     if not result:
@@ -77,6 +81,7 @@ def main(args=None):
         tmp_path = tempfile.mkstemp()[1]
         tmp_file = open(tmp_path, 'w')
         sys.stdout = tmp_file
+        raw_number = True
 
     print('# <percentile> <wss>')
     for tid in result.target_snapshots.keys():
@@ -96,13 +101,15 @@ def main(args=None):
             wss_dist.sort(reverse=False)
 
         print('# target_id\t%s' % tid)
-        print('# avr:\t%d' % (sum(wss_dist) / len(wss_dist)))
+        print('# avr:\t%s' % _fmt_nr.format_sz(
+            sum(wss_dist) / len(wss_dist), raw_number))
         for percentile in percentiles:
             thres_idx = int(percentile / 100.0 * len(wss_dist))
             if thres_idx == len(wss_dist):
                 thres_idx -= 1
             threshold = wss_dist[thres_idx]
-            print('%d\t%d' % (percentile, wss_dist[thres_idx]))
+            print('%d\t%s' % (percentile,
+                _fmt_nr.format_sz(wss_dist[thres_idx], raw_number)))
 
     if args.plot:
         sys.stdout = orig_stdout
