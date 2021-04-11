@@ -27,9 +27,9 @@ test_report \
 	"../damo report raw --input_type perf_script -i perf.data.script" \
 	"raw_perf_script"
 
-test_report "../damo report wss -r 1 101 1" "wss"
+test_report "../damo report wss -r 1 101 1 --raw_number" "wss"
 
-test_report "../damo report wss -r 1 101 1 --work_time 1000000" \
+test_report "../damo report wss -r 1 101 1 --work_time 1000000 --raw_number" \
 	"wss_worktime_1s"
 
 test_report \
