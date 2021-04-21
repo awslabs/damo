@@ -13,6 +13,7 @@ import time
 
 import _convert_damos
 import _damon
+import _paddr_layout
 
 def run_damon(target, is_target_cmd, init_regions, attrs, old_attrs):
     if os.path.isfile(attrs.rfile_path):
@@ -74,6 +75,8 @@ def set_argparser(parser):
     parser.add_argument('-c', '--schemes', metavar='<file>', type=str,
             default='damon.schemes',
             help='data access monitoring-based operation schemes')
+    parser.add_argument('--numa_node', metavar='<node id>', type=int,
+            help='if target is \'paddr\', limit it to the numa node')
 
 def main(args=None):
     global orig_attrs
@@ -94,10 +97,18 @@ def main(args=None):
     args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr)
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
+    numa_node = args.numa_node
     target = args.target
 
     target_fields = target.split()
-    if not subprocess.call('which %s &> /dev/null' % target_fields[0],
+    if target == 'paddr':   # physical memory address space
+        if not init_regions:
+            if numa_node:
+                init_regions = _paddr_layout.paddr_region_of(numa_node)
+            else:
+                init_regions = [_paddr_layout.default_paddr_region()]
+        run_damon(target, False, init_regions, new_attrs, orig_attrs)
+    elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
             shell=True, executable='/bin/bash'):
         run_damon(target, True, init_regions, new_attrs, orig_attrs)
     else:

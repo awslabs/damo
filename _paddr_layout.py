@@ -131,6 +131,39 @@ def pr_ranges(ranges):
         print('%13d %13d\t%s\t%s\t%s\t%d' % (r.start, r.end, r.nid,
             r.state, r.name, r.end - r.start))
 
+def default_paddr_region():
+    "Largest System RAM region becomes the default"
+    ret = []
+    with open('/proc/iomem', 'r') as f:
+        # example of the line: '100000000-42b201fff : System RAM'
+        for line in f:
+            fields = line.split(':')
+            if len(fields) != 2:
+                continue
+            name = fields[1].strip()
+            if name != 'System RAM':
+                continue
+            addrs = fields[0].split('-')
+            if len(addrs) != 2:
+                continue
+            start = int(addrs[0], 16)
+            end = int(addrs[1], 16)
+
+            sz_region = end - start
+            if not ret or sz_region > (ret[1] - ret[0]):
+                ret = [start, end]
+    return ret
+
+def paddr_region_of(numa_node):
+    regions = []
+    paddr_ranges = _paddr_layout.paddr_ranges()
+    for r in paddr_ranges:
+        if r.nid == numa_node and r.name == 'System RAM':
+            regions.append([r.start, r.end])
+
+    return regions
+
+
 def main():
     ranges = paddr_ranges()
 
