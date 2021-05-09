@@ -35,6 +35,8 @@ def set_argparser(parser):
             help='the metric to be used for the sort of the working set sizes')
     parser.add_argument('--plot', '-p', type=str, metavar='<file>',
             help='plot the distribution to an image file')
+    parser.add_argument('--plot_ascii', action='store_true',
+            help='visualize in ascii art')
     parser.add_argument('--raw_number', action='store_true',
             help='use machine-friendly raw numbers')
 
@@ -43,6 +45,13 @@ def main(args=None):
         parser = argparse.ArgumentParser()
         set_argparser(parser)
         args = parser.parse_args()
+
+    if args.plot and args.plot_ascii:
+        parser = argparse.ArgumentParser()
+        set_argparser(parser)
+        print('\'--plot\' and \'--plot_ascii\' cannot be given together\n')
+        parser.print_help()
+        exit(1)
 
     percentiles = [0, 25, 50, 75, 100]
 
@@ -103,13 +112,29 @@ def main(args=None):
         print('# target_id\t%s' % tid)
         print('# avr:\t%s' % _fmt_nr.format_sz(
             sum(wss_dist) / len(wss_dist), raw_number))
+
+        if args.plot_ascii:
+            max_sz = 0
+            for percentile in percentiles:
+                thres_idx = int(percentile / 100.0 * len(wss_dist))
+                if thres_idx == len(wss_dist):
+                    thres_idx -= 1
+                threshold = wss_dist[thres_idx]
+                if not max_sz or max_sz < threshold:
+                    max_sz = threshold
+            nr_cols = 60
+            sz_per_col = max_sz / 60
+
         for percentile in percentiles:
             thres_idx = int(percentile / 100.0 * len(wss_dist))
             if thres_idx == len(wss_dist):
                 thres_idx -= 1
             threshold = wss_dist[thres_idx]
-            print('%d\t%s' % (percentile,
-                _fmt_nr.format_sz(wss_dist[thres_idx], raw_number)))
+            line = '%3d%15s' % (percentile,
+                _fmt_nr.format_sz(wss_dist[thres_idx], raw_number))
+            if args.plot_ascii:
+                line += ' %s' % ('-' * int(wss_dist[thres_idx] / sz_per_col))
+            print(line)
 
     if args.plot:
         sys.stdout = orig_stdout
