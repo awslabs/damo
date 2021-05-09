@@ -6,6 +6,7 @@ Record data access patterns of the target process.
 """
 
 import argparse
+import datetime
 import os
 import signal
 import subprocess
@@ -25,7 +26,8 @@ def pidfd_open(pid):
 
     return syscall(NR_pidfd_open, pid, 0)
 
-def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
+def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd,
+        timeout):
     if os.path.isfile(attrs.rfile_path):
         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
 
@@ -65,11 +67,17 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
                 (attrs.rfile_path + '.perf.data'),
                 shell=True, executable='/bin/bash')
     print('Press Ctrl+C to stop')
-    if is_target_cmd:
-        p.wait()
+
+    wait_start = datetime.datetime.now()
     while True:
-        # damon will turn it off by itself if the target tasks are terminated.
+        time.sleep(1)
         if not _damon.is_damon_running():
+            break
+        if not timeout:
+            continue
+        if (datetime.datetime.now() - wait_start).total_seconds() > timeout:
+            if is_target_cmd:
+                p.kill()
             break
         time.sleep(1)
 
@@ -117,6 +125,8 @@ def set_argparser(parser):
             help='if target is \'paddr\', limit it to the numa node')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
             default='damon.data', help='output file path')
+    parser.add_argument('--timeout', metavar='<seconds>', type=float,
+            help='timeout in seconds')
 
 def main(args=None):
     global orig_attrs
@@ -138,6 +148,7 @@ def main(args=None):
     init_regions = _damon.cmd_args_to_init_regions(args)
     numa_node = args.numa_node
     target = args.target
+    timeout = args.timeout
 
     target_fields = target.split()
     if target == 'paddr':   # physical memory address space
@@ -146,17 +157,20 @@ def main(args=None):
                 init_regions = _paddr_layout.paddr_region_of(numa_node)
             else:
                 init_regions = [_paddr_layout.default_paddr_region()]
-        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
+        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd,
+                timeout)
     elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
             shell=True, executable='/bin/bash'):
-        do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd)
+        do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd,
+                timeout)
     else:
         try:
             pid = int(target)
         except:
             print('target \'%s\' is neither a command, nor a pid' % target)
             exit(1)
-        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
+        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd,
+                timeout)
 
 if __name__ == '__main__':
     main()
