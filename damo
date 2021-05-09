@@ -4,6 +4,7 @@
 import argparse
 
 import adjust
+import monitor
 import record
 import report
 import schemes
@@ -35,6 +36,10 @@ parser_report = subparser.add_parser('report',
         help='report the recorded data accesses in the specified form')
 report.set_argparser(parser_report)
 
+parser_monitor = subparser.add_parser('monitor',
+        help='repeat the recording and the reporting of data accesses')
+monitor.set_argparser(parser_monitor)
+
 parser_adjust = subparser.add_parser('adjust',
         help='adjust monitoring result file with different attributes')
 adjust.set_argparser(parser_adjust)
@@ -47,5 +52,7 @@ elif args.command == 'schemes':
     schemes.main(args)
 elif args.command == 'report':
     report.main(args)
+elif args.command == 'monitor':
+    monitor.main(args)
 elif args.command == 'adjust':
     adjust.main(args)
