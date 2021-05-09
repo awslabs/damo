@@ -26,8 +26,15 @@ def pidfd_open(pid):
 
     return syscall(NR_pidfd_open, pid, 0)
 
+perf_pipe = None
+rfile_path = None
 def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd,
         timeout):
+    global perf_pipe
+    global rfile_path
+
+    rfile_path = attrs.rfile_path
+
     if os.path.isfile(attrs.rfile_path):
         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
 
@@ -60,7 +67,6 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd,
     while not _damon.is_damon_running():
         time.sleep(1)
 
-    perf_pipe = None
     if not _damon.feature_supported('record'):
         perf_pipe = subprocess.Popen(
                 'perf record -e damon:damon_aggregated -a -o \'%s\'' %
@@ -84,15 +90,16 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd,
     if pidfd:
         os.close(fd)
 
+    cleanup_exit(old_attrs, 0)
+
+def cleanup_exit(orig_attrs, exit_code):
     if perf_pipe:
         perf_pipe.send_signal(signal.SIGINT)
         perf_pipe.wait()
         subprocess.call('perf script -i \'%s\' > \'%s\'' %
-                (attrs.rfile_path + '.perf.data', attrs.rfile_path),
+                (rfile_path + '.perf.data', rfile_path),
                 shell=True, executable='/bin/bash')
-    cleanup_exit(old_attrs, 0)
 
-def cleanup_exit(orig_attrs, exit_code):
     if _damon.is_damon_running():
         if _damon.turn_damon('off'):
             print('failed to turn damon off!')
