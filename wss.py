@@ -112,23 +112,23 @@ def main(args=None):
         if nr_cols_bar:
             max_sz = 0
             for percentile in percentiles:
-                thres_idx = int(percentile / 100.0 * len(wss_dist))
-                if thres_idx == len(wss_dist):
-                    thres_idx -= 1
-                threshold = wss_dist[thres_idx]
-                if not max_sz or max_sz < threshold:
-                    max_sz = threshold
+                wss_idx = int(percentile / 100.0 * len(wss_dist))
+                if wss_idx == len(wss_dist):
+                    wss_idx -= 1
+                wss = wss_dist[wss_idx]
+                if not max_sz or max_sz < wss:
+                    max_sz = wss
             sz_per_col = max_sz / nr_cols_bar
 
         for percentile in percentiles:
-            thres_idx = int(percentile / 100.0 * len(wss_dist))
-            if thres_idx == len(wss_dist):
-                thres_idx -= 1
-            threshold = wss_dist[thres_idx]
+            wss_idx = int(percentile / 100.0 * len(wss_dist))
+            if wss_idx == len(wss_dist):
+                wss_idx -= 1
+            wss = wss_dist[wss_idx]
             line = '%3d %15s' % (percentile,
-                _fmt_nr.format_sz(wss_dist[thres_idx], raw_number))
+                _fmt_nr.format_sz(wss, raw_number))
             if nr_cols_bar:
-                line += ' %s' % ('-' * int(wss_dist[thres_idx] / sz_per_col))
+                line += ' %s' % ('-' * int(wss / sz_per_col))
             print(line)
 
     if args.plot:
