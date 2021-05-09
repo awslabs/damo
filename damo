@@ -25,11 +25,11 @@ subparser = parser.add_subparsers(title='command', dest='command',
 subparser.required = True
 
 parser_record = subparser.add_parser('record',
-        help='record data accesses of the given target processes')
+        help='record data accesses')
 record.set_argparser(parser_record)
 
 parser_schemes = subparser.add_parser('schemes',
-        help='apply operation schemes to the given target process')
+        help='apply operation schemes')
 schemes.set_argparser(parser_schemes)
 
 parser_report = subparser.add_parser('report',
@@ -41,7 +41,7 @@ parser_monitor = subparser.add_parser('monitor',
 monitor.set_argparser(parser_monitor)
 
 parser_adjust = subparser.add_parser('adjust',
-        help='adjust monitoring result file with different attributes')
+        help='adjust the record results with different monitoring attributes')
 adjust.set_argparser(parser_adjust)
 
 args = parser.parse_args()
