@@ -59,7 +59,7 @@ def text_to_bytes(txt):
 unit_to_usecs = {'us': 1, 'ms': 1000, 's': 1000 * 1000, 'm': 60 * 1000 * 1000,
         'h': 60 * 60 * 1000 * 1000, 'd': 24 * 60 * 60 * 1000 * 1000}
 
-def text_to_aggr_intervals(txt, aggr_interval):
+def text_to_us(txt):
     if txt == 'min':
         return 0
     if txt == 'max':
@@ -71,7 +71,13 @@ def text_to_aggr_intervals(txt, aggr_interval):
     else:
         unit = txt[-1]
         number = float(txt[:-1])
-    return int(number * unit_to_usecs[unit]) / aggr_interval
+    return number * unit_to_usecs[unit]
+
+def text_to_aggr_intervals(txt, aggr_interval):
+    return int(text_to_us(txt) / aggr_interval)
+
+def text_to_ms(txt):
+    return int(text_to_us(txt) / 1000)
 
 damos_action_to_int = {'DAMOS_WILLNEED': 0, 'DAMOS_COLD': 1,
         'DAMOS_PAGEOUT': 2, 'DAMOS_HUGEPAGE': 3, 'DAMOS_NOHUGEPAGE': 4,
@@ -88,10 +94,13 @@ def text_to_nr_accesses(txt, max_nr_accesses):
 
     return int(float(txt) * max_nr_accesses / 100)
 
-def debugfs_scheme(line, sample_interval, aggr_interval):
+# scheme_version
+# 0: <sz range> <nr_accesses range> <age range> <action>
+# 1: v1 input + '<limit_sz> <limit_ms>'
+def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
     fields = line.split()
-    if len(fields) != 7:
-        print('wrong input line: %s' % line)
+    if not len(fields) in [7, 9]:
+        print('expected 7 or 9 fields, but \'%s\'' % line)
         exit(1)
 
     limit_nr_accesses = aggr_interval / sample_interval
@@ -103,13 +112,23 @@ def debugfs_scheme(line, sample_interval, aggr_interval):
         min_age = text_to_aggr_intervals(fields[4], aggr_interval)
         max_age = text_to_aggr_intervals(fields[5], aggr_interval)
         action = text_to_damos_action(fields[6])
+        if len(fields) == 9:
+            limit_sz = text_to_bytes(fields[7])
+            limit_ms = text_to_ms(fields[8])
+        else:
+            limit_sz = 0
+            limit_ms = ulong_max
     except:
         print('wrong input field')
         raise
-    return '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (min_sz, max_sz, min_nr_accesses,
-            max_nr_accesses, min_age, max_age, action)
+    v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (min_sz, max_sz,
+            min_nr_accesses, max_nr_accesses, min_age, max_age, action)
+    if scheme_version == 0:
+        return v0_scheme
+    v1_scheme = '%s\t%d\t%d' % (v0_scheme, limit_sz, limit_ms)
+    return v1_scheme
 
-def convert(schemes_file, sample_interval, aggr_interval):
+def convert(schemes_file, sample_interval, aggr_interval, scheme_version):
     lines = []
     with open(schemes_file, 'r') as f:
         for line in f:
@@ -118,7 +137,8 @@ def convert(schemes_file, sample_interval, aggr_interval):
             line = line.strip()
             if line == '':
                 continue
-            lines.append(debugfs_scheme(line, sample_interval, aggr_interval))
+            lines.append(debugfs_scheme(line, sample_interval, aggr_interval,
+                scheme_version))
     return '\n'.join(lines)
 
 def main():

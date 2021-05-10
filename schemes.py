@@ -87,6 +87,10 @@ def main(args=None):
 
     chk_permission()
     _damon.chk_update_debugfs(args.debugfs)
+    scheme_version = 0
+    if _damon.feature_supported('schemes_speed_limit'):
+        scheme_version = 1
+
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
@@ -94,7 +98,8 @@ def main(args=None):
 
     args.rbuf = 0
     args.out = 'null'
-    args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr)
+    args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr,
+            scheme_version)
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
     numa_node = args.numa_node
