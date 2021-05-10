@@ -8,6 +8,7 @@ Contains core functions for DAMON debugfs control.
 import os
 import subprocess
 
+debugfs_version = None
 debugfs_attrs = None
 debugfs_record = None
 debugfs_schemes = None
@@ -115,6 +116,22 @@ def current_attrs():
 
     return Attrs(*attrs)
 
+def dbgfs_version():
+    if not chk_update_debugfs_called:
+        chk_update_debugfs()
+
+    if debugfs_record == None:
+        return 0.1
+    if debugfs_schemes == None:
+        return 0.2
+    if debugfs_init_regions == None:
+        return 0.3
+    if debugfs_version == None:
+        return 0.4
+    with open(debugfs_version, 'r') as f:
+        return int(f.read())
+
+chk_update_debugfs_called = False
 def feature_supported(feature):
     """Should be called after 'chk_update_debugfs()' called"""
     if feature == 'record':
@@ -123,8 +140,12 @@ def feature_supported(feature):
         return debugfs_schemes != None
     if feature == 'init_regions':
         return debugfs_init_regions != None
+    if feature == 'schemes_speed_limit':
+        return damon_dbgfs_version() >= 1
 
-def chk_update_debugfs(debugfs):
+def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
+    global chk_update_debugfs_called
+    global debugfs_version
     global debugfs_attrs
     global debugfs_record
     global debugfs_schemes
@@ -132,7 +153,12 @@ def chk_update_debugfs(debugfs):
     global debugfs_init_regions
     global debugfs_monitor_on
 
+    if chk_update_debugfs_called:
+        return
+    chk_update_debugfs_called = True
+
     debugfs_damon = os.path.join(debugfs, 'damon')
+    debugfs_version = os.path.join(debugfs_damon, 'version')
     debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
     debugfs_record = os.path.join(debugfs_damon, 'record')
     debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
@@ -144,10 +170,12 @@ def chk_update_debugfs(debugfs):
         print("damon debugfs dir (%s) not found", debugfs_damon)
         exit(1)
 
-    for f in [debugfs_attrs, debugfs_record, debugfs_schemes,
+    for f in [debugfs_version, debugfs_attrs, debugfs_record, debugfs_schemes,
             debugfs_target_ids, debugfs_init_regions, debugfs_monitor_on]:
         if not os.path.isfile(f):
-            if f == debugfs_record:
+            if f == debugfs_version:
+                debugfs_version = None
+            elif f == debugfs_record:
                 debugfs_record = None
             elif f == debugfs_schemes:
                 debugfs_schemes = None
