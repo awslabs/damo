@@ -30,12 +30,14 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
+    target_is_cmd = False
     target = args.target
     target_fields = target.split()
     if target == 'paddr':
         pass
     elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
             shell=True, executable='/bin/bash'):
+        target_is_cmd = True
         p = subprocess.Popen(target, shell=True, executable='/bin/bash',
                 stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         target = p.pid
@@ -60,6 +62,8 @@ def main(args=None):
 
     nr_reports = 0
     while not args.count or nr_reports < args.count:
+        if target_is_cmd and p.poll() != None:
+            break
         try:
             subprocess.check_output(record_cmd, shell=True,
                     stderr=subprocess.STDOUT, executable='/bin/bash')
@@ -71,6 +75,9 @@ def main(args=None):
         except subprocess.CalledProcessError:
             break
         nr_reports += 1
+
+    if target_is_cmd and p.poll() != None:
+        p.kill()
 
 if __name__ == '__main__':
     main()
