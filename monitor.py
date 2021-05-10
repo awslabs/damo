@@ -69,9 +69,12 @@ def main(args=None):
                     stderr=subprocess.STDOUT, executable='/bin/bash')
             output = subprocess.check_output(report_cmd, shell=True,
                     executable='/bin/bash').decode()
-            for line in output.strip().split('\n'):
-                if not line.startswith('#'):
-                    print(line)
+            if args.report_type == 'heats':
+                for line in output.strip().split('\n'):
+                    if not line.startswith('#'):
+                        print(line)
+            else:
+                print(output)
         except subprocess.CalledProcessError:
             break
         nr_reports += 1
