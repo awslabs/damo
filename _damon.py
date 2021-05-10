@@ -133,6 +133,8 @@ def test_debugfs_file(path, input_str, expected):
     passed = False
     with open(path, 'r') as f:
         orig_value = f.read()
+        if orig_value == '':
+            orig_value = '\n'
     with open(path, 'w') as f:
         f.write(input_str)
     with open(path, 'r') as f:
