@@ -75,15 +75,16 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd,
     print('Press Ctrl+C to stop')
 
     wait_start = datetime.datetime.now()
+    if is_target_cmd:
+        try:
+            p.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            p.kill()
     while True:
-        time.sleep(1)
         if not _damon.is_damon_running():
             break
-        if not timeout:
-            continue
-        if (datetime.datetime.now() - wait_start).total_seconds() > timeout:
-            if is_target_cmd:
-                p.kill()
+        if timeout and ((datetime.datetime.now() - wait_start).total_seconds()
+                > timeout):
             break
         time.sleep(1)
 
