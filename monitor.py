@@ -36,7 +36,8 @@ def main(args=None):
         pass
     elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
             shell=True, executable='/bin/bash'):
-        p = subprocess.Popen(target, shell=True, executable='/bin/bash')
+        p = subprocess.Popen(target, shell=True, executable='/bin/bash',
+                stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         target = p.pid
     else:
         try:
@@ -59,9 +60,15 @@ def main(args=None):
 
     nr_reports = 0
     while not args.count or nr_reports < args.count:
-        if subprocess.call(record_cmd, shell=True, executable='/bin/bash'):
-            break
-        if subprocess.call(report_cmd, shell=True, executable='/bin/bash'):
+        try:
+            subprocess.check_output(record_cmd, shell=True,
+                    stderr=subprocess.STDOUT, executable='/bin/bash')
+            output = subprocess.check_output(report_cmd, shell=True,
+                    executable='/bin/bash').decode()
+            for line in output.strip().split('\n'):
+                if not line.startswith('#'):
+                    print(line)
+        except subprocess.CalledProcessError:
             break
         nr_reports += 1
 
