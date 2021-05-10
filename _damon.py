@@ -116,35 +116,49 @@ def current_attrs():
 
     return Attrs(*attrs)
 
-def dbgfs_version():
-    if not chk_update_debugfs_called:
+supported_features = None
+
+def feature_supported(feature):
+    if supported_features == None:
         chk_update_debugfs()
 
-    if debugfs_record == None:
-        return 0.1
-    if debugfs_schemes == None:
-        return 0.2
-    if debugfs_init_regions == None:
-        return 0.3
-    if debugfs_version == None:
-        return 0.4
-    with open(debugfs_version, 'r') as f:
-        return int(f.read())
+    return feature in supported_features
 
-chk_update_debugfs_called = False
-def feature_supported(feature):
-    """Should be called after 'chk_update_debugfs()' called"""
-    if feature == 'record':
-        return debugfs_record != None
-    if feature == 'schemes':
-        return debugfs_schemes != None
-    if feature == 'init_regions':
-        return debugfs_init_regions != None
-    if feature == 'schemes_speed_limit':
-        return damon_dbgfs_version() >= 1
+def get_supported_features():
+    if supported_features == None:
+        chk_update_debugfs()
+    return supported_features
+
+def test_debugfs_file(path, input_str, expected):
+    passed = False
+    with open(path, 'r') as f:
+        orig_value = f.read()
+    with open(path, 'w') as f:
+        f.write(input_str)
+    with open(path, 'r') as f:
+        if f.read() == expected:
+            passed = True
+    with open(path, 'w') as f:
+        f.write(orig_value)
+    return passed
+
+def update_supported_features():
+    if debugfs_record != None:
+        supported_features.append('record')
+    if debugfs_schemes != None:
+        supported_features.append('schemes')
+    if debugfs_init_regions != None:
+        supported_features.append('init_regions')
+
+    if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
+        supported_features.append('paddr')
+
+    if test_debugfs_file(debugfs_schemes, '1 1 1 1 1 1 1 1 1\n',
+            '1 1 1 1 1 1 1 1 1 0 0\n'):
+        supported_features.append('schemes_speed_limit')
 
 def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
-    global chk_update_debugfs_called
+    global supported_features
     global debugfs_version
     global debugfs_attrs
     global debugfs_record
@@ -153,9 +167,9 @@ def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
     global debugfs_init_regions
     global debugfs_monitor_on
 
-    if chk_update_debugfs_called:
+    if supported_features != None:
         return
-    chk_update_debugfs_called = True
+    supported_features = []
 
     debugfs_damon = os.path.join(debugfs, 'damon')
     debugfs_version = os.path.join(debugfs_damon, 'version')
@@ -184,6 +198,8 @@ def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
             else:
                 print("damon debugfs file (%s) not found" % f)
                 exit(1)
+
+    update_supported_features()
 
 def cmd_args_to_attrs(args):
     "Generate attributes with specified arguments"
