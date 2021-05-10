@@ -116,18 +116,18 @@ def current_attrs():
 
     return Attrs(*attrs)
 
-supported_features = None
+feature_supports = None
 
 def feature_supported(feature):
-    if supported_features == None:
+    if feature_supports == None:
         chk_update_debugfs()
 
-    return feature in supported_features
+    return feature_supports[feature]
 
 def get_supported_features():
-    if supported_features == None:
+    if feature_supports == None:
         chk_update_debugfs()
-    return supported_features
+    return feature_supports
 
 def test_debugfs_file(path, input_str, expected):
     passed = False
@@ -146,21 +146,21 @@ def test_debugfs_file(path, input_str, expected):
 
 def update_supported_features():
     if debugfs_record != None:
-        supported_features.append('record')
+        feature_supports['record'] = True
     if debugfs_schemes != None:
-        supported_features.append('schemes')
+        feature_supports['schemes'] = True
     if debugfs_init_regions != None:
-        supported_features.append('init_regions')
+        feature_supports['init_regions'] = True
 
     if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
-        supported_features.append('paddr')
+        feature_supports['paddr'] = True
 
     if test_debugfs_file(debugfs_schemes, '1 1 1 1 1 1 1 1 1\n',
             '1 1 1 1 1 1 1 1 1 0 0\n'):
-        supported_features.append('schemes_speed_limit')
+        feature_supports['schemes_speed_limit'] = True
 
 def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
-    global supported_features
+    global feature_supports
     global debugfs_version
     global debugfs_attrs
     global debugfs_record
@@ -169,9 +169,15 @@ def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
     global debugfs_init_regions
     global debugfs_monitor_on
 
-    if supported_features != None:
+    if feature_supports != None:
         return
-    supported_features = []
+    feature_supports = {
+            'record': False,
+            'schemes': False,
+            'init_regions': False,
+            'paddr': False,
+            'schemes_speed_limit': False,
+            }
 
     debugfs_damon = os.path.join(debugfs, 'damon')
     debugfs_version = os.path.join(debugfs_damon, 'version')
