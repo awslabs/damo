@@ -5,6 +5,7 @@
 
 import argparse
 import os
+import signal
 import subprocess
 import sys
 import time
@@ -12,6 +13,15 @@ import time
 import record
 import heats
 import wss
+
+def cleanup():
+    if target_is_cmd and cmd_pipe.poll() != None:
+        cmd_pipe.kill()
+
+
+def sighandler(signum, frame):
+    print('\nsignal %s received' % signum)
+    cleanup()
 
 def set_argparser(parser):
     parser.add_argument('target', type=str, metavar='<target>',
@@ -30,6 +40,12 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
+    global target_is_cmd
+    global cmd_pipe
+
+    signal.signal(signal.SIGINT, sighandler)
+    signal.signal(signal.SIGTERM, sighandler)
+
     target_is_cmd = False
     target = args.target
     target_fields = target.split()
@@ -38,9 +54,9 @@ def main(args=None):
     elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
             shell=True, executable='/bin/bash'):
         target_is_cmd = True
-        p = subprocess.Popen(target, shell=True, executable='/bin/bash',
+        cmd_pipe = subprocess.Popen(target, shell=True, executable='/bin/bash',
                 stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-        target = p.pid
+        target = cmd_pipe.pid
     else:
         try:
             pid = int(target)
@@ -62,7 +78,7 @@ def main(args=None):
 
     nr_reports = 0
     while not args.count or nr_reports < args.count:
-        if target_is_cmd and p.poll() != None:
+        if target_is_cmd and cmd_pipe.poll() != None:
             break
         try:
             subprocess.check_output(record_cmd, shell=True,
@@ -79,8 +95,7 @@ def main(args=None):
             break
         nr_reports += 1
 
-    if target_is_cmd and p.poll() != None:
-        p.kill()
+    cleanup()
 
 if __name__ == '__main__':
     main()
