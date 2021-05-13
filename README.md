@@ -7,6 +7,8 @@ access-aware memory management optimizations.
 
 [1] https://damonitor.github.io
 
+![damo monitor demo for water_nsquared](for_doc/damo_monitor_water_nsquared.gif)
+
 
 Demo Video
 ==========
