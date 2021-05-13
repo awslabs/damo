@@ -139,10 +139,11 @@ def pr_heats(args, damon_result):
     tmin = args.time_range[0]
     tmax = args.time_range[1]
     ares = args.resol[1]
-    amin = args.amin
+    amin = args.address_range[0]
+    amax = args.address_range[1]
 
     tunit = (tmax - tmin) // tres
-    aunit = (args.amax - amin) // ares
+    aunit = (amax - amin) // ares
 
     # Compensate the values so that those fit with the resolution
     tmax = tmin + tunit * tres
@@ -278,7 +279,7 @@ def region_sort_key(region):
     return region[1] - region[0]
 
 def set_missed_args(args, damon_result):
-    if args.tid and args.time_range and args.amin and args.amax:
+    if args.tid and args.time_range and args.address_range:
         return
     guides = get_guide_info(damon_result)
     guide = guides[0]
@@ -292,11 +293,9 @@ def set_missed_args(args, damon_result):
     if not args.time_range:
         args.time_range = [guide.start_time, guide.end_time]
 
-    if not args.amin or not args.amax:
-        region = sorted(guide.regions(), key=lambda x: x[1] - x[0],
+    if not args.address_range:
+        args.address_range = sorted(guide.regions(), key=lambda x: x[1] - x[0],
                 reverse=True)[0]
-        args.amin = region[0]
-        args.amax = region[1]
 
 def plot_heatmap(data_file, output_file):
     terminal = output_file.split('.')[-1]
@@ -330,10 +329,8 @@ def set_argparser(parser):
             help='resolutions for time and address axises')
     parser.add_argument('--time_range', metavar='<time>', type=int, nargs=2,
             help='start and end time of the output')
-    parser.add_argument('--amin', metavar='<address>', type=lambda x: int(x,0),
-            help='minimal space address of the output')
-    parser.add_argument('--amax', metavar='<address>', type=lambda x: int(x,0),
-            help='maximum space address of the output')
+    parser.add_argument('--address_range', metavar='<address>', type=int,
+            nargs=2, help='start and end address of the output')
     parser.add_argument('--abs_time', action='store_true', default=False,
             help='display absolute time in output')
     parser.add_argument('--abs_addr', action='store_true', default=False,
