@@ -71,7 +71,7 @@ def main(args=None):
             args.delay)
 
     if args.report_type == 'heats':
-        report_cmd = '%s report heats --plot stdout --resol 10 80' % damo
+        report_cmd = '%s report heats --heatmap stdout --resol 10 80' % damo
     else:
         report_cmd = '%s report wss' % damo
 
