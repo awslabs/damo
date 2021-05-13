@@ -348,7 +348,7 @@ def set_argparser(parser):
             help='display absolute address in output')
 
     parser.add_argument('--guide', action='store_true',
-            help='print a guidance for the min/max/resolution settings')
+            help='print a guidance for the ranges and resolution settings')
     parser.add_argument('--heatmap', metavar='<file>', type=str,
             help='heatmap image file to create')
     parser.add_argument('--plot_ascii', action='store_true',
@@ -369,7 +369,7 @@ def main(args=None):
         print('monitoring result file (%s) parsing failed' % args.input)
         exit(1)
 
-    # Use 80x50 resolution as default for ascii plot
+    # Use 80x40 resolution as default for ascii plot
     if args.plot_ascii and args.resol == [500, 500]:
         args.resol = [40, 80]
 
