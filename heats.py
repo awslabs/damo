@@ -297,22 +297,33 @@ def set_missed_args(args, damon_result):
         args.address_range = sorted(guide.regions(), key=lambda x: x[1] - x[0],
                 reverse=True)[0]
 
-def plot_heatmap(data_file, output_file):
+def plot_range(orig_range, use_absolute_val):
+    plot_range = [x for x in orig_range]
+    if not use_absolute_val:
+        plot_range[0] -= orig_range[0]
+        plot_range[1] -= orig_range[0]
+    return plot_range
+
+def plot_heatmap(data_file, output_file, args):
     terminal = output_file.split('.')[-1]
     if not terminal in ['pdf', 'jpeg', 'png', 'svg']:
         os.remove(data_file)
         print("Unsupported plot output type.")
         exit(-1)
 
+    x_range = plot_range(args.time_range, args.abs_time)
+    y_range = plot_range(args.address_range, args.abs_addr)
+
     gnuplot_cmd = """
     set term %s;
     set output '%s';
     set key off;
-    set xrange [0:];
-    set yrange [0:];
+    set xrange [%f:%f];
+    set yrange [%f:%f];
     set xlabel 'Time (ns)';
     set ylabel 'Address (bytes)';
-    plot '%s' using 1:2:3 with image;""" % (terminal, output_file, data_file)
+    plot '%s' using 1:2:3 with image;""" % (terminal, output_file, x_range[0],
+            x_range[1], y_range[0], y_range[1], data_file)
     subprocess.call(['gnuplot', '-e', gnuplot_cmd])
     os.remove(data_file)
 
@@ -378,7 +389,7 @@ def main(args=None):
             sys.stdout = orig_stdout
             tmp_file.flush()
             tmp_file.close()
-            plot_heatmap(tmp_path, args.heatmap)
+            plot_heatmap(tmp_path, args.heatmap, args)
 
 if __name__ == '__main__':
     main()
