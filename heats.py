@@ -157,7 +157,7 @@ def pr_heats(args, damon_result):
 
     if args.heatmap == 'stdout':
         heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax], [tres, ares],
-                args.stdout_plot_color)
+                args.stdout_heatmap_color)
         return
 
     for row in pixels:
@@ -351,7 +351,7 @@ def set_argparser(parser):
             help='print a guidance for the ranges and resolution settings')
     parser.add_argument('--heatmap', metavar='<file>', type=str,
             help='heatmap image file to create.  stdout for terminal output')
-    parser.add_argument('--stdout_plot_color',
+    parser.add_argument('--stdout_heatmap_color',
             choices=['gray', 'flame', 'emotion'], default='gray',
             help='color theme for access frequencies')
 
