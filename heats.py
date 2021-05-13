@@ -136,11 +136,12 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
 def pr_heats(args, damon_result):
     tid = args.tid
     tres = args.resol[0]
-    tmin = args.tmin
+    tmin = args.time_range[0]
+    tmax = args.time_range[1]
     ares = args.resol[1]
     amin = args.amin
 
-    tunit = (args.tmax - tmin) // tres
+    tunit = (tmax - tmin) // tres
     aunit = (args.amax - amin) // ares
 
     # Compensate the values so that those fit with the resolution
@@ -277,7 +278,7 @@ def region_sort_key(region):
     return region[1] - region[0]
 
 def set_missed_args(args, damon_result):
-    if args.tid and args.tmin and args.tmax and args.amin and args.amax:
+    if args.tid and args.time_range and args.amin and args.amax:
         return
     guides = get_guide_info(damon_result)
     guide = guides[0]
@@ -288,10 +289,8 @@ def set_missed_args(args, damon_result):
             guide = g
             break
 
-    if not args.tmin:
-        args.tmin = guide.start_time
-    if not args.tmax:
-        args.tmax = guide.end_time
+    if not args.time_range:
+        args.time_range = [guide.start_time, guide.end_time]
 
     if not args.amin or not args.amax:
         region = sorted(guide.regions(), key=lambda x: x[1] - x[0],
@@ -329,10 +328,8 @@ def set_argparser(parser):
     parser.add_argument('--resol', metavar='<resolution>', type=int, nargs=2,
             default=[500, 500],
             help='resolutions for time and address axises')
-    parser.add_argument('--tmin', metavar='<time>', type=lambda x: int(x,0),
-            help='minimal time of the output')
-    parser.add_argument('--tmax', metavar='<time>', type=lambda x: int(x,0),
-            help='maximum time of the output')
+    parser.add_argument('--time_range', metavar='<time>', type=int, nargs=2,
+            help='start and end time of the output')
     parser.add_argument('--amin', metavar='<address>', type=lambda x: int(x,0),
             help='minimal space address of the output')
     parser.add_argument('--amax', metavar='<address>', type=lambda x: int(x,0),
