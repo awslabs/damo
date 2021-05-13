@@ -155,8 +155,9 @@ def update_supported_features():
     if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
         feature_supports['paddr'] = True
 
-    if test_debugfs_file(debugfs_schemes, '1 1 1 1 1 1 1 1 1\n',
-            '1 1 1 1 1 1 1 1 1 0 0\n'):
+    if (debugfs_schemes != None and
+            test_debugfs_file(debugfs_schemes, '1 1 1 1 1 1 1 1 1\n',
+            '1 1 1 1 1 1 1 1 1 0 0\n')):
         feature_supports['schemes_speed_limit'] = True
 
 def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
