@@ -155,9 +155,9 @@ def pr_heats(args, damon_result):
     pixels = heat_pixels_from_snapshots(snapshots, [tmin, tmax], [amin, amax],
             [tres, ares])
 
-    if args.plot_ascii:
+    if args.plot == 'stdout':
         heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax], [tres, ares],
-                args.ascii_color)
+                args.stdout_plot_color)
         return
 
     for row in pixels:
@@ -349,11 +349,9 @@ def set_argparser(parser):
 
     parser.add_argument('--guide', action='store_true',
             help='print a guidance for the ranges and resolution settings')
-    parser.add_argument('--heatmap', metavar='<file>', type=str,
-            help='heatmap image file to create')
-    parser.add_argument('--plot_ascii', action='store_true',
-            help='visualize in ascii art')
-    parser.add_argument('--ascii_color',
+    parser.add_argument('--plot', metavar='<file>', type=str,
+            help='heatmap image file to create.  stdout for terminal output')
+    parser.add_argument('--stdout_plot_color',
             choices=['gray', 'flame', 'emotion'], default='gray',
             help='color theme for access frequencies')
 
@@ -370,7 +368,7 @@ def main(args=None):
         exit(1)
 
     # Use 80x40 resolution as default for ascii plot
-    if args.plot_ascii and args.resol == [500, 500]:
+    if args.plot == 'stdout' and args.resol == [500, 500]:
         args.resol = [40, 80]
 
     if args.guide:
@@ -378,18 +376,18 @@ def main(args=None):
     else:
         set_missed_args(args, damon_result)
         orig_stdout = sys.stdout
-        if args.heatmap:
+        if args.plot != 'stdout':
             tmp_path = tempfile.mkstemp()[1]
             tmp_file = open(tmp_path, 'w')
             sys.stdout = tmp_file
 
         pr_heats(args, damon_result)
 
-        if args.heatmap:
+        if args.plot != 'stdout':
             sys.stdout = orig_stdout
             tmp_file.flush()
             tmp_file.close()
-            plot_heatmap(tmp_path, args.heatmap, args)
+            plot_heatmap(tmp_path, args.plot, args)
 
 if __name__ == '__main__':
     main()
