@@ -376,14 +376,14 @@ def main(args=None):
     else:
         set_missed_args(args, damon_result)
         orig_stdout = sys.stdout
-        if args.heatmap != 'stdout':
+        if args.heatmap and args.heatmap != 'stdout':
             tmp_path = tempfile.mkstemp()[1]
             tmp_file = open(tmp_path, 'w')
             sys.stdout = tmp_file
 
         pr_heats(args, damon_result)
 
-        if args.heatmap != 'stdout':
+        if args.heatmap and args.heatmap != 'stdout':
             sys.stdout = orig_stdout
             tmp_file.flush()
             tmp_file.close()
