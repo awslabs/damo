@@ -128,7 +128,9 @@ def main(args=None):
             line = '%3d %15s' % (percentile,
                 _fmt_nr.format_sz(wss, raw_number))
             if nr_cols_bar:
-                line += ' %s' % ('-' * int(wss / sz_per_col))
+                cols = int(wss/sz_per_col)
+                remaining_cols = nr_cols_bar - cols
+                line += ' |%s%s|' % ('*' * cols, ' ' * remaining_cols)
             print(line)
 
     if args.plot:
