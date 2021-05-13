@@ -71,7 +71,7 @@ def main(args=None):
             args.delay)
 
     if args.report_type == 'heats':
-        report_cmd = '%s report heats --plot_ascii --tres 10 --ares 80' % damo
+        report_cmd = '%s report heats --plot stdout --resol 10 80' % damo
     else:
         report_cmd = '%s report wss' % damo
 
@@ -91,7 +91,7 @@ def main(args=None):
                         print(line)
             else:
                 print(output)
-        except subprocess.CalledProcessError:
+        except subprocess.CalledProcessError as e:
             break
         nr_reports += 1
 
