@@ -135,9 +135,9 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
 
 def pr_heats(args, damon_result):
     tid = args.tid
-    tres = args.tres
+    tres = args.resol[0]
     tmin = args.tmin
-    ares = args.ares
+    ares = args.resol[1]
     amin = args.amin
 
     tunit = (args.tmax - tmin) // tres
@@ -326,14 +326,13 @@ def set_argparser(parser):
 
     parser.add_argument('--tid', metavar='<id>', type=int,
             help='target id')
-    parser.add_argument('--tres', metavar='<resolution>', type=int,
-            default=500, help='time resolution of the output')
+    parser.add_argument('--resol', metavar='<resolution>', type=int, nargs=2,
+            default=[500, 500],
+            help='resolutions for time and address axises')
     parser.add_argument('--tmin', metavar='<time>', type=lambda x: int(x,0),
             help='minimal time of the output')
     parser.add_argument('--tmax', metavar='<time>', type=lambda x: int(x,0),
             help='maximum time of the output')
-    parser.add_argument('--ares', metavar='<resolution>', type=int, default=500,
-            help='space address resolution of the output')
     parser.add_argument('--amin', metavar='<address>', type=lambda x: int(x,0),
             help='minimal space address of the output')
     parser.add_argument('--amax', metavar='<address>', type=lambda x: int(x,0),
@@ -366,9 +365,8 @@ def main(args=None):
         exit(1)
 
     # Use 80x50 resolution as default for ascii plot
-    if args.plot_ascii and args.tres == 500 and args.ares == 500:
-        args.tres = 40
-        args.ares = 80
+    if args.plot_ascii and args.resol == [500, 500]:
+        args.resol = [40, 80]
 
     if args.guide:
         pr_guide(damon_result)
