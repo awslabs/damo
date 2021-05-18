@@ -90,7 +90,8 @@ def main(args=None):
     scheme_version = 0
     if _damon.feature_supported('schemes_speed_limit'):
         scheme_version = 1
-
+    if _damon.feature_supported('schemes_prioritization'):
+        scheme_version = 2
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)

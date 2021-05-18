@@ -155,10 +155,14 @@ def update_supported_features():
     if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
         feature_supports['paddr'] = True
 
-    if (debugfs_schemes != None and
-            test_debugfs_file(debugfs_schemes, '1 1 1 1 1 1 1 1 1\n',
-            '1 1 1 1 1 1 1 1 1 0 0\n')):
-        feature_supports['schemes_speed_limit'] = True
+    if debugfs_schemes != None:
+        if test_debugfs_file(debugfs_schemes,
+                '1 1 1 1 1 1 1 1 1\n', '1 1 1 1 1 1 1 1 1 0 0\n'):
+            feature_supports['schemes_speed_limit'] = True
+        elif test_debugfs_file(debugfs_schemes,
+                '1 1 1 1 1 1 1 1 1 1 1 1\n', '1 1 1 1 1 1 1 1 1 1 1 1 0 0\n'):
+            feature_supports['schemes_speed_limit'] = True
+            feature_supports['schemes_prioritization'] = True
 
 def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
     global feature_supports
@@ -178,6 +182,7 @@ def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
             'init_regions': False,
             'paddr': False,
             'schemes_speed_limit': False,
+            'schemes_prioritization': False,
             }
 
     debugfs_damon = os.path.join(debugfs, 'damon')

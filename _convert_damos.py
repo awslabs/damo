@@ -97,10 +97,12 @@ def text_to_nr_accesses(txt, max_nr_accesses):
 # scheme_version
 # 0: <sz range> <nr_accesses range> <age range> <action>
 # 1: v1 input + '<limit_sz> <limit_ms>'
+# 2: v2 input + '<weight_sz> <weight_nr_accesses> <weight_age>'
 def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
     fields = line.split()
-    if not len(fields) in [7, 9]:
-        print('expected 7 or 9 fields, but \'%s\'' % line)
+    expected_lengths = [7, 9, 12]
+    if not len(fields) in expected_lengths:
+        print('expected %s fields, but \'%s\'' % (expected_lengths, line))
         exit(1)
 
     limit_nr_accesses = aggr_interval / sample_interval
@@ -112,21 +114,32 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
         min_age = text_to_aggr_intervals(fields[4], aggr_interval)
         max_age = text_to_aggr_intervals(fields[5], aggr_interval)
         action = text_to_damos_action(fields[6])
-        if len(fields) == 9:
+        limit_sz = 0
+        limit_ms = ulong_max
+        weight_sz = 0
+        weight_nr_accesses = 0
+        weight_age = 0
+        if len(fields) >= 9:
             limit_sz = text_to_bytes(fields[7])
             limit_ms = text_to_ms(fields[8])
-        else:
-            limit_sz = 0
-            limit_ms = ulong_max
+        if len(fields) == 12:
+            weight_sz = int(fields[9])
+            weight_nr_accesses = int(fields[10])
+            weight_age = int(fields[11])
     except:
         print('wrong input field')
         raise
     v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (min_sz, max_sz,
             min_nr_accesses, max_nr_accesses, min_age, max_age, action)
+    v1_scheme = '%s\t%d\t%d' % (v0_scheme, limit_sz, limit_ms)
+    v2_scheme = '%s\t%d\t%d\t%d' % (v1_scheme,
+            weight_sz, weight_nr_accesses, weight_age)
+
     if scheme_version == 0:
         return v0_scheme
-    v1_scheme = '%s\t%d\t%d' % (v0_scheme, limit_sz, limit_ms)
-    return v1_scheme
+    elif scheme_version == 1:
+        return v1_scheme
+    return v2_scheme
 
 def convert(schemes_file, sample_interval, aggr_interval, scheme_version):
     lines = []
