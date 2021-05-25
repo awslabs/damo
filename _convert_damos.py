@@ -94,13 +94,19 @@ def text_to_nr_accesses(txt, max_nr_accesses):
 
     return int(float(txt) * max_nr_accesses / 100)
 
+damos_wmark_metric_to_int = {'NONE': 0, 'FREE_MEM_RATE': 1}
+
+def text_to_damos_wmark_metric(txt):
+    return damos_wmark_metric_to_int[txt.upper()]
+
 # scheme_version
 # 0: <sz range> <nr_accesses range> <age range> <action>
 # 1: v1 input + '<limit_sz> <limit_ms>'
 # 2: v2 input + '<weight_sz> <weight_nr_accesses> <weight_age>'
+# 3: v3 input + '<watermark metric> <check interval> <high> <mid> <low>'
 def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
     fields = line.split()
-    expected_lengths = [7, 9, 12]
+    expected_lengths = [7, 9, 12, 17]
     if not len(fields) in expected_lengths:
         print('expected %s fields, but \'%s\'' % (expected_lengths, line))
         exit(1)
@@ -119,13 +125,24 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
         weight_sz = 0
         weight_nr_accesses = 0
         weight_age = 0
+        wmarks_metric = text_to_damos_wmark_metric('none')
+        wmarks_interval = 0
+        wmarks_high = 0
+        wmarks_mid = 0
+        wmarks_low = 0
         if len(fields) >= 9:
             limit_sz = text_to_bytes(fields[7])
             limit_ms = text_to_ms(fields[8])
-        if len(fields) == 12:
+        if len(fields) >= 12:
             weight_sz = int(fields[9])
             weight_nr_accesses = int(fields[10])
             weight_age = int(fields[11])
+        if len(fields) == 17:
+            wmarks_metric = text_to_damos_wmark_metric(fields[12])
+            wmarks_interval = text_to_us(fields[13])
+            wmarks_high = int(fields[14])
+            wmarks_mid = int(fields[15])
+            wmarks_low = int(fields[16])
     except:
         print('wrong input field')
         raise
@@ -134,12 +151,16 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
     v1_scheme = '%s\t%d\t%d' % (v0_scheme, limit_sz, limit_ms)
     v2_scheme = '%s\t%d\t%d\t%d' % (v1_scheme,
             weight_sz, weight_nr_accesses, weight_age)
+    v3_scheme = '%s\t%d\t%d\t%d\t%d\t%d' % (v2_scheme, wmarks_metric,
+            wmarks_interval, wmarks_high, wmarks_mid, wmarks_low)
 
     if scheme_version == 0:
         return v0_scheme
     elif scheme_version == 1:
         return v1_scheme
-    return v2_scheme
+    elif scheme_version == 2:
+        return v2_scheme
+    return v3_scheme
 
 def convert(schemes_file, sample_interval, aggr_interval, scheme_version):
     lines = []

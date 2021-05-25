@@ -92,6 +92,8 @@ def main(args=None):
         scheme_version = 1
     if _damon.feature_supported('schemes_prioritization'):
         scheme_version = 2
+    if _damon.feature_supported('schemes_wmarks'):
+        scheme_version = 3
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
