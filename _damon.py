@@ -203,7 +203,7 @@ def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
     debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
     if not os.path.isdir(debugfs_damon):
-        print("damon debugfs dir (%s) not found", debugfs_damon)
+        print("damon debugfs dir (%s) not found" % debugfs_damon)
         exit(1)
 
     for f in [debugfs_version, debugfs_attrs, debugfs_record, debugfs_schemes,
