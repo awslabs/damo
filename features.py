@@ -4,7 +4,7 @@ import _damon
 
 def set_argparser(parser):
     parser.add_argument('type', choices=['supported', 'unsupported', 'all'],
-            default='all',
+            default='all', nargs='?',
             help='type of features to listed')
 
 def main(args=None):
