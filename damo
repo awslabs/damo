@@ -4,6 +4,7 @@
 import argparse
 
 import adjust
+import features
 import monitor
 import record
 import report
@@ -44,6 +45,10 @@ parser_adjust = subparser.add_parser('adjust',
         help='adjust the record results with different monitoring attributes')
 adjust.set_argparser(parser_adjust)
 
+parser_features = subparser.add_parser('features',
+        help='list supported DAMON features in the kernel')
+features.set_argparser(parser_features)
+
 args = parser.parse_args()
 
 if args.command == 'record':
@@ -56,3 +61,5 @@ elif args.command == 'monitor':
     monitor.main(args)
 elif args.command == 'adjust':
     adjust.main(args)
+elif args.command == 'features':
+    features.main(args)
