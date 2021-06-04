@@ -15,10 +15,10 @@ test_report() {
 	eval "$cmd" > "$result"
 	if ! diff -q "$expected" "$result"
 	then
-		echo "report-$test_name FAIL"
+		echo "FAIL report-$test_name"
 		exit 1
 	fi
-	echo "report-$test_name PASS"
+	echo "PASS report-$test_name"
 }
 
 mkdir -p results
@@ -52,4 +52,4 @@ fi
 
 rm -fr results
 
-echo "PASS"
+echo "PASS" $(basename $(pwd))

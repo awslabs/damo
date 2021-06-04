@@ -19,7 +19,7 @@ done
 
 if [ "$applied" -eq 0 ]
 then
-	echo "FAIL"
+	echo "FAIL schemes-stat"
 	exit 1
 fi
-echo "PASS ($applied cold memory found)"
+echo "PASS schemes-stat ($applied cold memory found)"
