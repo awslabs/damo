@@ -26,6 +26,10 @@ test_stat() {
 	echo "PASS schemes-stat ($applied cold memory found)"
 }
 
-test_stat
+if ! sudo "$damo" features supported | grep schemes
+then
+	echo "SKIP $(basename $(pwd))"
+	exit 0
+fi
 
 echo "PASS $(basename $(pwd))"
