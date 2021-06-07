@@ -70,6 +70,8 @@ measure_scheme_applied() {
 		sleep 1
 	done
 
+	rm test_scheme.damos
+
 	applied=$((after - before))
 }
 
