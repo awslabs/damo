@@ -7,10 +7,11 @@ damon_debugfs="/sys/kernel/debug/damon"
 damo="../../damo"
 
 test_stat() {
+	echo "4K max    min min    3s max    stat" > test_scheme.damos
+
 	python ./stairs.py &
 	stairs_pid=$!
-	sudo "$damo" schemes -c ./stat_cold_memory.damos "$stairs_pid" > \
-		/dev/null &
+	sudo "$damo" schemes -c ./test_scheme.damos "$stairs_pid" > /dev/null &
 
 	total_applied=0
 	while ps --pid "$stairs_pid" > /dev/null
@@ -18,6 +19,8 @@ test_stat() {
 		applied=$(sudo cat "$damon_debugfs"/schemes | awk '{print $NF}')
 		sleep 2
 	done
+
+	rm test_scheme.damos
 
 	if [ "$applied" -eq 0 ]
 	then
