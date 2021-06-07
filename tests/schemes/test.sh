@@ -13,10 +13,11 @@ test_stat() {
 	stairs_pid=$!
 	sudo "$damo" schemes -c ./test_scheme.damos "$stairs_pid" > /dev/null &
 
-	total_applied=0
+	applied=0
 	while ps --pid "$stairs_pid" > /dev/null
 	do
-		applied=$(sudo cat "$damon_debugfs"/schemes | awk '{print $NF}')
+		applied=$(sudo cat "$damon_debugfs"/schemes | \
+			awk '{print $NF}')
 		sleep 2
 	done
 
@@ -38,7 +39,6 @@ ensure_free_mem_ratio() {
 	mem_free=$(grep MemFree /proc/meminfo | awk '{print $2}')
 	mem_free_rate=$((mem_free * 1000 / mem_total))
 
-	# Ensure free memory ratio is between 99% and 10%
 	if [ "$mem_free_rate" -gt "$upperbound" ] || \
 		[ "$mem_free_rate" -lt "$lowerbound" ]
 	then
@@ -68,12 +68,8 @@ measure_scheme_applied() {
 	sleep "$wait_for"
 	after=$(sudo cat "$damon_debugfs/schemes" | awk '{print $NF}')
 
-	while ps --pid "$damo_pid" > /dev/null
-	do
-		sleep 1
-	done
-
 	rm test_scheme.damos
+	wait "$damo_pid"
 
 	applied=$((after - before))
 }
