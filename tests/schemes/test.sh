@@ -9,7 +9,8 @@ damo="../../damo"
 test_stat() {
 	python ./stairs.py &
 	stairs_pid=$!
-	sudo "$damo" schemes -c ./stat_cold_memory.damos "$stairs_pid" &
+	sudo "$damo" schemes -c ./stat_cold_memory.damos "$stairs_pid" > \
+		/dev/null &
 
 	total_applied=0
 	while ps --pid "$stairs_pid" > /dev/null
@@ -52,7 +53,7 @@ measure_scheme_applied() {
 
 	timeout_after=$((wait_for + 2))
 	sudo timeout "$timeout_after" \
-		"$damo" schemes -c test_scheme.damos "$target" &
+		"$damo" schemes -c test_scheme.damos "$target" > /dev/null &
 	damo_pid=$!
 
 	sudo cat "$damon_debugfs/schemes"
@@ -73,7 +74,8 @@ measure_scheme_applied() {
 }
 
 test_wmarks() {
-	if ! sudo "$damo" features supported | grep schemes_wmarks > /dev/null
+	if ! sudo "$damo" features supported | grep -w schemes_wmarks > \
+		/dev/null
 	then
 		echo "SKIP schemes-wmarks (unsupported)"
 		return
