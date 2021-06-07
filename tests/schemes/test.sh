@@ -26,6 +26,52 @@ test_stat() {
 	echo "PASS schemes-stat ($applied cold memory found)"
 }
 
+ensure_free_mem_ratio() {
+	upperbound=$1
+	lowerbound=$2
+
+	mem_total=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+	mem_free=$(grep MemFree /proc/meminfo | awk '{print $2}')
+	mem_free_rate=$((mem_free * 1000 / mem_total))
+
+	# Ensure free memory ratio is between 99% and 10%
+	if [ "$mem_free_rate" -gt "$upperbound" ] || \
+		[ "$mem_free_rate" -lt "$lowerbound" ]
+	then
+		echo "SKIP schemes-wmarks ($mem_free_rate free mem rate)"
+		exit
+	fi
+}
+
+measure_scheme_applied() {
+	scheme=$1
+	target=$2
+	wait_for=$3
+
+	echo "$scheme" > test_scheme.damos
+
+	timeout_after=$((wait_for + 2))
+	sudo timeout "$timeout_after" \
+		"$damo" schemes -c test_scheme.damos "$target" &
+	damo_pid=$!
+
+	sudo cat "$damon_debugfs/schemes"
+	before=$(sudo cat "$damon_debugfs/schemes" | awk '{print $NF}')
+	if [ "$before" = "" ]
+	then
+		before=0
+	fi
+	sleep "$wait_for"
+	after=$(sudo cat "$damon_debugfs/schemes" | awk '{print $NF}')
+
+	while ps --pid "$damo_pid" > /dev/null
+	do
+		sleep 1
+	done
+
+	applied=$((after - before))
+}
+
 test_wmarks() {
 	if ! sudo "$damo" features supported | grep schemes_wmarks > /dev/null
 	then
@@ -33,71 +79,34 @@ test_wmarks() {
 		return
 	fi
 
-	mem_total=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-	mem_free=$(grep MemFree /proc/meminfo | awk '{print $2}')
-	mem_free_rate=$((mem_free * 1000 / mem_total))
-	echo "$mem_total $mem_free $mem_free_rate"
-	if [ "$mem_free_rate" -gt 970 ] || [ "$mem_free_rate" -lt 100 ]
-	then
-		echo "SKIP schemes-wmarks (memory pressure $mem_free_rate)"
-		return
-	fi
+	scheme_prefix="4K max  min min  1s max  stat"
+	scheme_prefix+="  5G 1s 0 3 7"
+	scheme_prefix+="  free_mem_rate 1s"
 
-	scheme="4K max  min min  1s max  stat"
-	scheme+="  5G 1s 0 3 7"
-	scheme+="  free_mem_rate 1s"
-
-	echo "$scheme 50 40 30" > test_wmarks.damos
-	sudo timeout 5 "$damo" schemes -c ./test_wmarks.damos paddr &
-	damo_pid=$!
-
-	before=$(sudo cat "$damon_debugfs"/schemes | awk '{print $NF}')
-	sleep 3
-	after=$(sudo cat "$damon_debugfs"/schemes | awk '{print $NF}')
-	while ps --pid "$damo_pid" > /dev/null
-	do
-		sleep 1
-	done
-
-	applied=$((after - before))
+	# Test high watermark-based deactivation
+	ensure_free_mem_ratio 990 100
+	applied=42
+	measure_scheme_applied "$scheme_prefix 50 40 30" "paddr" 3
 	if [ "$applied" -ne 0 ]
 	then
 		echo "FAIL schemes-wmarks (high watermark doesn't works)"
 		exit 1
 	fi
 
-	echo "$scheme 999 980 100" > test_wmarks.damos
-	sudo timeout 5 "$damo" schemes -c ./test_wmarks.damos paddr &
-	damo_pid=$!
-
-	before=$(sudo cat "$damon_debugfs"/schemes | awk '{print $NF}')
-	sleep 3
-	after=$(sudo cat "$damon_debugfs"/schemes | awk '{print $NF}')
-	while ps --pid "$damo_pid" > /dev/null
-	do
-		sleep 1
-	done
-
-	applied=$((after - before))
+	# Test mid-low watermarks-based activation
+	ensure_free_mem_ratio 990 100
+	applied=0
+	measure_scheme_applied "$scheme_prefix 999 995 100" "paddr" 3
 	if [ "$applied" -le 0 ]
 	then
 		echo "FAIL schemes-wmarks (mid watermark doesn't works)"
 		exit 1
 	fi
 
-	echo "$scheme 999 990 980" > test_wmarks.damos
-	sudo timeout 5 "$damo" schemes -c ./test_wmarks.damos paddr &
-	damo_pid=$!
-
-	before=$(sudo cat "$damon_debugfs"/schemes | awk '{print $NF}')
-	sleep 3
-	after=$(sudo cat "$damon_debugfs"/schemes | awk '{print $NF}')
-	while ps --pid "$damo_pid" > /dev/null
-	do
-		sleep 1
-	done
-
-	applied=$((after - before))
+	# Test low watermark-based deactivation
+	ensure_free_mem_ratio 990 100
+	applied=42
+	measure_scheme_applied "$scheme_prefix 999 998 995" "paddr" 3
 	if [ "$applied" -ne 0 ]
 	then
 		echo "FAIL schemes-wmarks (low watermark doesn't works)"
