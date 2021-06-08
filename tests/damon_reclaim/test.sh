@@ -33,7 +33,7 @@ then
 	exit 1
 fi
 
-echo N | sudo tee "$sysdir/enabled" > /dev/null && sleep 4
+echo N | sudo tee "$sysdir/enabled" > /dev/null && sleep 7
 if [ "$(sudo cat "$sysdir/kdamond_pid")" -ne -1 ]
 then
 	echo "FAIL damon_reclaim (disabling failed)"
@@ -53,7 +53,7 @@ then
 	exit 1
 fi
 
-echo N | sudo tee "$sysdir/enabled" > /dev/null && sleep 4
+echo N | sudo tee "$sysdir/enabled" > /dev/null && sleep 7
 kdamond_pid=$(sudo cat "$sysdir/kdamond_pid")
 if [ "$kdamond_pid" -ne -1 ]
 then
