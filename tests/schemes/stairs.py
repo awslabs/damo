@@ -4,7 +4,7 @@ import time
 
 sz_stair = 10 * 1024 * 1024
 nr_stairs = 2
-time_for_stair = 5
+time_for_stair = 3
 
 def main():
     stairs = []

@@ -8,7 +8,7 @@ damo="../../damo"
 
 __test_stat() {
 	local speed_limit=$1
-	scheme_prefix="4K max    min min    3s max    stat"
+	scheme_prefix="4K max    min min    1s max    stat"
 	if [ "$speed_limit" = "" ]
 	then
 		echo "$scheme_prefix" > test_scheme.damos
