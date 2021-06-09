@@ -6,22 +6,36 @@ cd "$bindir"
 damon_debugfs="/sys/kernel/debug/damon"
 damo="../../damo"
 
-test_stat() {
-	echo "4K max    min min    3s max    stat" > test_scheme.damos
+__test_stat() {
+	local speed_limit=$1
+	scheme_prefix="4K max    min min    3s max    stat"
+	if [ "$speed_limit" = "" ]
+	then
+		echo "$scheme_prefix" > test_scheme.damos
+	else
+		speed_limit+="B"
+		echo "$scheme_prefix $speed_limit 1s" > test_scheme.damos
+	fi
 
 	python ./stairs.py &
 	stairs_pid=$!
 	sudo "$damo" schemes -c ./test_scheme.damos "$stairs_pid" > /dev/null &
 
+	start_time=$SECONDS
 	applied=0
 	while ps --pid "$stairs_pid" > /dev/null
 	do
 		applied=$(sudo cat "$damon_debugfs"/schemes | \
 			awk '{print $NF}')
-		sleep 2
+		sleep 1
 	done
+	measure_time=$((SECONDS - start_time))
 
 	rm test_scheme.damos
+}
+
+test_stat() {
+	__test_stat 0
 
 	if [ "$applied" -eq 0 ]
 	then
@@ -29,6 +43,30 @@ test_stat() {
 		exit 1
 	fi
 	echo "PASS schemes-stat ($applied cold memory found)"
+
+	if ! sudo "$damo" features supported | grep -w schemes_speed_limit > \
+		/dev/null
+	then
+		echo "SKIP schemes-speed-limit (unsupported)"
+		return
+	fi
+
+	speed=$((applied / measure_time))
+	if [ "$speed" -lt $((4 * 1024 * 100)) ]
+	then
+		echo "SKIP schemes-speed-limit (too slow detection: $speed)"
+		return
+	fi
+	speed_limit=$((speed / 2))
+
+	__test_stat $speed_limit
+	speed=$((applied / measure_time))
+	if [ "$speed" -gt $((speed_limit * 11 / 10)) ]
+	then
+		echo "FAIL schemes-speed-limit ($speed > $speed_limit)"
+		exit 1
+	fi
+	echo "PASS schemes-speed-limit ($speed < $speed_limit)"
 }
 
 ensure_free_mem_ratio() {
