@@ -44,12 +44,6 @@ test_report "$damo report heats --guide" "heats_guide"
 
 test_report "$damo report heats" "heats"
 
-if perf script -l | grep -q damon
-then
-	test_report "perf script report damon -i perf.data heatmap" \
-		"perf_heatmap"
-fi
-
 rm -fr results
 
 echo "PASS" $(basename $(pwd))
