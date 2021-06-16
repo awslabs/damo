@@ -30,9 +30,9 @@ def main(args=None):
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
-    snapshot_time = (result.end_time - result.start_time) / result.nr_snapshots
-    nr_shots_in_aggr = max(round(args.aggregate_interval * 1000 /
-        snapshot_time), 1)
+    snapshot_time = float(result.end_time - result.start_time) / result.nr_snapshots
+    nr_shots_in_aggr = int(max(round(args.aggregate_interval * 1000 /
+        snapshot_time), 1))
     target_snapshots = result.target_snapshots
 
     start_time = 0

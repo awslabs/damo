@@ -44,7 +44,7 @@ def add_heats(snapshot, duration, pixels, time_unit, space_unit, addr_range):
             continue
 
         fraction_start = start
-        addr_idx = int((fraction_start - addr_range[0]) / space_unit)
+        addr_idx = int(float(fraction_start - addr_range[0]) / space_unit)
         while fraction_start < end:
             fraction_end = min((addr_idx + 1) * space_unit + addr_range[0],
                     end)
@@ -53,7 +53,7 @@ def add_heats(snapshot, duration, pixels, time_unit, space_unit, addr_range):
 
             pixel = pixels[addr_idx]
             heat += pixel.heat * pixel_sz
-            pixel.heat = heat / pixel_sz
+            pixel.heat = float(heat) / pixel_sz
 
             fraction_start = fraction_end
             addr_idx += 1
@@ -75,7 +75,7 @@ def heat_pixels_from_snapshots(snapshots, time_range, addr_range, resols):
         end = min(shot.end_time, time_range[1])
 
         fraction_start = start
-        time_idx = int((fraction_start - time_range[0]) / time_unit)
+        time_idx = int(float(fraction_start - time_range[0]) / time_unit)
         while fraction_start < end:
             fraction_end = min((time_idx + 1) * time_unit + time_range[0], end)
             add_heats(shot, fraction_end - fraction_start, pixels[time_idx],
@@ -95,7 +95,7 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
                 lowest_heat = pixel.heat
     if not highest_heat and not lowest_heat:
         return
-    heat_unit = (highest_heat + 1 - lowest_heat) / 9
+    heat_unit = float(highest_heat + 1 - lowest_heat) / 9
 
     colorsets = {
         'gray':[
@@ -112,7 +112,7 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
     for snapshot in pixels:
         chars = []
         for pixel in snapshot:
-            heat = int((pixel.heat - lowest_heat) / heat_unit)
+            heat = int(float(pixel.heat - lowest_heat) / heat_unit)
             heat = min(heat, len(colors[0]) - 1)
             bg = colors[0][heat]
             fg = colors[1][heat]
@@ -129,9 +129,9 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
     print('# resolution: %dx%d (%s and %s for each character)' % (
         len(pixels[1]), len(pixels),
         _fmt_nr.format_sz(
-            (addr_range[1] - addr_range[0]) / len(pixels[1]), False),
+            float(addr_range[1] - addr_range[0]) / len(pixels[1]), False),
         _fmt_nr.format_time(
-            (time_range[1] - time_range[0]) / len(pixels), False)))
+            float(time_range[1] - time_range[0]) / len(pixels), False)))
 
 def pr_heats(args, damon_result):
     tid = args.tid

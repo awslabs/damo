@@ -191,7 +191,7 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
             end_time = snapshots[-1].end_time
             start_time = snapshots[0].end_time
             nr_snapshots = len(snapshots) - 1
-            snapshot_time = (end_time - start_time) / nr_snapshots
+            snapshot_time = float(end_time - start_time) / nr_snapshots
 
             result.start_time = start_time - snapshot_time
             result.end_time = end_time

@@ -5,6 +5,7 @@ def format_sz(sz_bytes, machine_friendly):
     if machine_friendly:
         return '%d' % sz_bytes
 
+    sz_bytes = float(sz_bytes)
     if sz_bytes > 1<<40:
         return '%.3f TiB' % (sz_bytes / (1<<40))
     if sz_bytes > 1<<30:
@@ -19,6 +20,7 @@ def format_time(time_ns, machine_friendly):
     if machine_friendly:
         return '%d' % time_ns
 
+    time_ns = float(time_ns)
     if time_ns > 60000000000:
         return '%d m %.3f s' % (time_ns / 60000000000,
                 (time_ns % 60000000000) / 1000000000)

@@ -26,6 +26,10 @@ def pidfd_open(pid):
 
     return syscall(NR_pidfd_open, pid, 0)
 
+def passed_seconds(from_date):
+    delta = datetime.datetime.now() - from_date
+    return ((delta.seconds + delta.days * 24 * 3600) * 10**6 + delta.microseconds) / 10**6
+
 perf_pipe = None
 rfile_path = None
 def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd,
@@ -83,8 +87,7 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd,
     while True:
         if not _damon.is_damon_running():
             break
-        if timeout and ((datetime.datetime.now() - wait_start).total_seconds()
-                > timeout):
+        if timeout and passed_seconds(wait_start) > timeout:
             break
         time.sleep(1)
 

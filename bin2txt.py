@@ -68,14 +68,14 @@ def main(args=None):
                     _fmt_nr.format_time(
                         snapshot.end_time - snapshot.start_time,
                         args.raw_number))
-            print('target_id:', snapshot.target_id)
-            print('nr_regions:', len(snapshot.regions))
+            print('target_id: %s' % snapshot.target_id)
+            print('nr_regions: %s' % len(snapshot.regions))
             for r in snapshot.regions:
                 print("%012x-%012x(%12s):\t%d" %
                         (r.start, r.end,
                             _fmt_nr.format_sz(r.end - r.start,
                                 args.raw_number), r.nr_accesses))
-            print()
+            print('')
 
 if __name__ == '__main__':
     main()
