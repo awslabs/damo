@@ -104,9 +104,10 @@ def text_to_damos_wmark_metric(txt):
 # 1: v1 input + '<limit_sz> <limit_ms>'
 # 2: v2 input + '<weight_sz> <weight_nr_accesses> <weight_age>'
 # 3: v3 input + '<watermark metric> <check interval> <high> <mid> <low>'
+# 4: v1 input + '<quota_ms> <quota_sz> <window_ms>' + weights + watermarks
 def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
     fields = line.split()
-    expected_lengths = [7, 9, 12, 17]
+    expected_lengths = [7, 9, 12, 17, 18]
     if not len(fields) in expected_lengths:
         print('expected %s fields, but \'%s\'' % (expected_lengths, line))
         exit(1)
@@ -120,8 +121,9 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
         min_age = text_to_aggr_intervals(fields[4], aggr_interval)
         max_age = text_to_aggr_intervals(fields[5], aggr_interval)
         action = text_to_damos_action(fields[6])
-        limit_sz = 0
-        limit_ms = ulong_max
+        quota_ms = 0
+        quota_sz = 0
+        window_ms = ulong_max
         weight_sz = 0
         weight_nr_accesses = 0
         weight_age = 0
@@ -130,29 +132,46 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
         wmarks_high = 0
         wmarks_mid = 0
         wmarks_low = 0
-        if len(fields) >= 9:
-            limit_sz = text_to_bytes(fields[7])
-            limit_ms = text_to_ms(fields[8])
-        if len(fields) >= 12:
-            weight_sz = int(fields[9])
-            weight_nr_accesses = int(fields[10])
-            weight_age = int(fields[11])
-        if len(fields) == 17:
-            wmarks_metric = text_to_damos_wmark_metric(fields[12])
-            wmarks_interval = text_to_us(fields[13])
-            wmarks_high = int(fields[14])
-            wmarks_mid = int(fields[15])
-            wmarks_low = int(fields[16])
+        if len(fields) <= 17:
+            if len(fields) >= 9:
+                quota_sz = text_to_bytes(fields[7])
+                window_ms = text_to_ms(fields[8])
+            if len(fields) >= 12:
+                weight_sz = int(fields[9])
+                weight_nr_accesses = int(fields[10])
+                weight_age = int(fields[11])
+            if len(fields) == 17:
+                wmarks_metric = text_to_damos_wmark_metric(fields[12])
+                wmarks_interval = text_to_us(fields[13])
+                wmarks_high = int(fields[14])
+                wmarks_mid = int(fields[15])
+                wmarks_low = int(fields[16])
+        elif len(fields) == 18:
+            quota_ms = text_to_ms(fields[7])
+            quota_sz = text_to_bytes(fields[8])
+            window_ms = text_to_ms(fields[9])
+            weight_sz = int(fields[10])
+            weight_nr_accesses = int(fields[11])
+            weight_age = int(fields[12])
+            wmarks_metric = text_to_damos_wmark_metric(fields[13])
+            wmarks_interval = text_to_us(fields[14])
+            wmarks_high = int(fields[15])
+            wmarks_mid = int(fields[16])
+            wmarks_low = int(fields[17])
+
     except:
         print('wrong input field')
         raise
     v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (min_sz, max_sz,
             min_nr_accesses, max_nr_accesses, min_age, max_age, action)
-    v1_scheme = '%s\t%d\t%d' % (v0_scheme, limit_sz, limit_ms)
+    v1_scheme = '%s\t%d\t%d' % (v0_scheme, quota_sz, window_ms)
     v2_scheme = '%s\t%d\t%d\t%d' % (v1_scheme,
             weight_sz, weight_nr_accesses, weight_age)
     v3_scheme = '%s\t%d\t%d\t%d\t%d\t%d' % (v2_scheme, wmarks_metric,
             wmarks_interval, wmarks_high, wmarks_mid, wmarks_low)
+    v4_scheme = '%s\t' % v0_scheme + '\t'.join('%d' % x for x in [quota_ms,
+        quota_sz, window_ms, weight_sz, weight_nr_accesses, weight_age,
+        wmarks_metric, wmarks_interval, wmarks_high, wmarks_mid, wmarks_low])
 
     if scheme_version == 0:
         return v0_scheme
@@ -160,7 +179,13 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
         return v1_scheme
     elif scheme_version == 2:
         return v2_scheme
-    return v3_scheme
+    elif scheme_version == 3:
+        return v3_scheme
+    elif scheme_version == 4:
+        return v4_scheme
+    else:
+        print('Unsupported scheme version: %d' % scheme_version)
+        exit(1)
 
 def convert(schemes_file, sample_interval, aggr_interval, scheme_version):
     lines = []
@@ -189,7 +214,7 @@ def main():
     sample_interval = args.sample
     aggr_interval = args.aggr
 
-    print(convert(schemes_file, sample_interval, aggr_interval))
+    print(convert(schemes_file, sample_interval, aggr_interval, 4))
 
 if __name__ == '__main__':
     main()

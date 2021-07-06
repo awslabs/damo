@@ -169,7 +169,12 @@ def update_supported_features():
             feature_supports['schemes_speed_limit'] = True
             feature_supports['schemes_prioritization'] = True
             feature_supports['schemes_wmarks'] = True
-
+        elif test_debugfs_file(debugfs_schemes, '%s\n' % ' '.join(['1'] * 18),
+                '%s 0 0\n' % ' '.join(['1'] * 18)):
+            feature_supports['schemes_speed_limit'] = True
+            feature_supports['schemes_speed_time_limit'] = True
+            feature_supports['schemes_prioritization'] = True
+            feature_supports['schemes_wmarks'] = True
 
 def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
     global feature_supports
@@ -189,6 +194,7 @@ def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
             'init_regions': False,
             'paddr': False,
             'schemes_speed_limit': False,
+            'schemes_speed_time_limit': False,
             'schemes_prioritization': False,
             'schemes_wmarks': False,
             }
