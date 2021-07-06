@@ -85,8 +85,7 @@ def main(args=None):
     bindir = os.path.dirname(sys.argv[0])
     damo = os.path.join(bindir, 'damo')
 
-    record_cmd = '%s record \"%s\" --timeout %s' % (damo, target,
-            args.delay)
+    record_cmd = 'timeout %s %s record \"%s\"' % (args.delay, damo, target)
 
     if args.report_type == 'heats':
         report_cmd = '%s report heats --heatmap stdout --resol 10 80' % damo
@@ -101,6 +100,9 @@ def main(args=None):
         try:
             subprocess.check_output(record_cmd, shell=True,
                     stderr=subprocess.STDOUT, executable='/bin/bash')
+        except subprocess.CalledProcessError as e:
+            pass
+        try:
             output = subprocess.check_output(report_cmd, shell=True,
                     executable='/bin/bash').decode()
             if args.report_type == 'heats':

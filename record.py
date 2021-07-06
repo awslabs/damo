@@ -26,14 +26,9 @@ def pidfd_open(pid):
 
     return syscall(NR_pidfd_open, pid, 0)
 
-def passed_seconds(from_date):
-    delta = datetime.datetime.now() - from_date
-    return ((delta.seconds + delta.days * 24 * 3600) * 10**6 + delta.microseconds) / 10**6
-
 perf_pipe = None
 rfile_path = None
-def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd,
-        timeout):
+def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
     global perf_pipe
     global rfile_path
 
@@ -80,14 +75,9 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd,
 
     wait_start = datetime.datetime.now()
     if is_target_cmd:
-        try:
-            p.wait(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            p.kill()
+        p.wait()
     while True:
         if not _damon.is_damon_running():
-            break
-        if timeout and passed_seconds(wait_start) > timeout:
             break
         time.sleep(1)
 
@@ -136,8 +126,6 @@ def set_argparser(parser):
             help='if target is \'paddr\', limit it to the numa node')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
             default='damon.data', help='output file path')
-    parser.add_argument('--timeout', metavar='<seconds>', type=float,
-            help='timeout in seconds')
 
 def main(args=None):
     global orig_attrs
@@ -159,7 +147,6 @@ def main(args=None):
     init_regions = _damon.cmd_args_to_init_regions(args)
     numa_node = args.numa_node
     target = args.target
-    timeout = args.timeout
 
     target_fields = target.split()
     if target == 'paddr':   # physical memory address space
@@ -168,20 +155,17 @@ def main(args=None):
                 init_regions = _paddr_layout.paddr_region_of(numa_node)
             else:
                 init_regions = [_paddr_layout.default_paddr_region()]
-        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd,
-                timeout)
+        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
     elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
             shell=True, executable='/bin/bash'):
-        do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd,
-                timeout)
+        do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd)
     else:
         try:
             pid = int(target)
         except:
             print('target \'%s\' is neither a command, nor a pid' % target)
             exit(1)
-        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd,
-                timeout)
+        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
 
 if __name__ == '__main__':
     main()
