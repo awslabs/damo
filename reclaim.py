@@ -9,9 +9,10 @@ import time
 
 darc_params_dir = '/sys/module/damon_reclaim/parameters'
 darc_params = ['kdamond_pid', 'enabled', 'min_age', 'quota_ms', 'quota_sz',
-        'charge_window_ms', 'wmarks_interval', 'wmarks_high', 'wmarks_mid',
-        'wmarks_low', 'sample_interval', 'aggr_interval', 'min_nr_regions',
-        'max_nr_regions', 'monitor_region_start', 'monitor_region_end']
+        'quota_reset_interval_ms', 'wmarks_interval', 'wmarks_high',
+        'wmarks_mid', 'wmarks_low', 'sample_interval', 'aggr_interval',
+        'min_nr_regions', 'max_nr_regions', 'monitor_region_start',
+        'monitor_region_end']
 
 def chk_permission():
     if os.geteuid() != 0:
@@ -64,38 +65,21 @@ def set_argparser(parser):
     parser.add_argument('--min_age', type=int, metavar='<microseconds>',
             default=5000000,
             help='time threshold for cold memory regions identification (us)')
-    parser.add_argument('--quota_ms', type=int, metavar='<milliseconds>',
-            default=100, help='time limit in milliseconds')
-    parser.add_argument('--quota_sz', type=int, metavar='<bytes>',
-            default=1024*1024*1024, help='size limit in bytes')
-    parser.add_argument('--charge_window_ms', type=int,
-            metavar='<milliseconds>', default=1000,
-            help='limit charge time window in milliseconds')
-    parser.add_argument('--wmarks_interval', type=int,
-            metavar='<microseconds>', default=5000000,
-            help='watermarks check time interval in microseconds')
-    parser.add_argument('--wmarks_high', type=int, metavar='<per-thousand>',
-            default=500, help='high watermark in per-thousand')
-    parser.add_argument('--wmarks_mid', type=int, metavar='<per-thousand>',
-            default=400, help='mid watermark in per-thousand')
-    parser.add_argument('--wmarks_low', type=int, metavar='<per-thousand>',
-            default=200, help='low watermark in per-thousand')
-    parser.add_argument('--sample_interval', type=int,
-            metavar='<microseconds>', default=5000,
-            help='sampling interval in microseconds')
-    parser.add_argument('--aggr_interval', type=int, metavar='<microseconds>',
-            default=100000,
-            help='aggregation interval in microseconds')
-    parser.add_argument('--min_nr_regions', type=int, metavar='<number>',
-            default=10, help='minimum number of memory regions')
-    parser.add_argument('--max_nr_regions', type=int, metavar='<number>',
-            default=1000, help='maximum number of memory regions')
-    parser.add_argument('--monitor_region_start', type=int,
-            metavar='<phy addr>', default=0,
-            help='start address of target memory region')
-    parser.add_argument('--monitor_region_end', type=int,
-            metavar='<phy addr>', default=0,
-            help='AAAAAend address of target memory region')
+    parser.add_argument('--quota', type=int, metavar='<ms or bytes>', nargs=3,
+            default=[100, 1024 * 1024 * 1024, 1000],
+            help='quotas for time and size, and reset interval')
+    parser.add_argument('--wmarks', type=int, metavar='<us or per-thousand>',
+            nargs=4, default=[5000000, 500, 400, 200],
+            help='watermarks check interval and three watermarks')
+    parser.add_argument('--monitor_intervals', type=int,
+            metavar='<microseconds>', nargs=2, default=[5000, 100000],
+            help='sampling interval and aggregation interval of DAMON')
+    parser.add_argument('--nr_regions', type=int, metavar='<number>',
+            nargs=2, default=[10, 1000],
+            help='minimum and maximum number of DAMON memory regions')
+    parser.add_argument('--monitor_region', type=int, metavar='<phy addr>',
+            default=[0, 0],
+            help='start and end addresses of target memory region')
 
 def main(args=None):
     if not args:
@@ -111,19 +95,19 @@ def main(args=None):
         return
 
     set_param('min_age', args.min_age)
-    set_param('quota_ms', args.quota_ms)
-    set_param('quota_sz', args.quota_sz)
-    set_param('charge_window_ms', args.charge_window_ms)
-    set_param('wmarks_interval', args.wmarks_interval)
-    set_param('wmarks_high', args.wmarks_high)
-    set_param('wmarks_mid', args.wmarks_mid)
-    set_param('wmarks_low', args.wmarks_low)
-    set_param('sample_interval', args.sample_interval)
-    set_param('aggr_interval', args.aggr_interval)
-    set_param('min_nr_regions', args.min_nr_regions)
-    set_param('max_nr_regions', args.max_nr_regions)
-    set_param('monitor_region_start', args.monitor_region_start)
-    set_param('monitor_region_end', args.monitor_region_end)
+    set_param('quota_ms', args.quota[0])
+    set_param('quota_sz', args.quota[1])
+    set_param('quota_reset_interval_ms', args.quota[2])
+    set_param('wmarks_interval', args.wmarks[0])
+    set_param('wmarks_high', args.wmarks[1])
+    set_param('wmarks_mid', args.wmarks[2])
+    set_param('wmarks_low', args.wmarks[3])
+    set_param('sample_interval', args.monitor_intervals[0])
+    set_param('aggr_interval', args.monitor_intervals[1])
+    set_param('min_nr_regions', args.nr_regions[0])
+    set_param('max_nr_regions', args.nr_regions[1])
+    set_param('monitor_region_start', args.monitor_region[0])
+    set_param('monitor_region_end', args.monitor_region[1])
 
     darc_enable(args.action == 'enable')
 
