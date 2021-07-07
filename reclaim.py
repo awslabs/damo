@@ -8,11 +8,10 @@ import os
 import time
 
 darc_params_dir = '/sys/module/damon_reclaim/parameters'
-darc_params = ['enabled', 'min_age', 'quota_ms', 'quota_sz',
+darc_params = ['kdamond_pid', 'enabled', 'min_age', 'quota_ms', 'quota_sz',
         'charge_window_ms', 'wmarks_interval', 'wmarks_high', 'wmarks_mid',
         'wmarks_low', 'sample_interval', 'aggr_interval', 'min_nr_regions',
-        'max_nr_regions', 'monitor_region_start', 'monitor_region_end',
-        'kdamond_pid']
+        'max_nr_regions', 'monitor_region_start', 'monitor_region_end']
 
 def chk_permission():
     if os.geteuid() != 0:
@@ -52,10 +51,16 @@ def darc_enable(on):
         time.sleep(1)
     return
 
+def darc_read_status():
+    for param in darc_params:
+        param_file = os.path.join(darc_params_dir, param)
+        with open(param_file, 'r') as f:
+            print('%s: %s' % (param, f.read().strip()))
+
 def set_argparser(parser):
-    parser.add_argument('enable', type=str, metavar='<mode>', nargs='?',
-            choices=['enable', 'disable'], default='enable',
-            help='(re-)enable or disable DAMON_RECLAIM')
+    parser.add_argument('action', type=str, metavar='<action>', nargs='?',
+            choices=['enable', 'disable', 'status'], default='status',
+            help='read status, enable, or disable DAMON_RECLAIM')
     parser.add_argument('--min_age', type=int, metavar='<microseconds>',
             default=5000000,
             help='time threshold for cold memory regions identification (us)')
@@ -90,7 +95,7 @@ def set_argparser(parser):
             help='start address of target memory region')
     parser.add_argument('--monitor_region_end', type=int,
             metavar='<phy addr>', default=0,
-            help='end address of target memory region')
+            help='AAAAAend address of target memory region')
 
 def main(args=None):
     if not args:
@@ -100,6 +105,10 @@ def main(args=None):
 
     chk_permission()
     chk_darc_sysfs()
+
+    if args.action == 'status':
+        darc_read_status()
+        return
 
     set_param('min_age', args.min_age)
     set_param('quota_ms', args.quota_ms)
@@ -116,7 +125,7 @@ def main(args=None):
     set_param('monitor_region_start', args.monitor_region_start)
     set_param('monitor_region_end', args.monitor_region_end)
 
-    darc_enable(args.enable == 'enable')
+    darc_enable(args.action == 'enable')
 
 if __name__ == '__main__':
     main()
