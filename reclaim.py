@@ -94,6 +94,11 @@ def main(args=None):
         darc_read_status()
         return
 
+    if args.action == 'disable':
+        darc_enable(False)
+        return
+
+    # args.action is 'enable'.
     set_param('min_age', args.min_age)
     set_param('quota_ms', args.quota[0])
     set_param('quota_sz', args.quota[1])
@@ -109,7 +114,7 @@ def main(args=None):
     set_param('monitor_region_start', args.monitor_region[0])
     set_param('monitor_region_end', args.monitor_region[1])
 
-    darc_enable(args.action == 'enable')
+    darc_enable(True)
 
 if __name__ == '__main__':
     main()
