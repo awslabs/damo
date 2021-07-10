@@ -144,6 +144,12 @@ def test_debugfs_file(path, input_str, expected):
         f.write(orig_value)
     return passed
 
+def test_debugfs_file_schemes(nr_fields):
+    input_str = ' '.join(['1'] * nr_fields)
+    expected = '%s 0 0\n' % input_str
+
+    return test_debugfs_file(debugfs_schemes, input_str, expected)
+
 def update_supported_features():
     if debugfs_record != None:
         feature_supports['record'] = True
@@ -156,21 +162,16 @@ def update_supported_features():
         feature_supports['paddr'] = True
 
     if debugfs_schemes != None:
-        if test_debugfs_file(debugfs_schemes,
-                '1 1 1 1 1 1 1 1 1\n', '1 1 1 1 1 1 1 1 1 0 0\n'):
+        if test_debugfs_file_schemes(9):
             feature_supports['schemes_speed_limit'] = True
-        elif test_debugfs_file(debugfs_schemes,
-                '1 1 1 1 1 1 1 1 1 1 1 1\n', '1 1 1 1 1 1 1 1 1 1 1 1 0 0\n'):
+        elif test_debugfs_file_schemes(12):
             feature_supports['schemes_speed_limit'] = True
             feature_supports['schemes_prioritization'] = True
-        elif test_debugfs_file(debugfs_schemes,
-                '1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\n',
-                '1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0\n'):
+        elif test_debugfs_file_schemes(17):
             feature_supports['schemes_speed_limit'] = True
             feature_supports['schemes_prioritization'] = True
             feature_supports['schemes_wmarks'] = True
-        elif test_debugfs_file(debugfs_schemes, '%s\n' % ' '.join(['1'] * 18),
-                '%s 0 0\n' % ' '.join(['1'] * 18)):
+        elif test_debugfs_file_schemes(18):
             feature_supports['schemes_quotas'] = True
             feature_supports['schemes_prioritization'] = True
             feature_supports['schemes_wmarks'] = True
