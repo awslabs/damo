@@ -15,7 +15,7 @@ def main(args=None):
 
     features = _damon.get_supported_features()
 
-    for feature in features:
+    for feature in sorted(features.keys()):
         if args.type == 'all':
             print('%s: %s' % (feature,
                 'Supported' if features[feature] else 'Unsupported'))
