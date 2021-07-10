@@ -36,7 +36,6 @@ def cleanup():
     if target_is_cmd and cmd_pipe.poll() == None:
         cmd_pipe.kill()
 
-
 def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
     cleanup()
@@ -98,7 +97,6 @@ def main(args=None):
         report_cmd = '%s report heats --heatmap stdout --resol 10 80' % damo
     else:
         report_cmd = '%s report wss' % damo
-
 
     nr_reports = 0
     while not args.count or nr_reports < args.count:

@@ -35,8 +35,8 @@ def set_target(tid, init_regions=[]):
             shell=True, executable='/bin/bash')
 
 def turn_damon(on_off):
-    return subprocess.call("echo %s > %s" % (on_off, debugfs_monitor_on),
-            shell=True, executable="/bin/bash")
+    return subprocess.call('echo %s > %s' % (on_off, debugfs_monitor_on),
+            shell=True, executable='/bin/bash')
 
 def is_damon_running():
     with open(debugfs_monitor_on, 'r') as f:
@@ -63,13 +63,13 @@ class Attrs:
         self.schemes = c
 
     def __str__(self):
-        return "%s %s %s %s %s %s %s\n%s" % (self.sample_interval,
+        return '%s %s %s %s %s %s %s\n%s' % (self.sample_interval,
                 self.aggr_interval, self.regions_update_interval,
                 self.min_nr_regions, self.max_nr_regions, self.rbuf_len,
                 self.rfile_path, self.schemes)
 
     def attr_str(self):
-        return "%s %s %s %s %s " % (self.sample_interval, self.aggr_interval,
+        return '%s %s %s %s %s ' % (self.sample_interval, self.aggr_interval,
                 self.regions_update_interval, self.min_nr_regions,
                 self.max_nr_regions)
 
@@ -209,7 +209,7 @@ def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
     debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
     if not os.path.isdir(debugfs_damon):
-        print("damon debugfs dir (%s) not found" % debugfs_damon)
+        print('damon debugfs dir (%s) not found' % debugfs_damon)
         exit(1)
 
     for f in [debugfs_version, debugfs_attrs, debugfs_record, debugfs_schemes,
@@ -224,13 +224,13 @@ def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
             elif f == debugfs_init_regions:
                 debugfs_init_regions = None
             else:
-                print("damon debugfs file (%s) not found" % f)
+                print('damon debugfs file (%s) not found' % f)
                 exit(1)
 
     update_supported_features()
 
 def cmd_args_to_attrs(args):
-    "Generate attributes with specified arguments"
+    'Generate attributes with specified arguments'
     sample_interval = args.sample
     aggr_interval = args.aggr
     regions_update_interval = args.updr
