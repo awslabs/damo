@@ -94,7 +94,7 @@ def main(args=None):
         scheme_version = 2
     if _damon.feature_supported('schemes_wmarks'):
         scheme_version = 3
-    if _damon.feature_supported('schemes_speed_time_limit'):
+    if _damon.feature_supported('schemes_quotas'):
         scheme_version = 4
 
     signal.signal(signal.SIGINT, sighandler)
