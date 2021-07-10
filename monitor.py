@@ -33,7 +33,7 @@ except AttributeError:
     subprocess.check_output = check_output
 
 def cleanup():
-    if target_is_cmd and cmd_pipe.poll() != None:
+    if target_is_cmd and cmd_pipe.poll() == None:
         cmd_pipe.kill()
 
 
