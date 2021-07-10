@@ -110,7 +110,7 @@ def sighandler(signum, frame):
 
 def chk_permission():
     if os.geteuid() != 0:
-        print("Run as root")
+        print('Run as root')
         exit(1)
 
 def set_argparser(parser):
