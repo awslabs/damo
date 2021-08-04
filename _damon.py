@@ -174,9 +174,10 @@ def update_supported_features():
             feature_supports['schemes_prioritization'] = True
             feature_supports['schemes_wmarks'] = True
         elif test_debugfs_file_schemes(18):
-            feature_supports['schemes_quotas'] = True
+            feature_supports['schemes_speed_limit'] = True
             feature_supports['schemes_prioritization'] = True
             feature_supports['schemes_wmarks'] = True
+            feature_supports['schemes_quotas'] = True
 
 def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
     global feature_supports
