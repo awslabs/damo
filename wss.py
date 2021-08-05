@@ -118,7 +118,10 @@ def main(args=None):
                 wss = wss_dist[wss_idx]
                 if not max_sz or max_sz < wss:
                     max_sz = wss
-            sz_per_col = max_sz / nr_cols_bar
+            if max_sz != 0:
+                sz_per_col = max_sz / nr_cols_bar
+            else:
+                sz_per_col = 1
 
         for percentile in percentiles:
             wss_idx = int(percentile / 100.0 * len(wss_dist))
