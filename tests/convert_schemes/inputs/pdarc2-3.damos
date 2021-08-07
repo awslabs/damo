@@ -1,0 +1,7 @@
+# For scheme version 2 (refer to comment of debugfs_scheme() in damo)
+
+# format is:
+# <min/max size> <min/max frequency (0-100)> <min/max age> <action> \
+# <limit_sz> <limit_ms> <weight_sz> <weight_nr_accesses> <weight_age>
+
+4K  max		min min		5s max		pageout		10G 1s		0 3 7
