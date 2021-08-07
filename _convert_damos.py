@@ -208,13 +208,16 @@ def main():
             default=5000, help='sampling interval (us)')
     parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
             default=100000, help='aggregation interval (us)')
+    parser.add_argument('--scheme_version', metavar='<version>', type=int,
+            choices=range(0, 5), default=4, help='destination scheme version')
     args = parser.parse_args()
 
     schemes_file = args.input
     sample_interval = args.sample
     aggr_interval = args.aggr
+    scheme_ver = args.scheme_version
 
-    print(convert(schemes_file, sample_interval, aggr_interval, 4))
+    print(convert(schemes_file, sample_interval, aggr_interval, scheme_ver))
 
 if __name__ == '__main__':
     main()
