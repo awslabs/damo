@@ -3,7 +3,7 @@
 bindir=$(dirname "$0")
 cd "$bindir"
 
-for test_dir in report schemes damon_reclaim
+for test_dir in report convert_schemes schemes damon_reclaim
 do
 	testfile="./$test_dir/test.sh"
 	"$testfile"
