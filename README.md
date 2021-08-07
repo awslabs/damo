@@ -27,7 +27,7 @@ Follow below instructions and commands to monitor and visualize the access
 pattern of your workload.
 
     $ git clone https://github.com/sjp38/linux -b damon/master
-    /* build the kernel with CONFIG_DAMON_*=y, install, reboot */
+    $ # build the kernel with CONFIG_DAMON_*=y, install, reboot
     $ mount -t debugfs none /sys/kernel/debug/
     $ ./damo record $(pidof <your workload>)
     $ ./damo report heats --plot stdout --stdout_heatmap_color emotion
@@ -44,7 +44,7 @@ For more detailed usage, please refer to [USAGE.md](USAGE.md) file.
 Recording Data Access Patterns
 ==============================
 
-Below commands record memory access pattern of a program and save the
+Below commands record memory access patterns of a program and save the
 monitoring results in a file.
 
     $ git clone https://github.com/sjp38/masim
