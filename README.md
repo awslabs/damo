@@ -1,11 +1,10 @@
 DAMO: DAMon Operator
 ====================
 
-This directory contains a user space tool for DAMON[1], namely ``damo``.  Using
-the tool, you can monitor the data access patterns of your system and make data
-access-aware memory management optimizations.
-
-[1] https://damonitor.github.io
+This directory contains a user space tool for
+[DAMON](https://damonitor.github.io), namely ``damo``.  Using the tool, you can
+monitor the data access patterns of your system and make data access-aware
+memory management optimizations.
 
 ![damo monitor demo for water_nsquared](for_doc/damo_monitor_water_nsquared.gif)
 
