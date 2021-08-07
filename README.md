@@ -95,34 +95,3 @@ overhead.
     $ echo "#min-size max-size min-acc max-acc min-age max-age action" > scheme
     $ echo "4K        max      0       0       60s     max     pageout" >> scheme
     $ damo schemes -c my_thp_scheme <pid of your workload>
-
-
-System Disgn
-============
-
-Below shows how `damo` works with DAMON/DAMOS in kernel.
-
-                       ┌──────┐
-           ┌───────────┤ DAMO │
-           │Read       └──┬───┘
-           ▼              │read/write
-      ┌──────────┐        ▼
-      │Monitoring│   ┌─────────┐       User space
-    ──┤  reuslt  ├───┤ debugfs ├─────────────────
-      │   file   │   └─┬─────┬─┘     Kernel space
-      └──────────┘     │     │Operation scheme
-           ▲           │     ▼
-           │    Monitor│  ┌──────────────┐
-           │    request│  │     DAMOS    │
-           │           │  └────────────┬─┘
-           │           │   ▲ Monitor   │
-           │           │   │ request/  │
-           │           ▼   ▼ response  │Control
-           │Write┌────────────┐        │swap,
-           └─────┤   DAMON    │        │LRU,
-                 └──────┬─────┘        │THP
-                        │Check access  │
-                        ▼              ▼
-                 ┌───────────────────────┐
-                 │         Memory        │
-                 └───────────────────────┘
