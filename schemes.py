@@ -108,8 +108,8 @@ def main(args=None):
             schemes_txt = f.read()
     else:
         schemes_txt = args.schemes
-    args.schemes = _convert_damos.convert_txt(schemes_txt, args.sample,
-            args.aggr, scheme_version)
+    args.schemes = _convert_damos.convert(schemes_txt, args.sample, args.aggr,
+            scheme_version)
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
     numa_node = args.numa_node

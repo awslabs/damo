@@ -187,8 +187,8 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
         print('Unsupported scheme version: %d' % scheme_version)
         exit(1)
 
-def convert_txt(schemes_txt, sample_interval, aggr_interval, scheme_version):
-    raw_lines = schemes_txt.split('\n')
+def convert(schemes, sample_interval, aggr_interval, scheme_version):
+    raw_lines = schemes.split('\n')
     converted_lines = []
     for line in raw_lines:
         if line.startswith('#'):
@@ -199,11 +199,6 @@ def convert_txt(schemes_txt, sample_interval, aggr_interval, scheme_version):
         converted_lines.append(debugfs_scheme(line, sample_interval,
             aggr_interval, scheme_version))
     return '\n'.join(converted_lines)
-
-def convert(schemes_file, sample_interval, aggr_interval, scheme_version):
-    with open(schemes_file, 'r') as f:
-        return convert_txt(f.read(), sample_interval, aggr_interval,
-                scheme_version)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -223,7 +218,7 @@ def main():
     scheme_ver = args.scheme_version
 
     with open(schemes_file, 'r') as f:
-        print(convert_txt(f.read(), sample_interval, aggr_interval,
+        print(convert(f.read(), sample_interval, aggr_interval,
             scheme_ver))
 
 if __name__ == '__main__':
