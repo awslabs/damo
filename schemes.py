@@ -72,8 +72,8 @@ def set_argparser(parser):
     _damon.set_init_regions_argparser(parser)
     parser.add_argument('target', type=str, metavar='<target>',
             help='the target command or the pid to record')
-    parser.add_argument('-c', '--schemes', metavar='<file>', type=str,
-            default='damon.schemes',
+    parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
+            type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
             help='if target is \'paddr\', limit it to the numa node')
@@ -103,8 +103,13 @@ def main(args=None):
 
     args.rbuf = 0
     args.out = 'null'
-    args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr,
-            scheme_version)
+    if os.path.isfile(args.schemes):
+        with open(args.schemes, 'r') as f:
+            schemes_txt = f.read()
+    else:
+        schemes_txt = args.schemes
+    args.schemes = _convert_damos.convert_txt(schemes_txt, args.sample,
+            args.aggr, scheme_version)
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
     numa_node = args.numa_node
