@@ -103,12 +103,7 @@ def main(args=None):
 
     args.rbuf = 0
     args.out = 'null'
-    if os.path.isfile(args.schemes):
-        with open(args.schemes, 'r') as f:
-            schemes_txt = f.read()
-    else:
-        schemes_txt = args.schemes
-    args.schemes = _convert_damos.convert(schemes_txt, args.sample, args.aggr,
+    args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr,
             scheme_version)
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
