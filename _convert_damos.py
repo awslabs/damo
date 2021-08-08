@@ -36,6 +36,7 @@ schemes written in the human readable format:
 """
 
 import argparse
+import os
 import platform
 
 uint_max = 2**32 - 1
@@ -202,8 +203,8 @@ def convert(schemes, sample_interval, aggr_interval, scheme_version):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('input', metavar='<file>',
-            help='input file describing the schemes')
+    parser.add_argument('input', metavar='<file or schemes in text>',
+            help='input file describing the schemes or the schemes')
     parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
             default=5000, help='sampling interval (us)')
     parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
@@ -212,14 +213,15 @@ def main():
             choices=range(0, 5), default=4, help='destination scheme version')
     args = parser.parse_args()
 
-    schemes_file = args.input
+    schemes_input = args.input
     sample_interval = args.sample
     aggr_interval = args.aggr
     scheme_ver = args.scheme_version
 
-    with open(schemes_file, 'r') as f:
-        print(convert(f.read(), sample_interval, aggr_interval,
-            scheme_ver))
+    if os.path.isfile(schemes_input):
+        with open(schemes_input, 'r') as f:
+            schemes_input = f.read()
+    print(convert(schemes_input, sample_interval, aggr_interval, scheme_ver))
 
 if __name__ == '__main__':
     main()
