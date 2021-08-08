@@ -222,7 +222,9 @@ def main():
     aggr_interval = args.aggr
     scheme_ver = args.scheme_version
 
-    print(convert(schemes_file, sample_interval, aggr_interval, scheme_ver))
+    with open(schemes_file, 'r') as f:
+        print(convert_txt(f.read(), sample_interval, aggr_interval,
+            scheme_ver))
 
 if __name__ == '__main__':
     main()
