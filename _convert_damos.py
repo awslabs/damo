@@ -189,6 +189,10 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
         exit(1)
 
 def convert(schemes, sample_interval, aggr_interval, scheme_version):
+    if os.path.isfile(schemes):
+        with open(schemes, 'r') as f:
+            schemes = f.read()
+
     raw_lines = schemes.split('\n')
     converted_lines = []
     for line in raw_lines:
@@ -213,15 +217,11 @@ def main():
             choices=range(0, 5), default=4, help='destination scheme version')
     args = parser.parse_args()
 
-    schemes_input = args.input
     sample_interval = args.sample
     aggr_interval = args.aggr
     scheme_ver = args.scheme_version
 
-    if os.path.isfile(schemes_input):
-        with open(schemes_input, 'r') as f:
-            schemes_input = f.read()
-    print(convert(schemes_input, sample_interval, aggr_interval, scheme_ver))
+    print(convert(args.input, sample_interval, aggr_interval, scheme_ver))
 
 if __name__ == '__main__':
     main()
