@@ -14,6 +14,7 @@ import _fmt_nr
 import adjust
 
 def get_wss_dist(result, acc_thres, sz_thres, do_sort):
+    wss_dists = {}
     for tid in result.target_snapshots.keys():
         snapshots = result.target_snapshots[tid]
         wss_dist = []
@@ -29,11 +30,13 @@ def get_wss_dist(result, acc_thres, sz_thres, do_sort):
             wss_dist.append(wss)
         if do_sort:
             wss_dist.sort(reverse=False)
-    return wss_dist
+        wss_dists[tid] = wss_dist
+    return wss_dists
 
-def pr_wss_dist(result, wss_dist, percentiles, raw_number, nr_cols_bar):
+def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar):
     print('# <percentile> <wss>')
-    for tid in result.target_snapshots.keys():
+    for tid in wss_dists.keys():
+        wss_dist = wss_dists[tid]
         print('# target_id\t%s' % tid)
         print('# avr:\t%s' % _fmt_nr.format_sz(
             sum(wss_dist) / len(wss_dist), raw_number))
@@ -119,7 +122,7 @@ def main(args=None):
         exit(1)
 
     adjust.adjust_result(result, args.work_time, args.exclude_samples)
-    wss_dist = get_wss_dist(result, args.acc_thres, args.sz_thres, wss_sort)
+    wss_dists = get_wss_dist(result, args.acc_thres, args.sz_thres, wss_sort)
 
     if args.plot:
         orig_stdout = sys.stdout
@@ -129,7 +132,7 @@ def main(args=None):
         raw_number = True
         args.nr_cols_bar = 0
 
-    pr_wss_dist(result, wss_dist, percentiles, raw_number, args.nr_cols_bar)
+    pr_wss_dists(wss_dists, percentiles, raw_number, args.nr_cols_bar)
 
     if args.plot:
         sys.stdout = orig_stdout
