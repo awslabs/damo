@@ -66,8 +66,8 @@ def main(args=None):
 
     adjust.adjust_result(result, args.work_time, args.exclude_samples)
 
-    orig_stdout = sys.stdout
     if args.plot:
+        orig_stdout = sys.stdout
         tmp_path = tempfile.mkstemp()[1]
         tmp_file = open(tmp_path, 'w')
         sys.stdout = tmp_file
