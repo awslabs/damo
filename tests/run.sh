@@ -1,13 +1,11 @@
 #!/bin/bash
 
 bindir=$(dirname "$0")
-cd "$bindir"
+cd "$bindir" || exit 1
 
 for test_dir in report convert_schemes schemes damon_reclaim
 do
-	testfile="./$test_dir/test.sh"
-	"$testfile"
-	if [ "$?" -ne 0 ]
+	if ! "./$test_dir/test.sh"
 	then
 		exit 1
 	fi
