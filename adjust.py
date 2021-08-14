@@ -13,6 +13,9 @@ def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
     nr_shots_in_aggr = int(max(round(aggregate_interval * 1000 / interval), 1))
     target_snapshots = result.target_snapshots
 
+    if nr_shots_in_aggr <= 1:
+        return
+
     start_time = 0
     end_time = 0
     nr_snapshots = int(max((result.nr_snapshots - nr_snapshots_to_skip), 0) /
