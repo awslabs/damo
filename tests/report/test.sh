@@ -38,6 +38,11 @@ test_report \
 	"$damo adjust 1000000 && $damo report raw -i damon.adjusted.data" \
 	"aggr_1s_raw"
 
+test_report \
+	"$damo adjust --skip 30 1000000 && \
+	$damo report raw -i damon.adjusted.data" \
+	"aggr_1s_raw_skip_30"
+
 test_report "$damo report nr_regions -r 1 101 1" "nr_regions"
 
 test_report "$damo report heats --guide" "heats_guide"
