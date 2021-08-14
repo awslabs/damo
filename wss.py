@@ -11,6 +11,8 @@ import _dist
 import _damon_result
 import _fmt_nr
 
+import adjust
+
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
@@ -62,22 +64,7 @@ def main(args=None):
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
-    interval = float(result.end_time - result.start_time) / result.nr_snapshots
-    nr_shots_in_aggr = int(max(round(args.work_time * 1000 / interval), 1))
-    target_snapshots = result.target_snapshots
-
-    if nr_shots_in_aggr > 1:
-        for tid in target_snapshots:
-            # Skip first N snapshots as regions may not adjusted yet.
-            snapshots = target_snapshots[tid][args.exclude_samples:]
-
-            aggregated_snapshots = []
-            for i in range(0, len(snapshots), nr_shots_in_aggr):
-                to_aggregate = snapshots[i:
-                        min(i + nr_shots_in_aggr, len(snapshots))]
-                aggregated_snapshots.append(
-                        _damon_result.aggregate_snapshots(to_aggregate))
-            result.target_snapshots[tid] = aggregated_snapshots
+    adjust.adjust_result(result, args.work_time, args.exclude_samples)
 
     orig_stdout = sys.stdout
     if args.plot:
