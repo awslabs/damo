@@ -46,4 +46,4 @@ test_report "$damo report heats" "heats"
 
 rm -fr results
 
-echo "PASS" $(basename $(pwd))
+echo "PASS" "$(basename "$(pwd)")"
