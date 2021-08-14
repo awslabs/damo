@@ -16,6 +16,8 @@ def set_argparser(parser):
             default='damon.data', help='input file name')
     parser.add_argument('--output', '-o', type=str, metavar='<file>',
             default='damon.adjusted.data', help='output file name')
+    parser.add_argument('--skip', type=int, metavar='<int>', default=20,
+            help='number of first snapshots to skip')
 
 def main(args=None):
     if not args:
@@ -37,11 +39,12 @@ def main(args=None):
 
     start_time = 0
     end_time = 0
-    nr_snapshots = int(max((result.nr_snapshots - 20), 0) / nr_shots_in_aggr)
+    nr_snapshots = int(max((result.nr_snapshots - args.skip), 0) /
+            nr_shots_in_aggr)
 
     for tid in target_snapshots:
-        # Skip first 20 snapshots as regions may not adjusted yet.
-        snapshots = target_snapshots[tid][20:]
+        # Skip first args.skip snapshots as regions may not adjusted yet.
+        snapshots = target_snapshots[tid][args.skip:]
         if start_time == 0:
             start_time = snapshots[0].start_time
             end_time = snapshots[-1].end_time
