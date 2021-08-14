@@ -13,6 +13,60 @@ import _fmt_nr
 
 import adjust
 
+def get_wss_dist(result, acc_thres, sz_thres, do_sort):
+    for tid in result.target_snapshots.keys():
+        snapshots = result.target_snapshots[tid]
+        wss_dist = []
+        for idx, snapshot in enumerate(snapshots):
+            wss = 0
+            for r in snapshot.regions:
+                # Ignore regions not fulfill working set conditions
+                if r.nr_accesses < acc_thres:
+                    continue
+                if r.end - r.start < sz_thres:
+                    continue
+                wss += r.end - r.start
+            wss_dist.append(wss)
+        if do_sort:
+            wss_dist.sort(reverse=False)
+    return wss_dist
+
+def pr_wss_dist(result, wss_dist, percentiles, raw_number, nr_cols_bar):
+    print('# <percentile> <wss>')
+    for tid in result.target_snapshots.keys():
+        print('# target_id\t%s' % tid)
+        print('# avr:\t%s' % _fmt_nr.format_sz(
+            sum(wss_dist) / len(wss_dist), raw_number))
+
+        nr_cols_bar = nr_cols_bar
+        if nr_cols_bar:
+            max_sz = 0
+            for percentile in percentiles:
+                wss_idx = int(percentile / 100.0 * len(wss_dist))
+                if wss_idx == len(wss_dist):
+                    wss_idx -= 1
+                wss = wss_dist[wss_idx]
+                if not max_sz or max_sz < wss:
+                    max_sz = wss
+            if max_sz != 0:
+                sz_per_col = max_sz / nr_cols_bar
+            else:
+                sz_per_col = 1
+
+        for percentile in percentiles:
+            wss_idx = int(percentile / 100.0 * len(wss_dist))
+            if wss_idx == len(wss_dist):
+                wss_idx -= 1
+            wss = wss_dist[wss_idx]
+            line = '%3d %15s' % (percentile,
+                _fmt_nr.format_sz(wss, raw_number))
+            if nr_cols_bar:
+                cols = int(wss/sz_per_col)
+                remaining_cols = nr_cols_bar - cols
+                line += ' |%s%s|' % ('*' * cols, ' ' * remaining_cols)
+            print(line)
+
+
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
@@ -65,6 +119,7 @@ def main(args=None):
         exit(1)
 
     adjust.adjust_result(result, args.work_time, args.exclude_samples)
+    wss_dist = get_wss_dist(result, args.acc_thres, args.sz_thres, wss_sort)
 
     if args.plot:
         orig_stdout = sys.stdout
@@ -74,54 +129,7 @@ def main(args=None):
         raw_number = True
         args.nr_cols_bar = 0
 
-    print('# <percentile> <wss>')
-    for tid in result.target_snapshots.keys():
-        snapshots = result.target_snapshots[tid]
-        wss_dist = []
-        for idx, snapshot in enumerate(snapshots):
-            wss = 0
-            for r in snapshot.regions:
-                # Ignore regions not fulfill working set conditions
-                if r.nr_accesses < args.acc_thres:
-                    continue
-                if r.end - r.start < args.sz_thres:
-                    continue
-                wss += r.end - r.start
-            wss_dist.append(wss)
-        if wss_sort:
-            wss_dist.sort(reverse=False)
-
-        print('# target_id\t%s' % tid)
-        print('# avr:\t%s' % _fmt_nr.format_sz(
-            sum(wss_dist) / len(wss_dist), raw_number))
-
-        nr_cols_bar = args.nr_cols_bar
-        if nr_cols_bar:
-            max_sz = 0
-            for percentile in percentiles:
-                wss_idx = int(percentile / 100.0 * len(wss_dist))
-                if wss_idx == len(wss_dist):
-                    wss_idx -= 1
-                wss = wss_dist[wss_idx]
-                if not max_sz or max_sz < wss:
-                    max_sz = wss
-            if max_sz != 0:
-                sz_per_col = max_sz / nr_cols_bar
-            else:
-                sz_per_col = 1
-
-        for percentile in percentiles:
-            wss_idx = int(percentile / 100.0 * len(wss_dist))
-            if wss_idx == len(wss_dist):
-                wss_idx -= 1
-            wss = wss_dist[wss_idx]
-            line = '%3d %15s' % (percentile,
-                _fmt_nr.format_sz(wss, raw_number))
-            if nr_cols_bar:
-                cols = int(wss/sz_per_col)
-                remaining_cols = nr_cols_bar - cols
-                line += ' |%s%s|' % ('*' * cols, ' ' * remaining_cols)
-            print(line)
+    pr_wss_dist(result, wss_dist, percentiles, raw_number, args.nr_cols_bar)
 
     if args.plot:
         sys.stdout = orig_stdout
