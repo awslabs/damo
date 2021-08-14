@@ -9,9 +9,8 @@ import struct
 import _damon_result
 
 def adjust_result(result, aggregate_interval, nr_snapshots_to_skip): 
-    snapshot_time = float(result.end_time - result.start_time) / result.nr_snapshots
-    nr_shots_in_aggr = int(max(round(aggregate_interval * 1000 /
-        snapshot_time), 1))
+    interval = float(result.end_time - result.start_time) / result.nr_snapshots
+    nr_shots_in_aggr = int(max(round(aggregate_interval * 1000 / interval), 1))
     target_snapshots = result.target_snapshots
 
     start_time = 0
