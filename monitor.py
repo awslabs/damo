@@ -10,6 +10,8 @@ import subprocess
 import sys
 import time
 
+import _damon
+
 import record
 import heats
 import wss
@@ -40,11 +42,6 @@ def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
     cleanup()
 
-def chk_permission():
-    if os.geteuid() != 0:
-        print('Run as root')
-        exit(1)
-
 def set_argparser(parser):
     parser.add_argument('target', type=str, metavar='<target>',
             help='monitoring target (command, pid or \'paddr\')')
@@ -62,7 +59,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    chk_permission()
+    _damon.chk_permission()
 
     global target_is_cmd
     global cmd_pipe

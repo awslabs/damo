@@ -16,6 +16,11 @@ debugfs_target_ids = None
 debugfs_init_regions = None
 debugfs_monitor_on = None
 
+def chk_permission():
+    if os.geteuid() != 0:
+        print('Run as root')
+        exit(1)
+
 def set_target_id(tid):
     with open(debugfs_target_ids, 'w') as f:
         f.write('%s\n' % tid)

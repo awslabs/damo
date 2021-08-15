@@ -7,17 +7,14 @@ import argparse
 import os
 import time
 
+import _damon
+
 darc_params_dir = '/sys/module/damon_reclaim/parameters'
 darc_params = ['kdamond_pid', 'enabled', 'min_age', 'quota_ms', 'quota_sz',
         'quota_reset_interval_ms', 'wmarks_interval', 'wmarks_high',
         'wmarks_mid', 'wmarks_low', 'sample_interval', 'aggr_interval',
         'min_nr_regions', 'max_nr_regions', 'monitor_region_start',
         'monitor_region_end']
-
-def chk_permission():
-    if os.geteuid() != 0:
-        print('Run as root')
-        exit(1)
 
 def chk_darc_sysfs():
     if not os.path.isdir(darc_params_dir):
@@ -88,7 +85,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    chk_permission()
+    _damon.chk_permission()
     chk_darc_sysfs()
 
     if args.action == 'status':

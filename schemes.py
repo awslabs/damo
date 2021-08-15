@@ -62,11 +62,6 @@ def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
     cleanup_exit(orig_attrs, signum)
 
-def chk_permission():
-    if os.geteuid() != 0:
-        print('Run as root')
-        exit(1)
-
 def set_argparser(parser):
     _damon.set_attrs_argparser(parser)
     _damon.set_init_regions_argparser(parser)
@@ -85,7 +80,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    chk_permission()
+    _damon.chk_permission()
     _damon.chk_update_debugfs(args.debugfs)
     scheme_version = 0
     if _damon.feature_supported('schemes_speed_limit'):
