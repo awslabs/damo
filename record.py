@@ -147,24 +147,24 @@ def main(args=None):
     numa_node = args.numa_node
     target = args.target
 
-    target_fields = target.split()
     if target == 'paddr':   # physical memory address space
+        cmd_target = False
         if not init_regions:
             if numa_node:
                 init_regions = _paddr_layout.paddr_region_of(numa_node)
             else:
                 init_regions = [_paddr_layout.default_paddr_region()]
-        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
-    elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
+    elif not subprocess.call('which %s &> /dev/null' % target.split()[0],
             shell=True, executable='/bin/bash'):
-        do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd)
+        cmd_target = True
     else:
         try:
             pid = int(target)
         except:
-            print('target \'%s\' is neither a command, nor a pid' % target)
+            print('target \'%s\' is not supported' % target)
             exit(1)
-        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
+        cmd_target = False
+    do_record(target, cmd_target, init_regions, new_attrs, orig_attrs, pidfd)
 
 if __name__ == '__main__':
     main()
