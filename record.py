@@ -141,7 +141,6 @@ def main(args=None):
     signal.signal(signal.SIGTERM, sighandler)
     orig_attrs = _damon.current_attrs()
 
-    args.schemes = ''
     pidfd = args.pidfd
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
