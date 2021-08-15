@@ -13,12 +13,11 @@ import _fmt_nr
 
 import adjust
 
-def get_wss_dist(result, acc_thres, sz_thres, do_sort):
+def get_wss_dists(result, acc_thres, sz_thres, do_sort):
     wss_dists = {}
     for tid in result.target_snapshots.keys():
-        snapshots = result.target_snapshots[tid]
         wss_dist = []
-        for idx, snapshot in enumerate(snapshots):
+        for idx, snapshot in enumerate(result.target_snapshots[tid]):
             wss = 0
             for r in snapshot.regions:
                 # Ignore regions not fulfill working set conditions
@@ -41,17 +40,16 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar):
         print('# avr:\t%s' % _fmt_nr.format_sz(
             sum(wss_dist) / len(wss_dist), raw_number))
 
-        nr_cols_bar = nr_cols_bar
-        if nr_cols_bar:
+        if nr_cols_bar > 0:
             max_sz = 0
             for percentile in percentiles:
                 wss_idx = int(percentile / 100.0 * len(wss_dist))
                 if wss_idx == len(wss_dist):
                     wss_idx -= 1
                 wss = wss_dist[wss_idx]
-                if not max_sz or max_sz < wss:
+                if max_sz <= wss:
                     max_sz = wss
-            if max_sz != 0:
+            if max_sz > 0:
                 sz_per_col = max_sz / nr_cols_bar
             else:
                 sz_per_col = 1
@@ -63,12 +61,11 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar):
             wss = wss_dist[wss_idx]
             line = '%3d %15s' % (percentile,
                 _fmt_nr.format_sz(wss, raw_number))
-            if nr_cols_bar:
-                cols = int(wss/sz_per_col)
+            if nr_cols_bar > 0:
+                cols = int(wss / sz_per_col)
                 remaining_cols = nr_cols_bar - cols
                 line += ' |%s%s|' % ('*' * cols, ' ' * remaining_cols)
             print(line)
-
 
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
@@ -76,7 +73,7 @@ def set_argparser(parser):
     parser.add_argument('--input_type', choices=['record', 'perf_script'],
             default=None, help='input file\'s type')
     parser.add_argument('--range', '-r', type=int, nargs=3,
-            metavar=('<start>', '<stop>', '<step>'),
+            metavar=('<start>', '<stop>', '<step>'), default=[0,101,25],
             help='range of wss percentiles to print')
     parser.add_argument('--exclude_samples', type=int, default=20,
             metavar='<# samples>',
@@ -106,11 +103,8 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    percentiles = [0, 25, 50, 75, 100]
-
     file_path = args.input
-    if args.range:
-        percentiles = range(args.range[0], args.range[1], args.range[2])
+    percentiles = range(args.range[0], args.range[1], args.range[2])
     wss_sort = True
     if args.sortby == 'time':
         wss_sort = False
@@ -122,7 +116,7 @@ def main(args=None):
         exit(1)
 
     adjust.adjust_result(result, args.work_time, args.exclude_samples)
-    wss_dists = get_wss_dist(result, args.acc_thres, args.sz_thres, wss_sort)
+    wss_dists = get_wss_dists(result, args.acc_thres, args.sz_thres, wss_sort)
 
     if args.plot:
         orig_stdout = sys.stdout
