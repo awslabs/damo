@@ -8,11 +8,18 @@ damo="../../damo"
 
 __test_stat() {
 	local speed_limit=$1
+	local use_scheme_file=$2
 	scheme="4K max    min min    1s max    stat"
 	if [ ! "$speed_limit" = "" ]
 	then
 		speed_limit+="B"
 		scheme+=" $speed_limit 1s"
+	fi
+
+	if [ "$use_scheme_file" = "use_scheme_file" ]
+	then
+		echo "$scheme" > test_scheme.damos
+		scheme="./test_scheme.damos"
 	fi
 
 	python ./stairs.py &
@@ -28,17 +35,29 @@ __test_stat() {
 		sleep 1
 	done
 	measure_time=$((SECONDS - start_time))
+
+	if [ "$use_scheme_file" = "use_scheme_file" ]
+	then
+		rm "$scheme"
+	fi
 }
 
 test_stat() {
 	__test_stat 0
-
 	if [ "$applied" -eq 0 ]
 	then
 		echo "FAIL schemes-stat"
 		exit 1
 	fi
 	echo "PASS schemes-stat ($applied cold memory found)"
+
+	__test_stat 0 "use_scheme_file"
+	if [ "$applied" -eq 0 ]
+	then
+		echo "FAIL schemes-stat-using-scheme-file"
+		exit 1
+	fi
+	echo "PASS schemes-stat-using-scheme-file ($applied cold memory found)"
 
 	if ! sudo "$damo" features supported | grep -w schemes_speed_limit > \
 		/dev/null
