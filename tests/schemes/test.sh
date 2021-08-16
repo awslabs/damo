@@ -8,18 +8,16 @@ damo="../../damo"
 
 __test_stat() {
 	local speed_limit=$1
-	scheme_prefix="4K max    min min    1s max    stat"
-	if [ "$speed_limit" = "" ]
+	scheme="4K max    min min    1s max    stat"
+	if [ ! "$speed_limit" = "" ]
 	then
-		echo "$scheme_prefix" > test_scheme.damos
-	else
 		speed_limit+="B"
-		echo "$scheme_prefix $speed_limit 1s" > test_scheme.damos
+		scheme+=" $speed_limit 1s"
 	fi
 
 	python ./stairs.py &
 	stairs_pid=$!
-	sudo "$damo" schemes -c ./test_scheme.damos "$stairs_pid" > /dev/null &
+	sudo "$damo" schemes -c "$scheme" "$stairs_pid" > /dev/null &
 
 	start_time=$SECONDS
 	applied=0
@@ -30,8 +28,6 @@ __test_stat() {
 		sleep 1
 	done
 	measure_time=$((SECONDS - start_time))
-
-	rm test_scheme.damos
 }
 
 test_stat() {
@@ -90,11 +86,9 @@ measure_scheme_applied() {
 	target=$2
 	wait_for=$3
 
-	echo "$scheme" > test_scheme.damos
-
 	timeout_after=$((wait_for + 2))
 	sudo timeout "$timeout_after" \
-		"$damo" schemes -c test_scheme.damos "$target" > /dev/null &
+		"$damo" schemes -c "$scheme" "$target" > /dev/null &
 	damo_pid=$!
 
 	sudo cat "$damon_debugfs/schemes"
@@ -106,7 +100,6 @@ measure_scheme_applied() {
 	sleep "$wait_for"
 	after=$(sudo cat "$damon_debugfs/schemes" | awk '{print $NF}')
 
-	rm test_scheme.damos
 	wait "$damo_pid"
 
 	applied=$((after - before))
