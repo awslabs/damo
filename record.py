@@ -137,6 +137,8 @@ def main(args=None):
     orig_attrs = _damon.current_attrs()
 
     pidfd = args.pidfd
+    # we don't use this, but _damon.cmd_args_to_attrs() require this.
+    args.schemes = ''
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
     numa_node = args.numa_node
