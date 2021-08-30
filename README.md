@@ -28,8 +28,8 @@ pattern of your workload.
 
     $ git clone https://github.com/sjp38/linux -b damon/master
     $ # build the kernel with CONFIG_DAMON_*=y, install, reboot
-    $ mount -t debugfs none /sys/kernel/debug/
-    $ ./damo record $(pidof <your workload>)
+    $ sudo mount -t debugfs none /sys/kernel/debug/
+    $ sudo ./damo record $(pidof <your workload>)
     $ ./damo report heats --plot stdout --stdout_heatmap_color emotion
 
 The last command will show the access pattern of your workload, like below:
@@ -94,4 +94,4 @@ overhead.
 
     $ echo "#min-size max-size min-acc max-acc min-age max-age action" > scheme
     $ echo "4K        max      0       0       60s     max     pageout" >> scheme
-    $ damo schemes -c my_thp_scheme <pid of your workload>
+    $ sudo damo schemes -c my_thp_scheme <pid of your workload>
