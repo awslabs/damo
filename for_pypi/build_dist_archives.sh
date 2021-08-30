@@ -35,5 +35,5 @@ then
 	echo
 	echo "The distribution archives are ready at $work_dir/dist/"
 	echo "You may upload it now via:"
-	echo "    python3 -m twine upload dist/*"
+	echo "    cd $work_dir && python3 -m twine upload dist/*"
 fi
