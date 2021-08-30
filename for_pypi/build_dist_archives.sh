@@ -7,7 +7,6 @@ then
 fi
 
 work_dir=$1
-damo_dir="$1/.."
 
 if [ -d "$work_dir" ] || [ -f "$work_dir" ]
 then
@@ -22,6 +21,8 @@ for file in "README.md" "setup.py" "pyproject.toml"
 do
 	cp "$bindir/$file" "$work_dir/"
 done
+
+damo_dir="$bindir/.."
 
 mkdir -p "$work_dir/src/damo"
 cp "$damo_dir/"*.py "$work_dir/src/damo"
