@@ -177,7 +177,7 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
         result, f = perf_script_to_damon_result(result_file, f, max_secs)
         fmt_version = None
     else:
-        print('unknown result file type: %s' % file_type)
+        print('unknown result file type: %s (%s)' % (file_type, result_file))
         return None
 
     for snapshots in result.target_snapshots.values():
