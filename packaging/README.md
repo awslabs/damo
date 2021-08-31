@@ -32,8 +32,8 @@ pattern of your workload.
 
 The last command will show the access pattern of your workload, like below:
 
-![masim zigzag heatmap in ascii](https://raw.githubusercontent.com/awslabs/damo/master/for_doc/masim_zigzag_heatmap_ascii.png)
-![masim stairs heatmap in ascii](https://raw.githubusercontent.com/awslabs/damo/master/for_doc/masim_stairs_heatmap_ascii.png)
+![masim zigzag heatmap in ascii](https://raw.githubusercontent.com/awslabs/damo/v0.0.1/for_doc/masim_zigzag_heatmap_ascii.png)
+![masim stairs heatmap in ascii](https://raw.githubusercontent.com/awslabs/damo/v0.0.1/for_doc/masim_stairs_heatmap_ascii.png)
 
 For more detailed usage, please refer to
 [USAGE.md](https://github.com/awslabs/damo/blob/master/USAGE.md).
