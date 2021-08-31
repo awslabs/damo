@@ -9,10 +9,7 @@ Kernel
 
 You should first ensure your system is running on a kernel built with
 ``CONFIG_DAMON``, ``CONFIG_DAMON_VADDR``, ``CONFIG_DAMON_PADDR``, and
-``CONFIG_DAMON_DBGFS``.  Also, you should ensure the kernel has DAMON
-monitoring results reporting feature.  You can check this by seeing if
-``<debugfs>/damon/record`` file exists or not, after debugfs is mounted.  The
-file should be there.
+``CONFIG_DAMON_DBGFS``.
 
 
 Debugfs
@@ -29,6 +26,17 @@ automatically mount debugfs from next booting:
     debugfs /sys/kernel/debug debugfs defaults 0 0
 
 
+Install
+-------
+
+You can install `damo` via the official Python packages system, PyPi:
+
+    $ sudo pip3 install damo
+
+Or, you can simply download the source code and make `$PATH` to point the
+source code directory.
+
+
 Overview
 ========
 
@@ -36,8 +44,6 @@ Overview
 `-h` option, which provides the minimal usage of it. Currently, the tool
 supports two subcommands, record and report.
 
-Below example commands assume you set $PATH to point this directory for
-brevity.  It is not mandatory, though.
 
 Recording Data Access Pattern
 =============================
