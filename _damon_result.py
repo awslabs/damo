@@ -164,15 +164,11 @@ def perf_script_to_damon_result(file_path, f, max_secs):
 
 def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
     if not file_type:
+        file_type = 'record'
         output = subprocess.check_output('file -b \'%s\'' % result_file,
                 shell=True, executable='/bin/bash').decode().strip()
-        if output == 'data':
-            file_type = 'record'
-        elif output == 'ASCII text':
+        if output == 'ASCII text':
             file_type = 'perf_script'
-        else:
-            print('cannot figure out the type of result file')
-            return None
 
     if file_type == 'record':
         result, f, fmt_version = record_to_damon_result(result_file,
