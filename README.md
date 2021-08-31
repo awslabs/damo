@@ -26,9 +26,9 @@ Getting Started
 Follow below instructions and commands to monitor and visualize the access
 pattern of your workload.
 
-    $ git clone https://github.com/sjp38/linux -b damon/master
-    $ # build the kernel with CONFIG_DAMON_*=y, install, reboot
+    $ # ensure your kernel is built with CONFIG_DAMON_*=y
     $ sudo mount -t debugfs none /sys/kernel/debug/
+    $ git clone https://github.com/awslabs/damo && cd damo
     $ sudo ./damo record $(pidof <your workload>)
     $ ./damo report heats --plot stdout --stdout_heatmap_color emotion
 
