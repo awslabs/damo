@@ -6,7 +6,7 @@ This directory contains a user space tool for
 monitor the data access patterns of your system or workloads and make data
 access-aware memory management optimizations.
 
-![damo monitor demo for water_nsquared](for_doc/damo_monitor_water_nsquared.gif)
+![damo monitor demo for water_nsquared](images/damo_monitor_water_nsquared.gif)
 
 
 Demo Video
@@ -34,8 +34,8 @@ pattern of your workload.
 
 The last command will show the access pattern of your workload, like below:
 
-![masim zigzag heatmap in ascii](for_doc/masim_zigzag_heatmap_ascii.png)
-![masim stairs heatmap in ascii](for_doc/masim_stairs_heatmap_ascii.png)
+![masim zigzag heatmap in ascii](images/masim_zigzag_heatmap_ascii.png)
+![masim stairs heatmap in ascii](images/masim_stairs_heatmap_ascii.png)
 
 
 FAQs
