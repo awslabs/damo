@@ -56,7 +56,7 @@ file in the tree.
 How can I participate in the development of `damo`?
 ---------------------------------------------------
 
-Please refer to [CONTRIBUTING](CONTIRUTING) file.
+Please refer to [CONTRIBUTING](CONTRIBUTING) file.
 
 
 What does the version number means?

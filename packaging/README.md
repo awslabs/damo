@@ -55,7 +55,7 @@ How can I participate in the development of `damo`?
 ---------------------------------------------------
 
 Please refer to
-[CONTRIBUTING](https://github.com/awslabs/damo/blob/master/CONTIRUTING) file.
+[CONTRIBUTING](https://github.com/awslabs/damo/blob/master/CONTRIBUTING) file.
 
 
 What does the version number means?
