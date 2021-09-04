@@ -1,12 +1,13 @@
 #!/bin/bash
 
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 then
-	echo "Usage: $0 <work dir>"
+	echo "Usage: $0 <work dir> <version>"
 	exit 1
 fi
 
 work_dir=$1
+version=$2
 
 if [ -d "$work_dir" ] || [ -f "$work_dir" ]
 then
@@ -17,10 +18,12 @@ fi
 mkdir "$work_dir"
 bindir=$(dirname "$0")
 
-for file in "README.md" "setup.py" "pyproject.toml"
+for file in "setup.py" "pyproject.toml"
 do
 	cp "$bindir/$file" "$work_dir/"
 done
+
+"$bindir/mk_readme.sh" "$work_dir" "$version"
 
 damo_dir="$bindir/.."
 
