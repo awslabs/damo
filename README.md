@@ -69,7 +69,8 @@ file in the tree.
 How can I participate in the development of `damo`?
 ---------------------------------------------------
 
-Please refer to [CONTRIBUTING](CONTRIBUTING) file.
+Please refer to
+[CONTRIBUTING](https://github.com/awslabs/damo/blob/next/CONTRIBUTING) file.
 
 
 Recording Data Access Patterns
