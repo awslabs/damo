@@ -1,10 +1,10 @@
-DAMO: DAMon Operator
-====================
+DAMO: Data Access Monitoring Operator
+=====================================
 
 This directory contains a user space tool for
 [DAMON](https://damonitor.github.io), namely ``damo``.  Using the tool, you can
-monitor the data access patterns of your system and make data access-aware
-memory management optimizations.
+monitor the data access patterns of your system or workloads and make data
+access-aware memory management optimizations.
 
 ![damo monitor demo for water_nsquared](for_doc/damo_monitor_water_nsquared.gif)
 
@@ -28,24 +28,55 @@ pattern of your workload.
 
     $ # ensure your kernel is built with CONFIG_DAMON_*=y
     $ sudo mount -t debugfs none /sys/kernel/debug/
-    $ git clone https://github.com/awslabs/damo && cd damo
-    $ sudo ./damo record $(pidof <your workload>)
-    $ ./damo report heats --plot stdout --stdout_heatmap_color emotion
+    $ sudo pip3 install damo
+    $ sudo damo record $(pidof <your workload>)
+    $ damo report heats --plot stdout --stdout_heatmap_color emotion
 
 The last command will show the access pattern of your workload, like below:
 
 ![masim zigzag heatmap in ascii](for_doc/masim_zigzag_heatmap_ascii.png)
 ![masim stairs heatmap in ascii](for_doc/masim_stairs_heatmap_ascii.png)
 
-Below sections further provide quick introductions for `damo`'s major features.
-For more detailed usage, please refer to [USAGE.md](USAGE.md) file.
+
+FAQs
+====
+
+Will `pip3 install damo` install latest version of `damo`?
+----------------------------------------------------------
+
+It will install the latest _stable_ version of `damo`.  If you want, you can
+also install less stable but more fresh `damo` from source code.  For that,
+simply download the `next` branch of the source tree and use `damo` executable
+file in the tree.
+
+    $ git clone https://github.com/awslabs/damo -b next
+    $ sudo ./damo/damo record $(pidof <your workload>)
+
+
+How can I participate in the development of `damo`?
+---------------------------------------------------
+
+Please refer to [CONTRIBUTING](CONTIRUTING) file.
+
+
+What does the version number means?
+-----------------------------------
+
+Nothing at all, but larger version number means it is released more recently.
+
+
+Where can I get more detailed usage?
+------------------------------------
+
+Below sections provide quick introductions for `damo`'s major features.  For
+more detailed usage, please refer to [USAGE.md](USAGE.md) file.
 
 
 Recording Data Access Patterns
 ==============================
 
 Below commands record memory access patterns of a program and save the
-monitoring results in a file.
+monitoring results in `damon.data` file.
 
     $ git clone https://github.com/sjp38/masim
     $ cd masim; make; ./masim ./configs/zigzag.cfg &
@@ -94,4 +125,4 @@ overhead.
 
     $ echo "#min-size max-size min-acc max-acc min-age max-age action" > scheme
     $ echo "4K        max      0       0       60s     max     pageout" >> scheme
-    $ sudo damo schemes -c my_thp_scheme <pid of your workload>
+    $ sudo damo schemes -c scheme <pid of your workload>
