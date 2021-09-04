@@ -41,6 +41,19 @@ The last command will show the access pattern of your workload, like below:
 FAQs
 ====
 
+Where can I get more detailed usage?
+------------------------------------
+
+Below sections provide quick introductions for `damo`'s major features.  For
+more detailed usage, please refer to [USAGE.md](USAGE.md) file.
+
+
+What does the version number means?
+-----------------------------------
+
+Nothing at all, but larger version number means it is released more recently.
+
+
 Will `pip3 install damo` install latest version of `damo`?
 ----------------------------------------------------------
 
@@ -57,19 +70,6 @@ How can I participate in the development of `damo`?
 ---------------------------------------------------
 
 Please refer to [CONTRIBUTING](CONTRIBUTING) file.
-
-
-What does the version number means?
------------------------------------
-
-Nothing at all, but larger version number means it is released more recently.
-
-
-Where can I get more detailed usage?
-------------------------------------
-
-Below sections provide quick introductions for `damo`'s major features.  For
-more detailed usage, please refer to [USAGE.md](USAGE.md) file.
 
 
 Recording Data Access Patterns
