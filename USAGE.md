@@ -141,7 +141,7 @@ The ``raw`` output is very detailed but hard to manually read.  ``heats``
 sub-subcommand plots the data in 3-dimensional form, which represents the time
 in x-axis, address of regions in y-axis, and the access frequency in z-axis.
 Users can optionally set the resolution of the map (``--resol``) and start/end
-point of each axis (``--time_range`` and ``address_range``).  For example:
+point of each axis (``--time_range`` and ``--address_range``).  For example:
 
     $ damo report heats --resol 3 3
     0               0               0.0
