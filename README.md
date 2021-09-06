@@ -124,6 +124,6 @@ accessed for >=60 seconds in your workload to be swapped out.  By doing this,
 you can make your workload more memory efficient with near-zero performance
 overhead.
 
-    $ echo "#min-size max-size min-acc max-acc min-age max-age action" > scheme
-    $ echo "4K        max      0       0       60s     max     pageout" >> scheme
-    $ sudo damo schemes -c scheme <pid of your workload>
+    $ echo "#min-size max-size min-acc max-acc min-age max-age action" > my_scheme
+    $ echo "4K        max      0       0       60s     max     pageout" >> my_scheme
+    $ sudo damo schemes -c my_scheme <pid of your workload>
