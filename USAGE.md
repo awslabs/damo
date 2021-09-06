@@ -40,9 +40,8 @@ source code directory.
 Overview
 ========
 
-`damo` provides a subcommands based interface. Every subcommand provides
-`-h` option, which provides the minimal usage of it. Currently, the tool
-supports two subcommands, record and report.
+`damo` provides a subcommands based interface. Every subcommand provides `-h`
+option, which provides the minimal usage of it.
 
 
 Recording Data Access Pattern
@@ -52,7 +51,7 @@ The ``record`` subcommand records the data access pattern of target workloads
 in a file (``./damon.data`` by default).  Note that the file will owned by
 ``root`` but have ``644`` permission, so anyone could read it.  You can specify
 the target with 1) the command for execution of the monitoring target process,
-2) pid of running target process, or 3) the special keyword, 'paddr', if you
+2) pid of running target process, or 3) the special keyword, `paddr`, if you
 want to monitor the system's physical memory address space.  Below example
 shows a command target usage:
 
@@ -63,26 +62,26 @@ The tool will execute ``sleep 5`` by itself and record the data access patterns
 of the process.  Below example shows a pid target usage:
 
     # sleep 5 &
-    # damo record `pidof sleep`
+    # damo record $(pidof sleep)
 
-Finally, below example shows the use of the special keyword, 'paddr':
+Finally, below example shows the use of the special keyword, `paddr`:
 
     # damo record paddr
 
-In this case, the monitoring target regions defaults to the largetst 'System
-RAM' region specified in '/proc/iomem' file.  Note that the initial monitoring
+In this case, the monitoring target regions defaults to the largest 'System
+RAM' region specified in `/proc/iomem` file.  Note that the initial monitoring
 target region is maintained rather than dynamically updated like the virtual
 memory address spaces monitoring case.
 
 The location of the recorded file can be explicitly set using ``-o`` option.
 You can further tune this by setting the monitoring attributes.  To know about
-the monitoring attributes in detail, please refer to the
-:doc:`/vm/damon/design`.
+the monitoring attributes in detail, please refer to the DAMON design
+[doc](https://damonitor.github.io/doc/html/latest/vm/damon/design.html).
 
 Note that the ``record`` subcommand executes the target command as a root.
 Therefore, the user could execute arbitrary commands with root permission.
 Hence, sysadmins should allow only trusted users to use ``damo``.  This is same
-to ``schemes`` subcommand that mentioned below.  Please take care for that,
+to ``schemes`` subcommand which is mentioned below.  Please take care for that,
 either.
 
 
@@ -103,36 +102,36 @@ raw
 human-readable text.  For example:
 
     $ damo report raw
-    start_time:  193485829398
-    rel time:                0
-    nr_tasks:  1
-    target_id:  1348
-    nr_regions:  4
-    560189609000-56018abce000(  22827008):  0
-    7fbdff59a000-7fbdffaf1a00(   5601792):  0
-    7fbdffaf1a00-7fbdffbb5000(    800256):  1
-    7ffea0dc0000-7ffea0dfd000(    249856):  0
+    base_time_absolute: 8 m 59.809 s
 
-    rel time:        100000731
-    nr_tasks:  1
-    target_id:  1348
-    nr_regions:  6
-    560189609000-56018abce000(  22827008):  0
-    7fbdff59a000-7fbdff8ce933(   3361075):  0
-    7fbdff8ce933-7fbdffaf1a00(   2240717):  1
-    7fbdffaf1a00-7fbdffb66d99(    480153):  0
-    7fbdffb66d99-7fbdffbb5000(    320103):  1
-    7ffea0dc0000-7ffea0dfd000(    249856):  0
+    monitoring_start:                0 ns
+    monitoring_end:            104.599 ms
+    monitoring_duration:       104.599 ms
+    target_id: 18446623438842320000
+    nr_regions: 3
+    563ebaa00000-563ebc99e000(  31.617 MiB):        1
+    7f938d7e1000-7f938ddfc000(   6.105 MiB):        0
+    7fff66b0a000-7fff66bb2000( 672.000 KiB):        0
 
-The first line shows the recording started timestamp (nanosecond).  Records of
-data access patterns follows.  Each record is separated by a blank line.  Each
-record first specifies the recorded time (``rel time``) in relative to the
-start time, the number of monitored tasks in this record (``nr_tasks``).
-Recorded data access patterns of each task follow.  Each data access pattern
-for each task shows the target's pid (``target_id``) and a number of monitored
-address regions in this access pattern (``nr_regions``) first.  After that,
-each line shows the start/end address, size, and the number of observed
-accesses of each region.
+    monitoring_start:          104.599 ms
+    monitoring_end:            208.590 ms
+    monitoring_duration:       103.991 ms
+    target_id: 18446623438842320000
+    nr_regions: 4
+    563ebaa00000-563ebc99e000(  31.617 MiB):        1
+    7f938d7e1000-7f938d9b5000(   1.828 MiB):        0
+    7f938d9b5000-7f938ddfc000(   4.277 MiB):        0
+    7fff66b0a000-7fff66bb2000( 672.000 KiB):        5
+
+The first line shows the recording started timestamp.  Records of data access
+patterns follow.  Each record is separated by a blank line.  Each record first
+specifies when the record started (`monitoring_start`) and ended
+(`monitoring_end`) in relative to the start time, the duration for the
+recording (`monitoring_duration`).  Recorded data access patterns of each
+target follow.  Each data access pattern for each task shows the target's id
+(``target_id``) and a number of monitored address regions in this access
+pattern (``nr_regions``) first.  After that, each line shows the start/end
+address, size, and the number of observed accesses of each region.
 
 
 heats
@@ -157,12 +156,12 @@ point of each axis (``--time_range`` and ``address_range``).  For example:
 
 This command shows a recorded access pattern in heatmap of 3x3 resolution.
 Therefore it shows 9 data points in total.  Each line shows each of the data
-points.  The three numbers in each line represent time in nanosecond, address,
-and the observed access frequency.
+points.  The three numbers in each line represent time in nanosecond, address
+in bytes, and the observed access frequency.
 
-Users will be able to convert this text output into a heatmap image (represents
-z-axis values with colors) or other 3D representations using various tools such
-as 'gnuplot'.  For more convenience, ``heats`` sub-subcommand provides the
+Users can convert this text output into a heatmap image (represents z-axis
+values with colors) or other 3D representations using various tools such as
+'gnuplot'.  For more convenience, ``heats`` sub-subcommand provides the
 'gnuplot' based heatmap image creation.  For this, you can use ``--heatmap``
 option.  Also, note that because it uses 'gnuplot' internally, it will fail if
 'gnuplot' is not installed on your system.  For example:
@@ -179,11 +178,11 @@ resolution and axis boundary-setting arguments.  To make this effort minimal,
 you can use ``--guide`` option as below:
 
     $ ./damo report heats --guide
-    target_id:1348
-    time: 193485829398-198337863555 (4852034157)
-    region   0: 00000094564599762944-00000094564622589952 (22827008)
-    region   1: 00000140454009610240-00000140454016012288 (6402048)
-    region   2: 00000140731597193216-00000140731597443072 (249856)
+    target_id:18446623438842320000
+    time: 539914032967-596606618651 (56.693 s)
+    region   0: 00000094827419009024-00000094827452162048 (31.617 MiB)
+    region   1: 00000140271510761472-00000140271717171200 (196.848 MiB)
+    region   2: 00000140734916239360-00000140734916927488 (672.000 KiB)
 
 The output shows unions of monitored regions (start and end addresses in byte)
 and the union of monitored time duration (start and end time in nanoseconds) of
@@ -200,38 +199,38 @@ changes from the records.  For example:
 
     $ ./damo report wss
     # <percentile> <wss>
-    # target_id   1348
-    # avr:  66228
-    0       0
-    25      0
-    50      0
-    75      0
-    100     1920615
+    # target_id     18446623438842320000
+    # avr:  107.767 MiB
+      0             0 B |                                                           |
+     25      95.387 MiB |****************************                               |
+     50      95.391 MiB |****************************                               |
+     75      95.414 MiB |****************************                               |
+    100     196.871 MiB |***********************************************************|
 
 Without any option, it shows the distribution of the working set sizes as
 above.  It shows 0th, 25th, 50th, 75th, and 100th percentile and the average of
 the measured working set sizes in the access pattern records.  In this case,
-the working set size was zero for 75th percentile but 1,920,615 bytes in max
-and 66,228 bytes on average.
+the working set size was 95.387 MiB for 25th to 75th percentile but 196.871 MiB
+in max and 107.767 MiB on average.
 
-By setting the sort key of the percentile using '--sortby', you can show how
+By setting the sort key of the percentile using `--sortby`, you can show how
 the working set size has chronologically changed.  For example:
 
     $ ./damo report wss --sortby time
     # <percentile> <wss>
-    # target_id   1348
-    # avr:  66228
-    0       0
-    25      0
-    50      0
-    75      0
-    100     0
+    # target_id     18446623438842320000
+    # avr:  107.767 MiB
+      0             0 B |                                                           |
+     25      95.418 MiB |*****************************                              |
+     50     190.766 MiB |***********************************************************|
+     75      95.391 MiB |*****************************                              |
+    100      95.395 MiB |*****************************                              |
 
-The average is still 66,228.  And, because the access was spiked in very short
-duration and this command plots only 4 data points, we cannot show when the
-access spikes made.  Users can specify the resolution of the distribution
-(``--range``).  By giving more fine resolution, the short duration spikes could
-be found.
+The average is still 107.767 MiB, of course.  And, because the access was
+spiked in very short duration and this command plots only 4 data points, we
+cannot show when the access spikes made.  Users can specify the resolution of
+the distribution (``--range``).  By giving more fine resolution, the short
+duration spikes could be more easily found.
 
 Similar to that of ``heats --heatmap``, it also supports 'gnuplot' based simple
 visualization of the distribution via ``--plot`` option.
@@ -256,7 +255,7 @@ to ``schemes`` subcommand via ``--schemes`` option.
 The format also supports comments, several units for size and age of regions,
 and human readable action names.  Currently supported operation actions are
 ``willneed``, ``cold``, ``pageout``, ``hugepage`` and ``nohugepage``.  Each of
-the actions works same to the madvise() system call hints having the name.
+the actions works same to the ``madvise()`` system call hints having the name.
 Please also note that the range is inclusive (closed interval), and ``0`` for
 max values means infinite. Below example schemes are possible.
 
@@ -293,4 +292,4 @@ memory regions keeping 2MB or larger size and having very high access frequency
 for at least 100 milliseconds using below commands:
 
     $ echo "2M max    90 max    100ms max    hugepage" > my_thp_scheme
-    $ ./damo schemes --schemes my_thp_scheme `pidof foo`
+    $ ./damo schemes --schemes my_thp_scheme $(pidof foo)
