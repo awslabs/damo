@@ -206,11 +206,13 @@ class GuideInfo:
 
     def __str__(self):
         lines = ['target_id:%d' % self.tid]
-        lines.append('time: %d-%d (%d)' % (self.start_time, self.end_time,
-                    self.end_time - self.start_time))
+        lines.append('time: %d-%d (%s)' % (self.start_time, self.end_time,
+                    _fmt_nr.format_time(self.end_time - self.start_time,
+                        False)))
         for idx, region in enumerate(self.regions()):
-            lines.append('region\t%2d: %020d-%020d (%d)' %
-                    (idx, region[0], region[1], region[1] - region[0]))
+            lines.append('region\t%2d: %020d-%020d (%s)' %
+                    (idx, region[0], region[1],
+                        _fmt_nr.format_sz(region[1] - region[0], False)))
         return '\n'.join(lines)
 
 def is_overlap(region1, region2):
