@@ -30,7 +30,7 @@ pattern of your workload.
     $ sudo mount -t debugfs none /sys/kernel/debug/
     $ sudo pip3 install damo
     $ sudo damo record $(pidof <your workload>)
-    $ damo report heats --plot stdout --stdout_heatmap_color emotion
+    $ damo report heats --heatmap stdout --stdout_heatmap_color emotion
 
 The last command will show the access pattern of your workload, like below:
 
