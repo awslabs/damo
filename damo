@@ -50,12 +50,12 @@ def main():
             help='adjust the record results with different monitoring attributes')
     adjust.set_argparser(parser_adjust)
 
+    parser_reclaim = subparser.add_parser('reclaim', help='control DAMON_RECLAIM')
+    reclaim.set_argparser(parser_reclaim)
+
     parser_features = subparser.add_parser('features',
             help='list supported DAMON features in the kernel')
     features.set_argparser(parser_features)
-
-    parser_reclaim = subparser.add_parser('reclaim', help='control DAMON_RECLAIM')
-    reclaim.set_argparser(parser_reclaim)
 
     args = parser.parse_args()
 
@@ -69,10 +69,10 @@ def main():
         monitor.main(args)
     elif args.command == 'adjust':
         adjust.main(args)
-    elif args.command == 'features':
-        features.main(args)
     elif args.command == 'reclaim':
         reclaim.main(args)
+    elif args.command == 'features':
+        features.main(args)
 
 if __name__ == '__main__':
     main()
