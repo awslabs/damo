@@ -13,3 +13,12 @@ please base your work on 'next'.
 
 [1] https://www.kernel.org/doc/html/latest/process/index.html
 [2] https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+
+
+What To Do, First?
+==================
+
+If you want to participate in the development but unsure what to do first, you
+could consider running DAMON tests suite
+(https://github.com/awslabs/damon-tests) on your system.  It might reveal some
+issues in DAMO or DAMON to you.
