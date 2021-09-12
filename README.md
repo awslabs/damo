@@ -40,6 +40,11 @@ The last command will show the access pattern of your workload, like below:
 FAQs
 ====
 
+How can I install a kernel that built with `CONFIG_DAMON_*=y`?
+--------------------------------------------------------------
+
+Please refer to 'Install' section of https://damonitor.github.io/.
+
 Where can I get more detailed usage?
 ------------------------------------
 
