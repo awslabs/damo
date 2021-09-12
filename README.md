@@ -1,10 +1,9 @@
 DAMO: Data Access Monitoring Operator
 =====================================
 
-This directory contains a user space tool for
-[DAMON](https://damonitor.github.io), namely ``damo``.  Using the tool, you can
-monitor the data access patterns of your system or workloads and make data
-access-aware memory management optimizations.
+`damo` is a user space tool for [DAMON](https://damonitor.github.io).  Using
+this, you can monitor the data access patterns of your system or workloads and
+make data access-aware memory management optimizations.
 
 ![damo monitor demo for water_nsquared](images/damo_monitor_water_nsquared.gif)
 
@@ -51,7 +50,8 @@ more detailed usage, please refer to [USAGE.md](USAGE.md) file.
 What does the version number means?
 -----------------------------------
 
-Nothing at all, but larger version number means it is released more recently.
+Nothing at all but indicate which version is more fresh.  Higher version number
+means it is more recently released.
 
 
 Will `pip3 install damo` install latest version of `damo`?
@@ -59,8 +59,8 @@ Will `pip3 install damo` install latest version of `damo`?
 
 It will install the latest _stable_ version of `damo`.  If you want, you can
 also install less stable but more fresh `damo` from source code.  For that,
-simply download the `next` branch of the source tree and use `damo` executable
-file in the tree.
+fetch the `next` branch of the source tree and use `damo` executable file in
+the tree.
 
     $ git clone https://github.com/awslabs/damo -b next
     $ sudo ./damo/damo record $(pidof <your workload>)
