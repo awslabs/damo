@@ -86,7 +86,7 @@ monitoring results in `damon.data` file.
 
     $ git clone https://github.com/sjp38/masim
     $ cd masim; make; ./masim ./configs/zigzag.cfg &
-    $ sudo ./damo record -o damon.data $(pidof masim)
+    $ sudo damo record -o damon.data $(pidof masim)
 
 The first two lines of the commands get an artificial memory access generator
 program and runs it in the background.  It will repeatedly access two 100 MiB
