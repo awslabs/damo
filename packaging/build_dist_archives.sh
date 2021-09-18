@@ -38,6 +38,10 @@ do
 	cp "$bindir/$file" "$work_dir/"
 done
 
+version_number=$(echo -n $(cat "$bindir/../VERSION"))
+sed -i "s/<<replace_me_with_the_version_number>>/$version_number/" \
+	"$work_dir/setup.py"
+
 "$bindir/mk_readme.sh" "$work_dir" "$version"
 
 damo_dir="$bindir/.."
