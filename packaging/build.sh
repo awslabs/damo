@@ -23,6 +23,7 @@ then
 		exit 1
 	fi
 
+	echo "remove it for clean build"
 	if ! rm -fr "$work_dir"
 	then
 		echo "failed removing old $work_dir"
