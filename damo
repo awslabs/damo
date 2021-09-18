@@ -76,7 +76,9 @@ def main():
     elif args.command == 'features':
         features.main(args)
     elif args.command == 'version':
-        print('0.0.3')
+        bindir = path.dirname(path.abspath(__file__))
+        with open(path.join(bindir, 'VERSION'), 'r') as f:
+            print(f.read().strip())
 
 if __name__ == '__main__':
     main()
