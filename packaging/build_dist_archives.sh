@@ -1,18 +1,33 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]
+if [ $# -lt 2 ]
 then
-	echo "Usage: $0 <work dir> <version>"
+	echo "Usage: $0 <work dir> <version> [--force]"
 	exit 1
 fi
 
 work_dir=$1
 version=$2
 
+rm_workdir="false"
+if [ $# -eq 3 ] && [ "$3" = "--force" ]
+then
+	rm_workdir="true"
+fi
+
 if [ -d "$work_dir" ] || [ -f "$work_dir" ]
 then
 	echo "$work_dir already exist"
-	exit 1
+	if [ "$rm_workdir" = "false" ]
+	then
+		exit 1
+	fi
+
+	if ! rm -fr "$work_dir"
+	then
+		echo "failed removing old $work_dir"
+		exit 1
+	fi
 fi
 
 mkdir "$work_dir"
