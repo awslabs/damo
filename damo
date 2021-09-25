@@ -77,7 +77,7 @@ def main():
         features.main(args)
     elif args.command == 'version':
         bindir = os.path.dirname(os.path.abspath(__file__))
-        with open(os.path.join(bindir, 'VERSION'), 'r') as f:
+        with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:
             print(f.read().strip())
 
 if __name__ == '__main__':
