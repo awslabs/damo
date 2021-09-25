@@ -3,8 +3,8 @@
 
 import argparse
 
-from os import sys, path
-sys.path.append(path.dirname(path.abspath(__file__)))
+import os
+os.sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import adjust
 import features
@@ -76,8 +76,8 @@ def main():
     elif args.command == 'features':
         features.main(args)
     elif args.command == 'version':
-        bindir = path.dirname(path.abspath(__file__))
-        with open(path.join(bindir, 'VERSION'), 'r') as f:
+        bindir = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(bindir, 'VERSION'), 'r') as f:
             print(f.read().strip())
 
 if __name__ == '__main__':
