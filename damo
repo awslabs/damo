@@ -30,8 +30,7 @@ def main():
             metavar='<command>')
     subparser.required = True
 
-    parser_record = subparser.add_parser('record',
-            help='record data accesses')
+    parser_record = subparser.add_parser('record', help='record data accesses')
     record.set_argparser(parser_record)
 
     parser_schemes = subparser.add_parser('schemes',
@@ -50,7 +49,8 @@ def main():
             help='adjust the record results with different monitoring attributes')
     adjust.set_argparser(parser_adjust)
 
-    parser_reclaim = subparser.add_parser('reclaim', help='control DAMON_RECLAIM')
+    parser_reclaim = subparser.add_parser('reclaim',
+            help='control DAMON_RECLAIM')
     reclaim.set_argparser(parser_reclaim)
 
     parser_features = subparser.add_parser('features',
