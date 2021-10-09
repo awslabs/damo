@@ -11,7 +11,7 @@ make data access-aware memory management optimizations.
 Demo Video
 ==========
 
-Please click below thumbnail to show the short demo video.
+Please click the below thumbnail to show the short demo video.
 
 [![DAMON: a demo for the Kernel Summit 2020](
 http://img.youtube.com/vi/l63eqbVBZRY/0.jpg)](
@@ -40,27 +40,27 @@ The last command will show the access pattern of your workload, like below:
 FAQs
 ====
 
-How can I install a kernel that built with `CONFIG_DAMON_*=y`?
---------------------------------------------------------------
+How can I install a kernel that is built with `CONFIG_DAMON_*=y`?
+-----------------------------------------------------------------
 
 Please refer to 'Install' section of https://damonitor.github.io/.
 
 Where can I get more detailed usage?
 ------------------------------------
 
-Below sections provide quick introductions for `damo`'s major features.  For
+The below sections provide quick introductions for `damo`'s major features.  For
 more detailed usage, please refer to [USAGE.md](USAGE.md) file.
 
 
-What does the version number means?
------------------------------------
+What does the version number mean?
+----------------------------------
 
-Nothing at all but indicate which version is more fresh.  Higher version number
+Nothing at all but indicate which version is fresher.  A higher version number
 means it is more recently released.
 
 
-Will `pip3 install damo` install latest version of `damo`?
-----------------------------------------------------------
+Will `pip3 install damo` install the latest version of `damo`?
+--------------------------------------------------------------
 
 It will install the latest _stable_ version of `damo`.  If you want, you can
 also install less stable but more fresh `damo` from source code.  For that,
@@ -89,8 +89,8 @@ monitoring results in `damon.data` file.
     $ sudo damo record -o damon.data $(pidof masim)
 
 The first two lines of the commands get an artificial memory access generator
-program and runs it in the background.  It will repeatedly access two 100 MiB
-sized memory regions one by one.  You can substitute this with your real
+program and run it in the background.  It will repeatedly access two 100
+MiB-sized memory regions one by one.  You can substitute this with your real
 workload.  The last line asks ``damo`` to record the access pattern in
 ``damon.data`` file.
 
@@ -112,7 +112,7 @@ image files.
 - ``wss_chron_change.png`` will show how the working set size has
   chronologically changed.
 
-You can show the images in a web page [1].  Those made with other realistic
+You can show the images on a web page [1].  Those made with other realistic
 workloads are also available [2,3,4].
 
 [1] https://damonitor.github.io/doc/html/latest/admin-guide/mm/damon/start.html#visualizing-recorded-patterns  
@@ -124,9 +124,9 @@ workloads are also available [2,3,4].
 Data Access Pattern Aware Memory Management
 ===========================================
 
-Below three commands make every memory region of size >=4K that doesn't
-accessed for >=60 seconds in your workload to be swapped out.  By doing this,
-you can make your workload more memory efficient with near-zero performance
+Below three commands make every memory region of size >=4K that hasn't accessed
+for >=60 seconds in your workload to be swapped out.  By doing this, you can
+make your workload more memory efficient with only a modest performance
 overhead.
 
     $ echo "#min-size max-size min-acc max-acc min-age max-age action" > my_scheme
