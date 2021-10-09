@@ -40,7 +40,7 @@ source code directory.
 Overview
 ========
 
-`damo` provides a subcommands based interface. Every subcommand provides `-h`
+`damo` provides a subcommands-based interface. Every subcommand provides `-h`
 option, which shows the minimal usage of it.
 
 
@@ -48,7 +48,7 @@ Recording Data Access Pattern
 =============================
 
 The ``record`` subcommand records the data access pattern of target workloads
-in a file (``./damon.data`` by default).  Note that the file will owned by
+in a file (``./damon.data`` by default).  Note that the file will be owned by
 ``root`` but have ``644`` permission, so anyone could read it.  You can specify
 the monitoring target with 1) the command for execution of the monitoring
 target process, 2) pid of running target process, or 3) the special keyword,
@@ -63,7 +63,7 @@ of the process.  Below example shows a pid target usage:
     # sleep 5 &
     # damo record $(pidof sleep)
 
-Finally, below example shows the use of the special keyword, `paddr`:
+Finally, the below example shows the use of the special keyword, `paddr`:
 
     # damo record paddr
 
@@ -79,9 +79,9 @@ the monitoring attributes in detail, please refer to the DAMON design
 
 Note that the ``record`` subcommand executes the target command as a root.
 Therefore, the user could execute arbitrary commands with root permission.
-Hence, sysadmins should allow only trusted users to use ``damo``.  This is same
-to ``schemes`` subcommand which is mentioned below.  Please take care for that,
-either.
+Hence, sysadmins should allow only trusted users to use ``damo``.  This is the
+same as the ``schemes`` subcommand which is mentioned below.  Please take care
+of that, either.
 
 
 Analyzing Data Access Pattern
@@ -125,12 +125,12 @@ human-readable text.  For example:
 The first line shows the recording started timestamp.  Records of data access
 patterns follow.  Each record is separated by a blank line.  Each record first
 specifies when the record started (`monitoring_start`) and ended
-(`monitoring_end`) in relative to the start time, the duration for the
-recording (`monitoring_duration`).  Recorded data access patterns of each
-target follow.  Each data access pattern for each task shows the target's id
-(``target_id``) and a number of monitored address regions in this access
-pattern (``nr_regions``) first.  After that, each line shows the start/end
-address, size, and the number of observed accesses of each region.
+(`monitoring_end`) relative to the start time, the duration for the recording
+(`monitoring_duration`).  Recorded data access patterns of each target follow.
+Each data access pattern for each task shows the target's id (``target_id``)
+and a number of monitored address regions in this access pattern
+(``nr_regions``) first.  After that, each line shows the start/end address,
+size, and the number of observed accesses of each region.
 
 
 heats
@@ -155,8 +155,8 @@ point of each axis (``--time_range`` and ``--address_range``).  For example:
 
 This command shows a recorded access pattern in heatmap of 3x3 resolution.
 Therefore it shows 9 data points in total.  Each line shows each of the data
-points.  The three numbers in each line represent time in nanosecond, address
-in bytes, and the observed access frequency.
+points.  The three numbers in each line represent time in nanoseconds, address
+in bytes and the observed access frequency.
 
 Users can convert this text output into a heatmap image (represents z-axis
 values with colors) or other 3D representations using various tools such as
@@ -240,23 +240,23 @@ DAMON-based Operation Schemes
 
 The ``schemes`` subcommand allows users to do DAMON-based memory management
 optimizations in a few seconds.  Similar to ``record``, it receives monitoring
-attributes and target.  However, in addition to those, ``schemes`` receives
+attributes and targets.  However, in addition to those, ``schemes`` receive
 data access pattern-based memory operation schemes, which describes what memory
 operation action should be applied to memory regions showing specific data
 access pattern.  Then, it starts the data access monitoring and automatically
 applies the schemes to the targets.
 
-The operation schemes should be saved in a text file in below format and passed
-to ``schemes`` subcommand via ``--schemes`` option.
+The operation schemes should be saved in a text file in the below format and
+passed to ``schemes`` subcommand via ``--schemes`` option.
 
     min-size max-size min-acc max-acc min-age max-age action
 
 The format also supports comments, several units for size and age of regions,
-and human readable action names.  Currently supported operation actions are
+and human-readable action names.  Currently supported operation actions are
 ``willneed``, ``cold``, ``pageout``, ``hugepage`` and ``nohugepage``.  Each of
-the actions works same to the ``madvise()`` system call hints having the name.
-Please also note that the range is inclusive (closed interval), and ``0`` for
-max values means infinite. Below example schemes are possible.
+the actions works the same to the ``madvise()`` system call hints having the
+name.  Please also note that the range is inclusive (closed interval), and
+``0`` for max values means infinite. Below example schemes are possible.
 
     # format is:
     # <min/max size> <min/max frequency (0-100)> <min/max age> <action>
@@ -282,13 +282,13 @@ max values means infinite. Below example schemes are possible.
     # MADV_HUGEPAGE).
     2M      max     90      100     100ms   max hugepage
 
-    # If a regions of a size >=2MiB keeps small access frequency for >=100ms,
+    # If a region of a size >=2MiB keeps a small access frequency for >=100ms,
     # avoid the region using huge pages (call madvise() with MADV_NOHUGEPAGE).
     2M      max     0       25      100ms   max nohugepage
 
 For example, you can make a running process named 'foo' to use huge pages for
 memory regions keeping 2MB or larger size and having very high access frequency
-for at least 100 milliseconds using below commands:
+for at least 100 milliseconds using the below commands:
 
     $ echo "2M max    90 max    100ms max    hugepage" > my_thp_scheme
     $ ./damo schemes --schemes my_thp_scheme $(pidof foo)
