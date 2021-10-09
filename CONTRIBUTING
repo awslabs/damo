@@ -4,7 +4,7 @@ General Process
 For contributions, please refer to the linux kernel development process[1] and
 send patches to sjpark@amazon.com or pull-requests via Github.  The
 contributions should have proper 'Signed-off-by:' tags[2].  The tag will be
-considered same to that of the linux kernel development process.
+considered the same as that of the linux kernel development process.
 
 There are two branches, 'master' and 'next'.  Changes first merged in 'next',
 get tested, and finally merged in 'master', if the tests show no problem.  So,
@@ -18,7 +18,7 @@ please base your work on 'next'.
 What To Do, First?
 ==================
 
-If you want to participate in the development but unsure what to do first, you
-could consider running DAMON tests suite
+If you want to participate in the development but are unsure what to do first,
+you could consider running DAMON tests suite
 (https://github.com/awslabs/damon-tests) on your system.  It might reveal some
 issues in DAMO or DAMON to you.
