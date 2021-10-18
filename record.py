@@ -115,9 +115,8 @@ def set_argparser(parser):
             help='the target command or the pid to record')
     parser.add_argument('--pidfd', action='store_true',
             help='use pidfd type target id')
-    if _damon.get_supported_features()['record']:
-        parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-                default=1024*1024, help='length of record result buffer')
+    parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
+            help='length of record result buffer')
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
             help='if target is \'paddr\', limit it to the numa node')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
@@ -132,6 +131,11 @@ def main(args=None):
 
     _damon.chk_permission()
     _damon.chk_update_debugfs(args.debugfs)
+
+    if args.rbuf and _damon.feature_supported('record'):
+        print('# \'--rbuf\' will be ignored')
+    if not args.rbuf:
+        args.rbuf = 1024 * 1024
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
