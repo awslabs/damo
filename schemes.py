@@ -35,7 +35,7 @@ def run_damon(target, is_target_cmd, init_regions, attrs, old_attrs):
         print('could not turn on damon' % target)
         cleanup_exit(old_attrs, -3)
     while not _damon.is_damon_running():
-        sleep(1)
+        time.sleep(1)
     print('Press Ctrl+C to stop')
     if is_target_cmd:
         p.wait()
@@ -52,7 +52,7 @@ def cleanup_exit(orig_attrs, exit_code):
         if _damon.turn_damon('off'):
             print('failed to turn damon off!')
         while _damon.is_damon_running():
-            sleep(1)
+            time.sleep(1)
     if orig_attrs:
         if orig_attrs.apply():
             print('original attributes (%s) restoration failed!' % orig_attrs)
