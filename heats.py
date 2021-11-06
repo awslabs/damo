@@ -89,11 +89,11 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
     lowest_heat = None
     for snapshot in pixels:
         for pixel in snapshot:
-            if not highest_heat or highest_heat < pixel.heat:
+            if highest_heat == None or highest_heat < pixel.heat:
                 highest_heat = pixel.heat
-            if not lowest_heat or lowest_heat > pixel.heat:
+            if lowest_heat == None or lowest_heat > pixel.heat:
                 lowest_heat = pixel.heat
-    if not highest_heat and not lowest_heat:
+    if highest_heat == None and lowest_heat == None:
         return
     heat_unit = float(highest_heat + 1 - lowest_heat) / 9
 
