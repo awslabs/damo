@@ -11,8 +11,8 @@ get tested, and finally merged in 'master', if the tests show no problem.  So,
 please base your work on 'next'.
 
 
-[1] https://www.kernel.org/doc/html/latest/process/index.html
-[2] https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+[1] https://docs.kernel.org/process/index.html
+[2] https://docs.kernel.org/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
 
 
 What To Do, First?
