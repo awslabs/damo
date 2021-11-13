@@ -45,6 +45,8 @@ def set_argparser(parser):
             metavar='<microseconds>', help='new aggregation interval')
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
+    parser.add_argument('--input_type', choices=['record', 'perf_script'],
+            default=None, help='input file\'s type')
     parser.add_argument('--output', '-o', type=str, metavar='<file>',
             default='damon.adjusted.data', help='output file name')
     parser.add_argument('--skip', type=int, metavar='<int>', default=20,
@@ -58,7 +60,7 @@ def main(args=None):
 
     file_path = args.input
 
-    result = _damon_result.parse_damon_result(file_path, None)
+    result = _damon_result.parse_damon_result(file_path, args.input_type)
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
