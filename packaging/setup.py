@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-2.0
+
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:

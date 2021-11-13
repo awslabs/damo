@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-2.0
 
 bindir=$(dirname "$0")
 cd "$bindir" || exit 1
