@@ -58,7 +58,7 @@ def main(args=None):
 
     file_path = args.input
 
-    result = _damon_result.parse_damon_result(file_path, 'record')
+    result = _damon_result.parse_damon_result(file_path, None)
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
