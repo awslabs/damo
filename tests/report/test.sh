@@ -36,11 +36,12 @@ test_report "$damo report wss -r 1 101 1 --work_time 1000000 --raw_number" \
 	"wss_worktime_1s"
 
 test_report \
-	"$damo adjust 1000000 && $damo report raw -i damon.adjusted.data" \
+	"$damo adjust --aggregate_interval 1000000 && \
+	$damo report raw -i damon.adjusted.data" \
 	"aggr_1s_raw"
 
 test_report \
-	"$damo adjust --skip 30 1000000 && \
+	"$damo adjust --skip 30 --aggregate_interval 1000000 && \
 	$damo report raw -i damon.adjusted.data" \
 	"aggr_1s_raw_skip_30"
 

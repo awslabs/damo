@@ -41,7 +41,7 @@ def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
     result.nr_snapshots = nr_snapshots
 
 def set_argparser(parser):
-    parser.add_argument('aggregate_interval', type=int,
+    parser.add_argument('--aggregate_interval', type=int, default=None,
             metavar='<microseconds>', help='new aggregation interval')
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
@@ -65,7 +65,8 @@ def main(args=None):
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
-    adjust_result(result, args.aggregate_interval, args.skip)
+    if args.aggregate_interval != None:
+        adjust_result(result, args.aggregate_interval, args.skip)
     _damon_result.write_damon_record(result, args.output, 2)
 
 if __name__ == '__main__':
