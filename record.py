@@ -13,6 +13,7 @@ import subprocess
 import time
 
 import _damon
+import _damon_result
 import _paddr_layout
 
 def pidfd_open(pid):
@@ -28,6 +29,7 @@ def pidfd_open(pid):
 
 perf_pipe = None
 rfile_path = None
+rfile_format = None
 def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
     global perf_pipe
     global rfile_path
@@ -87,12 +89,14 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
     cleanup_exit(old_attrs, 0)
 
 def cleanup_exit(orig_attrs, exit_code):
+    rfile_mid_format = 'record'
     if perf_pipe:
         perf_pipe.send_signal(signal.SIGINT)
         perf_pipe.wait()
         subprocess.call('perf script -i \'%s\' > \'%s\'' %
                 (rfile_path + '.perf.data', rfile_path),
                 shell=True, executable='/bin/bash')
+        rfile_mid_format = 'perf_script'
 
     if _damon.is_damon_running():
         if _damon.turn_damon('off'):
@@ -102,6 +106,15 @@ def cleanup_exit(orig_attrs, exit_code):
     if orig_attrs:
         if orig_attrs.apply():
             print('original attributes (%s) restoration failed!' % orig_attrs)
+
+    if rfile_format != None and rfile_mid_format != rfile_format:
+        rfile_path_mid = rfile_path + '.mid'
+        os.rename(rfile_path, rfile_path_mid)
+        result = _damon_result.parse_damon_result(rfile_path_mid,
+                rfile_mid_format)
+        _damon_result.write_damon_result(result, rfile_path, rfile_format)
+        os.remove(rfile_path_mid)
+
     exit(exit_code)
 
 def sighandler(signum, frame):
@@ -121,9 +134,13 @@ def set_argparser(parser):
             help='if target is \'paddr\', limit it to the numa node')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
             default='damon.data', help='output file path')
+    parser.add_argument('--output_type', choices=['record', 'perf_script'],
+            default=None, help='output file\'s type')
 
 def main(args=None):
     global orig_attrs
+    global rfile_format
+
     if not args:
         parser = argparse.ArgumentParser()
         set_argparser(parser)
@@ -136,6 +153,8 @@ def main(args=None):
         print('# \'--rbuf\' will be ignored')
     if not args.rbuf:
         args.rbuf = 1024 * 1024
+
+    rfile_format = args.output_type
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
