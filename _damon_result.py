@@ -232,6 +232,36 @@ def write_damon_record(result, file_path, format_version):
                     f.write(struct.pack('L', region.end))
                     f.write(struct.pack('I', region.nr_accesses))
 
+def write_damon_perf_script(result, file_path):
+    '''
+    Example of the normal perf script output:
+
+    kdamond.0  4452 [000] 82877.315633: damon:damon_aggregated: \
+            target_id=18446623435582458880 nr_regions=17 \
+            140731667070976-140731668037632: 0 3
+    '''
+
+    with open(file_path, 'w') as f:
+        for snapshot_idx in range(result.nr_snapshots):
+            for tid in result.target_snapshots:
+                snapshot = result.target_snapshots[tid][snapshot_idx]
+                for region in snapshot.regions:
+                    f.write(' '.join(['kdamond.x', 'xxxx', 'xxxx',
+                        '%f:' % (snapshot.end_time / 1000000000),
+                        'damon:damon_aggregated:',
+                        'target_id=%s' % snapshot.target_id,
+                        'nr_regions=%d' % len(snapshot.regions),
+                        '%d-%d: %d x' % (region.start, region.end,
+                            region.nr_accesses)]) + '\n')
+
+def write_damon_result(result, file_path, file_type):
+    if file_type == 'record':
+        write_damon_record(result, file_path, 2)
+    elif file_type == 'perf_script':
+        write_damon_perf_script(result, file_path)
+    else:
+        print('unsupported file type: %s' % file_type)
+
 def regions_intersect(r1, r2):
     return not (r1.end <= r2.start or r2.end <= r1.start)
 
