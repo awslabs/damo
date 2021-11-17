@@ -49,6 +49,8 @@ def set_argparser(parser):
             default=None, help='input file\'s type')
     parser.add_argument('--output', '-o', type=str, metavar='<file>',
             default='damon.adjusted.data', help='output file name')
+    parser.add_argument('--output_type', choices=['record', 'perf_script'],
+            default='record', help='output file\'s type')
     parser.add_argument('--skip', type=int, metavar='<int>', default=20,
             help='number of first snapshots to skip')
 
@@ -67,7 +69,7 @@ def main(args=None):
 
     if args.aggregate_interval != None:
         adjust_result(result, args.aggregate_interval, args.skip)
-    _damon_result.write_damon_record(result, args.output, 2)
+    _damon_result.write_damon_result(result, args.output, args.output_type)
 
 if __name__ == '__main__':
     main()
