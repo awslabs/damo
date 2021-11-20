@@ -92,15 +92,16 @@ remove_perf_data = False
 def cleanup_exit(orig_attrs, exit_code):
     rfile_mid_format = 'record'
     if perf_pipe:
+        perf_data = rfile_path + '.perf.data'
         perf_pipe.send_signal(signal.SIGINT)
         perf_pipe.wait()
         subprocess.call('perf script -i \'%s\' > \'%s\'' %
-                (rfile_path + '.perf.data', rfile_path),
+                (perf_data, rfile_path),
                 shell=True, executable='/bin/bash')
         rfile_mid_format = 'perf_script'
 
         if remove_perf_data:
-            os.remove(rfile_path + '.perf.data')
+            os.remove(perf_data)
 
     if _damon.is_damon_running():
         if _damon.turn_damon('off'):
