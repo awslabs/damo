@@ -13,6 +13,7 @@ import reclaim
 import record
 import report
 import schemes
+import validate
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
     def _format_action(self, action):
@@ -57,6 +58,10 @@ def main():
             help='list supported DAMON features in the kernel')
     features.set_argparser(parser_features)
 
+    parser_validate = subparser.add_parser('validate',
+            help='validate a given record result file')
+    validate.set_argparser(parser_validate)
+
     subparser.add_parser('version', help='print the version number')
 
     args = parser.parse_args()
@@ -75,6 +80,8 @@ def main():
         reclaim.main(args)
     elif args.command == 'features':
         features.main(args)
+    elif args.command == 'validate':
+        validate.main(args)
     elif args.command == 'version':
         bindir = os.path.dirname(os.path.abspath(__file__))
         with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:
