@@ -88,6 +88,7 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
 
     cleanup_exit(old_attrs, 0)
 
+remove_perf_data = False
 def cleanup_exit(orig_attrs, exit_code):
     rfile_mid_format = 'record'
     if perf_pipe:
@@ -97,6 +98,9 @@ def cleanup_exit(orig_attrs, exit_code):
                 (rfile_path + '.perf.data', rfile_path),
                 shell=True, executable='/bin/bash')
         rfile_mid_format = 'perf_script'
+
+        if remove_perf_data:
+            os.remove(rfile_path + '.perf.data')
 
     if _damon.is_damon_running():
         if _damon.turn_damon('off'):
@@ -136,10 +140,13 @@ def set_argparser(parser):
             default='damon.data', help='output file path')
     parser.add_argument('--output_type', choices=['record', 'perf_script'],
             default=None, help='output file\'s type')
+    parser.add_argument('--remove_perf_data', action='store_true',
+            help='remove the perf.data file')
 
 def main(args=None):
     global orig_attrs
     global rfile_format
+    global remove_perf_data
 
     if not args:
         parser = argparse.ArgumentParser()
@@ -155,6 +162,7 @@ def main(args=None):
         args.rbuf = 1024 * 1024
 
     rfile_format = args.output_type
+    remove_perf_data = args.remove_perf_data
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
