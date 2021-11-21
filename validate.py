@@ -14,6 +14,8 @@ def set_argparser(parser):
             help='min/max valid sample intervals (ns)')
     parser.add_argument('--nr_regions', metavar='<number>', type=int, nargs=2,
             help='min/max number of regions')
+    parser.add_argument('--nr_accesses', metavar='<number>', type=int, nargs=2,
+            help='min/max number of measured accesses per aggregate interval')
 
 def main(args=None):
     if not args:
@@ -41,6 +43,15 @@ def main(args=None):
                 print('invalid: expected %d<=nr_regions<=%d, but %d' %
                         (args.nr_regions[0], args.nr_regions[1], nr_regions))
                 exit(1)
+
+            for region in snapshot.regions:
+                nra = region.nr_accesses
+                if args.nr_accesses and (nra < args.nr_accesses[0] or nra >
+                        args.nr_accesses[1]):
+                    print('invalid: expected %d<=nr_accesses<=%d, but %d' %
+                            (args.nr_accesses[0], args.nr_accesses[1], nra))
+                    exit(1)
+
 
     print('valid')
 
