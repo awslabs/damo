@@ -7,6 +7,15 @@ import argparse
 
 import _damon_result
 
+def assert_value_in_range(value, min_max, name):
+    if not min_max:
+        return
+    if min_max[0] <= value and value <= min_max[1]:
+        return
+    print('invalid: expecte %d<=%s<=%d but %d' %
+            (min_max[0], name, min_max[1], value))
+    exit(1)
+
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
@@ -30,28 +39,15 @@ def main(args=None):
 
     for target in result.target_snapshots:
         for snapshot in result.target_snapshots[target]:
-            aggr_int_ns = snapshot.end_time - snapshot.start_time
-            if args.aggr and (aggr_int_ns < args.aggr[0] or
-                    aggr_int_ns > args.aggr[1]):
-                print('invalid: expected %d<=aggregate interval<=%d, but %d' %
-                        (args.aggr[0], args.aggr[1], aggr_int_ns))
-                exit(1)
+            assert_value_in_range(snapshot.end_time - snapshot.start_time,
+                    args.aggr, 'aggregate interval')
 
-            nr_regions = len(snapshot.regions)
-            if args.nr_regions and (nr_regions < args.nr_regions[0] or
-                    nr_regions > args.nr_regions[1]):
-                print('invalid: expected %d<=nr_regions<=%d, but %d' %
-                        (args.nr_regions[0], args.nr_regions[1], nr_regions))
-                exit(1)
+            assert_value_in_range(len(snapshot.regions), args.nr_regions,
+                    'nr_regions')
 
             for region in snapshot.regions:
-                nra = region.nr_accesses
-                if args.nr_accesses and (nra < args.nr_accesses[0] or nra >
-                        args.nr_accesses[1]):
-                    print('invalid: expected %d<=nr_accesses<=%d, but %d' %
-                            (args.nr_accesses[0], args.nr_accesses[1], nra))
-                    exit(1)
-
+                assert_value_in_range(region.nr_accesses, args.nr_accesses,
+                        'nr_accesses')
 
     print('valid')
 
