@@ -12,6 +12,8 @@ def set_argparser(parser):
             default='damon.data', help='input file name')
     parser.add_argument('--aggr', metavar='<interval>', type=int, nargs=2,
             help='min/max valid sample intervals (ns)')
+    parser.add_argument('--nr_regions', metavar='<number>', type=int, nargs=2,
+            help='min/max number of regions')
 
 def main(args=None):
     if not args:
@@ -31,6 +33,13 @@ def main(args=None):
                     aggr_int_ns > args.aggr[1]):
                 print('invalid: expected %d<=aggregate interval<=%d, but %d' %
                         (args.aggr[0], args.aggr[1], aggr_int_ns))
+                exit(1)
+
+            nr_regions = len(snapshot.regions)
+            if args.nr_regions and (nr_regions < args.nr_regions[0] or
+                    nr_regions > args.nr_regions[1]):
+                print('invalid: expected %d<=nr_regions<=%d, but %d' %
+                        (args.nr_regions[0], args.nr_regions[1], nr_regions))
                 exit(1)
 
     print('valid')
