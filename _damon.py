@@ -276,11 +276,11 @@ def set_attrs_argparser(parser):
     parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
             default='/sys/kernel/debug', help='debugfs mounted path')
     parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
-            default=5000, help='sampling interval')
+            default=5000, help='sampling interval (us)')
     parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
-            default=100000, help='aggregate interval')
+            default=100000, help='aggregate interval (us)')
     parser.add_argument('-u', '--updr', metavar='<interval>', type=int,
-            default=1000000, help='regions update interval')
+            default=1000000, help='regions update interval (us)')
     parser.add_argument('-n', '--minr', metavar='<# regions>', type=int,
             default=10, help='minimal number of regions')
     parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
