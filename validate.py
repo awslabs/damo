@@ -20,7 +20,7 @@ def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
     parser.add_argument('--aggr', metavar='<interval>', type=int, nargs=2,
-            help='min/max valid sample intervals (ns)')
+            help='min/max valid sample intervals (us)')
     parser.add_argument('--nr_regions', metavar='<number>', type=int, nargs=2,
             help='min/max number of regions')
     parser.add_argument('--nr_accesses', metavar='<number>', type=int, nargs=2,
@@ -39,8 +39,9 @@ def main(args=None):
 
     for target in result.target_snapshots:
         for snapshot in result.target_snapshots[target]:
-            assert_value_in_range(snapshot.end_time - snapshot.start_time,
-                    args.aggr, 'aggregate interval')
+            aggr_interval_us = (snapshot.end_time - snapshot.start_time) / 1000
+            assert_value_in_range(aggr_interval_us, args.aggr,
+                    'aggregate interval')
 
             assert_value_in_range(len(snapshot.regions), args.nr_regions,
                     'nr_regions')
