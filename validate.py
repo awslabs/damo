@@ -46,6 +46,10 @@ def main(args=None):
                     'nr_regions')
 
             for region in snapshot.regions:
+                if region.start >= region.end:
+                    print('wrong regiosn [%d, %d)' % (saddr, eaddr))
+                    exit(1)
+
                 assert_value_in_range(region.nr_accesses, args.nr_accesses,
                         'nr_accesses')
 
