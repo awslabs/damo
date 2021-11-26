@@ -4,7 +4,7 @@
 import argparse
 
 import os
-os.sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import adjust
 import features
