@@ -142,7 +142,7 @@ def set_argparser(parser):
     parser.add_argument('--output_type', choices=['record', 'perf_script'],
             default=None, help='output file\'s type')
     parser.add_argument('--remove_perf_data', action='store_true',
-            help='remove the perf.data file')
+            default=True, help='remove the perf.data file')
 
 def main(args=None):
     global orig_attrs
