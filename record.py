@@ -157,7 +157,7 @@ def main(args=None):
     _damon.chk_permission()
     _damon.chk_update_debugfs(args.debugfs)
 
-    if args.rbuf and _damon.feature_supported('record'):
+    if args.rbuf and not _damon.feature_supported('record'):
         print('# \'--rbuf\' will be ignored')
     if not args.rbuf:
         args.rbuf = 1024 * 1024
