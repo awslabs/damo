@@ -165,9 +165,7 @@ def paddr_region_of(numa_node):
 
 
 def main():
-    ranges = paddr_ranges()
-
-    pr_ranges(ranges)
+    pr_ranges(paddr_ranges())
 
     print('largest system RAM region:', default_paddr_region())
 
