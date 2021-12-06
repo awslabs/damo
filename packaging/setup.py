@@ -9,7 +9,7 @@ setuptools.setup(
     name="damo",
     version="<<replace_me_with_the_version_number>>",
     author="SeongJae Park",
-    author_email="sjpark@amazon.de",
+    author_email="sj@kernel.org",
     description="DAMON user-space tool",
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -2,9 +2,9 @@ General Process
 ===============
 
 For contributions, please refer to the linux kernel development process[1] and
-send patches to sjpark@amazon.com or pull-requests via Github.  The
-contributions should have proper 'Signed-off-by:' tags[2].  The tag will be
-considered the same as that of the linux kernel development process.
+send patches to sj@kernel.org or pull-requests via Github.  The contributions
+should have proper 'Signed-off-by:' tags[2].  The tag will be considered the
+same as that of the linux kernel development process.
 
 There are two branches, 'master' and 'next'.  Changes first merged in 'next',
 get tested, and finally merged in 'master', if the tests show no problem.  So,
