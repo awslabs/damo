@@ -248,7 +248,11 @@ def cmd_args_to_attrs(args):
     if not os.path.isabs(args.out):
         args.out = os.path.join(os.getcwd(), args.out)
     rfile_path = args.out
+
+    if not hasattr(args, 'schemes'):
+        args.schemes = ''
     schemes = args.schemes
+
     return Attrs(sample_interval, aggr_interval, regions_update_interval,
             min_nr_regions, max_nr_regions, rbuf_len, rfile_path, schemes)
 
