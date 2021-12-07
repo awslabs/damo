@@ -157,6 +157,12 @@ def test_debugfs_file_schemes(nr_fields):
 
     return test_debugfs_file(debugfs_schemes, input_str, expected)
 
+def test_debugfs_file_schemes_stat_extended(nr_fields):
+    input_str = ' '.join(['1'] * nr_fields)
+    expected = '%s 0 0 0 0 0\n' % input_str
+
+    return test_debugfs_file(debugfs_schemes, input_str, expected)
+
 def update_supported_features():
     if debugfs_record != None:
         feature_supports['record'] = True
@@ -183,6 +189,13 @@ def update_supported_features():
             feature_supports['schemes_prioritization'] = True
             feature_supports['schemes_wmarks'] = True
             feature_supports['schemes_quotas'] = True
+        elif test_debugfs_file_schemes_stat_extended(18):
+            feature_supports['schemes_speed_limit'] = True
+            feature_supports['schemes_prioritization'] = True
+            feature_supports['schemes_wmarks'] = True
+            feature_supports['schemes_quotas'] = True
+            feature_supports['schemes_stat_succ'] = True
+            feature_supports['schemes_stat_qt_exceed'] = True
 
 def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
     global feature_supports
