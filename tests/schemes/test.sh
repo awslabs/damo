@@ -31,8 +31,7 @@ __test_stat() {
 	applied=0
 	while ps --pid "$stairs_pid" > /dev/null
 	do
-		applied=$(sudo cat "$damon_debugfs"/schemes | \
-			awk '{print $NF}')
+		applied=$(__measure_scheme_applied)
 		sleep 1
 	done
 	measure_time=$((SECONDS - start_time))
@@ -101,6 +100,11 @@ ensure_free_mem_ratio() {
 	fi
 }
 
+__measure_scheme_applied() {
+	sudo cat "$damon_debugfs/schemes" | \
+		awk '{if (NF==23) print $20; else print $NF;}'
+}
+
 measure_scheme_applied() {
 	scheme=$1
 	target=$2
@@ -112,13 +116,13 @@ measure_scheme_applied() {
 	damo_pid=$!
 
 	sudo cat "$damon_debugfs/schemes"
-	before=$(sudo cat "$damon_debugfs/schemes" | awk '{print $NF}')
+	before=$(__measure_scheme_applied)
 	if [ "$before" = "" ]
 	then
 		before=0
 	fi
 	sleep "$wait_for"
-	after=$(sudo cat "$damon_debugfs/schemes" | awk '{print $NF}')
+	after=$(__measure_scheme_applied)
 
 	wait "$damo_pid"
 
