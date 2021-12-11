@@ -30,7 +30,8 @@ def pidfd_open(pid):
 perf_pipe = None
 rfile_path = None
 rfile_format = None
-def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
+def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
+        old_attrs, pidfd):
     global perf_pipe
     global rfile_path
 
@@ -59,7 +60,7 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
         # only for reference of the pidfd usage.
         target = 'pidfd %s' % fd
 
-    if _damon.set_target(target, init_regions):
+    if _damon.set_target(target_ids_prefix + target, init_regions):
         print('target setting (%s, %s) failed' % (target, init_regions))
         cleanup_exit(old_attrs, -2)
     if _damon.turn_damon('on'):
@@ -131,6 +132,8 @@ def set_argparser(parser):
     _damon.set_init_regions_argparser(parser)
     parser.add_argument('target', type=str, metavar='<target>',
             help='the target command or the pid to record')
+    parser.add_argument('--target_ids_prefix', type=str, metavar='<prefix>',
+            default='', help='prefix for the target_ids input')
     parser.add_argument('--pidfd', action='store_true',
             help='use pidfd type target id')
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
@@ -192,7 +195,8 @@ def main(args=None):
             print('target \'%s\' is not supported' % target)
             exit(1)
         cmd_target = False
-    do_record(target, cmd_target, init_regions, new_attrs, orig_attrs, pidfd)
+    do_record(target, cmd_target, args.target_ids_prefix, init_regions,
+            new_attrs, orig_attrs, pidfd)
 
 if __name__ == '__main__':
     main()
