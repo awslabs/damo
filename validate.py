@@ -4,6 +4,7 @@
 "Validate a given damo-record result file"
 
 import argparse
+import os
 
 import _damon_result
 
@@ -34,6 +35,10 @@ def main(args=None):
         parser = argparse.ArgumentParser()
         set_argparser(parser)
         args = parser.parse_args()
+
+    if not os.path.isfile(args.input):
+        print('the file (%s) not found' % args.input)
+        exit(1)
 
     result = _damon_result.parse_damon_result(args.input, None)
     if not result:
