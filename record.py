@@ -144,8 +144,8 @@ def set_argparser(parser):
             default='damon.data', help='output file path')
     parser.add_argument('--output_type', choices=['record', 'perf_script'],
             default=None, help='output file\'s type')
-    parser.add_argument('--remove_perf_data', action='store_true',
-            default=True, help='remove the perf.data file')
+    parser.add_argument('--leave_perf_data', action='store_true',
+            default=False, help='don\'t remove the perf.data file')
 
 def main(args=None):
     global orig_attrs
@@ -166,7 +166,7 @@ def main(args=None):
         args.rbuf = 1024 * 1024
 
     rfile_format = args.output_type
-    remove_perf_data = args.remove_perf_data
+    remove_perf_data = not args.leave_perf_data
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
