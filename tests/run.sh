@@ -4,7 +4,7 @@
 bindir=$(dirname "$0")
 cd "$bindir" || exit 1
 
-for test_dir in report convert_schemes schemes damon_reclaim
+for test_dir in record report convert_schemes schemes damon_reclaim
 do
 	if ! "./$test_dir/test.sh"
 	then
