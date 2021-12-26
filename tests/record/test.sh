@@ -38,6 +38,12 @@ test_record_validate()
 		exit 1
 	fi
 
+	if [ -f ./damon.data.perf.data ]
+	then
+		echo "FAIL record-validate (perf.data is not removed)"
+		exit 1
+	fi
+
 	echo "PASS record-validate-sleep-3"
 }
 
