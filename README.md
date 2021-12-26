@@ -48,19 +48,19 @@ Please refer to 'Install' section of https://damonitor.github.io/.
 Where can I get more detailed usage?
 ------------------------------------
 
-The below sections provide quick introductions for `damo`'s major features.  For
-more detailed usage, please refer to [USAGE.md](USAGE.md) file.
+The below sections provide quick introductions for `damo`'s major features.
+For more detailed usage, please refer to [USAGE.md](USAGE.md) file.
 
 
 What does the version number mean?
 ----------------------------------
 
-Nothing at all but indicate which version is fresher.  A higher version number
-means it is more recently released.
+Nothing at all but indicate which version is more fresh.  A higher version
+number means it is more recently released.
 
 
-Will `pip3 install damo` install the latest version of `damo`?
---------------------------------------------------------------
+Will `pip3 install damo` installs the latest version of `damo`?
+---------------------------------------------------------------
 
 It will install the latest _stable_ version of `damo`.  If you want, you can
 also install less stable but more fresh `damo` from source code.  For that,
@@ -68,7 +68,6 @@ fetch the `next` branch of the source tree and use `damo` executable file in
 the tree.
 
     $ git clone https://github.com/awslabs/damo -b next
-    $ sudo ./damo/damo record $(pidof <your workload>)
 
 
 How can I participate in the development of `damo`?
