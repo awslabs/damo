@@ -7,6 +7,23 @@ cd "$bindir"
 damon_debugfs="/sys/kernel/debug/damon"
 damo="../../damo"
 
+test_leave_perf_data()
+{
+	if ! sudo "$damo" record "sleep 2" --leave_perf_data
+	then
+		echo "FAIL record-leave-perf-data (damo-record command failed)"
+		exit 1
+	fi
+
+	if [ ! -f ./damon.data.perf.data ]
+	then
+		echo "FAIL record-leave-perf-data (perf.data not found)"
+		exit 1
+	fi
+
+	echo "PASS record-leave-perf-data"
+}
+
 test_record_validate()
 {
 	if ! sudo "$damo" record "sleep 3"
@@ -25,5 +42,6 @@ test_record_validate()
 }
 
 test_record_validate
+test_leave_perf_data
 
 echo "PASS $(basename $(pwd))"
