@@ -11,13 +11,13 @@ test_record_validate()
 {
 	if ! sudo "$damo" record "sleep 3"
 	then
-		echo "FAIL record-validate-3: command failed"
+		echo "FAIL record-validate (damo-record command failed)"
 		exit 1
 	fi
 
 	if ! "$damo" validate
 	then
-		echo "FAIL record-validate-sleep-3"
+		echo "FAIL record-validate (record fild is not valid)"
 		exit 1
 	fi
 
