@@ -62,7 +62,5 @@ def main(args=None):
                 assert_value_in_range(region.nr_accesses, args.nr_accesses,
                         'nr_accesses')
 
-    print('valid')
-
 if __name__ == '__main__':
     main()
