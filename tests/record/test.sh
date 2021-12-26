@@ -19,4 +19,6 @@ then
 	exit 1
 fi
 
-exit 0
+echo "PASS record-validate-sleep-3"
+
+echo "PASS $(basename $(pwd))"
