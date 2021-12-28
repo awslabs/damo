@@ -60,7 +60,8 @@ def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
         # only for reference of the pidfd usage.
         target = 'pidfd %s' % fd
 
-    if _damon.set_target('%s %s' % (target_ids_prefix, target), init_regions):
+    target_ids_input = '%s %s' % (target_ids_prefix, target)
+    if _damon.set_target(target_ids_input.strip(), init_regions):
         print('target setting (%s, %s) failed' % (target, init_regions))
         cleanup_exit(old_attrs, -2)
     if _damon.turn_damon('on'):
