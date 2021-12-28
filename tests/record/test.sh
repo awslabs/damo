@@ -44,9 +44,21 @@ test_leave_perf_data()
 
 test_record_validate()
 {
-	if ! sudo "$damo" record "sleep 3"
+	if [ $# -ne 2 ]
 	then
-		echo "FAIL record-validate (damo-record command failed)"
+		echo "Usage: $0 <target> <timeout>"
+		exit 1
+	fi
+
+	target=$1
+	timeout=$2
+
+	sudo timeout "$timeout" "$damo" record "$target"
+	rc=$?
+	if [ $? -ne 0 ] && [ $? -ne 124 ]
+	then
+		echo "FAIL record-validate $target $timeout"
+		echo "(damo-record command failed with value $rc)"
 		exit 1
 	fi
 
@@ -64,10 +76,11 @@ test_record_validate()
 
 	cleanup_files
 
-	echo "PASS record-validate-sleep-3"
+	echo "PASS record-validate \"$target\" $timeout"
 }
 
-test_record_validate
+test_record_validate "sleep 3" 4
+test_record_validate "paddr" 3
 test_leave_perf_data
 
 echo "PASS $(basename $(pwd))"
