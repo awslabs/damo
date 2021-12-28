@@ -163,6 +163,40 @@ def test_debugfs_file_schemes_stat_extended(nr_fields):
 
     return test_debugfs_file(debugfs_schemes, input_str, expected)
 
+def test_init_regions_version():
+    # Save previous values
+    with open(debugfs_target_ids, 'r') as f:
+        orig_target_ids = f.read()
+        if orig_target_ids == '':
+            orig_target_ids = '\n'
+        if orig_target_ids == '42\n':
+            orig_target_ids = 'paddr\n'
+    with open(debugfs_init_regions, 'r') as f:
+        orig_init_regions = f.read()
+        if orig_init_regions == '':
+            orig_init_regions = '\n'
+
+    # Test
+    with open(debugfs_target_ids, 'w') as f:
+        f.write('paddr\n')
+    try:
+        with open(debugfs_init_regions, 'w') as f:
+            f.write('42 100 200')
+    except IOError as e:
+        version = 2
+    with open(debugfs_init_regions, 'r') as f:
+        if f.read().strip() == '42 100 200':
+            version = 1
+        else:
+            version = 2
+
+    # Restore previous values
+    with open(debugfs_target_ids, 'w') as f:
+        f.write(orig_target_ids)
+    with open(debugfs_init_regions, 'w') as f:
+        f.write(orig_init_regions)
+    return version
+
 def update_supported_features():
     if debugfs_record != None:
         feature_supports['record'] = True
@@ -173,6 +207,10 @@ def update_supported_features():
 
     if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
         feature_supports['paddr'] = True
+
+    init_regions_version = test_init_regions_version()
+    if init_regions_version == 2:
+        feature_supports['init_regions_target_idx'] = True
 
     if debugfs_schemes != None:
         if test_debugfs_file_schemes(9):
@@ -214,6 +252,7 @@ def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
             'schemes': False,
             'init_regions': False,
             'paddr': False,
+            'init_regions_target_idx': False,
             'schemes_speed_limit': False,
             'schemes_quotas': False,
             'schemes_prioritization': False,
