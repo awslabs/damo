@@ -45,6 +45,10 @@ def main(args=None):
         print('invalid')
         exit(1)
 
+    if len(result.target_snapshots) == 0:
+        print('target snapshots is zero')
+        exit(1)
+
     for target in result.target_snapshots:
         for snapshot in result.target_snapshots[target]:
             aggr_interval_us = (snapshot.end_time - snapshot.start_time) / 1000
