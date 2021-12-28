@@ -23,7 +23,7 @@ def chk_permission():
 
 def set_target_id(tid):
     with open(debugfs_target_ids, 'w') as f:
-        f.write('%s\n' % tid)
+        f.write('%s\n' % tid.strip())
 
 def set_target(tid, init_regions=[]):
     rc = set_target_id(tid)
