@@ -53,6 +53,13 @@ test_record_validate()
 	target=$1
 	timeout=$2
 
+	if [ "$target" = "paddr" ] && ! sudo "$damo" features supported | \
+		grep -w paddr > /dev/null
+	then
+		echo "SKIP record-validate $target $timeout (paddr unsupported)"
+		return
+	fi
+
 	sudo timeout "$timeout" "$damo" record "$target"
 	rc=$?
 	if [ $? -ne 0 ] && [ $? -ne 124 ]
