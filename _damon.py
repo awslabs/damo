@@ -207,13 +207,12 @@ def update_supported_features():
         feature_supports['schemes'] = True
     if debugfs_init_regions != None:
         feature_supports['init_regions'] = True
+        init_regions_version = test_init_regions_version()
+        if init_regions_version == 2:
+            feature_supports['init_regions_target_idx'] = True
 
     if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
         feature_supports['paddr'] = True
-
-    init_regions_version = test_init_regions_version()
-    if init_regions_version == 2:
-        feature_supports['init_regions_target_idx'] = True
 
     if debugfs_schemes != None:
         if test_debugfs_file_schemes(9):
