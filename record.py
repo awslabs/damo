@@ -16,22 +16,11 @@ import _damon
 import _damon_result
 import _paddr_layout
 
-def pidfd_open(pid):
-    import ctypes
-    libc = ctypes.CDLL(None)
-    syscall = libc.syscall
-    syscall.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_uint]
-    syscall.restype = ctypes.c_long
-
-    NR_pidfd_open = 434
-
-    return syscall(NR_pidfd_open, pid, 0)
-
 perf_pipe = None
 rfile_path = None
 rfile_format = None
 def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
-        old_attrs, pidfd):
+        old_attrs):
     global perf_pipe
     global rfile_path
 
@@ -47,18 +36,6 @@ def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
     if is_target_cmd:
         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
         target = p.pid
-
-    if pidfd:
-        fd = pidfd_open(int(target))
-        if fd < 0:
-            print('failed getting pidfd of %s: %s' % (target, fd))
-            cleanup_exit(old_attrs, -1)
-
-        # NOTE: The race is still possible because the pid might be already
-        # reused before above pidfd_open() returned.  Eliminating the race is
-        # impossible unless we drop the pid support.  This option handling is
-        # only for reference of the pidfd usage.
-        target = 'pidfd %s' % fd
 
     target_ids_input = '%s %s' % (target_ids_prefix, target)
     if _damon.set_target(target_ids_input.strip(), init_regions):
@@ -84,9 +61,6 @@ def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
         if not _damon.is_damon_running():
             break
         time.sleep(1)
-
-    if pidfd:
-        os.close(fd)
 
     cleanup_exit(old_attrs, 0)
 
@@ -135,8 +109,6 @@ def set_argparser(parser):
             help='the target command or the pid to record')
     parser.add_argument('--target_ids_prefix', type=str, metavar='<prefix>',
             default='', help='prefix for the target_ids input')
-    parser.add_argument('--pidfd', action='store_true',
-            help='use pidfd type target id')
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
             help='length of record result buffer')
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
@@ -173,7 +145,6 @@ def main(args=None):
     signal.signal(signal.SIGTERM, sighandler)
     orig_attrs = _damon.current_attrs()
 
-    pidfd = args.pidfd
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
     numa_node = args.numa_node
@@ -197,7 +168,7 @@ def main(args=None):
             exit(1)
         cmd_target = False
     do_record(target, cmd_target, args.target_ids_prefix, init_regions,
-            new_attrs, orig_attrs, pidfd)
+            new_attrs, orig_attrs)
 
 if __name__ == '__main__':
     main()
