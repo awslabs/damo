@@ -194,10 +194,14 @@ def test_init_regions_version():
             version = 2
 
     # Restore previous values
-    with open(debugfs_target_ids, 'w') as f:
-        f.write(orig_target_ids)
-    with open(debugfs_init_regions, 'w') as f:
-        f.write(orig_init_regions)
+    try:
+        with open(debugfs_target_ids, 'w') as f:
+            f.write(orig_target_ids)
+        with open(debugfs_init_regions, 'w') as f:
+            f.write(orig_init_regions)
+    except IOError:
+        # Previous value might be invalid now (e.g., process terminated)
+        pass
     return version
 
 def update_supported_features():
