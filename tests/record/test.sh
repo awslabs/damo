@@ -86,6 +86,12 @@ test_record_validate()
 	echo "PASS record-validate \"$target\" $timeout"
 }
 
+if [ ! -d /sys/kernel/debug/damon ]
+then
+	echo "SKIP $(basename $(pwd)) (DAMON debugfs not found)"
+	exit 0
+fi
+
 test_record_validate "sleep 3" 4
 test_record_validate "paddr" 3
 test_leave_perf_data
