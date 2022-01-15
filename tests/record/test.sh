@@ -94,6 +94,13 @@ test_record_validate()
 		exit 1
 	fi
 
+	permission=$(stat -c %a damon.data)
+	if [ ! "$permission" = "600" ]
+	then
+		echo "FAIL record-validate (out file permission $permission)"
+		exit 1
+	fi
+
 	cleanup_files
 
 	echo "PASS record-validate \"$target\" $timeout"
