@@ -65,6 +65,7 @@ def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
     cleanup_exit(old_attrs, 0)
 
 remove_perf_data = False
+rfile_permission = None
 def cleanup_exit(orig_attrs, exit_code):
     rfile_mid_format = 'record'
     if perf_pipe:
@@ -96,6 +97,9 @@ def cleanup_exit(orig_attrs, exit_code):
         _damon_result.write_damon_result(result, rfile_path, rfile_format)
         os.remove(rfile_path_mid)
 
+    if rfile_permission:
+        os.chmod(rfile_path, int(rfile_permission, 8))
+
     exit(exit_code)
 
 def sighandler(signum, frame):
@@ -119,10 +123,13 @@ def set_argparser(parser):
             default=None, help='output file\'s type')
     parser.add_argument('--leave_perf_data', action='store_true',
             default=False, help='don\'t remove the perf.data file')
+    parser.add_argument('--output_permission', type=str,
+            help='permission of the output file')
 
 def main(args=None):
     global orig_attrs
     global rfile_format
+    global rfile_permission
     global remove_perf_data
 
     if not args:
@@ -140,6 +147,7 @@ def main(args=None):
 
     rfile_format = args.output_type
     remove_perf_data = not args.leave_perf_data
+    rfile_permission = args.output_permission
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
