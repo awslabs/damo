@@ -123,7 +123,7 @@ def set_argparser(parser):
             default=None, help='output file\'s type')
     parser.add_argument('--leave_perf_data', action='store_true',
             default=False, help='don\'t remove the perf.data file')
-    parser.add_argument('--output_permission', type=str,
+    parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')
 
 def main(args=None):
