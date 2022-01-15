@@ -25,7 +25,7 @@ cleanup_files()
 
 test_record_permission()
 {
-	sudo "$damo" record "sleep 1" --output_permission 611
+	sudo "$damo" record "sleep 1" --output_permission 611 &> /dev/null
 	if [ ! "$(stat -c %a damon.data)" = "611" ]
 	then
 		echo "FAIL record-permission"
@@ -38,7 +38,7 @@ test_record_permission()
 
 test_leave_perf_data()
 {
-	if ! sudo "$damo" record "sleep 2" --leave_perf_data
+	if ! sudo "$damo" record "sleep 2" --leave_perf_data &> /dev/null
 	then
 		echo "FAIL record-leave-perf-data (damo-record command failed)"
 		exit 1
@@ -73,7 +73,7 @@ test_record_validate()
 		return
 	fi
 
-	sudo timeout "$timeout" "$damo" record "$target"
+	sudo timeout "$timeout" "$damo" record "$target" &> /dev/null
 	rc=$?
 	if [ $? -ne 0 ] && [ $? -ne 124 ]
 	then
