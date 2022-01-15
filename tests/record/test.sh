@@ -23,6 +23,19 @@ cleanup_files()
 	done
 }
 
+test_record_permission()
+{
+	sudo "$damo" record "sleep 1" --output_permission 611
+	if [ ! "$(stat -c %a damon.data)" = "611" ]
+	then
+		echo "FAIL record-permission"
+		exit 1
+	fi
+	cleanup_files
+
+	echo "PASS record-permission"
+}
+
 test_leave_perf_data()
 {
 	if ! sudo "$damo" record "sleep 2" --leave_perf_data
@@ -95,5 +108,6 @@ fi
 test_record_validate "sleep 3" 4
 test_record_validate "paddr" 3
 test_leave_perf_data
+test_record_permission
 
 echo "PASS $(basename $(pwd))"
