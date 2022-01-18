@@ -161,7 +161,7 @@ def main(args=None):
     if target == 'paddr':   # physical memory address space
         cmd_target = False
         if not init_regions:
-            if numa_node:
+            if numa_node != None:
                 init_regions = _paddr_layout.paddr_region_of(numa_node)
             else:
                 init_regions = [_paddr_layout.default_paddr_region()]
