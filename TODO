@@ -1,1 +1,3 @@
 - Test --numa_node 0 case
+- Disallow temporal 644 permission of output file
+  The output file can have 644 permission before finally chmod(600).
