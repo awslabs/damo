@@ -97,7 +97,7 @@ def cleanup_exit(orig_attrs, exit_code):
         _damon_result.write_damon_result(result, rfile_path, rfile_format)
         os.remove(rfile_path_mid)
 
-    os.chmod(rfile_path, int(rfile_permission, 8))
+    os.chmod(rfile_path, rfile_permission)
 
     exit(exit_code)
 
@@ -146,7 +146,10 @@ def main(args=None):
 
     rfile_format = args.output_type
     remove_perf_data = not args.leave_perf_data
-    rfile_permission = args.output_permission
+    rfile_permission = int(args.output_permission, 8)
+    if rfile_permission < 0o0 or rfile_permission > 0o777:
+        print('wrong --output_permission (%s)' % rfile_permission)
+        exit(1)
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
