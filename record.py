@@ -97,8 +97,7 @@ def cleanup_exit(orig_attrs, exit_code):
         _damon_result.write_damon_result(result, rfile_path, rfile_format)
         os.remove(rfile_path_mid)
 
-    if rfile_permission:
-        os.chmod(rfile_path, int(rfile_permission, 8))
+    os.chmod(rfile_path, int(rfile_permission, 8))
 
     exit(exit_code)
 
