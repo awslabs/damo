@@ -179,7 +179,7 @@ def main():
 
     pr_ranges(ranges)
 
-    print('largest system RAM region:', default_paddr_region())
+    print('largest system RAM region: %s' % default_paddr_region())
 
 if __name__ == '__main__':
     main()
