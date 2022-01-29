@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
+import argparse
 import os
 
 class PaddrRange:
@@ -165,7 +166,18 @@ def paddr_region_of(numa_node):
 
 
 def main():
-    pr_ranges(paddr_ranges())
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--numa_node', type=int, metavar='<node id>',
+            help='print ranges of this numa node only')
+    args = parser.parse_args()
+
+    ranges = []
+    for r in paddr_ranges():
+        if args.numa_node and r.nid != args.numa_node:
+            continue
+        ranges.append(r)
+
+    pr_ranges(ranges)
 
     print('largest system RAM region:', default_paddr_region())
 
