@@ -65,7 +65,7 @@ def darc_read_status():
 
 def set_argparser(parser):
     parser.add_argument('action', type=str, nargs='?',
-            choices=['enable', 'disable', 'status'], default='status',
+            choices=['status', 'enable', 'disable'], default='status',
             help='read status, enable, or disable DAMON_RECLAIM')
     parser.add_argument('--min_age', type=int, metavar='<microseconds>',
             help='time threshold for cold memory regions identification (us)')
