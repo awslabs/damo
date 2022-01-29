@@ -69,10 +69,13 @@ def set_argparser(parser):
             help='read status, enable, or disable DAMON_RECLAIM')
     parser.add_argument('--min_age', type=int, metavar='<microseconds>',
             help='time threshold for cold memory regions identification (us)')
-    parser.add_argument('--quota', type=int, metavar='<ms or bytes>', nargs=3,
+    parser.add_argument('--quota', type=int,
+            metavar=('<ms>', '<bytes>', '<ms>'), nargs=3,
             default=[None] * 3,
             help='quotas for time and size, and reset interval')
-    parser.add_argument('--wmarks', type=int, metavar='<us or per-thousand>',
+    parser.add_argument('--wmarks', type=int,
+            metavar=('<us>', '<per-thousand>', '<per-thousand>',
+                '<per-thousand>'),
             nargs=4, default=[None] * 4,
             help='watermarks check interval and three watermarks')
     parser.add_argument('--monitor_intervals', type=int,
