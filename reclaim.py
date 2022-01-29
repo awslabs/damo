@@ -16,6 +16,9 @@ darc_params = ['kdamond_pid', 'enabled', 'min_age', 'quota_ms', 'quota_sz',
         'min_nr_regions', 'max_nr_regions', 'monitor_region_start',
         'monitor_region_end']
 
+darc_stat_params = ['nr_reclaim_tried_regions', 'nr_reclaimed_regions',
+        'bytes_reclaim_tried_regions', 'bytes_reclaimed_regions']
+
 def chk_darc_sysfs():
     if not os.path.isdir(darc_params_dir):
         print('%s not found' % darc_params_dir)
@@ -52,8 +55,11 @@ def darc_enable(on):
     return
 
 def darc_read_status():
-    for param in darc_params:
+    for param in darc_params + darc_stat_params:
         param_file = os.path.join(darc_params_dir, param)
+        if not os.path.isfile(param_file):
+            continue
+
         with open(param_file, 'r') as f:
             print('%s: %s' % (param, f.read().strip()))
 
