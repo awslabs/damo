@@ -10,19 +10,21 @@ import time
 import _damon
 
 darc_params_dir = '/sys/module/damon_reclaim/parameters'
-darc_params = ['kdamond_pid', 'enabled', 'min_age', 'quota_ms', 'quota_sz',
-        'quota_reset_interval_ms', 'wmarks_interval', 'wmarks_high',
-        'wmarks_mid', 'wmarks_low', 'sample_interval', 'aggr_interval',
-        'min_nr_regions', 'max_nr_regions', 'monitor_region_start',
-        'monitor_region_end']
+# parameters that existed since the initial release of DAMON_RECLAIM
+darc_essential_params = ['kdamond_pid', 'enabled', 'min_age', 'quota_ms',
+        'quota_sz', 'quota_reset_interval_ms', 'wmarks_interval',
+        'wmarks_high', 'wmarks_mid', 'wmarks_low', 'sample_interval',
+        'aggr_interval', 'min_nr_regions', 'max_nr_regions',
+        'monitor_region_start', 'monitor_region_end']
 
-darc_stat_params = ['nr_reclaim_tried_regions', 'nr_reclaimed_regions',
+# parameters that introduced after the initial release
+darc_optional_params = ['nr_reclaim_tried_regions', 'nr_reclaimed_regions',
         'bytes_reclaim_tried_regions', 'bytes_reclaimed_regions']
 
 def chk_darc_sysfs():
     if not os.path.isdir(darc_params_dir):
         print('%s not found' % darc_params_dir)
-    for param in darc_params:
+    for param in darc_essential_params:
         param_file = os.path.join(darc_params_dir, param)
         if not os.path.isfile(param_file):
             print('%s file not found' % param_file)
@@ -55,7 +57,7 @@ def darc_enable(on):
     return
 
 def darc_read_status():
-    for param in darc_params + darc_stat_params:
+    for param in darc_essential_params + darc_optional_params:
         param_file = os.path.join(darc_params_dir, param)
         if not os.path.isfile(param_file):
             continue
