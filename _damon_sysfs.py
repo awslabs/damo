@@ -8,6 +8,7 @@ Contains core functions for DAMON sysfs control.
 import _damon
 
 feature_supports = None
+sysfs_damon = '/sys/kernel/mm/damon/admin/'
 
 def set_target(tid, init_regions):
     pass
@@ -34,7 +35,7 @@ def get_supported_features():
         chk_update()
     return feature_supports
 
-def chk_update(sysfs_damon='/sys/kernel/mm/damon/admin/'):
+def chk_update():
     if not os.path.isdir(sysfs_damon):
         print('damon sysfs dir (%s) not found' % sysfs_damon)
         exit(1)
