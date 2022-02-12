@@ -138,7 +138,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.chk_permission()
-    _damon.chk_update_debugfs(args.debugfs)
+    _damon.chk_update(args.debugfs)
 
     if args.rbuf and not _damon.feature_supported('record'):
         print('# \'--rbuf\' will be ignored')

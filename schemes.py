@@ -81,7 +81,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.chk_permission()
-    _damon.chk_update_debugfs(args.debugfs)
+    _damon.chk_update(args.debugfs)
     scheme_version = 0
     if _damon.feature_supported('schemes_speed_limit'):
         scheme_version = 1

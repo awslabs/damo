@@ -75,13 +75,13 @@ feature_supports = None
 
 def feature_supported(feature):
     if feature_supports == None:
-        chk_update_debugfs()
+        chk_update()
 
     return feature_supports[feature]
 
 def get_supported_features():
     if feature_supports == None:
-        chk_update_debugfs()
+        chk_update()
     return feature_supports
 
 def test_debugfs_file(path, input_str, expected):
@@ -188,7 +188,7 @@ def update_supported_features():
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
 
-def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
+def chk_update(debugfs='/sys/kernel/debug/'):
     global feature_supports
     global debugfs_version
     global debugfs_attrs

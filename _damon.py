@@ -62,8 +62,8 @@ def feature_supported(feature):
 def get_supported_features():
     return _damon_dbgfs.get_supported_features()
 
-def chk_update_debugfs(debugfs='/sys/kernel/debug/'):
-    _damon_dbgfs.chk_update_debugfs(debugfs)
+def chk_update(debugfs='/sys/kernel/debug/'):
+    _damon_dbgfs.chk_update(debugfs)
 
 def cmd_args_to_attrs(args):
     return _damon_dbgfs.cmd_args_to_attrs(args)
