@@ -5,15 +5,7 @@
 Contains core functions for DAMON sysfs control.
 """
 
-features = ['record',
-            'schemes',
-            'init_regions',
-            'paddr',
-            'init_regions_target_idx',
-            'schemes_speed_limit',
-            'schemes_quotas',
-            'schemes_prioritization',
-            'schemes_wmarks']
+import _damon
 
 feature_supports = None
 
@@ -50,7 +42,7 @@ def chk_update(sysfs_damon='/sys/kernel/mm/damon/admin/'):
         print('damon sysfs dir (%s) not found' % sysfs_damon)
         exit(1)
 
-    feature_supports = {x: True for x in features}
+    feature_supports = {x: True for x in _damon.features}
 
 def cmd_args_to_attrs(args):
     pass

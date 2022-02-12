@@ -200,17 +200,7 @@ def chk_update(debugfs='/sys/kernel/debug/'):
 
     if feature_supports != None:
         return
-    feature_supports = {
-            'record': False,
-            'schemes': False,
-            'init_regions': False,
-            'paddr': False,
-            'init_regions_target_idx': False,
-            'schemes_speed_limit': False,
-            'schemes_quotas': False,
-            'schemes_prioritization': False,
-            'schemes_wmarks': False,
-            }
+    feature_supports = {x: False for x in _damon.features}
 
     debugfs_damon = os.path.join(debugfs, 'damon')
     debugfs_version = os.path.join(debugfs_damon, 'version')

@@ -10,6 +10,16 @@ import subprocess
 
 import _damon_dbgfs
 
+features = ['record',
+            'schemes',
+            'init_regions',
+            'paddr',
+            'init_regions_target_idx',
+            'schemes_speed_limit',
+            'schemes_quotas',
+            'schemes_prioritization',
+            'schemes_wmarks']
+
 def chk_permission():
     if os.geteuid() != 0:
         print('Run as root')
