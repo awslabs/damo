@@ -32,7 +32,7 @@ def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
     if attrs.apply():
         print('attributes (%s) failed to be applied' % attrs)
         cleanup_exit(old_attrs, -1)
-    print('# damon attrs: %s %s' % (attrs.attr_str(), attrs.record_str()))
+    print('# damon attrs: %s' % attrs)
     if is_target_cmd:
         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
         target = p.pid

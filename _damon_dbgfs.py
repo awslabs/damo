@@ -8,6 +8,8 @@ Contains core functions for DAMON debugfs control.
 import os
 import subprocess
 
+import _damon
+
 debugfs_version = None
 debugfs_attrs = None
 debugfs_record = None
@@ -45,56 +47,6 @@ def is_damon_running():
     with open(debugfs_monitor_on, 'r') as f:
         return f.read().strip() == 'on'
 
-class Attrs:
-    sample_interval = None
-    aggr_interval = None
-    regions_update_interval = None
-    min_nr_regions = None
-    max_nr_regions = None
-    rbuf_len = None
-    rfile_path = None
-    schemes = None
-
-    def __init__(self, s, a, r, n, x, l, f, c):
-        self.sample_interval = s
-        self.aggr_interval = a
-        self.regions_update_interval = r
-        self.min_nr_regions = n
-        self.max_nr_regions = x
-        self.rbuf_len = l
-        self.rfile_path = f
-        self.schemes = c
-
-    def __str__(self):
-        return '%s %s %s %s %s %s %s\n%s' % (self.sample_interval,
-                self.aggr_interval, self.regions_update_interval,
-                self.min_nr_regions, self.max_nr_regions, self.rbuf_len,
-                self.rfile_path, self.schemes)
-
-    def attr_str(self):
-        return '%s %s %s %s %s ' % (self.sample_interval, self.aggr_interval,
-                self.regions_update_interval, self.min_nr_regions,
-                self.max_nr_regions)
-
-    def record_str(self):
-        return '%s %s ' % (self.rbuf_len, self.rfile_path)
-
-    def apply(self):
-        ret = subprocess.call('echo %s > %s' % (self.attr_str(), debugfs_attrs),
-                shell=True, executable='/bin/bash')
-        if ret:
-            return ret
-        if debugfs_record:
-            ret = subprocess.call('echo %s > %s' % (self.record_str(),
-                debugfs_record), shell=True, executable='/bin/bash')
-            if ret:
-                return ret
-        if not debugfs_schemes:
-            return 0
-        return subprocess.call('echo %s > %s' % (
-            self.schemes.replace('\n', ' '), debugfs_schemes), shell=True,
-            executable='/bin/bash')
-
 def current_attrs():
     with open(debugfs_attrs, 'r') as f:
         attrs = f.read().split()
@@ -117,7 +69,7 @@ def current_attrs():
     else:
         attrs.append(None)
 
-    return Attrs(*attrs)
+    return _damon.Attrs(*attrs)
 
 feature_supports = None
 
@@ -306,8 +258,33 @@ def cmd_args_to_attrs(args):
         args.schemes = ''
     schemes = args.schemes
 
-    return Attrs(sample_interval, aggr_interval, regions_update_interval,
-            min_nr_regions, max_nr_regions, rbuf_len, rfile_path, schemes)
+    return _damon.Attrs(sample_interval, aggr_interval,
+            regions_update_interval, min_nr_regions, max_nr_regions, rbuf_len,
+            rfile_path, schemes)
+
+def attr_str(attrs):
+    return '%s %s %s %s %s ' % (attrs.sample_interval, attrs.aggr_interval,
+            attrs.regions_update_interval, attrs.min_nr_regions,
+            attrs.max_nr_regions)
+
+def record_str(attrs):
+    return '%s %s ' % (attrs.rbuf_len, attrs.rfile_path)
+
+def attrs_apply(attrs):
+    ret = subprocess.call('echo %s > %s' % (attr_str(attrs), debugfs_attrs),
+            shell=True, executable='/bin/bash')
+    if ret:
+        return ret
+    if debugfs_record:
+        ret = subprocess.call('echo %s > %s' % (record_str(attrs),
+            debugfs_record), shell=True, executable='/bin/bash')
+        if ret:
+            return ret
+    if not debugfs_schemes:
+        return 0
+    return subprocess.call('echo %s > %s' % (
+        attrs.schemes.replace('\n', ' '), debugfs_schemes), shell=True,
+        executable='/bin/bash')
 
 def cmd_args_to_init_regions(args):
     regions = []
