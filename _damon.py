@@ -40,7 +40,7 @@ def cmd_args_to_attrs(args):
     return _damon_dbgfs.cmd_args_to_attrs(args)
 
 def cmd_args_to_init_regions(args):
-    return _damon_dbgfs.cmd_args_to_attrs(args)
+    return _damon_dbgfs.cmd_args_to_init_regions(args)
 
 def set_attrs_argparser(parser):
     _damon_dbgfs.set_attrs_argparser(parser)
