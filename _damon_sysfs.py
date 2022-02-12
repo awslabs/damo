@@ -10,9 +10,6 @@ import _damon
 feature_supports = None
 
 def set_target(tid, init_regions):
-    if tid != 'paddr':
-        set_target_pid(tid)
-
     pass
 
 def turn_damon(on_off):
