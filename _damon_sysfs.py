@@ -87,16 +87,21 @@ def _write(filepath, content):
         f.write(content)
 
 def set_target(tid, init_regions):
-    if tid == 'paddr':
-        _write(context_type_file, 'paddr\n')
-    else:
-        _write(context_type_file, 'vaddr\n')
-        _write(target_pid_file, '%d' % tid)
+    try:
+        if tid == 'paddr':
+            _write(context_type_file, 'paddr\n')
+        else:
+            _write(context_type_file, 'vaddr\n')
+            _write(target_pid_file, '%d' % tid)
 
-    _write(regions_nr_file, '%d' % len(init_regions))
-    for idx, region in enumerate(init_regions):
-        _write(region_start_file(idx), '%d' % region[0])
-        _write(region_start_file(idx), '%d' % region[1])
+        _write(regions_nr_file, '%d' % len(init_regions))
+        for idx, region in enumerate(init_regions):
+            _write(region_start_file(idx), '%d' % region[0])
+            _write(region_start_file(idx), '%d' % region[1])
+        return 0
+    except Exception as e:
+        print(e)
+        return 1
 
 def turn_damon(on_off):
     pass
@@ -121,16 +126,16 @@ def get_supported_features():
     return feature_supports
 
 def chk_update():
-    if not os.path.isdir(sysfs_damon):
-        print('damon sysfs dir (%s) not found' % sysfs_damon)
+    if not os.path.isdir(kdamonds_dir):
+        print('damon sysfs dir (%s) not found' % kdamonds_dir)
         exit(1)
 
-    if _write('1', kdamonds_nr_file):
-        print('failed creating kdamond dir')
-        exit(1)
-
-    if _write('1', contexts_nr_file):
-        print('failed creating context dir')
+    try:
+        _write(kdamonds_nr_file, '1')
+        _write(contexts_nr_file, '1')
+    except Exception as e:
+        print(e)
+        print('failed populating kdamond and context dirs')
         exit(1)
 
     feature_supports = {x: True for x in _damon.features}
