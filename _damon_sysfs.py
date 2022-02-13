@@ -32,7 +32,7 @@ nr_regions_max_file = os.path.join(attrs_nr_regions_dir, 'max')
 context_targets_dir = os.path.join(context_dir, 'targets')
 targets_nr_file = os.path.join(context_targets_dir, 'nr')
 target_dir = os.path.join(context_targets_dir, '0')
-target_pid = os.path.join(target_dir, 'pid')
+target_pid_file = os.path.join(target_dir, 'pid')
 target_regions_dir = os.path.join(target_dir, 'regions')
 regions_nr_file = os.path.join(target_regions_dir, 'nr')
 
