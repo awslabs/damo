@@ -91,9 +91,8 @@ def cmd_args_to_attrs(args):
         args.schemes = ''
     schemes = args.schemes
 
-    return _damon.Attrs(sample_interval, aggr_interval,
-            regions_update_interval, min_nr_regions, max_nr_regions, rbuf_len,
-            rfile_path, schemes)
+    return Attrs(sample_interval, aggr_interval, regions_update_interval,
+            min_nr_regions, max_nr_regions, rbuf_len, rfile_path, schemes)
 
 def cmd_args_to_init_regions(args):
     regions = []
