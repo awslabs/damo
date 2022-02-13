@@ -86,6 +86,10 @@ def _write(filepath, content):
     with open(filepath, 'w') as f:
         f.write(content)
 
+def _read(filepath):
+    with open(filepath, 'r') as f:
+        return f.read()
+
 def set_target(tid, init_regions):
     try:
         if tid == 'paddr':
@@ -112,7 +116,7 @@ def turn_damon(on_off):
         return 1
 
 def is_damon_running():
-    pass
+    return _read(kdamond_state_file).strip() == 'on'
 
 def attrs_apply(attrs):
     pass
