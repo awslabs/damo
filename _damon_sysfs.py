@@ -119,10 +119,23 @@ def is_damon_running():
     return _read(kdamond_state_file).strip() == 'on'
 
 def attrs_apply(attrs):
-    pass
+    if not attrs:
+        return 0
+    try:
+        _write(intervals_sample_us_file, '%d' % attrs.sample_interval)
+        _write(intervals_aggr_us_file, '%d' % attrs.aggr_interval)
+        _write(intervals_update_us_file, '%d' % attrs.regions_update_interval)
+        _write(nr_regions_min_file, '%d' % attrs.min_nr_regions)
+        _write(nr_regions_max_file, '%d' % attrs.max_nr_regions)
+        # TODO: Support schemes
+        return 0
+    except Exception as e:
+        print(e)
+        return 1
 
+# sysfs doesn't restore original state
 def current_attrs():
-    pass
+    return None
 
 def feature_supported(feature):
     if feature_supports == None:
