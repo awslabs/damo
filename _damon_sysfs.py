@@ -104,7 +104,12 @@ def set_target(tid, init_regions):
         return 1
 
 def turn_damon(on_off):
-    pass
+    try:
+        _write(kdamond_state_file, on_off)
+        return 0
+    except Exception as e:
+        print(e)
+        return 1
 
 def is_damon_running():
     pass
