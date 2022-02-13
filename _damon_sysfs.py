@@ -11,7 +11,41 @@ import _damon
 
 feature_supports = None
 
+# Use only one kdamond, one context for now
 kdamonds_dir = '/sys/kernel/mm/damon/admin/kdamonds'
+kdamonds_nr_file = os.path.join(kdamonds_dir, 'nr')
+kdamond_dir = os.path.join(kdamonds_dir, '0')
+kdamond_state_file = os.path.join(kdamond_dir, 'state')
+kdamond_pid_file = os.path.join(kdamond_dir, 'pid')
+contexts_dir = os.path.join(kdamond_dir, 'contexts')
+contexts_nr_file = os.path.join(contexts_dir, 'nr')
+context_dir = os.path.join(contexts_dir, '0')
+context_type_file = os.path.join(context_dir, 'damon_type')
+context_attrs_dir = os.path.join(context_dir, 'monitoring_attrs')
+attrs_intervals_dir = os.path.join(context_attrs_dir, 'intervals')
+intervals_sample_us_file = os.path.join(attrs_intervals_dir, 'sample_us')
+intervals_aggr_us_file = os.path.join(attrs_intervals_dir, 'aggr_us')
+intervals_update_us_file = os.path.join(attrs_intervals_dir, 'update_us')
+attrs_nr_regions_dir = os.path.join(context_attrs_dir, 'nr_regions')
+nr_regions_min_file = os.path.join(attrs_nr_regions_dir, 'min')
+nr_regions_max_file = os.path.join(attrs_nr_regions_dir, 'max')
+context_targets_dir = os.path.join(context_dir, 'targets')
+targets_nr_file = os.path.join(context_targets_dir, 'nr')
+
+def target_dir(idx):
+    return os.path.join(context_targets_dir, '%d' % idx)
+
+def target_pid(idx):
+    return os.path.join(target_dir(idx), 'pid')
+
+def target_regions_dir(idx):
+    return os.path.join(target_dir(idx), 'regions')
+
+def regions_nr_file(idx):
+    return os.path.join(target_regions_dir(idx), 'nr')
+
+def region_dir(target_idx, region_idx):
+    return os.path.join(target_regions_dir(target_idx), '%d' % region_idx)
 
 class DamonSysfsFile:
     indices = None  # e.g., {'kdamond': 0, 'context': 1}
