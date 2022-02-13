@@ -93,14 +93,7 @@ def _write(content, filepath):
     except:
         return 1
 
-def _ensure_sysfs_dir_for_damo():
-    if not os.isdir(sysfs_damon + 'kdamonds/0')):
-        _write('1', sysfs_damon + 'kdamonds/nr')
-    if not os.isdir(sysfs_damon + 'kdamonds/0/contexts/0'):
-        _write('1', sysfs_damon + 'kdamonds/0/contexts/nr')
-
 def set_target(tid, init_regions):
-    _ensure_sysfs_dir_for_damo()
     if not os.isdir(sysfs_damon + 'kdamonds/0/contexts/0/targets/0'):
         _write('1', sysfs_damon + 'kdamonds/0/contexts/0/targets/nr')
     if tid == 'paddr':
@@ -142,6 +135,14 @@ def get_supported_features():
 def chk_update():
     if not os.path.isdir(sysfs_damon):
         print('damon sysfs dir (%s) not found' % sysfs_damon)
+        exit(1)
+
+    if _write('1', kdamonds_nr_file):
+        print('failed creating kdamond dir')
+        exit(1)
+
+    if _write('1', contexts_nr_file):
+        print('failed creating context dir')
         exit(1)
 
     feature_supports = {x: True for x in _damon.features}
