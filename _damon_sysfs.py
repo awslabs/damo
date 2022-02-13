@@ -86,8 +86,12 @@ class DamonSysfsFile:
             f.write(content)
 
 def _write(content, filepath):
-    with open(filepath, 'w') as f:
-        f.write(content)
+    try:
+        with open(filepath, 'w') as f:
+            f.write(content)
+        return 0
+    except:
+        return 1
 
 def _ensure_sysfs_dir_for_damo():
     if not os.isdir(sysfs_damon + 'kdamonds/0')):
