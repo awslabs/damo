@@ -161,6 +161,8 @@ def chk_update():
         exit(1)
 
     feature_supports = {x: True for x in _damon.features}
+    feature_supports['record'] = False
+    feature_supports['schemes'] = False
 
 def cmd_args_to_attrs(args):
     pass
