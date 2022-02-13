@@ -47,6 +47,8 @@ def regions_nr_file(idx):
 def region_dir(target_idx, region_idx):
     return os.path.join(target_regions_dir(target_idx), '%d' % region_idx)
 
+# This class will be used in a future when we support multiple
+# contexts/kdamonds
 class DamonSysfsFile:
     indices = None  # e.g., {'kdamond': 0, 'context': 1}
     extra_path = None
