@@ -11,7 +11,7 @@ import _damon
 
 feature_supports = None
 
-# Use only one kdamond, one context for now
+# Use only one kdamond, one context, and one target for now
 kdamonds_dir = '/sys/kernel/mm/damon/admin/kdamonds'
 kdamonds_nr_file = os.path.join(kdamonds_dir, 'nr')
 kdamond_dir = os.path.join(kdamonds_dir, '0')
@@ -31,21 +31,16 @@ nr_regions_min_file = os.path.join(attrs_nr_regions_dir, 'min')
 nr_regions_max_file = os.path.join(attrs_nr_regions_dir, 'max')
 context_targets_dir = os.path.join(context_dir, 'targets')
 targets_nr_file = os.path.join(context_targets_dir, 'nr')
+target_dir = os.path.join(context_targets_dir, '0')
+target_pid = os.path.join(target_dir, 'pid')
+target_regions_dir = os.path.join(target_dir, 'regions')
+regions_nr_file = os.path.join(target_regions_dir, 'nr')
 
-def target_dir(idx):
-    return os.path.join(context_targets_dir, '%d' % idx)
+def region_dir(region_idx):
+    return os.path.join(target_regions_dir, '%d' % region_idx)
 
-def target_pid(idx):
-    return os.path.join(target_dir(idx), 'pid')
-
-def target_regions_dir(idx):
-    return os.path.join(target_dir(idx), 'regions')
-
-def regions_nr_file(idx):
-    return os.path.join(target_regions_dir(idx), 'nr')
-
-def region_dir(target_idx, region_idx):
-    return os.path.join(target_regions_dir(target_idx), '%d' % region_idx)
+def region_start_file(region_idx):
+    return os.path.join(region_dir(region_idx), 'start')
 
 # This class will be used in a future when we support multiple
 # contexts/kdamonds
