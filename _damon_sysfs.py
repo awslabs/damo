@@ -91,21 +91,16 @@ def _write(filepath, content):
         return 1
 
 def set_target(tid, init_regions):
-    if not os.isdir(sysfs_damon + 'kdamonds/0/contexts/0/targets/0'):
-        _write(sysfs_damon + 'kdamonds/0/contexts/0/targets/nr', '1')
     if tid == 'paddr':
-        _write(sysfs_damon + 'kdamonds/0/contexts/0/damon_type','paddr\n')
+        _write(context_type_file, 'paddr\n')
     else:
-        _write(sysfs_damon +
-                'kdamonds/0/contexts/0/targets/0/pid','%s\n' % tid)
+        _write(context_type_file, 'vaddr\n')
+        _write(target_pid_file, '%d' % tid)
 
-    _write(sysfs_damon + 'kdamonds/0/contexts/0/targets/0/regions/nr', '%s' %
-            len(init_regions))
+    _write(regions_nr_file, '%d' % len(init_regions))
     for idx, region in enumerate(init_regions):
-        _write(sysfs_damon +
-                'kdamonds/0/contexts/0/targets/0/regions/%d/start', region[0])
-        _write(sysfs_damon +
-                'kdamonds/0/contexts/0/targets/0/regions/%d/start', region[1])
+        _write(region_start_file(idx), '%d' % region[0])
+        _write(region_start_file(idx), '%d' % region[1])
 
 def turn_damon(on_off):
     pass
