@@ -83,12 +83,8 @@ class DamonSysfsFile:
             f.write(content)
 
 def _write(filepath, content):
-    try:
-        with open(filepath, 'w') as f:
-            f.write(content)
-        return 0
-    except:
-        return 1
+    with open(filepath, 'w') as f:
+        f.write(content)
 
 def set_target(tid, init_regions):
     if tid == 'paddr':
