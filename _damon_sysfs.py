@@ -163,15 +163,3 @@ def chk_update():
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
     feature_supports['schemes'] = False
-
-def cmd_args_to_attrs(args):
-    pass
-
-def cmd_args_to_init_regions(args):
-    pass
-
-def set_attrs_argparser(parser):
-    pass
-
-def set_init_regions_argparser(parser):
-    pass

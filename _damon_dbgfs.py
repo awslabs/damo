@@ -232,26 +232,6 @@ def chk_update(debugfs='/sys/kernel/debug/'):
 
     update_supported_features()
 
-def cmd_args_to_attrs(args):
-    'Generate attributes with specified arguments'
-    sample_interval = args.sample
-    aggr_interval = args.aggr
-    regions_update_interval = args.updr
-    min_nr_regions = args.minr
-    max_nr_regions = args.maxr
-    rbuf_len = args.rbuf
-    if not os.path.isabs(args.out):
-        args.out = os.path.join(os.getcwd(), args.out)
-    rfile_path = args.out
-
-    if not hasattr(args, 'schemes'):
-        args.schemes = ''
-    schemes = args.schemes
-
-    return _damon.Attrs(sample_interval, aggr_interval,
-            regions_update_interval, min_nr_regions, max_nr_regions, rbuf_len,
-            rfile_path, schemes)
-
 def attr_str(attrs):
     return '%s %s %s %s %s ' % (attrs.sample_interval, attrs.aggr_interval,
             attrs.regions_update_interval, attrs.min_nr_regions,
@@ -275,41 +255,3 @@ def attrs_apply(attrs):
     return subprocess.call('echo %s > %s' % (
         attrs.schemes.replace('\n', ' '), debugfs_schemes), shell=True,
         executable='/bin/bash')
-
-def cmd_args_to_init_regions(args):
-    regions = []
-    for arg in args.regions.split():
-        addrs = arg.split('-')
-        try:
-            if len(addrs) != 2:
-                raise Exception('two addresses not given')
-            start = int(addrs[0])
-            end = int(addrs[1])
-            if start >= end:
-                raise Exception('start >= end')
-            if regions and regions[-1][1] > start:
-                raise Exception('regions overlap')
-        except Exception as e:
-            print('Wrong \'--regions\' argument (%s)' % e)
-            exit(1)
-
-        regions.append([start, end])
-    return regions
-
-def set_attrs_argparser(parser):
-    parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
-            default='/sys/kernel/debug', help='debugfs mounted path')
-    parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
-            default=5000, help='sampling interval (us)')
-    parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
-            default=100000, help='aggregate interval (us)')
-    parser.add_argument('-u', '--updr', metavar='<interval>', type=int,
-            default=1000000, help='regions update interval (us)')
-    parser.add_argument('-n', '--minr', metavar='<# regions>', type=int,
-            default=10, help='minimal number of regions')
-    parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
-            default=1000, help='maximum number of regions')
-
-def set_init_regions_argparser(parser):
-    parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
-            type=str, default='', help='monitoring target address regions')
