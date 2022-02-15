@@ -136,6 +136,11 @@ test_wmarks() {
 		echo "SKIP schemes-wmarks (unsupported)"
 		return
 	fi
+	if ! sudo "$damo" features supported | grep -w paddr > /dev/null
+	then
+		echo "SKIP schemes-wmarks (paddr unsupported)"
+		return
+	fi
 
 	scheme_prefix="4K max  min min  1s max  stat"
 	scheme_prefix+="  5G 1s 0 3 7"
