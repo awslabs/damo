@@ -19,8 +19,11 @@ debugfs_init_regions = None
 debugfs_monitor_on = None
 
 def set_target_id(tid):
-    with open(debugfs_target_ids, 'w') as f:
-        f.write('%s\n' % tid)
+    try:
+        with open(debugfs_target_ids, 'w') as f:
+            f.write('%s\n' % tid)
+    except Exception e:
+        return e
 
 def set_target(tid, init_regions=[]):
     rc = set_target_id(tid)
