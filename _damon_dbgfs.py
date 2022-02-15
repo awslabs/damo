@@ -116,7 +116,7 @@ def test_debugfs_file_schemes_stat_extended(nr_fields):
 
     return test_debugfs_file(debugfs_schemes, input_str, expected)
 
-def test_init_regions_version():
+def test_init_regions_version(paddr_supported):
     # Save previous values
     with open(debugfs_target_ids, 'r') as f:
         orig_target_ids = f.read()
@@ -131,14 +131,22 @@ def test_init_regions_version():
 
     # Test
     with open(debugfs_target_ids, 'w') as f:
-        f.write('paddr\n')
+        if paddr_supported:
+            f.write('paddr\n')
+        else:
+            f.write('%d\n' % os.getpid())
+
+    if paddr_supported:
+        v1_input = '42 100 200'
+    else:
+        v1_input = '%d 100 200' % os.getpid()
     try:
         with open(debugfs_init_regions, 'w') as f:
-            f.write('42 100 200')
+            f.write(v1_input)
     except IOError as e:
         version = 2
     with open(debugfs_init_regions, 'r') as f:
-        if f.read().strip() == '42 100 200':
+        if f.read().strip() == v1_input:
             version = 1
         else:
             version = 2
@@ -159,14 +167,16 @@ def update_supported_features():
         feature_supports['record'] = True
     if debugfs_schemes != None:
         feature_supports['schemes'] = True
-    if debugfs_init_regions != None:
-        feature_supports['init_regions'] = True
-        init_regions_version = test_init_regions_version()
-        if init_regions_version == 2:
-            feature_supports['init_regions_target_idx'] = True
 
     if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
         feature_supports['paddr'] = True
+
+    if debugfs_init_regions != None:
+        feature_supports['init_regions'] = True
+        init_regions_version = test_init_regions_version(
+                feature_supports['paddr'])
+        if init_regions_version == 2:
+            feature_supports['init_regions_target_idx'] = True
 
     if debugfs_schemes != None:
         if test_debugfs_file_schemes(9):
