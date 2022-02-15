@@ -92,11 +92,14 @@ def test_debugfs_file(path, input_str, expected):
             orig_value = '\n'
     if os.path.basename(path) == 'target_ids' and orig_value == '42\n':
         orig_value = 'paddr\n'
-    with open(path, 'w') as f:
-        f.write(input_str)
-    with open(path, 'r') as f:
-        if f.read() == expected:
-            passed = True
+    try:
+        with open(path, 'w') as f:
+            f.write(input_str)
+        with open(path, 'r') as f:
+            if f.read() == expected:
+                passed = True
+    except Exception as e:
+        passed = False
     with open(path, 'w') as f:
         f.write(orig_value)
     return passed
