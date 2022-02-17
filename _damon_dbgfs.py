@@ -22,7 +22,7 @@ def set_target_id(tid):
     try:
         with open(debugfs_target_ids, 'w') as f:
             f.write('%s\n' % tid)
-    except Exception e:
+    except Exception as e:
         return e
 
 def set_target(tid, init_regions=[]):
