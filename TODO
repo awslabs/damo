@@ -1,3 +1,5 @@
 - Test --numa_node 0 case
 - Implement raw wss listing (not percentile)
 - Implement age distribution reporting
+- Support sysfs-schemes
+- Support sysfs dumping/populating in json format
