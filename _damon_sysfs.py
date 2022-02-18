@@ -42,6 +42,12 @@ def region_dir(region_idx):
 def region_start_file(region_idx):
     return os.path.join(region_dir(region_idx), 'start')
 
+schemes_dir = os.path.join(context_dir, 'schemes')
+schemes_nr_file = os.path.join(schemes_dir, 'nr')
+
+def scheme_dir(scheme_idx):
+    return os.path.join(schemes_dir, '%d' % scheme_idx)
+
 # This class will be used in a future when we support multiple
 # contexts/kdamonds
 class DamonSysfsFile:
@@ -128,6 +134,36 @@ def attrs_apply(attrs):
         _write(nr_regions_min_file, '%d' % attrs.min_nr_regions)
         _write(nr_regions_max_file, '%d' % attrs.max_nr_regions)
         # TODO: Support schemes
+        schemes = attrs.schemes.split('\n')
+        _write(schemes_nr_file, '%d' % len(schemes))
+        # access pattern
+        for idx, scheme in enumerate(schemes):
+            fields = scheme.split()
+            field_idx = 0
+            for pattern_dir in ['sz', 'nr_accesses', 'age']:
+                for file_ in ['min', 'max']:
+                    _write(os.path.join(scheme_dir(idx), 'access_pattern',
+                        pattern_dir, file_), fields[field_idx])
+                    field_idx += 1
+            # action
+            _write(os.path.join(scheme_dir(idx), 'action'), fields[filed_idx])
+            filed_idx += 1
+
+            # quotas
+            quotas_dir = os.path.join(scheme_dir(idx), 'quotas')
+            for file_ in ['ms', 'sz', 'reset_interval_ms']:
+                _write(os.path.join(quotas_dir, file_), fields[filed_idx])
+                field_idx += 1
+            weights_dir = os.path.join(quotas_dir, 'weights')
+            for file_ in ['sz', 'nr_acceses', 'age']:
+                _write(os.path.join(weights_dir, file_), fields[filed_idx])
+                field_idx += 1
+
+            # watermarks
+            wmarks_dir = os.path.join(scheme_dir(idx), 'watermarks')
+            for file_ in ['metric', 'interval_us', 'high', 'mid', 'low']:
+                _write(os.path.join(wmarks_dir, file_), fields[field_idx])
+                field_idx += 1
         return 0
     except Exception as e:
         print(e)
