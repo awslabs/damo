@@ -9,6 +9,9 @@ import os
 import subprocess
 
 import _damon_dbgfs
+import _damon_sysfs
+
+_damon_fs = _damon_dbgfs
 
 features = ['record',
             'schemes',
@@ -26,13 +29,13 @@ def chk_permission():
         exit(1)
 
 def set_target(tid, init_regions=[]):
-    return _damon_dbgfs.set_target(tid, init_regions)
+    return _damon_fs.set_target(tid, init_regions)
 
 def turn_damon(on_off):
-    return _damon_dbgfs.turn_damon(on_off)
+    return _damon_fs.turn_damon(on_off)
 
 def is_damon_running():
-    return _damon_dbgfs.is_damon_running()
+    return _damon_fs.is_damon_running()
 
 class Attrs:
     sample_interval = None
@@ -61,19 +64,19 @@ class Attrs:
                 self.rfile_path, self.schemes)
 
     def apply(self):
-        return _damon_dbgfs.attrs_apply(self)
+        return _damon_fs.attrs_apply(self)
 
 def current_attrs():
-    return _damon_dbgfs.current_attrs()
+    return _damon_fs.current_attrs()
 
 def feature_supported(feature):
-    return _damon_dbgfs.feature_supported(feature)
+    return _damon_fs.feature_supported(feature)
 
 def get_supported_features():
-    return _damon_dbgfs.get_supported_features()
+    return _damon_fs.get_supported_features()
 
 def chk_update(debugfs='/sys/kernel/debug/'):
-    _damon_dbgfs.chk_update(debugfs)
+    _damon_fs.chk_update(debugfs)
 
 def cmd_args_to_attrs(args):
     'Generate attributes with specified arguments'
