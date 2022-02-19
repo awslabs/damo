@@ -11,8 +11,6 @@ import subprocess
 import _damon_dbgfs
 import _damon_sysfs
 
-_damon_fs = _damon_dbgfs
-
 features = ['record',
             'schemes',
             'init_regions',
@@ -22,6 +20,17 @@ features = ['record',
             'schemes_quotas',
             'schemes_prioritization',
             'schemes_wmarks']
+
+_damon_fs = _damon_dbgfs
+damon_interface_sysfs = 1
+damon_interface_dbgfs = 2
+
+def set_damon_interface(interface):
+    global _damon_fs
+    if interface == damon_interface_sysfs:
+        _damon_fs = _damon_sysfs
+    elif interface == damon_interface_dbgfs:
+        _damon_fs = _damon_dbgfs
 
 def chk_permission():
     if os.geteuid() != 0:
