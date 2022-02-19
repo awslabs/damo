@@ -102,7 +102,7 @@ def set_target(tid, init_regions):
             _write(context_operations_file, 'paddr\n')
         else:
             _write(context_operations_file, 'vaddr\n')
-            _write(target_pid_file, '%s' % tid)
+            _write(target_pid_file, '%d' % int(tid))
 
         _write(regions_nr_file, '%d' % len(init_regions))
         for idx, region in enumerate(init_regions):
