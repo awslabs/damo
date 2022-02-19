@@ -148,8 +148,17 @@ def attrs_apply(attrs):
                         pattern_dir, file_), fields[field_idx])
                     field_idx += 1
             # action
-            _write(os.path.join(scheme_dir(idx), 'action'), fields[filed_idx])
-            filed_idx += 1
+            dbgfs_action_to_sysfs_action = {
+                    0: 'willneed',
+                    1: 'cold',
+                    2: 'pageout',
+                    3: 'hugepage',
+                    4: 'nohugepage',
+                    5: 'stat',
+                    }
+            _write(os.path.join(scheme_dir(idx), 'action'),
+                    dbgfs_action_to_sysfs_action[int(fields[field_idx])])
+            field_idx += 1
 
             # quotas
             quotas_dir = os.path.join(scheme_dir(idx), 'quotas')
