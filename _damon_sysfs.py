@@ -163,11 +163,11 @@ def attrs_apply(attrs):
             # quotas
             quotas_dir = os.path.join(scheme_dir(idx), 'quotas')
             for file_ in ['ms', 'sz', 'reset_interval_ms']:
-                _write(os.path.join(quotas_dir, file_), fields[filed_idx])
+                _write(os.path.join(quotas_dir, file_), fields[field_idx])
                 field_idx += 1
             weights_dir = os.path.join(quotas_dir, 'weights')
-            for file_ in ['sz', 'nr_acceses', 'age']:
-                _write(os.path.join(weights_dir, file_), fields[filed_idx])
+            for file_ in ['sz', 'nr_accesses', 'age']:
+                _write(os.path.join(weights_dir, file_), fields[field_idx])
                 field_idx += 1
 
             # watermarks
