@@ -72,6 +72,8 @@ def set_argparser(parser):
             help='data access monitoring-based operation schemes')
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
             help='if target is \'paddr\', limit it to the numa node')
+    parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
+            default='debugfs', help='underlying DAMON interface to use')
 
 def main(args=None):
     global orig_attrs
@@ -81,6 +83,10 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.chk_permission()
+    if args.damon_interface == 'debugfs':
+        _damon.set_damon_interface(_damon.damon_interface_dbgfs)
+    elif args.damon_interface == 'sysfs':
+        _damon.set_damon_interface(_damon.damon_interface_sysfs)
     _damon.chk_update(args.debugfs)
     scheme_version = 0
     if _damon.feature_supported('schemes_speed_limit'):
