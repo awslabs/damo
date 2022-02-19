@@ -42,6 +42,9 @@ def region_dir(region_idx):
 def region_start_file(region_idx):
     return os.path.join(region_dir(region_idx), 'start')
 
+def region_end_file(region_idx):
+    return os.path.join(region_dir(region_idx), 'end')
+
 schemes_dir = os.path.join(context_dir, 'schemes')
 schemes_nr_file = os.path.join(schemes_dir, 'nr')
 
@@ -110,7 +113,7 @@ def set_target(tid, init_regions):
         _write(regions_nr_file, '%d' % len(init_regions))
         for idx, region in enumerate(init_regions):
             _write(region_start_file(idx), '%d' % region[0])
-            _write(region_start_file(idx), '%d' % region[1])
+            _write(region_end_file(idx), '%d' % region[1])
         return 0
     except Exception as e:
         print(e)
@@ -136,7 +139,6 @@ def attrs_apply(attrs):
         _write(intervals_update_us_file, '%d' % attrs.regions_update_interval)
         _write(nr_regions_min_file, '%d' % attrs.min_nr_regions)
         _write(nr_regions_max_file, '%d' % attrs.max_nr_regions)
-        # TODO: Support schemes
         schemes = [x for x in attrs.schemes.split('\n') if x != '']
         _write(schemes_nr_file, '%d' % len(schemes))
         # access pattern
