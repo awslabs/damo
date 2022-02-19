@@ -185,20 +185,26 @@ def get_supported_features():
         chk_update()
     return feature_supports
 
+populated = False
+
 def chk_update(arg=None):
     if not os.path.isdir(kdamonds_dir):
         print('damon sysfs dir (%s) not found' % kdamonds_dir)
         exit(1)
 
-    try:
-        _write(kdamonds_nr_file, '1')
-        _write(contexts_nr_file, '1')
-        _write(targets_nr_file, '1')
-    except Exception as e:
-        print(e)
-        print('failed populating kdamond and context dirs')
-        exit(1)
+    global populated
+    if not populated:
+        try:
+            _write(kdamonds_nr_file, '1')
+            _write(contexts_nr_file, '1')
+            _write(targets_nr_file, '1')
+            populated = True
+        except Exception as e:
+            print(e)
+            print('failed populating kdamond and context dirs')
+            exit(1)
 
+    global feature_supports
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
     feature_supports['schemes'] = False
