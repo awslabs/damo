@@ -193,6 +193,7 @@ def chk_update(arg=None):
     try:
         _write(kdamonds_nr_file, '1')
         _write(contexts_nr_file, '1')
+        _write(targets_nr_file, '1')
     except Exception as e:
         print(e)
         print('failed populating kdamond and context dirs')
