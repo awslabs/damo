@@ -20,7 +20,7 @@ kdamond_pid_file = os.path.join(kdamond_dir, 'pid')
 contexts_dir = os.path.join(kdamond_dir, 'contexts')
 contexts_nr_file = os.path.join(contexts_dir, 'nr')
 context_dir = os.path.join(contexts_dir, '0')
-context_type_file = os.path.join(context_dir, 'damon_type')
+context_operations_file = os.path.join(context_dir, 'operations')
 context_attrs_dir = os.path.join(context_dir, 'monitoring_attrs')
 attrs_intervals_dir = os.path.join(context_attrs_dir, 'intervals')
 intervals_sample_us_file = os.path.join(attrs_intervals_dir, 'sample_us')
@@ -99,9 +99,9 @@ def _read(filepath):
 def set_target(tid, init_regions):
     try:
         if tid == 'paddr':
-            _write(context_type_file, 'paddr\n')
+            _write(context_operations_file, 'paddr\n')
         else:
-            _write(context_type_file, 'vaddr\n')
+            _write(context_operations_file, 'vaddr\n')
             _write(target_pid_file, '%d' % tid)
 
         _write(regions_nr_file, '%d' % len(init_regions))
