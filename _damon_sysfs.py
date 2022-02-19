@@ -185,7 +185,7 @@ def get_supported_features():
         chk_update()
     return feature_supports
 
-def chk_update():
+def chk_update(arg):
     if not os.path.isdir(kdamonds_dir):
         print('damon sysfs dir (%s) not found' % kdamonds_dir)
         exit(1)
