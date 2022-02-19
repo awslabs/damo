@@ -138,6 +138,8 @@ def attrs_apply(attrs):
         _write(schemes_nr_file, '%d' % len(schemes))
         # access pattern
         for idx, scheme in enumerate(schemes):
+            if scheme == '':
+                continue
             fields = scheme.split()
             field_idx = 0
             for pattern_dir in ['sz', 'nr_accesses', 'age']:
