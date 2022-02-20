@@ -108,6 +108,7 @@ __measure_scheme_applied() {
 		sudo cat "$damon_debugfs/schemes" | \
 			awk '{if (NF==23) print $20; else print $NF;}'
 	else
+		echo update_schemes_stats > "/sys/kernel/mm/damon/admin/kdamonds/0/state"
 		sudo cat "/sys/kernel/mm/damon/admin/kdamonds/0/contexts/0/schemes/0/stats/sz_tried"
 	fi
 }
