@@ -22,17 +22,8 @@ features = ['record',
             'schemes_wmarks']
 
 _damon_fs = _damon_dbgfs
-damon_interface_sysfs = 1
-damon_interface_dbgfs = 2
 
 pr_debug_log = False
-
-def set_damon_interface(interface):
-    global _damon_fs
-    if interface == damon_interface_sysfs:
-        _damon_fs = _damon_sysfs
-    elif interface == damon_interface_dbgfs:
-        _damon_fs = _damon_dbgfs
 
 def chk_permission():
     if os.geteuid() != 0:
@@ -87,6 +78,12 @@ def get_supported_features():
     return _damon_fs.get_supported_features()
 
 def chk_update(args):
+    global _damon_fs
+    if args.damon_interface == 'sysfs':
+        _damon_fs = _damon_sysfs
+    elif args.damon_interface == 'debugfs':
+        _damon_fs = _damon_dbgfs
+
     global pr_debug_log
     if args.debug_damon:
         pr_debug_log = True
@@ -147,5 +144,7 @@ def set_argparser(parser):
             default=1000, help='maximum number of regions')
     parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
             type=str, default='', help='monitoring target address regions')
+    parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
+            default='debugfs', help='underlying DAMON interface to use')
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')

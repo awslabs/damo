@@ -124,8 +124,6 @@ def set_argparser(parser):
             default=False, help='don\'t remove the perf.data file')
     parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')
-    parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
-            default='debugfs', help='underlying DAMON interface to use')
 
 def main(args=None):
     global orig_attrs
@@ -139,10 +137,6 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.chk_permission()
-    if args.damon_interface == 'debugfs':
-        _damon.set_damon_interface(_damon.damon_interface_dbgfs)
-    elif args.damon_interface == 'sysfs':
-        _damon.set_damon_interface(_damon.damon_interface_sysfs)
     _damon.chk_update(args)
 
     if args.rbuf and not _damon.feature_supported('record'):
