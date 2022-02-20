@@ -25,6 +25,8 @@ _damon_fs = _damon_dbgfs
 damon_interface_sysfs = 1
 damon_interface_dbgfs = 2
 
+pr_debug_log = False
+
 def set_damon_interface(interface):
     global _damon_fs
     if interface == damon_interface_sysfs:
@@ -85,6 +87,10 @@ def get_supported_features():
     return _damon_fs.get_supported_features()
 
 def chk_update(args):
+    global pr_debug_log
+    if args.debug_damon:
+        pr_debug_log = True
+
     _damon_fs.chk_update(args)
 
 def cmd_args_to_attrs(args):
@@ -141,3 +147,5 @@ def set_argparser(parser):
             default=1000, help='maximum number of regions')
     parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
             type=str, default='', help='monitoring target address regions')
+    parser.add_argument('--debug_damon', action='store_true',
+            help='Print debugging log')

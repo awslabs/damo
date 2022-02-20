@@ -92,9 +92,8 @@ class DamonSysfsFile:
         with open(self.path(), 'w') as f:
             f.write(content)
 
-debug = False
 def _write(filepath, content):
-    if debug:
+    if _damon.pr_debug_log:
         print('write %s to %s' % (content, filepath))
     with open(filepath, 'w') as f:
         f.write(content)
