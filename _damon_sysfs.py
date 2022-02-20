@@ -178,8 +178,15 @@ def attrs_apply(attrs):
                 field_idx += 1
 
             # watermarks
+            dbgfs_wmark_metroc_to_sysfs_metric = {
+                    0: 'none',
+                    1: 'free_mem_rate',
+                    }
             wmarks_dir = os.path.join(scheme_dir(idx), 'watermarks')
-            for file_ in ['metric', 'interval_us', 'high', 'mid', 'low']:
+            _write(os.path.join(wmarks_dir, 'metric'),
+                    dbgfs_wmark_metroc_to_sysfs_metric[int(fields[field_idx])])
+            field_idx += 1
+            for file_ in ['interval_us', 'high', 'mid', 'low']:
                 _write(os.path.join(wmarks_dir, file_), fields[field_idx])
                 field_idx += 1
         return 0
