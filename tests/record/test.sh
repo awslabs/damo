@@ -4,7 +4,6 @@
 bindir=$(dirname "$0")
 cd "$bindir"
 
-damon_debugfs="/sys/kernel/debug/damon"
 damo="../../damo"
 
 cleanup_files()
