@@ -100,9 +100,16 @@ ensure_free_mem_ratio() {
 	fi
 }
 
+use_sysfs="no"
+
 __measure_scheme_applied() {
-	sudo cat "$damon_debugfs/schemes" | \
-		awk '{if (NF==23) print $20; else print $NF;}'
+	if [ "$use_sysfs" = "no" ]
+	then
+		sudo cat "$damon_debugfs/schemes" | \
+			awk '{if (NF==23) print $20; else print $NF;}'
+	else
+		sudo cat "/sys/kernel/mm/damon/admin/kdamonds/0/contexts/0/schemes/0/stats/sz_tried"
+	fi
 }
 
 measure_scheme_applied() {
@@ -115,7 +122,6 @@ measure_scheme_applied() {
 		"$damo" schemes -c "$scheme" "$target" > /dev/null &
 	damo_pid=$!
 
-	sudo cat "$damon_debugfs/schemes"
 	before=$(__measure_scheme_applied)
 	if [ "$before" = "" ]
 	then
