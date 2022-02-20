@@ -227,4 +227,3 @@ def chk_update(args=None):
     global feature_supports
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
-    feature_supports['schemes'] = False
