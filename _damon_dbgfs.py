@@ -204,7 +204,7 @@ def update_supported_features():
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
 
-def chk_update(debugfs='/sys/kernel/debug/'):
+def chk_update(args):
     global feature_supports
     global debugfs_version
     global debugfs_attrs
@@ -213,6 +213,8 @@ def chk_update(debugfs='/sys/kernel/debug/'):
     global debugfs_target_ids
     global debugfs_init_regions
     global debugfs_monitor_on
+
+    debugfs = args.debugfs
 
     if feature_supports != None:
         return

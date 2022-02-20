@@ -143,7 +143,7 @@ def main(args=None):
         _damon.set_damon_interface(_damon.damon_interface_dbgfs)
     elif args.damon_interface == 'sysfs':
         _damon.set_damon_interface(_damon.damon_interface_sysfs)
-    _damon.chk_update(args.debugfs)
+    _damon.chk_update(args)
 
     if args.rbuf and not _damon.feature_supported('record'):
         print('# \'--rbuf\' will be ignored')

@@ -218,7 +218,7 @@ def ensure_dirs_populated():
         print('failed populating kdamond and context dirs')
         exit(1)
 
-def chk_update(arg=None):
+def chk_update(args=None):
     if not os.path.isdir(kdamonds_dir):
         print('damon sysfs dir (%s) not found' % kdamonds_dir)
         exit(1)

@@ -86,7 +86,7 @@ def main(args=None):
         _damon.set_damon_interface(_damon.damon_interface_dbgfs)
     elif args.damon_interface == 'sysfs':
         _damon.set_damon_interface(_damon.damon_interface_sysfs)
-    _damon.chk_update(args.debugfs)
+    _damon.chk_update(args)
     scheme_version = 0
     if _damon.feature_supported('schemes_speed_limit'):
         scheme_version = 1

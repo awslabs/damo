@@ -84,8 +84,8 @@ def feature_supported(feature):
 def get_supported_features():
     return _damon_fs.get_supported_features()
 
-def chk_update(debugfs='/sys/kernel/debug/'):
-    _damon_fs.chk_update(debugfs)
+def chk_update(args):
+    _damon_fs.chk_update(args)
 
 def cmd_args_to_attrs(args):
     'Generate attributes with specified arguments'
