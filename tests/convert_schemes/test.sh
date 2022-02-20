@@ -4,9 +4,6 @@
 bindir=$(dirname "$0")
 cd "$bindir"
 
-damon_debugfs="/sys/kernel/debug/damon"
-damo="../../damo"
-
 test_convert_file() {
 	for input in ./inputs/*
 	do
