@@ -7,6 +7,7 @@ def set_argparser(parser):
     parser.add_argument('type', choices=['supported', 'unsupported', 'all'],
             default='all', nargs='?',
             help='type of features to listed')
+    _damon.set_common_argparser(parser)
 
 def main(args=None):
     if not args:
@@ -14,6 +15,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
+    _damon.chk_update(args)
     features = _damon.get_supported_features()
 
     for feature in sorted(features.keys()):

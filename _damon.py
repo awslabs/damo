@@ -129,9 +129,15 @@ def cmd_args_to_init_regions(args):
         regions.append([start, end])
     return regions
 
-def set_argparser(parser):
+def set_common_argparser(parser):
+    parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
+            default='debugfs', help='underlying DAMON interface to use')
+    parser.add_argument('--debug_damon', action='store_true',
+            help='Print debugging log')
     parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
             default='/sys/kernel/debug', help='debugfs mounted path')
+
+def set_argparser(parser):
     parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
             default=5000, help='sampling interval (us)')
     parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
@@ -144,7 +150,4 @@ def set_argparser(parser):
             default=1000, help='maximum number of regions')
     parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
             type=str, default='', help='monitoring target address regions')
-    parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
-            default='debugfs', help='underlying DAMON interface to use')
-    parser.add_argument('--debug_damon', action='store_true',
-            help='Print debugging log')
+    set_common_argparser(parser)
