@@ -121,6 +121,8 @@ def set_target(tid, init_regions):
         return 1
 
 def turn_damon(on_off):
+    # In case of vaddr, too early monitoring shows unstable mapping changes.
+    # Give the process a time to have stable memory mapping.
     time.sleep(0.5)
     try:
         _write(kdamond_state_file, on_off)
