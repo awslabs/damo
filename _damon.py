@@ -126,7 +126,7 @@ def cmd_args_to_init_regions(args):
         regions.append([start, end])
     return regions
 
-def set_attrs_argparser(parser):
+def set_argparser(parser):
     parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
             default='/sys/kernel/debug', help='debugfs mounted path')
     parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
@@ -139,7 +139,5 @@ def set_attrs_argparser(parser):
             default=10, help='minimal number of regions')
     parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
             default=1000, help='maximum number of regions')
-
-def set_init_regions_argparser(parser):
     parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
             type=str, default='', help='monitoring target address regions')

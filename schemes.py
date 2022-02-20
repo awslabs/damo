@@ -63,8 +63,7 @@ def sighandler(signum, frame):
     cleanup_exit(orig_attrs, signum)
 
 def set_argparser(parser):
-    _damon.set_attrs_argparser(parser)
-    _damon.set_init_regions_argparser(parser)
+    _damon.set_argparser(parser)
     parser.add_argument('target', type=str, metavar='<target>',
             help='the target command or the pid to record')
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
