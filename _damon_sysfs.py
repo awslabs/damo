@@ -235,12 +235,15 @@ def chk_update(args=None):
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
 
-def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin'):
+def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin', max_depth=None,
+        depth=1):
     contents = {}
     for filename in os.listdir(dir_to_read):
         filepath = os.path.join(dir_to_read, filename)
         if os.path.isdir(filepath):
-            contents[filename] = read_damon_fs(filepath)
+            if max_depth != None and depth + 1 > max_depth:
+                continue
+            contents[filename] = read_damon_fs(filepath, max_depth, depth + 1)
         else:
             with open(filepath, 'r') as f:
                 contents[filename] = f.read()
