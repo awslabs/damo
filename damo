@@ -7,6 +7,7 @@ import os
 os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import adjust
+import damon_fs
 import features
 import monitor
 import reclaim
@@ -62,6 +63,10 @@ def main():
             help='validate a given record result file')
     validate.set_argparser(parser_validate)
 
+    parser_damon_fs = subparser.add_parser('fs',
+            help='manipulate DAMON in a filesystem-like manner')
+    damon_fs.set_argparser(parser_damon_fs)
+
     subparser.add_parser('version', help='print the version number')
 
     args = parser.parse_args()
@@ -82,6 +87,8 @@ def main():
         features.main(args)
     elif args.command == 'validate':
         validate.main(args)
+    elif args.command == 'fs':
+        damon_fs.main(args)
     elif args.command == 'version':
         bindir = os.path.dirname(os.path.abspath(__file__))
         with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:

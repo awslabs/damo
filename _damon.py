@@ -129,6 +129,12 @@ def cmd_args_to_init_regions(args):
         regions.append([start, end])
     return regions
 
+def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin', max_depth=None,
+        depth=1):
+    if _damon_fs == _damon_dbgfs:
+        return 'debugfs not support this yet'
+    return _damon_fs.read_damon_fs(dir_to_read, max_depth, depth)
+
 def set_common_argparser(parser):
     parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
             default='debugfs', help='underlying DAMON interface to use')
