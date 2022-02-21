@@ -234,3 +234,14 @@ def chk_update(args=None):
     global feature_supports
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
+
+def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin'):
+    contents = {}
+    for filename in os.listdir(dir_to_read):
+        filepath = os.path.join(dir_to_read, filename)
+        if os.path.isdir(filepath):
+            contents[filename] = read_damon_fs(filepath)
+        else:
+            with open(filepath, 'r') as f:
+                contents[filename] = f.read()
+    return contents
