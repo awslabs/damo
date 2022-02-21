@@ -224,12 +224,13 @@ def ensure_dirs_populated():
         print('failed populating kdamond and context dirs')
         exit(1)
 
-def chk_update(args=None):
+def chk_update(args=None, skip_dirs_population=False):
     if not os.path.isdir(kdamonds_dir):
         print('damon sysfs dir (%s) not found' % kdamonds_dir)
         exit(1)
 
-    ensure_dirs_populated()
+    if not skip_dirs_population:
+        ensure_dirs_populated()
 
     global feature_supports
     feature_supports = {x: True for x in _damon.features}

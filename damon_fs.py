@@ -16,7 +16,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    _damon.chk_update(args)
+    _damon.chk_update(args, skip_dirs_population=True)
 
     if args.operation == 'read':
         print(json.dumps(_damon.read_damon_fs(), indent=4, sort_keys=True))

@@ -204,7 +204,7 @@ def update_supported_features():
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
 
-def chk_update(args):
+def chk_update(args, skip_dirs_population=False):
     global feature_supports
     global debugfs_version
     global debugfs_attrs
