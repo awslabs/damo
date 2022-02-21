@@ -255,6 +255,6 @@ def write_damon_fs(contents, rootdir='/sys/kernel/mm/damon/admin'):
         filepath = os.path.join(rootdir, filename)
         if os.path.isfile(filepath):
             with open(filepath, 'w') as f:
-                f.write(contents[filepath])
+                f.write(contents[filename])
         else:
-            write_damon_fs(contents[filepath], filepath)
+            write_damon_fs(contents[filename], filepath)
