@@ -3,3 +3,4 @@
 - Implement age distribution reporting
 - Support sysfs-schemes
 - Support sysfs dumping/populating in json format
+- Make schemes test run with sysfs without manual code edit
