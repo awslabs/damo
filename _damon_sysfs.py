@@ -14,12 +14,12 @@ feature_supports = None
 
 # Use only one kdamond, one context, and one target for now
 kdamonds_dir = '/sys/kernel/mm/damon/admin/kdamonds'
-kdamonds_nr_file = os.path.join(kdamonds_dir, 'nr')
+kdamonds_nr_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 kdamond_dir = os.path.join(kdamonds_dir, '0')
 kdamond_state_file = os.path.join(kdamond_dir, 'state')
 kdamond_pid_file = os.path.join(kdamond_dir, 'pid')
 contexts_dir = os.path.join(kdamond_dir, 'contexts')
-contexts_nr_file = os.path.join(contexts_dir, 'nr')
+contexts_nr_file = os.path.join(contexts_dir, 'nr_contexts')
 context_dir = os.path.join(contexts_dir, '0')
 context_operations_file = os.path.join(context_dir, 'operations')
 context_attrs_dir = os.path.join(context_dir, 'monitoring_attrs')
@@ -31,11 +31,11 @@ attrs_nr_regions_dir = os.path.join(context_attrs_dir, 'nr_regions')
 nr_regions_min_file = os.path.join(attrs_nr_regions_dir, 'min')
 nr_regions_max_file = os.path.join(attrs_nr_regions_dir, 'max')
 context_targets_dir = os.path.join(context_dir, 'targets')
-targets_nr_file = os.path.join(context_targets_dir, 'nr')
+targets_nr_file = os.path.join(context_targets_dir, 'nr_targets')
 target_dir = os.path.join(context_targets_dir, '0')
-target_pid_file = os.path.join(target_dir, 'pid')
+target_pid_file = os.path.join(target_dir, 'pid_target')
 target_regions_dir = os.path.join(target_dir, 'regions')
-regions_nr_file = os.path.join(target_regions_dir, 'nr')
+regions_nr_file = os.path.join(target_regions_dir, 'nr_regions')
 
 def region_dir(region_idx):
     return os.path.join(target_regions_dir, '%d' % region_idx)
@@ -47,7 +47,7 @@ def region_end_file(region_idx):
     return os.path.join(region_dir(region_idx), 'end')
 
 schemes_dir = os.path.join(context_dir, 'schemes')
-schemes_nr_file = os.path.join(schemes_dir, 'nr')
+schemes_nr_file = os.path.join(schemes_dir, 'nr_schemes')
 
 def scheme_dir(scheme_idx):
     return os.path.join(schemes_dir, '%d' % scheme_idx)
@@ -169,11 +169,11 @@ def attrs_apply(attrs):
 
             # quotas
             quotas_dir = os.path.join(scheme_dir(idx), 'quotas')
-            for file_ in ['ms', 'sz', 'reset_interval_ms']:
+            for file_ in ['ms', 'bytes', 'reset_interval_ms']:
                 _write(os.path.join(quotas_dir, file_), fields[field_idx])
                 field_idx += 1
             weights_dir = os.path.join(quotas_dir, 'weights')
-            for file_ in ['sz', 'nr_accesses', 'age']:
+            for file_ in ['sz_permil', 'nr_accesses_permil', 'age_permil']:
                 _write(os.path.join(weights_dir, file_), fields[field_idx])
                 field_idx += 1
 
