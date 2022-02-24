@@ -16,6 +16,7 @@ import record
 import heats
 import wss
 
+# For supporting python 2.6
 try:
     subprocess.DEVNULL = subprocess.DEVNULL
 except AttributeError:
