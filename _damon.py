@@ -77,9 +77,17 @@ def feature_supported(feature):
 def get_supported_features():
     return _damon_fs.get_supported_features()
 
+sysfs_warning = '''
+!!!
+DAMON sysfs interface is not stable yet.  Please note that it could be changed
+a lot and damo will not guarantee support of old versions of the interface
+until it becomes stable.
+!!!'''
+
 def chk_update(args, skip_dirs_population=False):
     global _damon_fs
     if args.damon_interface == 'sysfs':
+        print(sysfs_warning)
         _damon_fs = _damon_sysfs
     elif args.damon_interface == 'debugfs':
         _damon_fs = _damon_dbgfs
