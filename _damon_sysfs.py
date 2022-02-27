@@ -246,8 +246,11 @@ def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin', max_depth=None,
                 continue
             contents[filename] = read_damon_fs(filepath, max_depth, depth + 1)
         else:
-            with open(filepath, 'r') as f:
-                contents[filename] = f.read()
+            try:
+                with open(filepath, 'r') as f:
+                    contents[filename] = f.read()
+            except Exception as e:
+                contents[filename] = 'read failed (%s)' % e
     return contents
 
 def write_damon_fs(contents, rootdir='/sys/kernel/mm/damon/admin'):
@@ -259,7 +262,11 @@ def write_damon_fs(contents, rootdir='/sys/kernel/mm/damon/admin'):
     for filename in contents:
         filepath = os.path.join(rootdir, filename)
         if os.path.isfile(filepath):
-            with open(filepath, 'w') as f:
-                f.write(contents[filename])
+            try:
+                with open(filepath, 'w') as f:
+                    f.write(contents[filename])
+            except Exception as e:
+                print('writing %s to %s failed (%s)' % (contents[filename],
+                    filepath, e))
         else:
             write_damon_fs(contents[filename], filepath)
