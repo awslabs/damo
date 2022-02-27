@@ -20,14 +20,14 @@ def assert_value_in_range(value, min_max, name):
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
-    parser.add_argument('--aggr', metavar='<interval>', type=int, nargs=2,
+    parser.add_argument('--aggr', metavar='<microseconds>', type=int, nargs=2,
             default=[80000, 120000],
             help='min/max valid sample intervals (us)')
-    parser.add_argument('--nr_regions', metavar='<number>', type=int, nargs=2,
-            default=[5, 1200],
+    parser.add_argument('--nr_regions', metavar='<number of regions>',
+            type=int, nargs=2, default=[5, 1200],
             help='min/max number of regions')
-    parser.add_argument('--nr_accesses', metavar='<number>', type=int, nargs=2,
-            default=[0, 24],
+    parser.add_argument('--nr_accesses', metavar='<number of accesses>',
+            type=int, nargs=2, default=[0, 24],
             help='min/max number of measured accesses per aggregate interval')
 
 def main(args=None):
