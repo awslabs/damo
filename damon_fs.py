@@ -7,7 +7,8 @@ import json
 import _damon
 
 def set_argparser(parser):
-    parser.add_argument('operation', choices=['read', 'write'], help='operation to do')
+    parser.add_argument('operation', choices=['read', 'write'],
+            help='operation to do')
     parser.add_argument('--content', help='content to write')
     _damon.set_common_argparser(parser)
 
