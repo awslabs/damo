@@ -146,6 +146,7 @@ def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin', max_depth=None,
 def write_damon_fs(contents):
     if _damon_fs == _damon_dbgfs:
         print('debugfs not support this yet')
+        return
 
     _damon_fs.write_damon_fs(contents)
 
