@@ -235,10 +235,3 @@ def chk_update(args=None, skip_dirs_population=False):
     global feature_supports
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
-
-def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin', max_depth=None,
-        depth=1):
-    return damon_fs.read_files(dir_to_read, max_depth, depth)
-
-def write_damon_fs(contents, rootdir='/sys/kernel/mm/damon/admin'):
-    return damon_fs.write_files(rootdir, contents)
