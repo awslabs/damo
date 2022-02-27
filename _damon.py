@@ -140,15 +140,14 @@ def cmd_args_to_init_regions(args):
 def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin', max_depth=None,
         depth=1):
     if _damon_fs == _damon_dbgfs:
-        return 'debugfs not support this yet'
-    return _damon_fs.read_damon_fs(dir_to_read, max_depth, depth)
+        return damon_fs.read_files('/sys/kernel/debug/damon', max_depth, depth)
+    return damon_fs.read_files('/sys/kernel/mm/damon/admin', max_depth, depth)
 
 def write_damon_fs(contents):
     if _damon_fs == _damon_dbgfs:
-        print('debugfs not support this yet')
+        damon_fs.write_files('/sys/kernel/debug/damon', contents)
         return
-
-    _damon_fs.write_damon_fs(contents)
+    damon_fs.write_files('/sys/kernel/mm/damon/admin', contents)
 
 def set_common_argparser(parser):
     parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
