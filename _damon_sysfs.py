@@ -238,35 +238,7 @@ def chk_update(args=None, skip_dirs_population=False):
 
 def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin', max_depth=None,
         depth=1):
-    contents = {}
-    for filename in os.listdir(dir_to_read):
-        filepath = os.path.join(dir_to_read, filename)
-        if os.path.isdir(filepath):
-            if max_depth != None and depth + 1 > max_depth:
-                continue
-            contents[filename] = read_damon_fs(filepath, max_depth, depth + 1)
-        else:
-            try:
-                with open(filepath, 'r') as f:
-                    contents[filename] = f.read()
-            except Exception as e:
-                contents[filename] = 'read failed (%s)' % e
-    return contents
+    return damon_fs.read_files(dir_to_read, max_depth, depth)
 
 def write_damon_fs(contents, rootdir='/sys/kernel/mm/damon/admin'):
-    if isinstance(contents, list):
-        for c in contents:
-            write_damon_fs(c, rootdir)
-        return
-
-    for filename in contents:
-        filepath = os.path.join(rootdir, filename)
-        if os.path.isfile(filepath):
-            try:
-                with open(filepath, 'w') as f:
-                    f.write(contents[filename])
-            except Exception as e:
-                print('writing %s to %s failed (%s)' % (contents[filename],
-                    filepath, e))
-        else:
-            write_damon_fs(contents[filename], filepath)
+    return damon_fs.write_files(rootdir, contents)

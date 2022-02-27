@@ -6,6 +6,40 @@ import json
 
 import _damon
 
+def read_files(root, max_depth, current_depth):
+    contents = {}
+    for filename in os.listdir(dir_to_read):
+        filepath = os.path.join(dir_to_read, filename)
+        if os.path.isdir(filepath):
+            if max_depth != None and depth + 1 > max_depth:
+                continue
+            contents[filename] = read_files(filepath, max_depth, depth + 1)
+        else:
+            try:
+                with open(filepath, 'r') as f:
+                    contents[filename] = f.read()
+            except Exception as e:
+                contents[filename] = 'read failed (%s)' % e
+    return contents
+
+def write_files(root, contents):
+    if isinstance(contents, list):
+        for c in contents:
+            write_files(rootdir, c)
+        return
+
+    for filename in contents:
+        filepath = os.path.join(rootdir, filename)
+        if os.path.isfile(filepath):
+            try:
+                with open(filepath, 'w') as f:
+                    f.write(contents[filename])
+            except Exception as e:
+                print('writing %s to %s failed (%s)' % (contents[filename],
+                    filepath, e))
+        else:
+            write_files(filepath, contents[filename])
+
 def set_argparser(parser):
     parser.add_argument('operation', choices=['read', 'write'],
             help='operation to do')
