@@ -251,6 +251,11 @@ def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin', max_depth=None,
     return contents
 
 def write_damon_fs(contents, rootdir='/sys/kernel/mm/damon/admin'):
+    if isinstance(contents, list):
+        for c in contents:
+            write_damon_fs(c, rootdir)
+        return
+
     for filename in contents:
         filepath = os.path.join(rootdir, filename)
         if os.path.isfile(filepath):
