@@ -3,17 +3,19 @@
 
 import argparse
 import json
+import os
 
 import _damon
 
 def read_files(root, max_depth, current_depth):
     contents = {}
-    for filename in os.listdir(dir_to_read):
-        filepath = os.path.join(dir_to_read, filename)
+    for filename in os.listdir(root):
+        filepath = os.path.join(root, filename)
         if os.path.isdir(filepath):
-            if max_depth != None and depth + 1 > max_depth:
+            if max_depth != None and current_depth + 1 > max_depth:
                 continue
-            contents[filename] = read_files(filepath, max_depth, depth + 1)
+            contents[filename] = read_files(filepath, max_depth,
+                    current_depth + 1)
         else:
             try:
                 with open(filepath, 'r') as f:
