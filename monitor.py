@@ -46,9 +46,8 @@ def sighandler(signum, frame):
 def set_argparser(parser):
     parser.add_argument('target', type=str, metavar='<target>',
             help='monitoring target (command, pid or \'paddr\')')
-    parser.add_argument('--report_type', type=str, metavar='<report type>',
-            choices=['heats', 'wss'], default='heats',
-            help='report type')
+    parser.add_argument('--report_type', type=str, choices=['heats', 'wss'],
+            default='heats', help='report type')
     parser.add_argument('--delay', type=float, metavar='<seconds>', default=3,
             help='deplay between updates in seconds.')
     parser.add_argument('--count', type=int, metavar='<count>', default=0,
