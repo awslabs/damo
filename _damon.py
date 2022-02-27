@@ -10,6 +10,7 @@ import subprocess
 
 import _damon_dbgfs
 import _damon_sysfs
+import damon_fs
 
 features = ['record',
             'schemes',
