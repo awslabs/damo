@@ -32,13 +32,18 @@ def get_wss_dists(result, acc_thres, sz_thres, do_sort):
         wss_dists[tid] = wss_dist
     return wss_dists
 
-def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar):
+def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
     print('# <percentile> <wss>')
     for tid in wss_dists.keys():
         wss_dist = wss_dists[tid]
         print('# target_id\t%s' % tid)
         print('# avr:\t%s' % _fmt_nr.format_sz(
             sum(wss_dist) / len(wss_dist), raw_number))
+
+        if pr_all_wss:
+            for idx, wss in enumerate(wss_dist):
+                print('%s %s' % (idx, wss))
+            return
 
         if nr_cols_bar > 0:
             max_sz = 0
@@ -96,6 +101,8 @@ def set_argparser(parser):
             help='number of columns that is reserved for wss visualization')
     parser.add_argument('--raw_number', action='store_true',
             help='use machine-friendly raw numbers')
+    parser.add_argument('--all_wss', action='store_true',
+            help='Do not print percentile but all calculated wss')
 
 def main(args=None):
     if not args:
@@ -126,7 +133,8 @@ def main(args=None):
         raw_number = True
         args.nr_cols_bar = 0
 
-    pr_wss_dists(wss_dists, percentiles, raw_number, args.nr_cols_bar)
+    pr_wss_dists(wss_dists, percentiles, raw_number, args.nr_cols_bar,
+            args.all_wss)
 
     if args.plot:
         sys.stdout = orig_stdout
