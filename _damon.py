@@ -151,7 +151,7 @@ def write_damon_fs(contents):
     damon_fs.write_files('/sys/kernel/mm/damon/admin', contents)
 
 def damon_interface():
-    return 'sysfs' if _damon_fs == damon_sydasmon_dbgfs else 'sysfs'
+    return 'sysfs' if _damon_fs == _damon_sysfs else 'debugfs'
 
 def set_common_argparser(parser):
     parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
