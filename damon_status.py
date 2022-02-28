@@ -25,6 +25,7 @@ def main(args=None):
     if args.target == 'all':
         print(json.dumps(content, indent=4, sort_keys=True))
     elif args.target == 'schemes_stats':
+        print('# <kdamond> <context> <scheme> <field> <value>')
         kdamonds = content['kdamonds']
         nr_kdamonds = int(kdamonds['nr_kdamonds'])
         if nr_kdamonds == 0:
