@@ -6,6 +6,8 @@ import json
 import _damon
 
 def set_argparser(parser):
+    parser.add_argument('target', choices=['schemes_stats', 'all'],
+            nargs='?', default='all', help='What status to show')
     _damon.set_common_argparser(parser)
 
 def main(args=None):
@@ -19,7 +21,9 @@ def main(args=None):
         print('debugfs is not supported')
         return
 
-    print(json.dumps(_damon.read_damon_fs(), indent=4, sort_keys=True))
+    content = _damon.read_damon_fs()
+    if args.target == 'all':
+        print(json.dumps(content, indent=4, sort_keys=True))
 
 if __name__ == '__main__':
     main()
