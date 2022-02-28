@@ -15,6 +15,9 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.chk_update(args, skip_dirs_population=True)
+    if _damon.damon_interface() == 'debugfs':
+        print('debugfs is not supported')
+        return
 
     print(json.dumps(_damon.read_damon_fs(), indent=4, sort_keys=True))
 
