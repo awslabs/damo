@@ -42,7 +42,7 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
 
         if pr_all_wss:
             for idx, wss in enumerate(wss_dist):
-                print('%s %s' % (idx, wss))
+                print('%s %s' % (idx, _fmt_nr.format_sz(wss, raw_number)))
             return
 
         if nr_cols_bar > 0:
