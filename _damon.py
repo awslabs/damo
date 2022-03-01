@@ -160,7 +160,7 @@ def damon_interface():
 
 def set_common_argparser(parser):
     parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
-            default='debugfs', help='underlying DAMON interface to use')
+            default='sysfs', help='underlying DAMON interface to use')
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')
     parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
