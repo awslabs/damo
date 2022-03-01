@@ -25,15 +25,12 @@ __test_stat() {
 
 	python ./stairs.py &
 	stairs_pid=$!
-	echo "start damo"
 	sudo "$damo" schemes -c "$scheme" "$stairs_pid" > /dev/null &
-	echo "damo started"
 
 	start_time=$SECONDS
 	applied=0
 	while ps --pid "$stairs_pid" > /dev/null
 	do
-		echo "waiting stairs ($stairs_pid)"
 		applied=$(__measure_scheme_applied)
 		sleep 1
 	done
@@ -103,7 +100,7 @@ ensure_free_mem_ratio() {
 	fi
 }
 
-use_sysfs="yes"
+use_sysfs="no"
 
 __measure_scheme_applied() {
 	if [ "$use_sysfs" = "no" ]
