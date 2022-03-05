@@ -204,8 +204,7 @@ def update_supported_features():
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
 
-def chk_update(args, skip_dirs_population=False):
-    global feature_supports
+def set_root(root):
     global debugfs_version
     global debugfs_attrs
     global debugfs_record
@@ -214,12 +213,7 @@ def chk_update(args, skip_dirs_population=False):
     global debugfs_init_regions
     global debugfs_monitor_on
 
-    debugfs = args.debugfs
-
-    if feature_supports != None:
-        return
-    feature_supports = {x: False for x in _damon.features}
-
+    debugfs = root
     debugfs_damon = os.path.join(debugfs, 'damon')
     debugfs_version = os.path.join(debugfs_damon, 'version')
     debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
@@ -247,6 +241,14 @@ def chk_update(args, skip_dirs_population=False):
             else:
                 print('damon debugfs file (%s) not found' % f)
                 exit(1)
+
+def chk_update(args, skip_dirs_population=False):
+    set_root(args.debugfs)
+
+    global feature_supports
+    if feature_supports != None:
+        return
+    feature_supports = {x: False for x in _damon.features}
 
     update_supported_features()
 
