@@ -83,7 +83,8 @@ sysfs_warning = '''
 DAMON sysfs interface is not stable yet.  Please note that it could be changed
 a lot and damo will not guarantee support of old versions of the interface
 until it becomes stable.
-!!!'''
+!!!
+'''
 
 def chk_update(args, skip_dirs_population=False):
     global _damon_fs
