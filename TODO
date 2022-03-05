@@ -1,6 +1,4 @@
 - Test --numa_node 0 case
 - Implement age distribution reporting
-- Make schemes test run with sysfs without manual code edit
 - Test 'fs' and 'status'
 - Set default backend based on running kernel (prefer sysfs)
-- Test both debugfs and sysfs
