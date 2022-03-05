@@ -56,53 +56,58 @@ test_leave_perf_data()
 
 test_record_validate()
 {
-	if [ $# -ne 2 ]
+	if [ $# -ne 3 ]
 	then
-		echo "Usage: $0 <target> <timeout>"
+		echo "Usage: $0 <target> <timeout> <damon interface to use>"
 		exit 1
 	fi
 
 	target=$1
 	timeout=$2
+	damon_interface=$3
 
-	if [ "$target" = "paddr" ] && ! sudo "$damo" features supported | \
+	testname="record-validate \"$target\" $timeout $damon_interface"
+
+	if [ "$target" = "paddr" ] && ! sudo "$damo" features \
+		--damon_interface "$damon_interface" supported | \
 		grep -w paddr > /dev/null
 	then
 		echo "SKIP record-validate $target $timeout (paddr unsupported)"
 		return
 	fi
 
-	sudo timeout "$timeout" "$damo" record "$target" &> /dev/null
+	sudo timeout "$timeout" "$damo" record "$target" \
+		--damon_interface "$damon_interface" &> /dev/null
 	rc=$?
 	if [ $? -ne 0 ] && [ $? -ne 124 ]
 	then
-		echo "FAIL record-validate $target $timeout"
+		echo "FAIL $testname"
 		echo "(damo-record command failed with value $rc)"
 		exit 1
 	fi
 
 	if ! "$damo" validate
 	then
-		echo "FAIL record-validate (record fild is not valid)"
+		echo "FAIL $testname (record fild is not valid)"
 		exit 1
 	fi
 
 	if [ -f ./damon.data.perf.data ]
 	then
-		echo "FAIL record-validate (perf.data is not removed)"
+		echo "FAIL $testname (perf.data is not removed)"
 		exit 1
 	fi
 
 	permission=$(stat -c %a damon.data)
 	if [ ! "$permission" = "600" ]
 	then
-		echo "FAIL record-validate (out file permission $permission)"
+		echo "FAIL $testname (out file permission $permission)"
 		exit 1
 	fi
 
 	cleanup_files
 
-	echo "PASS record-validate \"$target\" $timeout"
+	echo "PASS $testname"
 }
 
 if [ ! -d /sys/kernel/debug/damon ]
@@ -111,8 +116,10 @@ then
 	exit 0
 fi
 
-test_record_validate "sleep 3" 4
-test_record_validate "paddr" 3
+test_record_validate "sleep 3" 4 "debugfs"
+test_record_validate "sleep 3" 4 "sysfs"
+test_record_validate "paddr" 3 "debugfs"
+test_record_validate "paddr" 3 "sysfs"
 test_leave_perf_data
 test_record_permission
 
