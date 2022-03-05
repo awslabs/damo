@@ -8,8 +8,16 @@ damon_debugfs="/sys/kernel/debug/damon"
 damo="../../damo"
 
 __test_stat() {
+	if [ $# -ne 3 ]
+	then
+		echo "Usage: $0 <speed limit> <use scheme file> <damon interface>"
+		exit 1
+	fi
+
 	local speed_limit=$1
 	local use_scheme_file=$2
+	local damon_interface=$3
+
 	scheme="4K max    min min    1s max    stat"
 	if [ ! "$speed_limit" = "" ]
 	then
@@ -25,13 +33,14 @@ __test_stat() {
 
 	python ./stairs.py &
 	stairs_pid=$!
-	sudo "$damo" schemes -c "$scheme" "$stairs_pid" > /dev/null &
+	sudo "$damo" schemes -c "$scheme" "$stairs_pid" \
+		--damon_interface "$damon_interface" > /dev/null &
 
 	start_time=$SECONDS
 	applied=0
 	while ps --pid "$stairs_pid" > /dev/null
 	do
-		applied=$(__measure_scheme_applied)
+		applied=$(__measure_scheme_applied "$damon_interface")
 		sleep 1
 	done
 	measure_time=$((SECONDS - start_time))
@@ -43,45 +52,57 @@ __test_stat() {
 }
 
 test_stat() {
-	__test_stat 0
-	if [ "$applied" -eq 0 ]
+	if [ $# -ne 1 ]
 	then
-		echo "FAIL schemes-stat"
+		echo "Usage: $0 <damon interface>"
 		exit 1
 	fi
-	echo "PASS schemes-stat ($applied cold memory found)"
+	local damon_interface=$1
 
-	__test_stat 0 "use_scheme_file"
+	testname="schmes-stat $damon_interface"
+
+	__test_stat 0 "dont_use_scheme_file" "$damon_interface"
 	if [ "$applied" -eq 0 ]
 	then
-		echo "FAIL schemes-stat-using-scheme-file"
+		echo "FAIL $testname"
 		exit 1
 	fi
-	echo "PASS schemes-stat-using-scheme-file ($applied cold memory found)"
+	echo "PASS $testname ($applied cold memory found)"
 
-	if ! sudo "$damo" features supported | grep -w schemes_speed_limit > \
+	testname="schemes-stat-using-scheme-file $damon_interface"
+	__test_stat 0 "use_scheme_file" "$damon_interface"
+	if [ "$applied" -eq 0 ]
+	then
+		echo "FAIL $testname"
+		exit 1
+	fi
+	echo "PASS $testname ($applied cold memory found)"
+
+	testname="schemes-speed-limit $damon_interface"
+	if ! sudo "$damo" features supported \
+		--damon_interface "$damon_interface" | grep -w schemes_speed_limit > \
 		/dev/null
 	then
-		echo "SKIP schemes-speed-limit (unsupported)"
+		echo "SKIP $testname (unsupported)"
 		return
 	fi
 
 	speed=$((applied / measure_time))
 	if [ "$speed" -lt $((4 * 1024 * 100)) ]
 	then
-		echo "SKIP schemes-speed-limit (too slow detection: $speed)"
+		echo "SKIP $testname (too slow detection: $speed)"
 		return
 	fi
 	speed_limit=$((speed / 2))
 
-	__test_stat $speed_limit
+	__test_stat $speed_limit "dont_use_scheme_file" "$damon_interface"
 	speed=$((applied / measure_time))
 	if [ "$speed" -gt $((speed_limit * 11 / 10)) ]
 	then
-		echo "FAIL schemes-speed-limit ($speed > $speed_limit)"
+		echo "FAIL $testname ($speed > $speed_limit)"
 		exit 1
 	fi
-	echo "PASS schemes-speed-limit ($speed < $speed_limit)"
+	echo "PASS $testname ($speed < $speed_limit)"
 }
 
 ensure_free_mem_ratio() {
@@ -100,40 +121,55 @@ ensure_free_mem_ratio() {
 	fi
 }
 
-use_sysfs="no"
-
 __measure_scheme_applied() {
-	if [ "$use_sysfs" = "no" ]
+	if [ $# -ne 1 ]
+	then
+		echo "Usage: $0 <damon_interface>"
+		exit 1
+	fi
+	local damon_interface=$1
+	if [ "$damon_interface" = "debugfs" ]
 	then
 		sudo cat "$damon_debugfs/schemes" | \
 			awk '{if (NF==23) print $20; else print $NF;}'
-	else
+	elif [ "$damon_interface" = "sysfs" ]
+	then
 		while [ "$(cat /sys/kernel/mm/damon/admin/kdamonds/0/state)" = "off" ]
 		do
 			sleep 0.1
 		done
 		echo update_schemes_stats > "/sys/kernel/mm/damon/admin/kdamonds/0/state"
 		sudo cat "/sys/kernel/mm/damon/admin/kdamonds/0/contexts/0/schemes/0/stats/sz_tried"
+	else
+		echo "wrong damon_interface ($damon_interface)"
+		exit 1
 	fi
 }
 
 measure_scheme_applied() {
+	if [ $# -ne 4 ]
+	then
+		echo" Usage: $0 <scheme> <target> <wait_for> <damon_interface>"
+		exit 1
+	fi
 	scheme=$1
 	target=$2
 	wait_for=$3
+	local damon_interface=$4
 
 	timeout_after=$((wait_for + 2))
 	sudo timeout "$timeout_after" \
-		"$damo" schemes -c "$scheme" "$target" > /dev/null &
+		"$damo" schemes -c "$scheme" \
+		--damon_interface "$damon_interface" "$target" > /dev/null &
 	damo_pid=$!
 
-	before=$(__measure_scheme_applied)
+	before=$(__measure_scheme_applied "$damon_interface")
 	if [ "$before" = "" ]
 	then
 		before=0
 	fi
 	sleep "$wait_for"
-	after=$(__measure_scheme_applied)
+	after=$(__measure_scheme_applied "$damon_interface")
 
 	wait "$damo_pid"
 
@@ -141,15 +177,26 @@ measure_scheme_applied() {
 }
 
 test_wmarks() {
-	if ! sudo "$damo" features supported | grep -w schemes_wmarks > \
-		/dev/null
+	if [ $# -ne 1 ]
 	then
-		echo "SKIP schemes-wmarks (unsupported)"
+		echo "Usage: $0 <damon interface>"
+		exit 1
+	fi
+	local damon_interface=$1
+	testname="schemes-wmarks $damon_interface"
+
+	if ! sudo "$damo" features supported \
+		--damon_interface "$damon_interface" | \
+		grep -w schemes_wmarks > /dev/null
+	then
+		echo "SKIP $testname (unsupported)"
 		return
 	fi
-	if ! sudo "$damo" features supported | grep -w paddr > /dev/null
+	if ! sudo "$damo" features supported \
+		--damon_interface "$damon_interface" | \
+		grep -w paddr > /dev/null
 	then
-		echo "SKIP schemes-wmarks (paddr unsupported)"
+		echo "SKIP $testname (paddr unsupported)"
 		return
 	fi
 
@@ -160,43 +207,51 @@ test_wmarks() {
 	# Test high watermark-based deactivation
 	ensure_free_mem_ratio 990 100
 	applied=42
-	measure_scheme_applied "$scheme_prefix 50 40 30" "paddr" 3
+	measure_scheme_applied "$scheme_prefix 50 40 30" "paddr" 3 \
+		"$damon_interface"
 	if [ "$applied" -ne 0 ]
 	then
-		echo "FAIL schemes-wmarks (high watermark doesn't works)"
+		echo "FAIL $testname (high watermark doesn't works)"
 		exit 1
 	fi
 
 	# Test mid-low watermarks-based activation
 	ensure_free_mem_ratio 990 100
 	applied=0
-	measure_scheme_applied "$scheme_prefix 999 995 100" "paddr" 3
+	measure_scheme_applied "$scheme_prefix 999 995 100" "paddr" 3 \
+		"$damon_interface"
 	if [ "$applied" -le 0 ]
 	then
-		echo "FAIL schemes-wmarks (mid watermark doesn't works)"
+		echo "FAIL $testname (mid watermark doesn't works)"
 		exit 1
 	fi
 
 	# Test low watermark-based deactivation
 	ensure_free_mem_ratio 990 100
 	applied=42
-	measure_scheme_applied "$scheme_prefix 999 998 995" "paddr" 3
+	measure_scheme_applied "$scheme_prefix 999 998 995" "paddr" 3 \
+		"$damon_interface"
 	if [ "$applied" -ne 0 ]
 	then
-		echo "FAIL schemes-wmarks (low watermark doesn't works)"
+		echo "FAIL $testname (low watermark doesn't works)"
 		exit 1
 	fi
 
-	echo "PASS schemes-wmarks"
+	echo "PASS $testname"
 }
 
-if ! sudo "$damo" features supported | grep -w "schemes" > /dev/null
-then
-	echo "SKIP $(basename $(pwd))"
-	exit 0
-fi
+for damon_interface in "debugfs" "sysfs"
+do
+	if ! sudo "$damo" features supported \
+	       --damon_interface "$damon_interface" | \
+	       grep -w "schemes" > /dev/null
+	then
+		echo "SKIP $(basename $(pwd))"
+		exit 0
+	fi
 
-test_stat
-test_wmarks
+	test_stat "$damon_interface"
+	test_wmarks "$damon_interface"
+done
 
 echo "PASS $(basename $(pwd))"
