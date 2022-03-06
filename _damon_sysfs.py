@@ -200,12 +200,12 @@ def current_attrs():
 
 def feature_supported(feature):
     if feature_supports == None:
-        chk_update()
+        update_supported_features()
     return feature_supports[feature]
 
 def get_supported_features():
     if feature_supports == None:
-        chk_update()
+        update_supported_features()
     return feature_supports
 
 populated = False
@@ -224,6 +224,14 @@ def ensure_dirs_populated():
         print('failed populating kdamond and context dirs')
         exit(1)
 
+def update_supported_features():
+    global feature_supports
+
+    if feature_supports != None:
+        return
+    feature_supports = {x: True for x in _damon.features}
+    feature_supports['record'] = False
+
 def chk_update(args=None, skip_dirs_population=False):
     if not os.path.isdir(kdamonds_dir):
         print('damon sysfs dir (%s) not found' % kdamonds_dir)
@@ -232,6 +240,4 @@ def chk_update(args=None, skip_dirs_population=False):
     if not skip_dirs_population:
         ensure_dirs_populated()
 
-    global feature_supports
-    feature_supports = {x: True for x in _damon.features}
-    feature_supports['record'] = False
+    update_supported_features()
