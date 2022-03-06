@@ -166,6 +166,11 @@ def test_init_regions_version(paddr_supported):
     return version
 
 def update_supported_features():
+    global feature_supports
+    if feature_supports != None:
+        return
+    feature_supports = {x: False for x in _damon.features}
+
     if debugfs_record != None:
         feature_supports['record'] = True
     if debugfs_schemes != None:
@@ -244,12 +249,6 @@ def set_root(root):
 
 def chk_update(args, skip_dirs_population=False):
     set_root(args.debugfs)
-
-    global feature_supports
-    if feature_supports != None:
-        return
-    feature_supports = {x: False for x in _damon.features}
-
     update_supported_features()
 
 def attr_str(attrs):
