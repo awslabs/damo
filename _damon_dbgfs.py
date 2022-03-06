@@ -10,6 +10,7 @@ import subprocess
 
 import _damon
 
+debugfs_damon = None
 debugfs_version = None
 debugfs_attrs = None
 debugfs_record = None
@@ -209,7 +210,8 @@ def update_supported_features():
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
 
-def set_root(root):
+def ensure_supported_kernel():
+    global debugfs_damon
     global debugfs_version
     global debugfs_attrs
     global debugfs_record
@@ -217,16 +219,6 @@ def set_root(root):
     global debugfs_target_ids
     global debugfs_init_regions
     global debugfs_monitor_on
-
-    debugfs = root
-    debugfs_damon = os.path.join(debugfs, 'damon')
-    debugfs_version = os.path.join(debugfs_damon, 'version')
-    debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
-    debugfs_record = os.path.join(debugfs_damon, 'record')
-    debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
-    debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
-    debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
-    debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
     if not os.path.isdir(debugfs_damon):
         print('damon debugfs dir (%s) not found' % debugfs_damon)
@@ -246,6 +238,28 @@ def set_root(root):
             else:
                 print('damon debugfs file (%s) not found' % f)
                 exit(1)
+
+def set_root(root):
+    global debugfs_damon
+    global debugfs_version
+    global debugfs_attrs
+    global debugfs_record
+    global debugfs_schemes
+    global debugfs_target_ids
+    global debugfs_init_regions
+    global debugfs_monitor_on
+
+    debugfs = root
+    debugfs_damon = os.path.join(debugfs, 'damon')
+    debugfs_version = os.path.join(debugfs_damon, 'version')
+    debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
+    debugfs_record = os.path.join(debugfs_damon, 'record')
+    debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
+    debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
+    debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
+    debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
+
+    ensure_supported_kernel()
 
 def chk_update(args, skip_dirs_population=False):
     set_root(args.debugfs)
