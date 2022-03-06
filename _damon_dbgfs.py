@@ -259,10 +259,9 @@ def set_root(root):
     debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
     debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
-    ensure_supported_kernel()
-
 def chk_update(args, skip_dirs_population=False):
     set_root(args.debugfs)
+    ensure_supported_kernel()
     update_supported_features()
 
 def attr_str(attrs):
