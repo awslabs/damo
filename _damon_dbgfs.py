@@ -210,7 +210,8 @@ def update_supported_features():
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
 
-def supported_kernel():
+def is_improper_kernel():
+    'Return problem in kernel for using DAMON debugfs interface'
     global debugfs_damon
     global debugfs_version
     global debugfs_attrs
@@ -221,7 +222,7 @@ def supported_kernel():
     global debugfs_monitor_on
 
     if not os.path.isdir(debugfs_damon):
-        return False, 'damon debugfs dir (%s) not found' % debugfs_damon
+        return 'damon debugfs dir (%s) not found' % debugfs_damon
 
     for f in [debugfs_version, debugfs_attrs, debugfs_record, debugfs_schemes,
             debugfs_target_ids, debugfs_init_regions, debugfs_monitor_on]:
@@ -235,13 +236,13 @@ def supported_kernel():
             elif f == debugfs_init_regions:
                 debugfs_init_regions = None
             else:
-                return False, 'damon debugfs file (%s) not found' % f
-    return True, ''
+                return 'damon debugfs file (%s) not found' % f
+    return None
 
 def ensure_supported_kernel():
-    supported, unsupported_reason = supported_kernel()
-    if not supported:
-        print(unsupported_reason)
+    kernel_issue = is_improper_kernel()
+    if kernel_issue:
+        print(kernel_issue)
         exit(1)
 
 def set_root(root):
