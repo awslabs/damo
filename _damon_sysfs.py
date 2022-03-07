@@ -244,6 +244,7 @@ def update_supported_features():
         return
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
+    feature_supports['damon_sysfs'] = improper_kernel() == None
 
 def chk_update(args=None, skip_dirs_population=False):
     ensure_supported_kernel()

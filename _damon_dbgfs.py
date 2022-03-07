@@ -172,6 +172,8 @@ def update_supported_features():
         return
     feature_supports = {x: False for x in _damon.features}
 
+    feature_supports['damon_debugfs'] = is_improper_kernel() == None
+
     if debugfs_record != None:
         feature_supports['record'] = True
     if debugfs_schemes != None:
@@ -226,6 +228,9 @@ def is_improper_kernel():
 
     for f in [debugfs_version, debugfs_attrs, debugfs_record, debugfs_schemes,
             debugfs_target_ids, debugfs_init_regions, debugfs_monitor_on]:
+        # f could be None if this function is called before
+        if f == None:
+            continue
         if not os.path.isfile(f):
             if f == debugfs_version:
                 debugfs_version = None
