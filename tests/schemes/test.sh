@@ -59,7 +59,7 @@ test_stat() {
 	fi
 	local damon_interface=$1
 
-	testname="schmes-stat $damon_interface"
+	testname="schemes-stat $damon_interface"
 
 	__test_stat 0 "dont_use_scheme_file" "$damon_interface"
 	if [ "$applied" -eq 0 ]
