@@ -110,16 +110,28 @@ test_record_validate()
 	echo "PASS $testname"
 }
 
-if [ ! -d /sys/kernel/debug/damon ]
+damon_interfaces=""
+if [ -d "/sys/kernel/debug/damon" ]
 then
-	echo "SKIP $(basename $(pwd)) (DAMON debugfs not found)"
+	damon_interfaces+="debugfs "
+fi
+
+if [ -d "/sys/kernel/mm/damon" ]
+then
+	damon_interfaces+="sysfs "
+fi
+
+if [ "$damon_interfaces" = "" ]
+then
+	echo "SKIP $(basename $(pwd)) (DAMON interface not found)"
 	exit 0
 fi
 
-test_record_validate "sleep 3" 4 "debugfs"
-test_record_validate "sleep 3" 4 "sysfs"
-test_record_validate "paddr" 3 "debugfs"
-test_record_validate "paddr" 3 "sysfs"
+for damon_interface in $damon_interfaces
+do
+	test_record_validate "sleep 3" 4 "$damon_interface"
+	test_record_validate "paddr" 3 "$damon_interface"
+done
 test_leave_perf_data
 test_record_permission
 

@@ -240,7 +240,24 @@ test_wmarks() {
 	echo "PASS $testname"
 }
 
-for damon_interface in "debugfs" "sysfs"
+damon_interfaces=""
+if [ -d "/sys/kernel/debug/damon" ]
+then
+	damon_interfaces+="debugfs "
+fi
+
+if [ -d "/sys/kernel/mm/damon" ]
+then
+	damon_interfaces+="sysfs "
+fi
+
+if [ "$damon_interfaces" = "" ]
+then
+	echo "SKIP $(basename $(pwd)) (DAMON interface not found)"
+	exit 0
+fi
+
+for damon_interface in $damon_interfaces
 do
 	if ! sudo "$damo" features supported \
 	       --damon_interface "$damon_interface" | \
