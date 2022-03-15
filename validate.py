@@ -24,7 +24,7 @@ def set_argparser(parser):
             default=[80000, 120000],
             help='min/max valid sample intervals (us)')
     parser.add_argument('--nr_regions', metavar='<number of regions>',
-            type=int, nargs=2, default=[5, 1200],
+            type=int, nargs=2, default=[3, 1200],
             help='min/max number of regions')
     parser.add_argument('--nr_accesses', metavar='<number of accesses>',
             type=int, nargs=2, default=[0, 24],
