@@ -235,9 +235,11 @@ def update_supported_features():
 
     if feature_supports != None:
         return
+    feature_supports['damon_sysfs'] = kernel_issue() == None
+    if not feature_supports['damon_sysfs']:
+        return
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
-    feature_supports['damon_sysfs'] = kernel_issue() == None
 
 def chk_update(args=None, skip_dirs_population=False):
     issue = kernel_issue()
