@@ -142,6 +142,13 @@ def main(args=None):
         print(err)
         exit(1)
 
+    if not _damon.feature_supported('record'):
+        try:
+            subprocess.check_call(['which', 'perf'])
+        except:
+            print('perf is not installed')
+            exit(1)
+
     if args.rbuf and not _damon.feature_supported('record'):
         print('# \'--rbuf\' will be ignored')
     if not args.rbuf:
