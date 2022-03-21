@@ -234,18 +234,20 @@ def update_supported_features():
     global feature_supports
 
     if feature_supports != None:
-        return
-    feature_supports['damon_sysfs'] = kernel_issue() == None
+        return None
+    err = kernel_issue()
+    feature_supports['damon_sysfs'] = err == None
     if not feature_supports['damon_sysfs']:
-        return
+        return err
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
+    return None
 
 def chk_update(args=None, skip_dirs_population=False):
-    update_supported_features()
-    issue = kernel_issue()
-    if issue:
-        return issue
+    err = update_supported_features()
+    if err:
+        return err
 
     if not skip_dirs_population:
         ensure_dirs_populated()
+    return None

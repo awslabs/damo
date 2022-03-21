@@ -169,12 +169,13 @@ def test_init_regions_version(paddr_supported):
 def update_supported_features():
     global feature_supports
     if feature_supports != None:
-        return
+        return None
     feature_supports = {x: False for x in _damon.features}
 
-    feature_supports['damon_debugfs'] = kernel_issue() == None
+    err = kernel_issue()
+    feature_supports['damon_debugfs'] = err == None
     if not feature_supports['damon_debugfs']:
-        return
+        return err
 
     if debugfs_record != None:
         feature_supports['record'] = True
@@ -213,6 +214,7 @@ def update_supported_features():
             feature_supports['schemes_quotas'] = True
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
+    return None
 
 def kernel_issue():
     'Return a problem in kernel for using DAMON debugfs interface'
@@ -268,10 +270,9 @@ def set_root(root):
 
 def chk_update(args, skip_dirs_population=False):
     set_root(args.debugfs)
-    update_supported_features()
-    issue = kernel_issue()
-    if issue:
-        return issue
+    err = update_supported_features()
+    if err:
+        return err
     return None
 
 def attr_str(attrs):
