@@ -94,6 +94,12 @@ def chk_update(args, skip_dirs_population=False):
         _damon_fs = _damon_sysfs
     elif args.damon_interface == 'debugfs':
         _damon_fs = _damon_dbgfs
+    elif args.damon_interface == 'auto':
+        err = _damon_sysfs.chk_update(args, skip_dirs_population)
+        if err == None:
+            _damon_fs = _damon_sysfs
+        else:
+            _damon_fs = _damon_dbgfs
 
     global pr_debug_log
     if args.debug_damon:
@@ -161,7 +167,8 @@ def damon_interface():
     raise Exception
 
 def set_common_argparser(parser):
-    parser.add_argument('--damon_interface', choices=['debugfs', 'sysfs'],
+    parser.add_argument('--damon_interface',
+            choices=['debugfs', 'sysfs', 'auto'],
             default='debugfs', help='underlying DAMON interface to use')
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')
