@@ -235,6 +235,8 @@ def update_supported_features():
 
     if feature_supports != None:
         return None
+    feature_supports = {x: False for x in _damon.features}
+
     err = kernel_issue()
     if err != None:
         return err
