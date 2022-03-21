@@ -242,11 +242,10 @@ def update_supported_features():
     feature_supports['record'] = False
 
 def chk_update(args=None, skip_dirs_population=False):
+    update_supported_features()
     issue = kernel_issue()
     if issue:
         return issue
 
     if not skip_dirs_population:
         ensure_dirs_populated()
-
-    update_supported_features()

@@ -268,11 +268,10 @@ def set_root(root):
 
 def chk_update(args, skip_dirs_population=False):
     set_root(args.debugfs)
+    update_supported_features()
     issue = kernel_issue()
     if issue:
         return issue
-
-    update_supported_features()
     return None
 
 def attr_str(attrs):
