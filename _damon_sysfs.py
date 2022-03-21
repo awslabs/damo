@@ -236,8 +236,7 @@ def update_supported_features():
     if feature_supports != None:
         return None
     err = kernel_issue()
-    feature_supports['damon_sysfs'] = err == None
-    if not feature_supports['damon_sysfs']:
+    if err != None:
         return err
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False

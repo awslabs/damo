@@ -173,8 +173,7 @@ def update_supported_features():
     feature_supports = {x: False for x in _damon.features}
 
     err = kernel_issue()
-    feature_supports['damon_debugfs'] = err == None
-    if not feature_supports['damon_debugfs']:
+    if err != None:
         return err
 
     if debugfs_record != None:

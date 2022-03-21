@@ -21,8 +21,6 @@ features = ['record',
             'schemes_quotas',
             'schemes_prioritization',
             'schemes_wmarks',
-            'damon_debugfs',
-            'damon_sysfs',
             ]
 
 _damon_fs = _damon_dbgfs
