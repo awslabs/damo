@@ -244,12 +244,6 @@ def kernel_issue():
                 return 'damon debugfs file (%s) not found' % f
     return None
 
-def ensure_supported_kernel():
-    issue = kernel_issue()
-    if issue:
-        print(issue)
-        exit(1)
-
 def set_root(root):
     global debugfs_damon
     global debugfs_version
@@ -272,8 +266,12 @@ def set_root(root):
 
 def chk_update(args, skip_dirs_population=False):
     set_root(args.debugfs)
-    ensure_supported_kernel()
+    issue = kernel_issue()
+    if issue:
+        return issue
+
     update_supported_features()
+    return None
 
 def attr_str(attrs):
     return '%s %s %s %s %s ' % (attrs.sample_interval, attrs.aggr_interval,

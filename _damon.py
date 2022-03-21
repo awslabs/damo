@@ -101,7 +101,7 @@ def chk_update(args, skip_dirs_population=False):
     if args.debug_damon:
         pr_debug_log = True
 
-    _damon_fs.chk_update(args, skip_dirs_population)
+    return _damon_fs.chk_update(args, skip_dirs_population)
 
 def cmd_args_to_attrs(args):
     'Generate attributes with specified arguments'

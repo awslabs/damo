@@ -230,13 +230,6 @@ def kernel_issue():
         return 'damon sysfs dir (%s) not found' % kdamonds_dir
     return None
 
-def ensure_supported_kernel():
-    kernel_issue = kernel_issue()
-    if not kernel_issue:
-        return
-    print(kernel_issue)
-    exit(1)
-
 def update_supported_features():
     global feature_supports
 
@@ -247,7 +240,9 @@ def update_supported_features():
     feature_supports['damon_sysfs'] = kernel_issue() == None
 
 def chk_update(args=None, skip_dirs_population=False):
-    ensure_supported_kernel()
+    issue = kernel_issue()
+    if issue:
+        return issue
 
     if not skip_dirs_population:
         ensure_dirs_populated()

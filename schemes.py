@@ -80,7 +80,10 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.chk_permission()
-    _damon.chk_update(args)
+    err = _damon.chk_update(args)
+    if err != None:
+        print(err)
+        exit(1)
     scheme_version = 0
     if _damon.feature_supported('schemes_speed_limit'):
         scheme_version = 1

@@ -15,7 +15,10 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    _damon.chk_update(args)
+    err = _damon.chk_update(args)
+    if err != None:
+        print(err)
+        exit(1)
     features = _damon.get_supported_features()
 
     for feature in sorted(features.keys()):
