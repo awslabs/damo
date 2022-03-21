@@ -224,14 +224,14 @@ def ensure_dirs_populated():
         print('failed populating kdamond and context dirs')
         exit(1)
 
-def improper_kernel():
-    'Return problem in kernel for using DAMON sysfs interface'
+def kernel_issue():
+    'Return a problem in kernel for using DAMON sysfs interface'
     if not os.path.isdir(kdamonds_dir):
         return 'damon sysfs dir (%s) not found' % kdamonds_dir
     return None
 
 def ensure_supported_kernel():
-    kernel_issue = improper_kernel()
+    kernel_issue = kernel_issue()
     if not kernel_issue:
         return
     print(kernel_issue)
@@ -244,7 +244,7 @@ def update_supported_features():
         return
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
-    feature_supports['damon_sysfs'] = improper_kernel() == None
+    feature_supports['damon_sysfs'] = kernel_issue() == None
 
 def chk_update(args=None, skip_dirs_population=False):
     ensure_supported_kernel()

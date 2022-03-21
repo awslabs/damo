@@ -172,7 +172,7 @@ def update_supported_features():
         return
     feature_supports = {x: False for x in _damon.features}
 
-    feature_supports['damon_debugfs'] = is_improper_kernel() == None
+    feature_supports['damon_debugfs'] = kernel_issue() == None
 
     if debugfs_record != None:
         feature_supports['record'] = True
@@ -212,8 +212,8 @@ def update_supported_features():
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
 
-def is_improper_kernel():
-    'Return problem in kernel for using DAMON debugfs interface'
+def kernel_issue():
+    'Return a problem in kernel for using DAMON debugfs interface'
     global debugfs_damon
     global debugfs_version
     global debugfs_attrs
@@ -245,9 +245,9 @@ def is_improper_kernel():
     return None
 
 def ensure_supported_kernel():
-    kernel_issue = is_improper_kernel()
-    if kernel_issue:
-        print(kernel_issue)
+    issue = kernel_issue()
+    if issue:
+        print(issue)
         exit(1)
 
 def set_root(root):
