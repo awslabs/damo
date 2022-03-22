@@ -144,7 +144,7 @@ def main(args=None):
 
     if not _damon.feature_supported('record'):
         try:
-            subprocess.check_call(['which', 'perf'])
+            subprocess.check_output(['which', 'perf'])
         except:
             print('perf is not installed')
             exit(1)
