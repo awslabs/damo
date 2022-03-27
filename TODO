@@ -1,5 +1,3 @@
 - Test --numa_node 0 case
 - Implement age distribution reporting
 - Test 'fs' and 'status'
-- Set default backend based on running kernel (prefer sysfs)
-- Make record depends on perf
