@@ -79,14 +79,14 @@ def feature_supported(feature):
 def get_supported_features():
     return _damon_fs.get_supported_features()
 
-def chk_update(args, skip_dirs_population=False):
+def initialize(args, skip_dirs_population=False):
     global _damon_fs
     if args.damon_interface == 'sysfs':
         _damon_fs = _damon_sysfs
     elif args.damon_interface == 'debugfs':
         _damon_fs = _damon_dbgfs
     elif args.damon_interface == 'auto':
-        err = _damon_sysfs.chk_update(args, skip_dirs_population)
+        err = _damon_sysfs.initialize(args, skip_dirs_population)
         if err == None:
             _damon_fs = _damon_sysfs
         else:
@@ -96,7 +96,7 @@ def chk_update(args, skip_dirs_population=False):
     if args.debug_damon:
         pr_debug_log = True
 
-    return _damon_fs.chk_update(args, skip_dirs_population)
+    return _damon_fs.initialize(args, skip_dirs_population)
 
 def cmd_args_to_attrs(args):
     'Generate attributes with specified arguments'

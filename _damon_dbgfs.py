@@ -79,13 +79,13 @@ feature_supports = None
 
 def feature_supported(feature):
     if feature_supports == None:
-        chk_update()
+        initialize()
 
     return feature_supports[feature]
 
 def get_supported_features():
     if feature_supports == None:
-        chk_update()
+        initialize()
     return feature_supports
 
 def test_debugfs_file(path, input_str, expected):
@@ -267,7 +267,7 @@ def set_root(root):
     debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
     debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
-def chk_update(args, skip_dirs_population=False):
+def initialize(args, skip_dirs_population=False):
     set_root(args.debugfs)
     err = update_supported_features()
     if err:

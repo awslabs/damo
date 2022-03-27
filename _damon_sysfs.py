@@ -244,7 +244,7 @@ def update_supported_features():
     feature_supports['record'] = False
     return None
 
-def chk_update(args=None, skip_dirs_population=False):
+def initialize(args=None, skip_dirs_population=False):
     err = update_supported_features()
     if err:
         return err

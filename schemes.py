@@ -80,7 +80,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.chk_permission()
-    err = _damon.chk_update(args)
+    err = _damon.initialize(args)
     if err != None:
         print(err)
         exit(1)

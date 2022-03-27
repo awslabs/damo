@@ -16,7 +16,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    err = _damon.chk_update(args, skip_dirs_population=True)
+    err = _damon.initialize(args, skip_dirs_population=True)
     if err != None:
         print(err)
         exit(1)
