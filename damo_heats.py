@@ -19,7 +19,7 @@ import sys
 import tempfile
 
 import _damon_result
-import _fmt_nr
+import _damo_fmt_nr
 
 class HeatPixel:
     time = None
@@ -123,14 +123,14 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
             (colors[0][i], colors[1][i], i) for i in range(10)]
     print('# access_frequency: %s' % ''.join(color_samples) + u'\u001b[0m')
     print('# x-axis: space (%d-%d: %s)' % (addr_range[0], addr_range[1],
-        _fmt_nr.format_sz(addr_range[1] - addr_range[0], False)))
+        _damo_fmt_nr.format_sz(addr_range[1] - addr_range[0], False)))
     print('# y-axis: time (%d-%d: %s)' % (time_range[0], time_range[1],
-        _fmt_nr.format_time(time_range[1] - time_range[0], False)))
+        _damo_fmt_nr.format_time(time_range[1] - time_range[0], False)))
     print('# resolution: %dx%d (%s and %s for each character)' % (
         len(pixels[1]), len(pixels),
-        _fmt_nr.format_sz(
+        _damo_fmt_nr.format_sz(
             float(addr_range[1] - addr_range[0]) / len(pixels[1]), False),
-        _fmt_nr.format_time(
+        _damo_fmt_nr.format_time(
             float(time_range[1] - time_range[0]) / len(pixels), False)))
 
 def pr_heats(args, damon_result):
@@ -207,12 +207,12 @@ class GuideInfo:
     def __str__(self):
         lines = ['target_id:%d' % self.tid]
         lines.append('time: %d-%d (%s)' % (self.start_time, self.end_time,
-                    _fmt_nr.format_time(self.end_time - self.start_time,
+                    _damo_fmt_nr.format_time(self.end_time - self.start_time,
                         False)))
         for idx, region in enumerate(self.regions()):
             lines.append('region\t%2d: %020d-%020d (%s)' %
                     (idx, region[0], region[1],
-                        _fmt_nr.format_sz(region[1] - region[0], False)))
+                        _damo_fmt_nr.format_sz(region[1] - region[0], False)))
         return '\n'.join(lines)
 
 def is_overlap(region1, region2):

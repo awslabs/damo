@@ -13,7 +13,7 @@ import time
 
 import _convert_damos
 import _damon
-import _paddr_layout
+import _damo_paddr_layout
 
 def run_damon(target, is_target_cmd, init_regions, attrs, old_attrs):
     if os.path.isfile(attrs.rfile_path):
@@ -111,9 +111,9 @@ def main(args=None):
     if target == 'paddr':   # physical memory address space
         if not init_regions:
             if numa_node:
-                init_regions = _paddr_layout.paddr_region_of(numa_node)
+                init_regions = _damo_paddr_layout.paddr_region_of(numa_node)
             else:
-                init_regions = [_paddr_layout.default_paddr_region()]
+                init_regions = [_damo_paddr_layout.default_paddr_region()]
         run_damon(target, False, init_regions, new_attrs, orig_attrs)
     elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
             shell=True, executable='/bin/bash'):

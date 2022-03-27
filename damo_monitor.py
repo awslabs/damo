@@ -12,9 +12,9 @@ import time
 
 import _damon
 
-import record
-import heats
-import wss
+import damo_record
+import damo_heats
+import damo_wss
 
 # For supporting python 2.6
 try:

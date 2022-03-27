@@ -14,7 +14,7 @@ import time
 
 import _damon
 import _damon_result
-import _paddr_layout
+import _damo_paddr_layout
 
 perf_pipe = None
 rfile_path = None
@@ -174,9 +174,9 @@ def main(args=None):
         cmd_target = False
         if not init_regions:
             if numa_node != None:
-                init_regions = _paddr_layout.paddr_region_of(numa_node)
+                init_regions = _damo_paddr_layout.paddr_region_of(numa_node)
             else:
-                init_regions = [_paddr_layout.default_paddr_region()]
+                init_regions = [_damo_paddr_layout.default_paddr_region()]
     elif not subprocess.call('which %s &> /dev/null' % target.split()[0],
             shell=True, executable='/bin/bash'):
         cmd_target = True

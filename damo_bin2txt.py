@@ -6,7 +6,7 @@ import os
 import sys
 
 import _damon_result
-import _fmt_nr
+import _damo_fmt_nr
 
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
@@ -55,17 +55,17 @@ def main(args=None):
 
         base_time = snapshots[0].start_time
         print('base_time_absolute: %s\n' %
-                _fmt_nr.format_time(base_time, args.raw_number))
+                _damo_fmt_nr.format_time(base_time, args.raw_number))
 
         for snapshot in snapshots:
             print('monitoring_start:    %16s' %
-                    _fmt_nr.format_time(
+                    _damo_fmt_nr.format_time(
                         snapshot.start_time - base_time, args.raw_number))
             print('monitoring_end:      %16s' %
-                    _fmt_nr.format_time(
+                    _damo_fmt_nr.format_time(
                         snapshot.end_time - base_time, args.raw_number))
             print('monitoring_duration: %16s' %
-                    _fmt_nr.format_time(
+                    _damo_fmt_nr.format_time(
                         snapshot.end_time - snapshot.start_time,
                         args.raw_number))
             print('target_id: %s' % snapshot.target_id)
@@ -73,7 +73,7 @@ def main(args=None):
             for r in snapshot.regions:
                 print("%012x-%012x(%12s):\t%d" %
                         (r.start, r.end,
-                            _fmt_nr.format_sz(r.end - r.start,
+                            _damo_fmt_nr.format_sz(r.end - r.start,
                                 args.raw_number), r.nr_accesses))
             print('')
 

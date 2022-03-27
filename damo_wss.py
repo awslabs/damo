@@ -7,11 +7,11 @@ import argparse
 import sys
 import tempfile
 
-import _dist
+import _damo_dist
 import _damon_result
-import _fmt_nr
+import _damo_fmt_nr
 
-import adjust
+import damo_adjust
 
 def get_wss_dists(result, acc_thres, sz_thres, do_sort):
     wss_dists = {}
@@ -37,12 +37,12 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
     for tid in wss_dists.keys():
         wss_dist = wss_dists[tid]
         print('# target_id\t%s' % tid)
-        print('# avr:\t%s' % _fmt_nr.format_sz(
+        print('# avr:\t%s' % _damo_fmt_nr.format_sz(
             sum(wss_dist) / len(wss_dist), raw_number))
 
         if pr_all_wss:
             for idx, wss in enumerate(wss_dist):
-                print('%s %s' % (idx, _fmt_nr.format_sz(wss, raw_number)))
+                print('%s %s' % (idx, _damo_fmt_nr.format_sz(wss, raw_number)))
             return
 
         if nr_cols_bar > 0:
@@ -65,7 +65,7 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
                 wss_idx -= 1
             wss = wss_dist[wss_idx]
             line = '%3d %15s' % (percentile,
-                _fmt_nr.format_sz(wss, raw_number))
+                _damo_fmt_nr.format_sz(wss, raw_number))
             if nr_cols_bar > 0:
                 cols = int(wss / sz_per_col)
                 remaining_cols = nr_cols_bar - cols
@@ -122,7 +122,7 @@ def main(args=None):
         print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
-    adjust.adjust_result(result, args.work_time, args.exclude_samples)
+    damo_adjust.adjust_result(result, args.work_time, args.exclude_samples)
     wss_dists = get_wss_dists(result, args.acc_thres, args.sz_thres, wss_sort)
 
     if args.plot:
@@ -143,7 +143,7 @@ def main(args=None):
         xlabel = 'runtime (percent)'
         if wss_sort:
             xlabel = 'percentile'
-        _dist.plot_dist(tmp_path, args.plot, xlabel,
+        _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
                 'working set size (bytes)')
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ import argparse
 import sys
 import tempfile
 
-import _dist
+import _damo_dist
 import _damon_result
 
 def set_argparser(parser):
@@ -76,7 +76,7 @@ def main(args=None):
         xlabel = 'runtime (percent)'
         if nr_regions_sort:
             xlabel = 'percentile'
-        _dist.plot_dist(tmp_path, args.plot, xlabel,
+        _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
                 'number of monitoring target regions')
 
 if __name__ == '__main__':
