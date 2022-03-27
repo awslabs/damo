@@ -12,10 +12,6 @@ import time
 
 import _damon
 
-import damo_record
-import damo_heats
-import damo_wss
-
 # For supporting python 2.6
 try:
     subprocess.DEVNULL = subprocess.DEVNULL
