@@ -21,9 +21,6 @@ def main(args=None):
     if err != None:
         print(err)
         exit(1)
-    if _damon.damon_interface() == 'debugfs':
-        print('debugfs is not supported')
-        return
 
     content = _damon.read_damon_fs()
     if args.target == 'all':
