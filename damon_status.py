@@ -6,7 +6,8 @@ import json
 import _damon
 
 def set_argparser(parser):
-    parser.add_argument('target', choices=['schemes_stats', 'all'],
+    parser.add_argument('target', choices=['schemes_stats', 'all',
+        'damon_interface'],
             nargs='?', default='all', help='What status to show')
     _damon.set_common_argparser(parser)
 
@@ -50,6 +51,8 @@ def main(args=None):
                     for f in ['nr_tried', 'sz_tried',
                             'nr_applied', 'sz_applied', 'qt_exceeds']:
                         print('%d %d %d %s: %d' % (i, c, s, f, int(stats[f])))
+    elif args.target == 'damon_interface':
+        print(_damon.damon_interface())
 
 if __name__ == '__main__':
     main()
