@@ -28,11 +28,13 @@ class DAMONRegion:
     start = None
     end = None
     nr_accesses = None
+    age = None
 
-    def __init__(self, start, end, nr_accesses):
+    def __init__(self, start, end, nr_accesses, age):
         self.start = start
         self.end = end
         self.nr_accesses = nr_accesses
+        self.age = age
 
 class DAMONSnapshot:
     start_time = None
@@ -113,7 +115,7 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
                 start_addr = struct.unpack('L', f.read(8))[0]
                 end_addr = struct.unpack('L', f.read(8))[0]
                 nr_accesses = struct.unpack('I', f.read(4))[0]
-                region = DAMONRegion(start_addr, end_addr, nr_accesses)
+                region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
                 snapshot.regions.append(region)
             target_snapshots.append(snapshot)
 
@@ -170,13 +172,18 @@ def perf_script_to_damon_result(file_path, f, max_secs):
         nr_regions = int(fields[6].split('=')[1])
         addrs = [int(x) for x in fields[7][:-1].split('-')]
         nr_accesses = int(fields[8])
+        if len(fields) == 10:
+            age = int(fields[9])
+        else:
+            age = None
 
         if nr_read_regions == 0:
             snapshot = DAMONSnapshot(start_time, end_time, target_id)
             target_snapshots.append(snapshot)
 
         snapshot = target_snapshots[-1]
-        snapshot.regions.append(DAMONRegion(addrs[0], addrs[1], nr_accesses))
+        snapshot.regions.append(
+                DAMONRegion(addrs[0], addrs[1], nr_accesses, age))
 
         nr_read_regions += 1
         if nr_read_regions == nr_regions:
@@ -294,10 +301,10 @@ def add_region(regions, region, nr_acc_to_add):
             new_regions = []
             if region.start < r.start:
                 new_regions.append(DAMONRegion(
-                    region.start, r.start, region.nr_accesses))
+                    region.start, r.start, region.nr_accesses, region.age))
             if r.end < region.end:
                 new_regions.append(DAMONRegion(
-                        r.end, region.end, region.nr_accesses))
+                        r.end, region.end, region.nr_accesses, region.age))
 
             for new_r in new_regions:
                 add_region(regions, new_r, nr_acc_to_add)
