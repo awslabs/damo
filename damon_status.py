@@ -17,6 +17,9 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
+    # Require root permission
+    _damon.chk_permission()
+
     err = _damon.initialize(args, skip_dirs_population=True)
     if err != None:
         print(err)
