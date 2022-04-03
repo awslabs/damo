@@ -96,7 +96,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    _damon.chk_permission()
+    _damon.ensure_root_permission()
     chk_darc_sysfs()
 
     if args.action == 'status':

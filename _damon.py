@@ -27,7 +27,7 @@ _damon_fs = _damon_dbgfs
 
 pr_debug_log = False
 
-def chk_permission():
+def ensure_root_permission():
     if os.geteuid() != 0:
         print('Run as root')
         exit(1)

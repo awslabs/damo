@@ -55,7 +55,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    _damon.chk_permission()
+    _damon.ensure_root_permission()
 
     global target_is_cmd
     global cmd_pipe

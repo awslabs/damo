@@ -136,7 +136,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    _damon.chk_permission()
+    _damon.ensure_root_permission()
     err = _damon.initialize(args)
     if err != None:
         print(err)
