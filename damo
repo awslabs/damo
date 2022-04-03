@@ -14,7 +14,7 @@ import damo_reclaim
 import damo_record
 import damo_report
 import damo_schemes
-import damon_status
+import damo_status
 import damo_validate
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
@@ -68,9 +68,9 @@ def main():
             help='manipulate DAMON in a filesystem-like manner')
     damon_fs.set_argparser(parser_damon_fs)
 
-    parser_damon_status = subparser.add_parser('status',
+    parser_damo_status = subparser.add_parser('status',
             help='print status of DAMON')
-    damon_status.set_argparser(parser_damon_status)
+    damo_status.set_argparser(parser_damo_status)
 
     subparser.add_parser('version', help='print the version number')
 
@@ -95,7 +95,7 @@ def main():
     elif args.command == 'fs':
         damon_fs.main(args)
     elif args.command == 'status':
-        damon_status.main(args)
+        damo_status.main(args)
     elif args.command == 'version':
         bindir = os.path.dirname(os.path.abspath(__file__))
         with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:
