@@ -136,8 +136,7 @@ def perf_script_to_damon_result(file_path, f, max_secs):
                 target_id=18446623435582458880 nr_regions=17 \
                 140731667070976-140731668037632: 0 3
 
-        Note that the last field is not in the mainline but a patch[1] for it
-        is posted.
+        Note that the last field is not in the early version[1].
 
         [1] https://lore.kernel.org/linux-mm/df8d52f1fb2f353a62ff34dc09fe99e32ca1f63f.1636610337.git.xhao@linux.alibaba.com/
         '''
