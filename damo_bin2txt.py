@@ -74,7 +74,8 @@ def main(args=None):
                 print("%012x-%012x(%12s):\t%d (age: %d)" %
                         (r.start, r.end,
                             _damo_fmt_nr.format_sz(r.end - r.start,
-                                args.raw_number), r.nr_accesses, r.age))
+                                args.raw_number), r.nr_accesses,
+                                r.age if r.age != None else -1))
             print('')
 
 if __name__ == '__main__':
