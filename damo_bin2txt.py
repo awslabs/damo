@@ -71,10 +71,10 @@ def main(args=None):
             print('target_id: %s' % snapshot.target_id)
             print('nr_regions: %s' % len(snapshot.regions))
             for r in snapshot.regions:
-                print("%012x-%012x(%12s):\t%d" %
+                print("%012x-%012x(%12s):\t%d (age: %d)" %
                         (r.start, r.end,
                             _damo_fmt_nr.format_sz(r.end - r.start,
-                                args.raw_number), r.nr_accesses))
+                                args.raw_number), r.nr_accesses, r.age))
             print('')
 
 if __name__ == '__main__':
