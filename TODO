@@ -3,3 +3,5 @@
 - Test 'fs' and 'status'
 - Support age in DAMON result
 - Support rss recording
+- Support filtering regions with min age
+- Make 'validate' allows little error
