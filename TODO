@@ -2,3 +2,4 @@
 - Implement age distribution reporting
 - Test 'fs' and 'status'
 - Support age in DAMON result
+- Support rss recording
