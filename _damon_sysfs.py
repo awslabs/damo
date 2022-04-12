@@ -107,7 +107,10 @@ def set_target(tid, init_regions):
         if tid == 'paddr':
             _write(context_operations_file, 'paddr')
         else:
-            _write(context_operations_file, 'vaddr')
+            if init_regions:
+                _write(context_operations_file, 'fvaddr')
+            else:
+                _write(context_operations_file, 'vaddr')
             _write(target_pid_file, '%d' % int(tid))
 
         _write(regions_nr_file, '%d' % len(init_regions))
