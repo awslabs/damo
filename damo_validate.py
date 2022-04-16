@@ -8,11 +8,15 @@ import os
 
 import _damon_result
 
-def assert_value_in_range(value, min_max, name):
+def assert_value_in_range(value, min_max, name, error_allowed):
+    '''Returns 0 if the value is in the range, 1 if the value is out of range
+    but error allowed, exit with non-zero else'''
     if not min_max:
-        return
+        return 0
     if min_max[0] <= value and value <= min_max[1]:
-        return
+        return 0
+    if error_allowed:
+        return 1
     print('invalid: expecte %d<=%s<=%d but %d' %
             (min_max[0], name, min_max[1], value))
     exit(1)
@@ -29,6 +33,8 @@ def set_argparser(parser):
     parser.add_argument('--nr_accesses', metavar='<number of accesses>',
             type=int, nargs=2, default=[0, 24],
             help='min/max number of measured accesses per aggregate interval')
+    parser.add_argument('--allow_error', metavar='<percent>', default=2,
+            help='allowed percent of error samples')
 
 def main(args=None):
     if not args:
@@ -50,13 +56,19 @@ def main(args=None):
         exit(1)
 
     for target in result.target_snapshots:
+        nr_snapshots = len(result.target_snapshots[target])
+        nr_allowed_errors = nr_snapshots * args.allow_error / 100.0
+        nr_aggr_interval_erros = 0
+        nr_nr_regions_erros = 0
         for snapshot in result.target_snapshots[target]:
             aggr_interval_us = (snapshot.end_time - snapshot.start_time) / 1000
-            assert_value_in_range(aggr_interval_us, args.aggr,
-                    'aggregate interval')
+            nr_aggr_interval_erros += assert_value_in_range( aggr_interval_us,
+                    args.aggr, 'aggregate interval',
+                    nr_aggr_interval_erros < nr_allowed_errors)
 
-            assert_value_in_range(len(snapshot.regions), args.nr_regions,
-                    'nr_regions')
+            nr_nr_regions_erros += assert_value_in_range(len(snapshot.regions),
+                    args.nr_regions, 'nr_regions',
+                    nr_nr_regions_erros < nr_allowed_errors)
 
             for region in snapshot.regions:
                 if region.start >= region.end:
@@ -64,7 +76,7 @@ def main(args=None):
                     exit(1)
 
                 assert_value_in_range(region.nr_accesses, args.nr_accesses,
-                        'nr_accesses')
+                        'nr_accesses', False)
 
 if __name__ == '__main__':
     main()
