@@ -13,7 +13,9 @@ import _damon
 feature_supports = None
 
 # Use only one kdamond, one context, and one target for now
-kdamonds_dir = '/sys/kernel/mm/damon/admin/kdamonds'
+root_dir = '/sys/kernel/mm/damon'
+admin_dir = os.path.join(root_dir, 'admin')
+kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
 kdamonds_nr_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 kdamond_dir = os.path.join(kdamonds_dir, '0')
 kdamond_state_file = os.path.join(kdamond_dir, 'state')

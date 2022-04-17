@@ -137,18 +137,17 @@ def cmd_args_to_init_regions(args):
         regions.append([start, end])
     return regions
 
-def read_damon_fs(dir_to_read='/sys/kernel/mm/damon/admin', max_depth=None,
-        depth=1):
+def read_damon_fs(dir_to_read=_damon_sysfs.admin_dir, max_depth=None, depth=1):
     if _damon_fs == _damon_dbgfs:
         return damon_fs.read_files(_damon_dbgfs.debugfs_damon, max_depth,
                 depth)
-    return damon_fs.read_files('/sys/kernel/mm/damon/admin', max_depth, depth)
+    return damon_fs.read_files(_damon_sysfs.admin_dir, max_depth, depth)
 
 def write_damon_fs(contents):
     if _damon_fs == _damon_dbgfs:
         damon_fs.write_files(_damon_dbgfs.debugfs_damon, contents)
         return
-    damon_fs.write_files('/sys/kernel/mm/damon/admin', contents)
+    damon_fs.write_files(_damon_sysfs.admin_dir, contents)
 
 def damon_interface():
     if _damon_fs == _damon_sysfs:
