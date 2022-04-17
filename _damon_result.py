@@ -314,6 +314,10 @@ def add_region(regions, region, nr_acc_to_add):
 def aggregate_snapshots(snapshots):
     new_regions = []
     for snapshot in snapshots:
+        # Suppose the first snapshot has a region 1-10:5, and the second
+        # snapshot has two regions, 1-5:2, 5-10: 4.  Aggregated snapshot should
+        # be 1-10:9.  That is, we should add maximum nr_accesses of
+        # intersecting regions.  nr_acc_to_add contains the information.
         nr_acc_to_add = {}
         for region in snapshot.regions:
             add_region(new_regions, region, nr_acc_to_add)
