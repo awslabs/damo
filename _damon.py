@@ -137,7 +137,7 @@ def cmd_args_to_init_regions(args):
         regions.append([start, end])
     return regions
 
-def read_damon_fs(dir_to_read=_damon_sysfs.admin_dir, max_depth=None, depth=1):
+def read_damon_fs(max_depth=None, depth=1):
     if _damon_fs == _damon_dbgfs:
         return damon_fs.read_files(_damon_dbgfs.debugfs_damon, max_depth,
                 depth)
