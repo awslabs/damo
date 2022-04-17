@@ -163,8 +163,6 @@ def set_common_argparser(parser):
             default='auto', help='underlying DAMON interface to use')
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')
-    parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
-            default='/sys/kernel/debug', help='debugfs mounted path')
 
 def set_argparser(parser):
     parser.add_argument('-s', '--sample', metavar='<interval>', type=int,

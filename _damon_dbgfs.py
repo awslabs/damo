@@ -10,14 +10,15 @@ import subprocess
 
 import _damon
 
-debugfs_damon = None
-debugfs_version = None
-debugfs_attrs = None
-debugfs_record = None
-debugfs_schemes = None
-debugfs_target_ids = None
-debugfs_init_regions = None
-debugfs_monitor_on = None
+debugfs = '/sys/kernel/debug'
+debugfs_damon = os.path.join(debugfs, 'damon')
+debugfs_version = os.path.join(debugfs_damon, 'version')
+debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
+debugfs_record = os.path.join(debugfs_damon, 'record')
+debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
+debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
+debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
+debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
 def set_target_id(tid):
     try:
@@ -247,28 +248,7 @@ def kernel_issue():
                 return 'damon debugfs file (%s) not found' % f
     return None
 
-def set_root(root):
-    global debugfs_damon
-    global debugfs_version
-    global debugfs_attrs
-    global debugfs_record
-    global debugfs_schemes
-    global debugfs_target_ids
-    global debugfs_init_regions
-    global debugfs_monitor_on
-
-    debugfs = root
-    debugfs_damon = os.path.join(debugfs, 'damon')
-    debugfs_version = os.path.join(debugfs_damon, 'version')
-    debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
-    debugfs_record = os.path.join(debugfs_damon, 'record')
-    debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
-    debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
-    debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
-    debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
-
 def initialize(args, skip_dirs_population=False):
-    set_root(args.debugfs)
     err = update_supported_features()
     if err:
         return err
