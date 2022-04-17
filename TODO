@@ -3,6 +3,5 @@
 - Test 'fs' and 'status'
 - Support rss recording
 - Support filtering regions with min age
-- Make 'validate' allows little error
 - Support online tuning
 - Support avail_operations
