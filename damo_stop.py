@@ -12,14 +12,19 @@ import _damon
 def set_argparser(parser):
     return
 
-def amin(args=None):
+def main(args=None):
     if not args:
         parser = argparse.ArgumentParser()
         set_argparser(parser)
         args = parser.parse_args()
 
-    print(args)
-    print('to be implemented...')
+    _damon.ensure_root_permission()
+
+    if not _damon.is_damon_running():
+        print('DAMON is not turned on')
+        exit(1)
+
+    _damon.turn_damon('off')
 
 if __name__ == '__main__':
     main()
