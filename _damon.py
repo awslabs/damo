@@ -166,7 +166,7 @@ def set_common_argparser(parser):
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')
 
-def set_argparser(parser):
+def set_monitoring_argparser(parser):
     parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
             default=5000, help='sampling interval (us)')
     parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
