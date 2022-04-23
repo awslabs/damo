@@ -23,6 +23,7 @@ kdamond_pid_file = os.path.join(kdamond_dir, 'pid')
 contexts_dir = os.path.join(kdamond_dir, 'contexts')
 contexts_nr_file = os.path.join(contexts_dir, 'nr_contexts')
 context_dir = os.path.join(contexts_dir, '0')
+context_avail_operations_file = os.path.join(context_dir, 'avail_operations')
 context_operations_file = os.path.join(context_dir, 'operations')
 context_attrs_dir = os.path.join(context_dir, 'monitoring_attrs')
 attrs_intervals_dir = os.path.join(context_attrs_dir, 'intervals')
@@ -247,6 +248,12 @@ def update_supported_features():
         return err
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
+
+    ensure_dirs_populated()
+    avail_ops = _read(context_avail_operations_file).strip().split()
+    for feature in ['vaddr', 'paddr', 'fvaddr']:
+        feature_supports[feature] = feature in avail_ops
+
     return None
 
 def initialize(args=None, skip_dirs_population=False):
