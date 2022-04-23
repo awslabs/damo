@@ -182,6 +182,8 @@ def update_supported_features():
     if debugfs_schemes != None:
         feature_supports['schemes'] = True
 
+    # virtual address space has supported since the beginning
+    feature_supports['vaddr'] = True
     if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
         feature_supports['paddr'] = True
 
