@@ -250,6 +250,15 @@ def update_supported_features():
     feature_supports['record'] = False
 
     ensure_dirs_populated()
+    if not os.path.isfile(context_avail_operations_file):
+        for feature in ['vaddr', 'paddr', 'fvaddr', 'vaddr']:
+            try:
+                _write(context_operations_file, feature)
+                feature_supports[feature] = True
+            except IOError:
+                feature_supports[feature] = False
+        return None
+
     avail_ops = _read(context_avail_operations_file).strip().split()
     for feature in ['vaddr', 'paddr', 'fvaddr']:
         feature_supports[feature] = feature in avail_ops
