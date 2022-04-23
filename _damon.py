@@ -15,6 +15,8 @@ import damon_fs
 features = ['record',
             'schemes',
             'init_regions',
+            'vaddr',
+            'fvaddr',
             'paddr',
             'init_regions_target_idx',
             'schemes_speed_limit',
