@@ -13,7 +13,9 @@ import damo_reclaim
 import damo_record
 import damo_report
 import damo_schemes
+import damo_start
 import damo_status
+import damo_stop
 import damo_validate
 import damon_fs
 
@@ -72,6 +74,14 @@ def main():
             help='print status of DAMON')
     damo_status.set_argparser(parser_damo_status)
 
+    parser_start = subparser.add_parser('start',
+            help='start DAMON with given parameters')
+    damo_start.set_argparser(parser_start)
+
+    parser_stop = subparser.add_parser('stop',
+            help='stop running DAMON')
+    damo_stop.set_argparser(parser_stop)
+
     subparser.add_parser('version', help='print the version number')
 
     args = parser.parse_args()
@@ -96,6 +106,10 @@ def main():
         damon_fs.main(args)
     elif args.command == 'status':
         damo_status.main(args)
+    elif args.command == 'start':
+        damo_start.main(args)
+    elif args.command == 'stop':
+        damo_stop.main(args)
     elif args.command == 'version':
         bindir = os.path.dirname(os.path.abspath(__file__))
         with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:
