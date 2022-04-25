@@ -15,6 +15,8 @@ def set_argparser(parser):
             default='vaddr',
             help='monitoring operations set')
     parser.add_argument('--target_pid', type=int, help='target pid')
+    parser.add_argument('--numa_node', metavar='<node id>', type=int,
+            help='limit the monitoring regions of the numa node')
 
 def main(args=None):
     if not args:
