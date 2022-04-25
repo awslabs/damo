@@ -230,6 +230,11 @@ def ensure_dirs_populated():
         print('failed populating kdamond and context dirs')
         exit(1)
 
+def dirs_populated():
+    return (int(_read(kdamonds_nr_file)) >= 1 and
+            int(_read(contexts_nr_file)) >= 1 and
+            int(_read(targets_nr_file)) >= 1)
+
 def kernel_issue():
     'Return a problem in kernel for using DAMON sysfs interface'
     if not os.path.isdir(kdamonds_dir):
@@ -249,7 +254,8 @@ def update_supported_features():
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
 
-    ensure_dirs_populated()
+    if not dirs_populated():
+        ensure_dirs_populated()
     if not os.path.isfile(context_avail_operations_file):
         for feature in ['vaddr', 'paddr', 'fvaddr', 'vaddr']:
             try:
