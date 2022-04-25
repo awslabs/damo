@@ -181,10 +181,10 @@ def main(args=None):
                 init_regions = [_damo_paddr_layout.default_paddr_region()]
     elif target == 'ongoing':
         cmd_target = False
+        new_attrs = None
     elif not subprocess.call('which %s &> /dev/null' % target.split()[0],
             shell=True, executable='/bin/bash'):
         cmd_target = True
-        new_attrs = None
     else:
         try:
             pid = int(target)
