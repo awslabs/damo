@@ -19,8 +19,7 @@ import _damo_paddr_layout
 perf_pipe = None
 rfile_path = None
 rfile_format = None
-def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
-        old_attrs):
+def do_record(target, is_target_cmd, init_regions, attrs, old_attrs):
     global perf_pipe
     global rfile_path
 
@@ -39,8 +38,7 @@ def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
         target = p.pid
 
     if target != 'ongoing':
-        target_ids_input = '%s %s' % (target_ids_prefix, target)
-        if _damon.set_target(target_ids_input.strip(), init_regions):
+        if _damon.set_target(target.strip(), init_regions):
             print('target setting (%s, %s) failed' % (target, init_regions))
             cleanup_exit(old_attrs, -2)
         if _damon.turn_damon('on'):
@@ -112,8 +110,6 @@ def set_argparser(parser):
     _damon.set_monitoring_argparser(parser)
     parser.add_argument('target', type=str, metavar='<target>',
             help='the target command or the pid to record')
-    parser.add_argument('--target_ids_prefix', type=str, metavar='<prefix>',
-            default='', help='prefix for the target_ids input')
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
             help='length of record result buffer')
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
@@ -196,8 +192,7 @@ def main(args=None):
             print('target \'%s\' is not supported' % target)
             exit(1)
         cmd_target = False
-    do_record(target, cmd_target, args.target_ids_prefix, init_regions,
-            new_attrs, orig_attrs)
+    do_record(target, cmd_target, init_regions, new_attrs, orig_attrs)
 
 if __name__ == '__main__':
     main()
