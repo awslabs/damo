@@ -29,23 +29,25 @@ def do_record(target, is_target_cmd, target_ids_prefix, init_regions, attrs,
     if os.path.isfile(attrs.rfile_path):
         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
 
-    if attrs.apply():
-        print('attributes (%s) failed to be applied' % attrs)
-        cleanup_exit(old_attrs, -1)
-    print('# damon attrs: %s' % attrs)
+    if attrs != None:
+        if attrs.apply():
+            print('attributes (%s) failed to be applied' % attrs)
+            cleanup_exit(old_attrs, -1)
+        print('# damon attrs: %s' % attrs)
     if is_target_cmd:
         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
         target = p.pid
 
-    target_ids_input = '%s %s' % (target_ids_prefix, target)
-    if _damon.set_target(target_ids_input.strip(), init_regions):
-        print('target setting (%s, %s) failed' % (target, init_regions))
-        cleanup_exit(old_attrs, -2)
-    if _damon.turn_damon('on'):
-        print('could not turn on damon' % target)
-        cleanup_exit(old_attrs, -3)
-    while not _damon.is_damon_running():
-        time.sleep(1)
+    if target != 'ongoing':
+        target_ids_input = '%s %s' % (target_ids_prefix, target)
+        if _damon.set_target(target_ids_input.strip(), init_regions):
+            print('target setting (%s, %s) failed' % (target, init_regions))
+            cleanup_exit(old_attrs, -2)
+        if _damon.turn_damon('on'):
+            print('could not turn on damon' % target)
+            cleanup_exit(old_attrs, -3)
+        while not _damon.is_damon_running():
+            time.sleep(1)
 
     if not _damon.feature_supported('record'):
         perf_pipe = subprocess.Popen(
@@ -137,7 +139,11 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    err = _damon.initialize(args)
+    if args.target == 'ongoing':
+        skip_dirs_population = True
+    else:
+        skip_dirs_population = False
+    err = _damon.initialize(args, skip_dirs_population)
     if err != None:
         print(err)
         exit(1)
@@ -177,9 +183,12 @@ def main(args=None):
                 init_regions = _damo_paddr_layout.paddr_region_of(numa_node)
             else:
                 init_regions = [_damo_paddr_layout.default_paddr_region()]
+    elif target == 'ongoing':
+        cmd_target = False
     elif not subprocess.call('which %s &> /dev/null' % target.split()[0],
             shell=True, executable='/bin/bash'):
         cmd_target = True
+        new_attrs = None
     else:
         try:
             pid = int(target)
