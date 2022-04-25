@@ -35,11 +35,11 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs):
         print('# damon attrs: %s' % attrs)
     if is_target_cmd:
         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-        target = p.pid
+        target = '%s' % p.pid
 
     if target != 'ongoing':
         if _damon.set_target(target.strip(), init_regions):
-            print('target setting (%s, %s) failed' % (target, init_regions))
+            print('target setting (%s) failed' % (target, init_regions))
             cleanup_exit(old_attrs, -2)
         if _damon.turn_damon('on'):
             print('could not turn on damon' % target)
