@@ -204,6 +204,14 @@ def attrs_apply(attrs):
 def current_attrs():
     return None
 
+def commit_inputs():
+    try:
+        _write(kdamond_state_file, 'commit')
+        return 0
+    except Exception as e:
+        print(e)
+        return 1
+
 def feature_supported(feature):
     if feature_supports == None:
         update_supported_features()
