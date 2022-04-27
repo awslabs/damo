@@ -28,7 +28,7 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs):
     if os.path.isfile(attrs.rfile_path):
         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
 
-    if attrs != None:
+    if target != 'ongoing':
         if attrs.apply():
             print('attributes (%s) failed to be applied' % attrs)
             cleanup_exit(old_attrs, -1)
@@ -181,7 +181,6 @@ def main(args=None):
                 init_regions = [_damo_paddr_layout.default_paddr_region()]
     elif target == 'ongoing':
         cmd_target = False
-        new_attrs = None
     elif not subprocess.call('which %s &> /dev/null' % target.split()[0],
             shell=True, executable='/bin/bash'):
         cmd_target = True
