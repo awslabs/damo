@@ -42,7 +42,7 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs):
             print('target setting (%s) failed' % (target, init_regions))
             cleanup_exit(old_attrs, -2)
         if _damon.turn_damon('on'):
-            print('could not turn on damon' % target)
+            print('could not turn on damon for target %s' % target)
             cleanup_exit(old_attrs, -3)
         while not _damon.is_damon_running():
             time.sleep(1)
