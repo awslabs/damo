@@ -19,6 +19,7 @@ import _damo_paddr_layout
 perf_pipe = None
 rfile_path = None
 rfile_format = None
+target_is_ongoing = False
 def do_record(target, is_target_cmd, init_regions, attrs, old_attrs):
     global perf_pipe
     global rfile_path
@@ -28,7 +29,7 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs):
     if os.path.isfile(attrs.rfile_path):
         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
 
-    if target != 'ongoing':
+    if not target_is_ongoing:
         if attrs.apply():
             print('attributes (%s) failed to be applied' % attrs)
             cleanup_exit(old_attrs, -1)
@@ -37,7 +38,7 @@ def do_record(target, is_target_cmd, init_regions, attrs, old_attrs):
         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
         target = '%s' % p.pid
 
-    if target != 'ongoing':
+    if not target_is_ongoing:
         if _damon.set_target(target.strip(), init_regions):
             print('target setting (%s) failed' % (target, init_regions))
             cleanup_exit(old_attrs, -2)
@@ -128,6 +129,7 @@ def main(args=None):
     global rfile_format
     global rfile_permission
     global remove_perf_data
+    global target_is_ongoing
 
     if not args:
         parser = argparse.ArgumentParser()
@@ -135,7 +137,8 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    if args.target == 'ongoing':
+    target_is_ongoing = args.target == 'ongoing'
+    if target_is_ongoing:
         skip_dirs_population = True
     else:
         skip_dirs_population = False
@@ -179,7 +182,7 @@ def main(args=None):
                 init_regions = _damo_paddr_layout.paddr_region_of(numa_node)
             else:
                 init_regions = [_damo_paddr_layout.default_paddr_region()]
-    elif target == 'ongoing':
+    elif target_is_ongoing:
         cmd_target = False
     elif not subprocess.call('which %s &> /dev/null' % target.split()[0],
             shell=True, executable='/bin/bash'):
