@@ -43,6 +43,46 @@ def turn_damon(on_off):
 def is_damon_running():
     return _damon_fs.is_damon_running()
 
+class Intervals:
+    sample = None
+    aggr = None
+    ops_update = None
+
+    def __init__(self, sample, aggr, ops_update):
+        self.sample = sample
+        self.aggr = aggr
+        self.ops_update = ops_update
+
+class NrRegions:
+    min_nr_regions = None
+    max_nr_regions = None
+
+    def __init__(self, min_, max_):
+        self.min_nr_regions = min_
+        self.max_nr_regions = max_
+
+class Target:
+    ops = None
+    pid = None
+    init_regions = None
+
+    def __init__(self, ops, pid, init_regions):
+        # TODO: Verify input
+        self.ops = ops
+        # TODO: Support multiple targets
+        self.pid = pid
+        self.init_regions = init_regions
+
+class DamonCtx:
+    intervals = None
+    nr_regions = None
+    target = None
+
+    def __init__(self, intervals, nr_regions, target):
+        self.intervals = intervals
+        self.nr_regions = nr_regions
+        self.target = target
+
 class Attrs:
     sample_interval = None
     aggr_interval = None
