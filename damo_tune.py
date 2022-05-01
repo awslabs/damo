@@ -11,6 +11,8 @@ import _damon
 
 def set_argparser(parser):
     _damon.set_monitoring_argparser(parser)
+    parser.add_argument('--target', type=str, metavar='<target>',
+            help='target pid or paddr')
 
 def main(args=None):
     if not args:
@@ -40,9 +42,9 @@ def main(args=None):
 
     if attrs.apply():
         print('attributes (%s) failed to be applied' % attrs)
-    # TODO: Support regions update
-    # if _damon.set_target(target, init_regions):
-    #     print('target setting (%s, %s) failed' % (target, init_regions))
+    if args.target:
+        if _damon.set_target(args.target, init_regions):
+            print('target setting (%s, %s) failed' % (target, init_regions))
     if _damon.commit_inputs():
         print('could not commit inputs')
 
