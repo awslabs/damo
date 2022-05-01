@@ -81,12 +81,12 @@ def cleanup_exit(orig_attrs, exit_code):
         if remove_perf_data:
             os.remove(perf_data)
 
-    if _damon.is_damon_running():
+    if not target_is_ongoing and _damon.is_damon_running():
         if _damon.turn_damon('off'):
             print('failed to turn damon off!')
         while _damon.is_damon_running():
             time.sleep(1)
-    if orig_attrs:
+    if not target_is_ongoing and orig_attrs:
         if orig_attrs.apply():
             print('original attributes (%s) restoration failed!' % orig_attrs)
 
