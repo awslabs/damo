@@ -61,33 +61,46 @@ class NrRegions:
         self.min_nr_regions = min_
         self.max_nr_regions = max_
 
-class Target:
-    ops = None
-    pid = None
-    init_regions = None
+class Region:
+    # [star, end)
+    start = None
+    end = None
 
-    def __init__(self, ops, pid, init_regions):
-        # TODO: Verify input
-        self.ops = ops
-        # TODO: Support multiple targets
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+class Target:
+    pid = None
+    regions = None
+
+    def __init__(self, pid, regions):
         self.pid = pid
-        self.init_regions = init_regions
+        self.regions = regions
 
 class DamonCtx:
     intervals = None
     nr_regions = None
-    target = None
+    ops = None
+    targets = None
 
-    def __init__(self, intervals, nr_regions, target):
+    def __init__(self, intervals, nr_regions, ops, targets):
         self.intervals = intervals
         self.nr_regions = nr_regions
-        self.target = target
+        self.ops = ops
+        self.targets = targets
 
     def set_intervals(self, sample, aggr, ops_update):
         self.intervals = Intervals(sample, aggr, ops_update)
 
     def set_nr_regions(self, min_, max_):
         self.nr_regions = NrRegions(min_, max_)
+
+    def set_ops(self, ops):
+        self.ops = ops
+
+    def set_targets(targets):
+        self.targets = targets
 
 class Attrs:
     sample_interval = None
