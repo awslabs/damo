@@ -83,6 +83,12 @@ class DamonCtx:
         self.nr_regions = nr_regions
         self.target = target
 
+    def set_intervals(self, sample, aggr, ops_update):
+        self.intervals = Intervals(sample, aggr, ops_update)
+
+    def set_nr_regions(self, min_, max_):
+        self.nr_regions = NrRegions(min_, max_)
+
 class Attrs:
     sample_interval = None
     aggr_interval = None
