@@ -102,6 +102,30 @@ class DamonCtx:
     def set_targets(targets):
         self.targets = targets
 
+class Kdamond:
+    name = None
+    contexts = None
+
+    def __init__(self, name, contexts):
+        self.name = name
+        self.contexts = contexts
+
+    def on(self):
+        _damon_fs.turn_kdamond_on(self)
+
+    def off(self):
+        _damon_fs.turn_kdamond_off(self)
+
+    def commit(self):
+        _damon_fs.commit_kdamond(self)
+
+    # TODO: Implement
+    def update_schemes_stats(self):
+        pass
+
+def apply_kdamonds(kdamonds):
+    _damon_fs.apply_kdamonds(kdamonds)
+
 class Attrs:
     sample_interval = None
     aggr_interval = None
