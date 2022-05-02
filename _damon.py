@@ -126,6 +126,11 @@ class Kdamond:
 def apply_kdamonds(kdamonds):
     _damon_fs.apply_kdamonds(kdamonds)
 
+
+# =============
+# Old interface
+# =============
+
 class Attrs:
     sample_interval = None
     aggr_interval = None
