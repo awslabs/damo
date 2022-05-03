@@ -56,17 +56,20 @@ test_leave_perf_data()
 
 test_record_validate()
 {
-	if [ $# -ne 3 ]
+	if [ $# -ne 4 ]
 	then
-		echo "Usage: $0 <target> <timeout> <damon interface to use>"
+		echo "Usage: $0 <target> <timeout> <region> \\"
+		echo "		<damon interface to use>"
 		exit 1
 	fi
 
 	target=$1
 	timeout=$2
-	damon_interface=$3
+	regions_boundary=$3
+	damon_interface=$4
 
-	testname="record-validate \"$target\" $timeout $damon_interface"
+	testname="record-validate \"$target\" $timeout $regions_boundary"
+	testname+=" $damon_interface"
 
 	if [ "$target" = "paddr" ] && ! sudo "$damo" features \
 		--damon_interface "$damon_interface" supported | \
@@ -76,8 +79,16 @@ test_record_validate()
 		return
 	fi
 
-	sudo timeout "$timeout" "$damo" record "$target" \
-		--damon_interface "$damon_interface" &> /dev/null
+	if [ "$regions_boundary" = "none" ]
+	then
+		sudo timeout "$timeout" "$damo" record "$target" \
+			--damon_interface "$damon_interface" &> /dev/null
+	else
+		sudo timeout "$timeout" "$damo" record "$target" \
+			--regions "$regions_boundary" \
+			--damon_interface "$damon_interface" &> /dev/null
+	fi
+
 	rc=$?
 	if [ $? -ne 0 ] && [ $? -ne 124 ]
 	then
@@ -86,10 +97,19 @@ test_record_validate()
 		exit 1
 	fi
 
-	if ! "$damo" validate
+	if [ "$regions_boundary" = "none" ]
 	then
-		echo "FAIL $testname (record fild is not valid)"
-		exit 1
+		if ! "$damo" validate
+		then
+			echo "FAIL $testname (record fild is not valid)"
+			exit 1
+		fi
+	else
+		if ! "$damo" validate --regions_boundary "$regions_boundary"
+		then
+			echo "FAIL $testname (record fild is not valid)"
+			exit 1
+		fi
 	fi
 
 	if [ -f ./damon.data.perf.data ]
@@ -129,9 +149,11 @@ fi
 
 for damon_interface in $damon_interfaces
 do
-	test_record_validate "sleep 3" 4 "$damon_interface"
-	test_record_validate "paddr" 3 "$damon_interface"
+	test_record_validate "sleep 3" 4 "none" "$damon_interface"
+	test_record_validate "paddr" 3 "none" "$damon_interface"
 done
+test_record_validate "sleep 3" 4 "4096-81920" "sysfs"
+
 test_leave_perf_data
 test_record_permission
 
