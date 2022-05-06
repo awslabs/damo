@@ -152,7 +152,13 @@ do
 	test_record_validate "sleep 3" 4 "none" "$damon_interface"
 	test_record_validate "paddr" 3 "none" "$damon_interface"
 done
-test_record_validate "sleep 3" 4 "4096-81920" "sysfs"
+
+if ! sudo "$damo" features \
+	--damon_interface "$damon_interface" supported | \
+	grep -w fvaddr > /dev/null
+then
+	test_record_validate "sleep 3" 4 "4096-81920" "sysfs"
+fi
 
 test_leave_perf_data
 test_record_permission
