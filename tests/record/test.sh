@@ -153,7 +153,7 @@ do
 	test_record_validate "paddr" 3 "none" "$damon_interface"
 done
 
-if ! sudo "$damo" features \
+if sudo "$damo" features \
 	--damon_interface "$damon_interface" supported | \
 	grep -w fvaddr > /dev/null
 then
