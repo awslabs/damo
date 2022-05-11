@@ -27,11 +27,11 @@ def read_files(root, max_depth, current_depth):
 def write_files(root, contents):
     if isinstance(contents, list):
         for c in contents:
-            write_files(rootdir, c)
+            write_files(root, c)
         return
 
     for filename in contents:
-        filepath = os.path.join(rootdir, filename)
+        filepath = os.path.join(root, filename)
         if os.path.isfile(filepath):
             try:
                 with open(filepath, 'w') as f:
