@@ -49,6 +49,8 @@ def main(args=None):
         print(err)
         exit(1)
 
+    if _damon.is_damon_running():
+        _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_stats'})
     content = _damon.read_damon_fs()
     if args.target == 'all':
         print(json.dumps(content, indent=4, sort_keys=True))
