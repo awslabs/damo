@@ -173,7 +173,7 @@ def update_supported_features():
         return None
     feature_supports = {x: False for x in _damon.features}
 
-    err = kernel_issue()
+    err = set_damon_debugfs_paths()
     if err != None:
         return err
 
@@ -218,8 +218,8 @@ def update_supported_features():
             feature_supports['schemes_stat_qt_exceed'] = True
     return None
 
-def kernel_issue():
-    'Return a problem in kernel for using DAMON debugfs interface'
+def set_damon_debugfs_paths():
+    'Set global variables for DAMON debugfs path.  Return error if failed'
     global debugfs_damon
     global debugfs_version
     global debugfs_attrs
