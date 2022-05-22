@@ -244,8 +244,8 @@ def dirs_populated():
             int(_read(contexts_nr_file)) >= 1 and
             int(_read(targets_nr_file)) >= 1)
 
-def kernel_issue():
-    'Return a problem in kernel for using DAMON sysfs interface'
+def damon_sysfs_missed():
+    'Return none-None if DAMON sysfs interface is not found'
     if not os.path.isdir(kdamonds_dir):
         return 'damon sysfs dir (%s) not found' % kdamonds_dir
     return None
@@ -257,9 +257,9 @@ def update_supported_features():
         return None
     feature_supports = {x: False for x in _damon.features}
 
-    err = kernel_issue()
-    if err != None:
-        return err
+    missed = damon_sysfs_missed()
+    if missed != None:
+        return missed
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
 
