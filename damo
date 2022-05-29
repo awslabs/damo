@@ -8,6 +8,7 @@ os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import damo_adjust
 import damo_features
+import damo_lru_sort
 import damo_monitor
 import damo_reclaim
 import damo_record
@@ -59,6 +60,10 @@ def main():
             help='control DAMON_RECLAIM')
     damo_reclaim.set_argparser(parser_reclaim)
 
+    parser_lru_sort = subparser.add_parser('lru_sort',
+            help='control DAMON_LRU_SORT')
+    damo_lru_sort.set_argparser(parser_lru_sort)
+
     parser_features = subparser.add_parser('features',
             help='list supported DAMON features in the kernel')
     damo_features.set_argparser(parser_features)
@@ -103,6 +108,8 @@ def main():
         damo_adjust.main(args)
     elif args.command == 'reclaim':
         damo_reclaim.main(args)
+    elif args.command == 'lru_sort':
+        damo_lru_sort.main(args)
     elif args.command == 'features':
         damo_features.main(args)
     elif args.command == 'validate':
