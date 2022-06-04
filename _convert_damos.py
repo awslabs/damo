@@ -82,7 +82,7 @@ def text_to_ms(txt):
 
 damos_action_to_int = {'DAMOS_WILLNEED': 0, 'DAMOS_COLD': 1,
         'DAMOS_PAGEOUT': 2, 'DAMOS_HUGEPAGE': 3, 'DAMOS_NOHUGEPAGE': 4,
-        'DAMOS_STAT': 5}
+        'DAMOS_STAT': 5, 'DAMOS_LRU_PRIO': 6, 'DAMOS_LRU_DEPRIO': 7}
 
 def text_to_damos_action(txt):
     return damos_action_to_int['DAMOS_' + txt.upper()]
