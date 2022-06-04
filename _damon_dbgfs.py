@@ -265,6 +265,11 @@ def record_str(attrs):
     return '%s %s ' % (attrs.rbuf_len, attrs.rfile_path)
 
 def attrs_apply(attrs):
+    for scheme in attrs.schemes.split('\n'):
+        action = int(scheme.split()[6])
+        if action > 5:
+            print('dbgfs unsupported DAMOS action')
+            exit(1)
     ret = subprocess.call('echo %s > %s' % (attr_str(attrs), debugfs_attrs),
             shell=True, executable='/bin/bash')
     if ret:
