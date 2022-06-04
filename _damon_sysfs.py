@@ -168,7 +168,6 @@ def attrs_apply(attrs):
                     3: 'hugepage',
                     4: 'nohugepage',
                     5: 'stat',
-                    6: 'hot',
                     }
             _write(os.path.join(scheme_dir(idx), 'action'),
                     dbgfs_action_to_sysfs_action[int(fields[field_idx])])
