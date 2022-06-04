@@ -266,6 +266,8 @@ def record_str(attrs):
 
 def attrs_apply(attrs):
     for scheme in attrs.schemes.split('\n'):
+        if scheme.strip() == '':
+            continue
         action = int(scheme.split()[6])
         if action > 5:
             print('dbgfs unsupported DAMOS action')
