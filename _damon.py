@@ -276,8 +276,17 @@ def set_common_monitoring_argparser(parser):
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
             help='if target is \'paddr\', limit it to the numa node')
 
-def set_monitoring_argparser(parser):
+def set_implicit_target_monitoring_argparser(parser):
     set_common_monitoring_argparser(parser)
     parser.add_argument('target', type=str, metavar='<target>',
             help='the target (command, pid, or special keywords) to monitor')
     set_common_argparser(parser)
+
+def set_explicit_target_monitoring_argparser(parser):
+    set_common_monitoring_argparser(parser)
+    parser.add_argument('ops', choices=['vaddr', 'paddr', 'fvaddr'],
+            default='vaddr',
+            help='monitoring operations set')
+    parser.add_argument('--target_pid', type=int, help='target pid')
+    set_common_argparser(parser)
+

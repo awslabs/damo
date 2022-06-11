@@ -108,7 +108,7 @@ def sighandler(signum, frame):
     cleanup_exit(orig_attrs, signum)
 
 def set_argparser(parser):
-    _damon.set_monitoring_argparser(parser)
+    _damon.set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
             help='length of record result buffer')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,

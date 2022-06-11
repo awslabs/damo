@@ -63,7 +63,7 @@ def sighandler(signum, frame):
     cleanup_exit(orig_attrs, signum)
 
 def set_argparser(parser):
-    _damon.set_monitoring_argparser(parser)
+    _damon.set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
             type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
