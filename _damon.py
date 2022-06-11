@@ -260,7 +260,7 @@ def set_common_argparser(parser):
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')
 
-def set_min_monitoring_argparser(parser):
+def set_common_monitoring_argparser(parser):
     parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
             default=5000, help='sampling interval (us)')
     parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
@@ -277,7 +277,7 @@ def set_min_monitoring_argparser(parser):
             help='if target is \'paddr\', limit it to the numa node')
 
 def set_monitoring_argparser(parser):
-    set_min_monitoring_argparser(parser)
+    set_common_monitoring_argparser(parser)
     parser.add_argument('target', type=str, metavar='<target>',
             help='the target (command, pid, or special keywords) to monitor')
     set_common_argparser(parser)
