@@ -11,7 +11,8 @@ import _damon
 import _damo_paddr_layout
 
 def set_argparser(parser):
-    _damon.set_monitoring_argparser(parser)
+    _damon.set_min_monitoring_argparser(parser)
+    _damon.set_common_argparser(parser)
     parser.add_argument('ops', choices=['vaddr', 'paddr', 'fvaddr'],
             default='vaddr',
             help='monitoring operations set')

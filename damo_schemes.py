@@ -64,8 +64,6 @@ def sighandler(signum, frame):
 
 def set_argparser(parser):
     _damon.set_monitoring_argparser(parser)
-    parser.add_argument('target', type=str, metavar='<target>',
-            help='the target command or the pid to record')
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
             type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
