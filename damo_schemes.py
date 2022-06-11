@@ -67,8 +67,6 @@ def set_argparser(parser):
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
             type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
-    parser.add_argument('--numa_node', metavar='<node id>', type=int,
-            help='if target is \'paddr\', limit it to the numa node')
 
 def main(args=None):
     global orig_attrs

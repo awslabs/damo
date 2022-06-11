@@ -111,8 +111,6 @@ def set_argparser(parser):
     _damon.set_monitoring_argparser(parser)
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
             help='length of record result buffer')
-    parser.add_argument('--numa_node', metavar='<node id>', type=int,
-            help='if target is \'paddr\', limit it to the numa node')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
             default='damon.data', help='output file path')
     parser.add_argument('--output_type', choices=['record', 'perf_script'],
