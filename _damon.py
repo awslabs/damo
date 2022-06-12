@@ -173,6 +173,7 @@ def implicit_target_args_to_explit_target_args(args):
         p = subprocess.Popen(args.target, shell=True, executable='/bin/bash')
         args.ops = 'vaddr'
         args.target_pid = p.pid
+        args.self_started_target = True
         return
     try:
         pid = int(args.target)
