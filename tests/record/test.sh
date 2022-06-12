@@ -101,13 +101,13 @@ test_record_validate()
 	then
 		if ! "$damo" validate
 		then
-			echo "FAIL $testname (record fild is not valid)"
+			echo "FAIL $testname (record file is not valid)"
 			exit 1
 		fi
 	else
 		if ! "$damo" validate --regions_boundary "$regions_boundary"
 		then
-			echo "FAIL $testname (record fild is not valid)"
+			echo "FAIL $testname (record file is not valid)"
 			exit 1
 		fi
 	fi
