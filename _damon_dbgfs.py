@@ -286,3 +286,50 @@ def attrs_apply(attrs):
     return subprocess.call('echo %s > %s' % (
         attrs.schemes.replace('\n', ' '), debugfs_schemes), shell=True,
         executable='/bin/bash')
+
+def attr_str_ctx(damon_ctx):
+    intervals = damon_ctx.intervals
+    nr_regions = damon_ctx.nr_regions
+    return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
+            intervals.update, nr_regions.min_nr_regions,
+            nr_regions.max_nr_regions)
+
+def apply_kdamonds(kdamonds):
+    if len(kdamonds) != 1:
+        print('Currently only one kdamond is supported')
+        exit(1)
+    if len(kdamonds[0].contexts) != 1:
+        print('currently only one damon_ctx is supported')
+        exit(1)
+    if len(kdamonds[0].contexts[0].targets) != 1:
+        print('currently only one target is supported')
+        exit(1)
+    ctx = kdamonds[0].contexts[0]
+    ret = subprocess.call('echo %s > %s' %
+            (attr_str_ctx(ctx), debugfs_attrs), shell=True,
+            executable='/bin/bash')
+    if ret:
+        return ret
+
+    target = ctx.targets[0]
+    if _damon.target_has_pid(ctx.ops):
+        try:
+            with open(debugfs_target_ids, 'w') as f:
+                f.write('%d\n' % target.pid)
+        except Exception as e:
+            return e
+
+        tid = target.pid
+        if feature_supported('init_regions_target_idx'):
+            tid = 0
+    else:
+        try:
+            with open(debugfs_target_ids, 'w') as f:
+                f.write('paddr\n')
+        except Exception as e:
+            return e
+        tid = 42
+
+    string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in target.regions])
+    return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
+            shell=True, executable='/bin/bash')
