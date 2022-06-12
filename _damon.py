@@ -126,6 +126,9 @@ class Kdamond:
 def apply_kdamonds(kdamonds):
     _damon_fs.apply_kdamonds(kdamonds)
 
+def target_has_pid(ops):
+    return ops in ['vaddr', 'fvaddr']
+
 def damon_ctx_from_damon_args(args):
     intervals = Interval(args.sample, args.aggr, args.updr)
     nr_regions = NrRegions(args.minr, args.maxr)
@@ -154,7 +157,7 @@ def damon_ctx_from_damon_args(args):
         else:
             init_regions = [_damo_paddr_layout.default_paddr_region()]
 
-    if ops in ['vaddr', 'fvaddr']:
+    if target_has_pid(ops):
         target = Target(args.target_pid, init_regions)
     else:
         target = Target(None, init_regions)
