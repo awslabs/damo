@@ -236,6 +236,9 @@ def apply_kdamonds(kdamonds):
         for idx, region in enumerate(target.regions):
             _write(region_start_file(idx), '%d' % region.start)
             _write(region_end_file(idx), '%d' % region.end)
+    except Exception as e:
+        print(e)
+        return 1
 
 def commit_inputs():
     try:
