@@ -126,6 +126,25 @@ class Kdamond:
 def apply_kdamonds(kdamonds):
     _damon_fs.apply_kdamonds(kdamonds)
 
+def implicit_target_args_to_explit_target_args(args):
+    if args.target == 'paddr':
+        args.ops = 'paddr'
+        args.target_pid = None
+        return
+    if subprocess.call('which %s &> /dev/null' % args.target.split()[0],
+            shell=True, executable='/bin/bash'):
+        p = subprocess.Popen(args.target, shell=True, executable='/bin/bash')
+        args.ops = 'vaddr'
+        args.target_pid = p.pid
+        return
+    try:
+        pid = int(args.target)
+    except:
+        print('target \'%s\' is not supported' % target)
+        exit(1)
+    args.ops = 'vaddr'
+    args.target_pid = pid
+    return
 
 # =============
 # Old interface
