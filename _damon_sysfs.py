@@ -206,6 +206,37 @@ def attrs_apply(attrs):
 def current_attrs():
     return None
 
+def apply_kdamonds(kdamonds):
+    if len(kdamonds) != 1:
+        print('Currently only one kdamond is supported')
+        exit(1)
+    if len(kdamonds[0].contexts) != 1:
+        print('currently only one damon_ctx is supported')
+        exit(1)
+    if len(kdamonds[0].contexts[0].targets) != 1:
+        print('currently only one target is supported')
+        exit(1)
+    ensure_dirs_populated()
+    ctx = kdamonds[0].contexts[0]
+    try:
+        _write(intervals_sample_us_file, '%d' % ctx.intervals.sample)
+        _write(intervals_aggr_us_file, '%d' % ctx.intervals.aggr)
+        _write(intervals_update_us_file, '%d' % ctx.intervals.update)
+        _write(nr_regions_min_file, '%d' % ctx.nr_regions.min_nr_regions)
+        _write(nr_regions_max_file, '%d' % ctx.nr_regions.max_nr_regions)
+
+        # TODO: Support schemes
+
+        _write(context_operations_file, ctx.ops)
+
+        target = ctx.targets[0]
+        if _damon.target_has_pid(ctx.ops):
+            _write(target_pid_file, '%d' % ctx.target.pid)
+        _write(regions_nr_file, '%d' % len(target.regions))
+        for idx, region in enumerate(target.regions):
+            _write(region_start_file(idx), '%d' % region.start)
+            _write(region_end_file(idx), '%d' % region.end)
+
 def commit_inputs():
     try:
         _write(kdamond_state_file, 'commit')
