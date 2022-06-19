@@ -157,6 +157,7 @@ def damon_ctx_from_damon_args(args):
             init_regions = _damo_paddr_layout.paddr_region_of(args.numa_node)
         else:
             init_regions = [_damo_paddr_layout.default_paddr_region()]
+        init_regions = [Region(r[0], r[1]) for r in init_regions]
 
     if target_has_pid(ops):
         target = Target(args.target_pid, init_regions)
