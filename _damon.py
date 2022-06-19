@@ -163,7 +163,7 @@ def damon_ctx_from_damon_args(args):
         target = Target(None, init_regions)
     return DamonCtx(intervals, nr_regions, ops, [target])
 
-def implicit_target_args_to_explit_target_args(args):
+def implicit_target_args_to_explicit_target_args(args):
     if args.target == 'paddr':
         args.ops = 'paddr'
         args.target_pid = None
