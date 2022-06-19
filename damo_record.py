@@ -20,50 +20,6 @@ perf_pipe = None
 rfile_path = None
 rfile_format = None
 target_is_ongoing = False
-def do_record(target, is_target_cmd, init_regions, attrs, old_attrs):
-    global perf_pipe
-    global rfile_path
-
-    rfile_path = attrs.rfile_path
-
-    if os.path.isfile(attrs.rfile_path):
-        os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
-
-    if not target_is_ongoing:
-        if attrs.apply():
-            print('attributes (%s) failed to be applied' % attrs)
-            cleanup_exit(old_attrs, -1)
-        print('# damon attrs: %s' % attrs)
-    if is_target_cmd:
-        p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-        target = '%s' % p.pid
-
-    if not target_is_ongoing:
-        if _damon.set_target(target.strip(), init_regions):
-            print('target setting (%s) failed' % (target, init_regions))
-            cleanup_exit(old_attrs, -2)
-        if _damon.turn_damon('on'):
-            print('could not turn on damon for target %s' % target)
-            cleanup_exit(old_attrs, -3)
-        while not _damon.is_damon_running():
-            time.sleep(1)
-
-    if not _damon.feature_supported('record'):
-        perf_pipe = subprocess.Popen(
-                'perf record -e damon:damon_aggregated -a -o \'%s\'' %
-                (attrs.rfile_path + '.perf.data'),
-                shell=True, executable='/bin/bash')
-    print('Press Ctrl+C to stop')
-
-    wait_start = datetime.datetime.now()
-    if is_target_cmd:
-        p.wait()
-    while True:
-        if not _damon.is_damon_running():
-            break
-        time.sleep(1)
-
-    cleanup_exit(old_attrs, 0)
 
 remove_perf_data = False
 rfile_permission = None
