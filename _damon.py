@@ -130,7 +130,7 @@ def target_has_pid(ops):
     return ops in ['vaddr', 'fvaddr']
 
 def damon_ctx_from_damon_args(args):
-    intervals = Interval(args.sample, args.aggr, args.updr)
+    intervals = Intervals(args.sample, args.aggr, args.updr)
     nr_regions = NrRegions(args.minr, args.maxr)
     ops = args.ops
 
