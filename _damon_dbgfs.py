@@ -291,7 +291,7 @@ def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
     nr_regions = damon_ctx.nr_regions
     return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
-            intervals.update, nr_regions.min_nr_regions,
+            intervals.ops_update, nr_regions.min_nr_regions,
             nr_regions.max_nr_regions)
 
 def apply_kdamonds(kdamonds):

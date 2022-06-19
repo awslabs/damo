@@ -221,7 +221,7 @@ def apply_kdamonds(kdamonds):
     try:
         _write(intervals_sample_us_file, '%d' % ctx.intervals.sample)
         _write(intervals_aggr_us_file, '%d' % ctx.intervals.aggr)
-        _write(intervals_update_us_file, '%d' % ctx.intervals.update)
+        _write(intervals_update_us_file, '%d' % ctx.intervals.ops_update)
         _write(nr_regions_min_file, '%d' % ctx.nr_regions.min_nr_regions)
         _write(nr_regions_max_file, '%d' % ctx.nr_regions.max_nr_regions)
 
@@ -231,7 +231,7 @@ def apply_kdamonds(kdamonds):
 
         target = ctx.targets[0]
         if _damon.target_has_pid(ctx.ops):
-            _write(target_pid_file, '%d' % ctx.target.pid)
+            _write(target_pid_file, '%d' % ctx.targets[0].pid)
         _write(regions_nr_file, '%d' % len(target.regions))
         for idx, region in enumerate(target.regions):
             _write(region_start_file(idx), '%d' % region.start)
