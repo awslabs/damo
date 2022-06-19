@@ -39,7 +39,7 @@ def main(args=None):
                 init_regions = _damo_paddr_layout.paddr_region_of(numa_node)
             else:
                 init_regions = [_damo_paddr_layout.default_paddr_region()]
-    elif args.ops in ['vaddr', 'fvaddr']:
+    elif target_has_pid(args.ops):
         try:
             pid = int(args.target_pid)
         except:
