@@ -169,7 +169,7 @@ def implicit_target_args_to_explicit_target_args(args):
         args.ops = 'paddr'
         args.target_pid = None
         return
-    if subprocess.call('which %s &> /dev/null' % args.target.split()[0],
+    if not subprocess.call('which %s &> /dev/null' % args.target.split()[0],
             shell=True, executable='/bin/bash'):
         p = subprocess.Popen(args.target, shell=True, executable='/bin/bash')
         args.ops = 'vaddr'
