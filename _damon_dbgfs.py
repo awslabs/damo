@@ -320,8 +320,6 @@ def apply_kdamonds(kdamonds):
             return e
 
         tid = target.pid
-        if feature_supported('init_regions_target_idx'):
-            tid = 0
     else:
         try:
             with open(debugfs_target_ids, 'w') as f:
@@ -329,6 +327,8 @@ def apply_kdamonds(kdamonds):
         except Exception as e:
             return e
         tid = 42
+    if feature_supported('init_regions_target_idx'):
+        tid = 0
 
     string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in target.regions])
     return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
