@@ -8,6 +8,7 @@ Contains core functions for DAMON control.
 import os
 import subprocess
 
+import _damo_paddr_layout
 import _damon_dbgfs
 import _damon_sysfs
 import damon_fs
