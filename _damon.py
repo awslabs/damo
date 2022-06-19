@@ -177,6 +177,8 @@ def implicit_target_args_to_explicit_target_args(args):
         args.ops = 'vaddr'
         args.target_pid = p.pid
         args.self_started_target = True
+        if args.regions and feature_supported('fvaddr'):
+            args.ops = 'fvaddr'
         return
     try:
         pid = int(args.target)
@@ -185,6 +187,9 @@ def implicit_target_args_to_explicit_target_args(args):
         exit(1)
     args.ops = 'vaddr'
     args.target_pid = pid
+    if args.regions and feature_supported('fvaddr'):
+        args.ops = 'fvaddr'
+
     return
 
 # =============
