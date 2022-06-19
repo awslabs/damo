@@ -138,7 +138,7 @@ def damon_ctx_from_damon_args(args):
     init_regions = []
     if args.regions:
         for region in args.regions.split():
-            addrs = args.split('-')
+            addrs = region.split('-')
             try:
                 if len(addrs) != 2:
                     raise Exception ('two addresses not given')
