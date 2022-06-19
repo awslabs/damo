@@ -123,8 +123,10 @@ def set_argparser(parser):
 def main(args=None):
     global orig_attrs
     global rfile_format
+    global rfile_path
     global rfile_permission
     global remove_perf_data
+    global perf_pipe
     global target_is_ongoing
 
     if not args:
@@ -166,31 +168,40 @@ def main(args=None):
     signal.signal(signal.SIGTERM, sighandler)
     orig_attrs = _damon.current_attrs()
 
-    new_attrs = _damon.cmd_args_to_attrs(args)
-    init_regions = _damon.cmd_args_to_init_regions(args)
-    numa_node = args.numa_node
-    target = args.target
+    if not target_is_ongoing:
+        _damon.implicit_target_args_to_explicit_target_args(args)
+        ctx = _damon.damon_ctx_from_damon_args(args)
+        kdamonds = [_damon.Kdamond('0', [ctx])]
+        _damon.apply_kdamonds(kdamonds)
 
-    if target == 'paddr':   # physical memory address space
-        cmd_target = False
-        if not init_regions:
-            if numa_node != None:
-                init_regions = _damo_paddr_layout.paddr_region_of(numa_node)
-            else:
-                init_regions = [_damo_paddr_layout.default_paddr_region()]
-    elif target_is_ongoing:
-        cmd_target = False
-    elif not subprocess.call('which %s &> /dev/null' % target.split()[0],
-            shell=True, executable='/bin/bash'):
-        cmd_target = True
-    else:
-        try:
-            pid = int(target)
-        except:
-            print('target \'%s\' is not supported' % target)
-            exit(1)
-        cmd_target = False
-    do_record(target, cmd_target, init_regions, new_attrs, orig_attrs)
+    rfile_path = args.out
+    if os.path.isfile(rfile_path):
+        os.rename(rfile_path, rfile_path + '.old')
+
+    if not target_is_ongoing:
+        if _damon.turn_damon('on'):
+            print('could not turn DAMON on')
+            cleanup_exit(orig_attrs, -2)
+
+        while not _damon.is_damon_running():
+            time.sleep(1)
+
+    if not _damon.feature_supported('record'):
+        perf_pipe = subprocess.Popen(
+                'perf record -e damon:damon_aggregated -a -o \'%s\'' %
+                (rfile_path + '.perf.data'),
+                shell=True, executable='/bin/bash')
+    print('Press Ctrl+C to stop')
+
+    wait_start = datetime.datetime.now()
+    if args.self_started_target == True:
+        os.waitpid(ctx.targets[0].pid, 0)
+    while True:
+        if not _damon.is_damon_running():
+            break
+        time.sleep(1)
+
+    cleanup_exit(orig_attrs, 0)
 
 if __name__ == '__main__':
     main()
