@@ -179,7 +179,7 @@ def implicit_target_args_to_explicit_target_args(args):
     try:
         pid = int(args.target)
     except:
-        print('target \'%s\' is not supported' % target)
+        print('target \'%s\' is not supported' % args.target)
         exit(1)
     args.ops = 'vaddr'
     args.target_pid = pid
