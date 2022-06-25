@@ -84,9 +84,6 @@ damos_action_to_int = {'DAMOS_WILLNEED': 0, 'DAMOS_COLD': 1,
         'DAMOS_PAGEOUT': 2, 'DAMOS_HUGEPAGE': 3, 'DAMOS_NOHUGEPAGE': 4,
         'DAMOS_STAT': 5, 'DAMOS_LRU_PRIO': 6, 'DAMOS_LRU_DEPRIO': 7}
 
-def text_to_damos_action(txt):
-    return damos_action_to_int['DAMOS_' + txt.upper()]
-
 def text_to_nr_accesses(txt, max_nr_accesses):
     if txt == 'min':
         return 0
@@ -121,7 +118,8 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
         max_nr_accesses = text_to_nr_accesses(fields[3], limit_nr_accesses)
         min_age = text_to_aggr_intervals(fields[4], aggr_interval)
         max_age = text_to_aggr_intervals(fields[5], aggr_interval)
-        action = text_to_damos_action(fields[6])
+        action_txt = 'DAMOS_' + fields[6].upper()
+        action = damos_action_to_int[action_txt]
         quota_ms = 0
         quota_sz = 0
         window_ms = ulong_max
