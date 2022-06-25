@@ -214,12 +214,6 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         print('Unsupported scheme version: %d' % scheme_version)
         exit(1)
 
-# scheme_version
-# 0: <sz range> <nr_accesses range> <age range> <action>
-# 1: v1 input + '<limit_sz> <limit_ms>'
-# 2: v2 input + '<weight_sz> <weight_nr_accesses> <weight_age>'
-# 3: v3 input + '<watermark metric> <check interval> <high> <mid> <low>'
-# 4: v1 input + '<quota_ms> <quota_sz> <window_ms>' + weights + watermarks
 def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
     damos = damo_scheme_to_damos(line, sample_interval, aggr_interval,
             scheme_version)
