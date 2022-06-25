@@ -74,9 +74,6 @@ def text_to_us(txt):
         number = float(txt[:-1])
     return number * unit_to_usecs[unit]
 
-def text_to_aggr_intervals(txt, aggr_interval):
-    return int(text_to_us(txt) / aggr_interval)
-
 def text_to_ms(txt):
     return int(text_to_us(txt) / 1000)
 
@@ -116,8 +113,10 @@ def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
         max_sz = text_to_bytes(fields[1])
         min_nr_accesses = text_to_nr_accesses(fields[2], limit_nr_accesses)
         max_nr_accesses = text_to_nr_accesses(fields[3], limit_nr_accesses)
-        min_age = text_to_aggr_intervals(fields[4], aggr_interval)
-        max_age = text_to_aggr_intervals(fields[5], aggr_interval)
+        min_age_us = text_to_us(fields[4])
+        min_age_us = text_to_us(fields[5])
+        min_age = min_age_us / aggr_interval
+        max_age = max_age_us / aggr_interval
         action_txt = 'DAMOS_' + fields[6].upper()
         action = damos_action_to_int[action_txt]
         quota_ms = 0
