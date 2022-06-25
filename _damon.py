@@ -79,17 +79,79 @@ class Target:
         self.pid = pid
         self.regions = regions
 
+class DamosAccessPattern:
+    min_sz_bytes = None
+    max_sz_bytes = None
+    min_nr_accesses_permil = None
+    max_nr_accesses_permil = None
+    min_age_us = None
+    max_age_us = None
+
+    def __init__(self, min_sz_bytes, max_sz_bytes, min_nr_accesses_permil,
+            max_nr_accesses_permil, min_age_us, max_age_us):
+        self.min_sz_bytes = min_sz_bytes
+        self.max_sz_bytes = max_sz_bytes
+        self.min_nr_accesses_permil = min_nr_accesses_permil
+        self.max_nr_accesses_permil = max_nr_accesses_permil
+        self.min_age_us = min_age_us
+        self.max_age_us = max_age_us
+
+class DamosQuota:
+    time_ms = None
+    sz_bytes = None
+    reset_interval_ms = None
+    weight_sz_permil = None
+    weight_nr_accesses_permil = None
+    weight_age_permil = None
+
+    def __init__(self, time_ms, sz_bytes, reset_interval_ms, weight_sz_permil,
+            weight_nr_accesses_permil, weight_age_permil):
+        self.time_ms = time_ms
+        self.sz_bytes = sz_bytes
+        self.reset_interval_ms = reset_interval_ms
+        self.weight_sz_permil = weight_sz_permil
+        self.weight_nr_accesses_permil = weight_nr_accesses_permil
+        self.weight_age_permil = self.weight_age_permil
+
+class DamosWatermarks:
+    metric = None
+    interval_us = None
+    high = None
+    mid = None
+    low = None
+
+    def __init__(self, metric, interval_us, high, mid, low):
+        self.metric = metric
+        self.interval_us = interval_us
+        self.high = high
+        self.mid = mid
+        self.low = low
+
+class Damos:
+    access_pattern = None
+    action = None
+    quotas = None
+    watermarks = None
+
+    def __init__(self, access_pattern, action, quotas, watermarks):
+        self.access_pattern = access_pattern
+        self.action = action
+        self.quotas = quotas
+        self.watermarks = watermarks
+
 class DamonCtx:
     intervals = None
     nr_regions = None
     ops = None
     targets = None
+    schemes = None
 
-    def __init__(self, intervals, nr_regions, ops, targets):
+    def __init__(self, intervals, nr_regions, ops, targets, schemes):
         self.intervals = intervals
         self.nr_regions = nr_regions
         self.ops = ops
         self.targets = targets
+        self.schemes = schemes
 
     def set_intervals(self, sample, aggr, ops_update):
         self.intervals = Intervals(sample, aggr, ops_update)
@@ -163,7 +225,7 @@ def damon_ctx_from_damon_args(args):
         target = Target(args.target_pid, init_regions)
     else:
         target = Target(None, init_regions)
-    return DamonCtx(intervals, nr_regions, ops, [target])
+    return DamonCtx(intervals, nr_regions, ops, [target], [])
 
 def implicit_target_args_to_explicit_target_args(args):
     args.self_started_target = False
