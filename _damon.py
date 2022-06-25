@@ -111,21 +111,21 @@ class DamosQuota:
         self.reset_interval_ms = reset_interval_ms
         self.weight_sz_permil = weight_sz_permil
         self.weight_nr_accesses_permil = weight_nr_accesses_permil
-        self.weight_age_permil = self.weight_age_permil
+        self.weight_age_permil = weight_age_permil
 
 class DamosWatermarks:
     metric = None
     interval_us = None
-    high = None
-    mid = None
-    low = None
+    high_permil = None
+    mid_permil = None
+    low_permil = None
 
     def __init__(self, metric, interval_us, high, mid, low):
         self.metric = metric
         self.interval_us = interval_us
-        self.high = high
-        self.mid = mid
-        self.low = low
+        self.high_permil = high
+        self.mid_permil = mid
+        self.low_permil = low
 
 class Damos:
     access_pattern = None
