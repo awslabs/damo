@@ -103,14 +103,13 @@ damos_wmark_metric_to_int = {'NONE': 0, 'FREE_MEM_RATE': 1}
 def text_to_damos_wmark_metric(txt):
     return damos_wmark_metric_to_int[txt.upper()]
 
-def damo_scheme_to_damos(line, sample_interval, aggr_interval, scheme_version):
+def damo_scheme_to_damos(line, scheme_version):
     fields = line.split()
     expected_lengths = [7, 9, 12, 17, 18]
     if not len(fields) in expected_lengths:
         print('expected %s fields, but \'%s\'' % (expected_lengths, line))
         exit(1)
 
-    limit_nr_accesses = aggr_interval / sample_interval
     try:
         min_sz = text_to_bytes(fields[0])
         max_sz = text_to_bytes(fields[1])
@@ -118,8 +117,6 @@ def damo_scheme_to_damos(line, sample_interval, aggr_interval, scheme_version):
         max_nr_accesses = text_percent_to_nr_accesses_permil(fields[3])
         min_age_us = text_to_us(fields[4])
         max_age_us = text_to_us(fields[5])
-        min_age = min_age_us / aggr_interval
-        max_age = max_age_us / aggr_interval
         action_txt = 'DAMOS_' + fields[6].upper()
         action = damos_action_to_int[action_txt]
         quota_ms = 0
@@ -215,8 +212,7 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         exit(1)
 
 def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
-    damos = damo_scheme_to_damos(line, sample_interval, aggr_interval,
-            scheme_version)
+    damos = damo_scheme_to_damos(line, scheme_version)
     return damos_to_debugfs_input(damos, sample_interval, aggr_interval,
             scheme_version)
 
