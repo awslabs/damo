@@ -211,19 +211,24 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         print('Unsupported scheme version: %d' % scheme_version)
         exit(1)
 
-def convert(schemes, sample_interval, aggr_interval, scheme_version):
-    if os.path.isfile(schemes):
-        with open(schemes, 'r') as f:
-            schemes = f.read()
-
-    raw_lines = schemes.split('\n')
-    converted_lines = []
+def damo_schemes_split_remove_comments(schemes):
+    raw_lines = schmes.split('\n')
+    clean_lines = []
     for line in raw_lines:
         if line.startswith('#'):
             continue
         line = line.strip()
         if line == '':
             continue
+        clean_lines.append(line)
+    return clean_lines
+
+def convert(schemes, sample_interval, aggr_interval, scheme_version):
+    if os.path.isfile(schemes):
+        with open(schemes, 'r') as f:
+            schemes = f.read()
+
+    for line in damo_schemes_split_remove_comments(schemes):
         damos = damo_scheme_to_damos(line, scheme_version)
         converted_lines.append(damos_to_debugfs_input(damos, sample_interval,
             aggr_interval, scheme_version))
