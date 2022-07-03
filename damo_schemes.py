@@ -16,9 +16,6 @@ import _damon
 import _damo_paddr_layout
 
 def run_damon(target, is_target_cmd, init_regions, attrs, old_attrs):
-    if os.path.isfile(attrs.rfile_path):
-        os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
-
     if attrs.apply():
         print('attributes (%s) failed to be applied' % attrs)
         cleanup_exit(old_attrs, -1)
