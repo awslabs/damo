@@ -192,6 +192,9 @@ def apply_kdamonds(kdamonds):
 def target_has_pid(ops):
     return ops in ['vaddr', 'fvaddr']
 
+def damos_from_args(args):
+    return []
+
 def damon_ctx_from_damon_args(args):
     intervals = Intervals(args.sample, args.aggr, args.updr)
     nr_regions = NrRegions(args.minr, args.maxr)
@@ -226,7 +229,9 @@ def damon_ctx_from_damon_args(args):
     else:
         target = Target(None, init_regions)
 
-    return DamonCtx(intervals, nr_regions, ops, [target], [])
+    schemes = damos_from_args(args)
+
+    return DamonCtx(intervals, nr_regions, ops, [target], schemes)
 
 def implicit_target_args_to_explicit_target_args(args):
     args.self_started_target = False
