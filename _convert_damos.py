@@ -118,7 +118,6 @@ def damo_scheme_to_damos(line, scheme_version):
         min_age_us = text_to_us(fields[4])
         max_age_us = text_to_us(fields[5])
         action_txt = 'DAMOS_' + fields[6].upper()
-        action = damos_action_to_int[action_txt]
         quota_ms = 0
         quota_sz = 0
         window_ms = ulong_max
