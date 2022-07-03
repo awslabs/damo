@@ -8,6 +8,7 @@ Contains core functions for DAMON control.
 import os
 import subprocess
 
+import _convert_damos
 import _damo_paddr_layout
 import _damon_dbgfs
 import _damon_sysfs
@@ -193,7 +194,18 @@ def target_has_pid(ops):
     return ops in ['vaddr', 'fvaddr']
 
 def damos_from_args(args):
-    return []
+    schemes = []
+    scheme_version = 0
+    if _damon.feature_supported('schemes_speed_limit'):
+        scheme_version = 1
+    if _damon.feature_supported('schemes_prioritization'):
+        scheme_version = 2
+    if _damon.feature_supported('schemes_wmarks'):
+        scheme_version = 3
+    if _damon.feature_supported('schemes_quotas'):
+        scheme_version = 4
+    return _convert_damos.convert(args.schemes, 'damos', args.sample,
+            args.aggr, scheme_version)
 
 def damon_ctx_from_damon_args(args):
     intervals = Intervals(args.sample, args.aggr, args.updr)
