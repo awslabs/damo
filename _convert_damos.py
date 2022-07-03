@@ -212,7 +212,7 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         exit(1)
 
 def damo_schemes_split_remove_comments(schemes):
-    raw_lines = schmes.split('\n')
+    raw_lines = schemes.split('\n')
     clean_lines = []
     for line in raw_lines:
         if line.startswith('#'):
