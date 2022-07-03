@@ -211,11 +211,6 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         print('Unsupported scheme version: %d' % scheme_version)
         exit(1)
 
-def debugfs_scheme(line, sample_interval, aggr_interval, scheme_version):
-    damos = damo_scheme_to_damos(line, scheme_version)
-    return damos_to_debugfs_input(damos, sample_interval, aggr_interval,
-            scheme_version)
-
 def convert(schemes, sample_interval, aggr_interval, scheme_version):
     if os.path.isfile(schemes):
         with open(schemes, 'r') as f:
@@ -229,7 +224,8 @@ def convert(schemes, sample_interval, aggr_interval, scheme_version):
         line = line.strip()
         if line == '':
             continue
-        converted_lines.append(debugfs_scheme(line, sample_interval,
+        damos = damo_scheme_to_damos(line, scheme_version)
+        converted_lines.append(damos_to_debugfs_input(damos, sample_interval,
             aggr_interval, scheme_version))
     return '\n'.join(converted_lines)
 
