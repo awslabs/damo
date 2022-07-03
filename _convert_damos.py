@@ -79,9 +79,8 @@ def text_to_us(txt):
 def text_to_ms(txt):
     return int(text_to_us(txt) / 1000)
 
-damos_action_to_int = {'DAMOS_WILLNEED': 0, 'DAMOS_COLD': 1,
-        'DAMOS_PAGEOUT': 2, 'DAMOS_HUGEPAGE': 3, 'DAMOS_NOHUGEPAGE': 4,
-        'DAMOS_STAT': 5, 'DAMOS_LRU_PRIO': 6, 'DAMOS_LRU_DEPRIO': 7}
+damos_action_to_int = {'willneed': 0, 'cold': 1, 'pageout': 2, 'hugepage': 3,
+        'nohugepage': 4, 'stat': 5, 'lru_prio': 6, 'lru_deprio': 7}
 
 def text_to_nr_accesses(txt, max_nr_accesses):
     if txt == 'min':
@@ -117,7 +116,7 @@ def damo_scheme_to_damos(line, scheme_version):
         max_nr_accesses = text_percent_to_nr_accesses_permil(fields[3])
         min_age_us = text_to_us(fields[4])
         max_age_us = text_to_us(fields[5])
-        action_txt = 'DAMOS_' + fields[6].upper()
+        action_txt = fields[6].lower()
         quota_ms = 0
         quota_sz = 0
         window_ms = ulong_max
