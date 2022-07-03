@@ -223,16 +223,25 @@ def damo_schemes_split_remove_comments(schemes):
         clean_lines.append(line)
     return clean_lines
 
-def convert(schemes, sample_interval, aggr_interval, scheme_version):
+def convert(schemes, target, sample_interval, aggr_interval, scheme_version):
     if os.path.isfile(schemes):
         with open(schemes, 'r') as f:
             schemes = f.read()
 
+    damos_list = []
+    debugfs_schemes_input_lines = []
     for line in damo_schemes_split_remove_comments(schemes):
         damos = damo_scheme_to_damos(line, scheme_version)
-        converted_lines.append(damos_to_debugfs_input(damos, sample_interval,
-            aggr_interval, scheme_version))
-    return '\n'.join(converted_lines)
+        damos_list.append(damos)
+        debugfs_schemes_input_lines.append(damos_to_debugfs_input(damos,
+            sample_interval, aggr_interval, scheme_version))
+    if target == 'debugfs schemes input':
+        return '\n'.join(debugfs_schemes_input_lines)
+    elif target == 'damos':
+        return damos_list
+    else:
+        print('_convert_damos.convert() received unsupported target \'%s\'',
+                target)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -250,7 +259,8 @@ def main():
     aggr_interval = args.aggr
     scheme_ver = args.scheme_version
 
-    print(convert(args.input, sample_interval, aggr_interval, scheme_ver))
+    print(convert(args.input, 'debugfs schemes input', sample_interval,
+        aggr_interval, scheme_ver))
 
 if __name__ == '__main__':
     main()

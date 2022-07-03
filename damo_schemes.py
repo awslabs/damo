@@ -96,8 +96,8 @@ def main(args=None):
 
     args.rbuf = 0
     args.out = 'null'
-    args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr,
-            scheme_version)
+    args.schemes = _convert_damos.convert(args.schemes,
+            'debugfs schemes input', args.sample, args.aggr, scheme_version)
     new_attrs = _damon.cmd_args_to_attrs(args)
     init_regions = _damon.cmd_args_to_init_regions(args)
     numa_node = args.numa_node
