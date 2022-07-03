@@ -123,6 +123,7 @@ def damo_scheme_to_damos(line, scheme_version):
         weight_sz = 0
         weight_nr_accesses = 0
         weight_age = 0
+        wmarks_txt = 'none'
         wmarks_metric = text_to_damos_wmark_metric('none')
         wmarks_interval = 0
         wmarks_high = 0
@@ -137,6 +138,7 @@ def damo_scheme_to_damos(line, scheme_version):
                 weight_nr_accesses = int(fields[10])
                 weight_age = int(fields[11])
             if len(fields) == 17:
+                wmarks_txt = fields[12].lower()
                 wmarks_metric = text_to_damos_wmark_metric(fields[12])
                 wmarks_interval = text_to_us(fields[13])
                 wmarks_high = int(fields[14])
@@ -149,6 +151,7 @@ def damo_scheme_to_damos(line, scheme_version):
             weight_sz = int(fields[10])
             weight_nr_accesses = int(fields[11])
             weight_age = int(fields[12])
+            wmarks_txt = fields[13].lower()
             wmarks_metric = text_to_damos_wmark_metric(fields[13])
             wmarks_interval = text_to_us(fields[14])
             wmarks_high = int(fields[15])
@@ -164,7 +167,7 @@ def damo_scheme_to_damos(line, scheme_version):
         action_txt,
         _damon.DamosQuota(quota_ms, quota_sz, window_ms, weight_sz,
             weight_nr_accesses, weight_age),
-        _damon.DamosWatermarks(wmarks_metric, wmarks_interval, wmarks_high,
+        _damon.DamosWatermarks(wmarks_txt, wmarks_interval, wmarks_high,
             wmarks_mid, wmarks_low))
 
 def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
@@ -187,13 +190,14 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
             quotas.weight_sz_permil, quotas.weight_nr_accesses_permil,
             quotas.weight_age_permil)
     v3_scheme = '%s\t%d\t%d\t%d\t%d\t%d' % (v2_scheme,
-            watermarks.metric, watermarks.interval_us, watermarks.high_permil,
+            text_to_damos_wmark_metric(watermarks.metric),
+            watermarks.interval_us, watermarks.high_permil,
             watermarks.mid_permil, watermarks.low_permil)
     v4_scheme = '%s\t' % v0_scheme + '\t'.join('%d' % x for x in [quotas.time_ms,
         quotas.sz_bytes, quotas.reset_interval_ms, quotas.weight_sz_permil,
         quotas.weight_nr_accesses_permil, quotas.weight_age_permil,
-        watermarks.metric, watermarks.interval_us, watermarks.high_permil,
-        watermarks.mid_permil, watermarks.low_permil])
+        text_to_damos_wmark_metric(watermarks.metric), watermarks.interval_us,
+        watermarks.high_permil, watermarks.mid_permil, watermarks.low_permil])
 
     if scheme_version == 0:
         return v0_scheme
