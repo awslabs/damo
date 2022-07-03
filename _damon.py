@@ -225,6 +225,7 @@ def damon_ctx_from_damon_args(args):
         target = Target(args.target_pid, init_regions)
     else:
         target = Target(None, init_regions)
+
     return DamonCtx(intervals, nr_regions, ops, [target], [])
 
 def implicit_target_args_to_explicit_target_args(args):
@@ -417,3 +418,8 @@ def set_explicit_target_monitoring_argparser(parser):
     parser.add_argument('--target_pid', type=int, help='target pid')
     set_common_argparser(parser)
 
+def set_implicit_target_schemes_argparser(parser):
+    set_implicit_target_monitoring_argparser(parser)
+    parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
+            type=str, default='damon.schemes',
+            help='data access monitoring-based operation schemes')
