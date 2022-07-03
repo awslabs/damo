@@ -97,10 +97,10 @@ def text_percent_to_nr_accesses_permil(txt):
         return 1000
     return float(txt) * 10
 
-damos_wmark_metric_to_int = {'NONE': 0, 'FREE_MEM_RATE': 1}
+damos_wmark_metric_to_int = {'none': 0, 'free_mem_rate': 1}
 
 def text_to_damos_wmark_metric(txt):
-    return damos_wmark_metric_to_int[txt.upper()]
+    return damos_wmark_metric_to_int[txt.lower()]
 
 def damo_scheme_to_damos(line, scheme_version):
     fields = line.split()
