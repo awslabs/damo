@@ -195,14 +195,17 @@ def target_has_pid(ops):
 
 def damos_from_args(args):
     schemes = []
+    if not 'schemes' in args:
+        return schemes
+
     scheme_version = 0
-    if _damon.feature_supported('schemes_speed_limit'):
+    if feature_supported('schemes_speed_limit'):
         scheme_version = 1
-    if _damon.feature_supported('schemes_prioritization'):
+    if feature_supported('schemes_prioritization'):
         scheme_version = 2
-    if _damon.feature_supported('schemes_wmarks'):
+    if feature_supported('schemes_wmarks'):
         scheme_version = 3
-    if _damon.feature_supported('schemes_quotas'):
+    if feature_supported('schemes_quotas'):
         scheme_version = 4
     return _convert_damos.convert(args.schemes, 'damos', args.sample,
             args.aggr, scheme_version)
