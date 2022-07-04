@@ -88,33 +88,27 @@ def main(args=None):
     signal.signal(signal.SIGTERM, sighandler)
     orig_attrs = _damon.current_attrs()
 
-    args.rbuf = 0
-    args.out = 'null'
-    args.schemes = _convert_damos.convert(args.schemes,
-            'debugfs schemes input', args.sample, args.aggr, scheme_version)
-    new_attrs = _damon.cmd_args_to_attrs(args)
-    init_regions = _damon.cmd_args_to_init_regions(args)
-    numa_node = args.numa_node
-    target = args.target
+    _damon.implicit_target_args_to_explicit_target_args(args)
+    ctx = _damon.damon_ctx_from_damon_args(args)
+    kdamonds = [_damon.Kdamond('0', [ctx])]
+    _damon.apply_kdamonds(kdamonds)
+    if _damon.turn_damon('on'):
+        print('could not turn DAMON on')
+        cleanup_exit(orig_attrs, -3)
 
-    target_fields = target.split()
-    if target == 'paddr':   # physical memory address space
-        if not init_regions:
-            if numa_node:
-                init_regions = _damo_paddr_layout.paddr_region_of(numa_node)
-            else:
-                init_regions = [_damo_paddr_layout.default_paddr_region()]
-        run_damon(target, False, init_regions, new_attrs, orig_attrs)
-    elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
-            shell=True, executable='/bin/bash'):
-        run_damon(target, True, init_regions, new_attrs, orig_attrs)
-    else:
-        try:
-            pid = int(target)
-        except:
-            print('target \'%s\' is neither a command, nor a pid' % target)
-            exit(1)
-        run_damon(target, False, init_regions, new_attrs, orig_attrs)
+    while not _damon.is_damon_running():
+        time.sleep(1)
+
+    print('Press Ctrl+C to stop')
+    if args.self_started_target == True:
+        os.waitpid(ctx.targets[0].pid, 0)
+    while True:
+        # damon will turn it off by itself if the target tasks are terminated.
+        if not _damon.is_damon_running():
+            break
+        time.sleep(1)
+
+    cleanup_exit(orig_attrs, 0)
 
 if __name__ == '__main__':
     main()
