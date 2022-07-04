@@ -140,12 +140,22 @@ class Damos:
         self.quotas = quotas
         self.watermarks = watermarks
 
+class DamonRecord:
+    rfile_buf = None
+    rfile_path = None
+
+    def __init__(self, rfile_buf, rfile_path):
+        self.rfile_buf = rfile_buf
+        self.rfile_path = rfile_path
+
 class DamonCtx:
     intervals = None
     nr_regions = None
     ops = None
     targets = None
     schemes = None
+    # For old downstream kernels that supports record feature
+    record = None
 
     def __init__(self, intervals, nr_regions, ops, targets, schemes):
         self.intervals = intervals
@@ -165,6 +175,12 @@ class DamonCtx:
 
     def set_targets(targets):
         self.targets = targets
+
+    def set_record(rfile_buf, rfile_path):
+        if feature_supported('record'):
+            self.record = DamonRecord(rfile_buf, rfile_path)
+        else:
+            print('DamonCtx.set_record() is called but record unsupported')
 
 class Kdamond:
     name = None
