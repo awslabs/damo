@@ -7,6 +7,7 @@ Contains core functions for DAMON sysfs control.
 
 import os
 import time
+import traceback
 
 import _damon
 
@@ -287,7 +288,8 @@ def apply_kdamonds(kdamonds):
             _write(region_start_file(idx), '%d' % region.start)
             _write(region_end_file(idx), '%d' % region.end)
     except Exception as e:
-        print(e)
+        print('kdamond applying failed: %s' % e)
+        traceback.print_exc()
         return 1
 
 def commit_inputs():
