@@ -127,6 +127,8 @@ def main(args=None):
     if not target_is_ongoing:
         _damon.implicit_target_args_to_explicit_target_args(args)
         ctx = _damon.damon_ctx_from_damon_args(args)
+        if _damon.feature_supported('record'):
+            ctx.set_record(args.rbuf, args.out)
         kdamonds = [_damon.Kdamond('0', [ctx])]
         _damon.apply_kdamonds(kdamonds)
 
