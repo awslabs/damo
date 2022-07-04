@@ -15,35 +15,6 @@ import _convert_damos
 import _damon
 import _damo_paddr_layout
 
-def run_damon(target, is_target_cmd, init_regions, attrs, old_attrs):
-    if attrs.apply():
-        print('attributes (%s) failed to be applied' % attrs)
-        cleanup_exit(old_attrs, -1)
-    print('# damon attrs: %s' % attrs)
-    for line in attrs.schemes.split('\n'):
-        print('# scheme: %s' % line)
-    if is_target_cmd:
-        p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-        target = p.pid
-    if _damon.set_target(target, init_regions):
-        print('target setting (%s, %s) failed' % (target, init_regions))
-        cleanup_exit(old_attrs, -2)
-    if _damon.turn_damon('on'):
-        print('could not turn on damon' % target)
-        cleanup_exit(old_attrs, -3)
-    while not _damon.is_damon_running():
-        time.sleep(1)
-    print('Press Ctrl+C to stop')
-    if is_target_cmd:
-        p.wait()
-    while True:
-        # damon will turn it off by itself if the target tasks are terminated.
-        if not _damon.is_damon_running():
-            break
-        time.sleep(1)
-
-    cleanup_exit(old_attrs, 0)
-
 def cleanup_exit(orig_attrs, exit_code):
     if _damon.is_damon_running():
         if _damon.turn_damon('off'):
