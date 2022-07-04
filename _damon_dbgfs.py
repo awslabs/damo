@@ -8,6 +8,7 @@ Contains core functions for DAMON debugfs control.
 import os
 import subprocess
 
+import _convert_damos
 import _damon
 
 debugfs = '/sys/kernel/debug'
@@ -331,5 +332,26 @@ def apply_kdamonds(kdamonds):
         tid = 0
 
     string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in target.regions])
-    return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
+    subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
             shell=True, executable='/bin/bash')
+
+    if not debugfs_schemes:
+        return 0
+
+    scheme_version = 0
+    if _damon.feature_supported('schemes_speed_limit'):
+        scheme_version = 1
+    if _damon.feature_supported('schemes_prioritization'):
+        scheme_version = 2
+    if _damon.feature_supported('schemes_wmarks'):
+        scheme_version = 3
+    if _damon.feature_supported('schemes_quotas'):
+        scheme_version = 4
+
+    scheme_file_input_lines = []
+    for scheme in ctx.schemes:
+        scheme_file_input_lines.append(_convert_damos.damos_to_debugfs_input(scheme,
+            ctx.intervals.sample, ctx.intervals.aggr, scheme_version))
+
+        with open(debugfs_schemes, 'w') as f:
+            f.write('\n'.join(scheme_file_input_lines))
