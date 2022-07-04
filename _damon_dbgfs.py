@@ -355,3 +355,9 @@ def apply_kdamonds(kdamonds):
 
         with open(debugfs_schemes, 'w') as f:
             f.write('\n'.join(scheme_file_input_lines))
+
+    if feature_supported('record') and ctx.record != None:
+        record_file_input = '%s %s' % (ctx.record.rfile_buf,
+                ctx.record.rfile_path)
+        with open(debugfs_record, 'w') as f:
+            f.write(record_file_input)
