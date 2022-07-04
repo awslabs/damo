@@ -225,7 +225,57 @@ def apply_kdamonds(kdamonds):
         _write(nr_regions_min_file, '%d' % ctx.nr_regions.min_nr_regions)
         _write(nr_regions_max_file, '%d' % ctx.nr_regions.max_nr_regions)
 
-        # TODO: Support schemes
+        schemes = ctx.schemes
+        _write(schemes_nr_file, '%d' % len(schemes))
+        for idx, scheme in enumerate(schemes):
+            # access pattern
+            max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
+            _write(os.path.join(scheme_dir(idx), 'access_pattern', 'sz',
+                'min'), '%d' % scheme.access_pattern.min_sz_bytes)
+            _write(os.path.join(scheme_dir(idx), 'access_pattern', 'sz',
+                'max'), '%d' % scheme.access_pattern.max_sz_bytes)
+            _write(os.path.join(scheme_dir(idx), 'access_pattern',
+                'nr_accesses', 'min'),
+                '%d' % int(scheme.access_pattern.min_nr_accesses_permil *
+                    max_nr_accesses / 1000))
+            _write(os.path.join(scheme_dir(idx), 'access_pattern',
+                'nr_accesses', 'max'),
+                '%d' % int(scheme.access_pattern.max_nr_accesses_permil *
+                    max_nr_accesses / 1000))
+            _write(os.path.join(scheme_dir(idx), 'access_pattern',
+                'age', 'min'), '%d' % (scheme.access_pattern.min_age_us /
+                ctx.intervals.aggr))
+            _write(os.path.join(scheme_dir(idx), 'access_pattern',
+                'age', 'max'), '%d' % (scheme.access_pattern.max_age_us /
+                ctx.intervals.aggr))
+
+            _write(os.path.join(scheme_dir(idx), 'action'), scheme.action)
+
+            # quotas
+            quotas_dir = os.path.join(scheme_dir(idx), 'quotas')
+            _write(os.path.join(quotas_dir, 'ms'), '%d' %
+                    scheme.quotas.time_ms)
+            _write(os.path.join(quotas_dir, 'bytes'), '%d' %
+                    scheme.quotas.sz_bytes)
+            _write(os.path.join(quotas_dir, 'reset_interval_ms'), '%d' %
+                    scheme.quotas.reset_interval_ms)
+            weights_dir = os.path.join(quotas_dir, 'weights')
+            _write(os.path.join(weights_dir, 'sz_permil'), '%d' %
+                    scheme.quotas.weight_sz_permil)
+            _write(os.path.join(weights_dir, 'nr_accesses_permil'), '%d' %
+                    scheme.quotas.weight_nr_accesses_permil)
+            _write(os.path.join(weights_dir, 'age_permil'), '%d' %
+                    scheme.quotas.weight_age_permil)
+
+            # watermarks
+            wmarks = scheme.watermarks
+            wmarks_dir = os.path.join(scheme_dir(idx), 'watermarks')
+            _write(os.path.join(wmarks_dir, 'metric'), wmarks.metric)
+            _write(os.path.join(wmarks_dir, 'interval_us'), '%d' %
+                    wmarks.interval_us)
+            _write(os.path.join(wmarks_dir, 'high'), '%d' % wmarks.high_permil)
+            _write(os.path.join(wmarks_dir, 'mid'), '%d' % wmarks.mid_permil)
+            _write(os.path.join(wmarks_dir, 'low'), '%d' % wmarks.low_permil)
 
         _write(context_operations_file, ctx.ops)
 
