@@ -288,6 +288,40 @@ def attrs_apply(attrs):
         attrs.schemes.replace('\n', ' '), debugfs_schemes), shell=True,
         executable='/bin/bash')
 
+class DebugfsInputs:
+    attrs = None
+    record = None
+    schemes = None
+
+def current_debugfs_inputs():
+    debugfs_inputs = DebugfsInputs()
+
+    with open(debugfs_attrs, 'r') as f:
+        debugfs_inputs.attrs = f.read().strip()
+
+    if debugfs_record:
+        with open(debugfs_record, 'r') as f:
+            debugfs_inputs.record = f.read().strip()
+
+    if debugfs_schemes:
+        with open(debugfs_schemes, 'r') as f:
+            # The last two fields in each line are statistics.
+            schemes = [' '.join(x.split()[:-2]) for x in
+                    f.read().strip().split('\n')]
+            debugfs_inputs.schemes = '\n'.join(schemes)
+
+def apply_debugfs_inputs(debugfs_inputs):
+    with open(debugfs_attrs, 'w') as f:
+        f.write(debugfs_inputs.attrs)
+
+    if debugfs_inputs.record != None and debugfs_record:
+        with open(debugfs_record, 'w') as f:
+            f.write(debugfs_inputs.record)
+
+    if debugfs_inputs.schemes != None and debugfs_schemes:
+        with open(debugfs_schemes, 'w') as f:
+            f.write(debugfs_inputs.schemes)
+
 def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
     nr_regions = damon_ctx.nr_regions
