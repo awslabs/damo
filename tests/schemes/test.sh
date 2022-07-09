@@ -170,6 +170,17 @@ measure_scheme_applied() {
 		--damon_interface "$damon_interface" "$target" > /dev/null &
 	damo_pid=$!
 
+	while true
+	do
+		# wait kdamond
+		if ! pidof kdamond.0
+		then
+			sleep 0.1
+		else
+			break
+		fi
+	done
+
 	before=$(__measure_scheme_applied "$damon_interface")
 	if [ "$before" = "" ]
 	then
