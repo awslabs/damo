@@ -10,7 +10,7 @@ import argparse
 import _damon
 
 def set_argparser(parser):
-    _damon.set_implicit_target_monitoring_argparser(parser)
+    _damon.set_explicit_target_monitoring_argparser(parser)
 
 def main(args=None):
     if not args:
@@ -32,20 +32,11 @@ def main(args=None):
         print('DAMON is not turned on')
         exit(1)
 
-    # TODO: Remove rbuf and out from the arguments in this case
-    args.rbuf = 0
-    args.out = 'null'
-    attrs = _damon.cmd_args_to_attrs(args)
-    init_regions = _damon.cmd_args_to_init_regions(args)
-
-    if attrs.apply():
-        print('attributes (%s) failed to be applied' % attrs)
-    if args.target:
-        if _damon.set_target(args.target, init_regions):
-            print('target setting (%s, %s) failed' % (target, init_regions))
+    ctx = _damon.damon_ctx_from_damon_args(args)
+    kdamonds = [_damon.Kdamond('0', [ctx])]
+    _damon.apply_kdamonds(kdamonds)
     if _damon.commit_inputs():
         print('could not commit inputs')
-
 
 if __name__ == '__main__':
     main()
