@@ -13,6 +13,7 @@ import subprocess
 import time
 
 import _damon
+import _damon_dbgfs
 import _damon_result
 import _damo_paddr_layout
 
@@ -43,8 +44,10 @@ def cleanup_exit(orig_attrs, exit_code):
         while _damon.is_damon_running():
             time.sleep(1)
     if not target_is_ongoing and orig_attrs:
-        if orig_attrs.apply():
-            print('original attributes (%s) restoration failed!' % orig_attrs)
+        if _damon.damon_interface() != 'debugfs':
+            print('damo_record/cleanup_exit: ' +
+                    'BUG: none-debugfs is in use but orig_attrs is not None')
+        _damon_dbgfs.apply_debugfs_inputs(orig_attrs)
 
     if rfile_format != None and rfile_mid_format != rfile_format:
         rfile_path_mid = rfile_path + '.mid'
@@ -122,7 +125,11 @@ def main(args=None):
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
-    orig_attrs = _damon.current_attrs()
+
+    if _damon.damon_interface() == 'debugfs':
+        orig_attrs = _damon_dbgfs.current_debugfs_inputs()
+    else:
+        orig_attrs = None
 
     if not target_is_ongoing:
         _damon.implicit_target_args_to_explicit_target_args(args)
