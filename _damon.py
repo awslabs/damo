@@ -294,7 +294,7 @@ def initialize(args, skip_dirs_population=False):
     elif args.damon_interface == 'debugfs':
         _damon_fs = _damon_dbgfs
     elif args.damon_interface == 'auto':
-        err = _damon_sysfs.initialize(args, skip_dirs_population)
+        err = _damon_sysfs.initialize(skip_dirs_population)
         if err == None:
             _damon_fs = _damon_sysfs
         else:
@@ -304,7 +304,7 @@ def initialize(args, skip_dirs_population=False):
     if args.debug_damon:
         pr_debug_log = True
 
-    return _damon_fs.initialize(args, skip_dirs_population)
+    return _damon_fs.initialize(skip_dirs_population)
 
 def commit_inputs():
     if _damon_fs == _damon_dbgfs:

@@ -203,7 +203,7 @@ def set_damon_debugfs_paths():
                 return 'damon debugfs file (%s) not found' % f
     return None
 
-def initialize(args, skip_dirs_population=False):
+def initialize(skip_dirs_population=False):
     err = update_supported_features()
     if err:
         return err
