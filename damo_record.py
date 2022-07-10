@@ -6,7 +6,6 @@ Record data access patterns of the target process.
 """
 
 import argparse
-import datetime
 import os
 import signal
 import subprocess
@@ -158,7 +157,6 @@ def main(args=None):
                 shell=True, executable='/bin/bash')
     print('Press Ctrl+C to stop')
 
-    wait_start = datetime.datetime.now()
     if args.self_started_target == True:
         os.waitpid(ctx.targets[0].pid, 0)
     while True:
