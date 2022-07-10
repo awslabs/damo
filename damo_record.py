@@ -111,8 +111,8 @@ def main(args=None):
             print('perf is not installed')
             exit(1)
 
-    if args.rbuf and not _damon.feature_supported('record'):
-        print('# \'--rbuf\' will be ignored')
+        if args.rbuf:
+            print('# \'--rbuf\' will be ignored')
     if not args.rbuf:
         args.rbuf = 1024 * 1024
 
@@ -132,7 +132,7 @@ def main(args=None):
         orig_attrs = None
 
     if not target_is_ongoing:
-        _damon.implicit_target_args_to_explicit_target_args(args)
+        _damon.set_implicit_target_args_explicit(args)
         ctx = _damon.damon_ctx_from_damon_args(args)
         if _damon.feature_supported('record'):
             ctx.set_record(args.rbuf, args.out)

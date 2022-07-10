@@ -67,7 +67,7 @@ def main(args=None):
     else:
         orig_attrs = None
 
-    _damon.implicit_target_args_to_explicit_target_args(args)
+    _damon.set_implicit_target_args_explicit(args)
     ctx = _damon.damon_ctx_from_damon_args(args)
     kdamonds = [_damon.Kdamond('0', [ctx])]
     _damon.apply_kdamonds(kdamonds)
