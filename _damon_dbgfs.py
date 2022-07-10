@@ -37,11 +37,6 @@ def feature_supported(feature):
 
     return feature_supports[feature]
 
-def get_supported_features():
-    if feature_supports == None:
-        initialize()
-    return feature_supports
-
 def test_debugfs_file(path, input_str, expected):
     passed = False
     with open(path, 'r') as f:

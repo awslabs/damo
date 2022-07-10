@@ -284,9 +284,6 @@ def implicit_target_args_to_explicit_target_args(args):
 def feature_supported(feature):
     return _damon_fs.feature_supported(feature)
 
-def get_supported_features():
-    return _damon_fs.get_supported_features()
-
 def initialize(args, skip_dirs_population=False):
     global _damon_fs
     if args.damon_interface == 'sysfs':

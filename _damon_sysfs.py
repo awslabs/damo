@@ -219,11 +219,6 @@ def feature_supported(feature):
         update_supported_features()
     return feature_supports[feature]
 
-def get_supported_features():
-    if feature_supports == None:
-        update_supported_features()
-    return feature_supports
-
 populated = False
 def ensure_dirs_populated():
     global populated
