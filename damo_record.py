@@ -103,7 +103,9 @@ def main(args=None):
         print(err)
         exit(1)
 
-    if not _damon.feature_supported('record'):
+    damon_record_supported = _damon.feature_supported('record')
+
+    if not damon_record_supported:
         try:
             subprocess.check_output(['which', 'perf'])
         except:
@@ -133,7 +135,7 @@ def main(args=None):
     if not target_is_ongoing:
         _damon.set_implicit_target_args_explicit(args)
         ctx = _damon.damon_ctx_from_damon_args(args)
-        if _damon.feature_supported('record'):
+        if damon_record_supported:
             ctx.set_record(args.rbuf, args.out)
         kdamonds = [_damon.Kdamond('0', [ctx])]
         _damon.apply_kdamonds(kdamonds)
@@ -150,7 +152,7 @@ def main(args=None):
         while not _damon.is_damon_running():
             time.sleep(1)
 
-    if not _damon.feature_supported('record'):
+    if not damon_record_supported:
         perf_pipe = subprocess.Popen(
                 'perf record -e damon:damon_aggregated -a -o \'%s\'' %
                 (rfile_path + '.perf.data'),
