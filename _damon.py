@@ -342,26 +342,6 @@ def initialize(args, skip_dirs_population=False):
 
     return _damon_fs.initialize(args, skip_dirs_population)
 
-def cmd_args_to_init_regions(args):
-    regions = []
-    for arg in args.regions.split():
-        addrs = arg.split('-')
-        try:
-            if len(addrs) != 2:
-                raise Exception('two addresses not given')
-            start = int(addrs[0])
-            end = int(addrs[1])
-            if start >= end:
-                raise Exception('start >= end')
-            if regions and regions[-1][1] > start:
-                raise Exception('regions overlap')
-        except Exception as e:
-            print('Wrong \'--regions\' argument (%s)' % e)
-            exit(1)
-
-        regions.append([start, end])
-    return regions
-
 def commit_inputs():
     if _damon_fs == _damon_dbgfs:
         print('debugfs interface unsupport commit_inputs()')
