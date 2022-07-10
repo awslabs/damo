@@ -317,9 +317,6 @@ class Attrs:
     def apply(self):
         return _damon_fs.attrs_apply(self)
 
-def current_attrs():
-    return _damon_fs.current_attrs()
-
 def feature_supported(feature):
     return _damon_fs.feature_supported(feature)
 

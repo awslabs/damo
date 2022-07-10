@@ -53,30 +53,6 @@ def is_damon_running():
     with open(debugfs_monitor_on, 'r') as f:
         return f.read().strip() == 'on'
 
-def current_attrs():
-    with open(debugfs_attrs, 'r') as f:
-        attrs = f.read().split()
-    attrs = [int(x) for x in attrs]
-
-    if debugfs_record:
-        with open(debugfs_record, 'r') as f:
-            rattrs = f.read().split()
-        attrs.append(int(rattrs[0]))
-        attrs.append(rattrs[1])
-    else:
-        attrs += [None, None]
-
-    if debugfs_schemes:
-        with open(debugfs_schemes, 'r') as f:
-            schemes = f.read()
-        # The last two fields in each line are statistics.  Remove those.
-        schemes = [' '.join(x.split()[:-2]) for x in schemes.strip().split('\n')]
-        attrs.append('\n'.join(schemes))
-    else:
-        attrs.append(None)
-
-    return _damon.Attrs(*attrs)
-
 feature_supports = None
 
 def feature_supported(feature):

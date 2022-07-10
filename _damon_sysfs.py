@@ -203,10 +203,6 @@ def attrs_apply(attrs):
         print(e)
         return 1
 
-# sysfs doesn't restore original state
-def current_attrs():
-    return None
-
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
         print('Currently only one kdamond is supported')
