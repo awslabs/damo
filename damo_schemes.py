@@ -49,15 +49,7 @@ def main(args=None):
     if err != None:
         print(err)
         exit(1)
-    scheme_version = 0
-    if _damon.feature_supported('schemes_speed_limit'):
-        scheme_version = 1
-    if _damon.feature_supported('schemes_prioritization'):
-        scheme_version = 2
-    if _damon.feature_supported('schemes_wmarks'):
-        scheme_version = 3
-    if _damon.feature_supported('schemes_quotas'):
-        scheme_version = 4
+    scheme_version = _convert_damos.get_scheme_version()
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
