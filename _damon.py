@@ -27,7 +27,7 @@ features = ['record',
             'schemes_wmarks',
             ]
 
-_damon_fs = _damon_dbgfs
+_damon_fs = None
 
 pr_debug_log = False
 
