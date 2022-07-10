@@ -161,9 +161,7 @@ def main(args=None):
 
     if args.self_started_target == True:
         os.waitpid(ctx.targets[0].pid, 0)
-    while True:
-        if not _damon.is_damon_running():
-            break
+    while _damon.is_damon_running():
         time.sleep(1)
 
     cleanup_exit(orig_attrs, 0)
