@@ -173,7 +173,7 @@ measure_scheme_applied() {
 	while true
 	do
 		# wait kdamond
-		if ! pidof kdamond.0
+		if ! pidof kdamond.0 > /dev/null
 		then
 			sleep 0.1
 		else
