@@ -36,9 +36,6 @@ def ensure_root_permission():
         print('Run as root')
         exit(1)
 
-def set_target(tid, init_regions=[]):
-    return _damon_fs.set_target(tid, init_regions)
-
 def turn_damon(on_off):
     return _damon_fs.turn_damon(on_off)
 

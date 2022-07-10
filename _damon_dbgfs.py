@@ -21,30 +21,6 @@ debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
 debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
 debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
-def set_target_id(tid):
-    try:
-        with open(debugfs_target_ids, 'w') as f:
-            f.write('%s\n' % tid)
-    except Exception as e:
-        return e
-
-def set_target(tid, init_regions=[]):
-    rc = set_target_id(tid)
-    if rc:
-        return rc
-
-    if not debugfs_init_regions:
-        return 0
-
-    if feature_supported('init_regions_target_idx'):
-        tid = 0
-    elif tid == 'paddr':
-        tid = 42
-
-    string = ' '.join(['%s %d %d' % (tid, r[0], r[1]) for r in init_regions])
-    return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
-            shell=True, executable='/bin/bash')
-
 def turn_damon(on_off):
     return subprocess.call('echo %s > %s' % (on_off, debugfs_monitor_on),
             shell=True, executable='/bin/bash')

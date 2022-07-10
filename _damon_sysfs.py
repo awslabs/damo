@@ -106,26 +106,6 @@ def _read(filepath):
     with open(filepath, 'r') as f:
         return f.read()
 
-def set_target(tid, init_regions):
-    try:
-        if tid == 'paddr':
-            _write(context_operations_file, 'paddr')
-        else:
-            if init_regions:
-                _write(context_operations_file, 'fvaddr')
-            else:
-                _write(context_operations_file, 'vaddr')
-            _write(target_pid_file, '%d' % int(tid))
-
-        _write(regions_nr_file, '%d' % len(init_regions))
-        for idx, region in enumerate(init_regions):
-            _write(region_start_file(idx), '%d' % region[0])
-            _write(region_end_file(idx), '%d' % region[1])
-        return 0
-    except Exception as e:
-        print(e)
-        return 1
-
 def turn_damon(on_off):
     if on_off == 'on':
         # In case of vaddr, too early monitoring shows unstable mapping changes.
