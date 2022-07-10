@@ -153,10 +153,8 @@ def main(args=None):
             time.sleep(1)
 
     if not damon_record_supported:
-        perf_pipe = subprocess.Popen(
-                'perf record -e damon:damon_aggregated -a -o \'%s\'' %
-                (rfile_path + '.perf.data'),
-                shell=True, executable='/bin/bash')
+        perf_pipe = subprocess.Popen(['perf', 'record', '-a',
+            '-e', 'damon:damon_aggregated', '-o', rfile_path + '.perf.data'])
     print('Press Ctrl+C to stop')
 
     if args.self_started_target == True:
