@@ -141,68 +141,6 @@ def turn_damon(on_off):
 def is_damon_running():
     return _read(kdamond_state_file).strip() == 'on'
 
-def attrs_apply(attrs):
-    if not attrs:
-        return 0
-    try:
-        _write(intervals_sample_us_file, '%d' % attrs.sample_interval)
-        _write(intervals_aggr_us_file, '%d' % attrs.aggr_interval)
-        _write(intervals_update_us_file, '%d' % attrs.regions_update_interval)
-        _write(nr_regions_min_file, '%d' % attrs.min_nr_regions)
-        _write(nr_regions_max_file, '%d' % attrs.max_nr_regions)
-        schemes = [x for x in attrs.schemes.split('\n') if x != '']
-        _write(schemes_nr_file, '%d' % len(schemes))
-        # access pattern
-        for idx, scheme in enumerate(schemes):
-            fields = scheme.split()
-            field_idx = 0
-            for pattern_dir in ['sz', 'nr_accesses', 'age']:
-                for file_ in ['min', 'max']:
-                    _write(os.path.join(scheme_dir(idx), 'access_pattern',
-                        pattern_dir, file_), fields[field_idx])
-                    field_idx += 1
-            # action
-            dbgfs_action_to_sysfs_action = {
-                    0: 'willneed',
-                    1: 'cold',
-                    2: 'pageout',
-                    3: 'hugepage',
-                    4: 'nohugepage',
-                    5: 'stat',
-                    6: 'lru_prio',
-                    7: 'lru_deprio',
-                    }
-            _write(os.path.join(scheme_dir(idx), 'action'),
-                    dbgfs_action_to_sysfs_action[int(fields[field_idx])])
-            field_idx += 1
-
-            # quotas
-            quotas_dir = os.path.join(scheme_dir(idx), 'quotas')
-            for file_ in ['ms', 'bytes', 'reset_interval_ms']:
-                _write(os.path.join(quotas_dir, file_), fields[field_idx])
-                field_idx += 1
-            weights_dir = os.path.join(quotas_dir, 'weights')
-            for file_ in ['sz_permil', 'nr_accesses_permil', 'age_permil']:
-                _write(os.path.join(weights_dir, file_), fields[field_idx])
-                field_idx += 1
-
-            # watermarks
-            dbgfs_wmark_metroc_to_sysfs_metric = {
-                    0: 'none',
-                    1: 'free_mem_rate',
-                    }
-            wmarks_dir = os.path.join(scheme_dir(idx), 'watermarks')
-            _write(os.path.join(wmarks_dir, 'metric'),
-                    dbgfs_wmark_metroc_to_sysfs_metric[int(fields[field_idx])])
-            field_idx += 1
-            for file_ in ['interval_us', 'high', 'mid', 'low']:
-                _write(os.path.join(wmarks_dir, file_), fields[field_idx])
-                field_idx += 1
-        return 0
-    except Exception as e:
-        print(e)
-        return 1
-
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
         print('Currently only one kdamond is supported')
