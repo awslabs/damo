@@ -342,25 +342,6 @@ def initialize(args, skip_dirs_population=False):
 
     return _damon_fs.initialize(args, skip_dirs_population)
 
-def cmd_args_to_attrs(args):
-    'Generate attributes with specified arguments'
-    sample_interval = args.sample
-    aggr_interval = args.aggr
-    regions_update_interval = args.updr
-    min_nr_regions = args.minr
-    max_nr_regions = args.maxr
-    rbuf_len = args.rbuf
-    if not os.path.isabs(args.out):
-        args.out = os.path.join(os.getcwd(), args.out)
-    rfile_path = args.out
-
-    if not hasattr(args, 'schemes'):
-        args.schemes = ''
-    schemes = args.schemes
-
-    return Attrs(sample_interval, aggr_interval, regions_update_interval,
-            min_nr_regions, max_nr_regions, rbuf_len, rfile_path, schemes)
-
 def cmd_args_to_init_regions(args):
     regions = []
     for arg in args.regions.split():
