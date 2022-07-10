@@ -16,15 +16,15 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.initialize(args)
-    features = _damon.get_supported_features()
 
-    for feature in sorted(features.keys()):
+    for feature in sorted(_damon.features):
+        supported = _damon.feature_supported(feature)
         if args.type == 'all':
             print('%s: %s' % (feature,
-                'Supported' if features[feature] else 'Unsupported'))
-        elif args.type == 'supported' and features[feature]:
+                'Supported' if supported else 'Unsupported'))
+        elif args.type == 'supported' and supported:
             print(feature)
-        elif args.type == 'unsupported' and not features[feature]:
+        elif args.type == 'unsupported' and not supported:
             print(feature)
 
 if __name__ == '__main__':
