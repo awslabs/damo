@@ -14,34 +14,6 @@ import _damon_dbgfs
 import _damon_sysfs
 import damon_fs
 
-features = ['record',
-            'schemes',
-            'init_regions',
-            'vaddr',
-            'fvaddr',
-            'paddr',
-            'init_regions_target_idx',
-            'schemes_speed_limit',
-            'schemes_quotas',
-            'schemes_prioritization',
-            'schemes_wmarks',
-            ]
-
-_damon_fs = None
-
-pr_debug_log = False
-
-def ensure_root_permission():
-    if os.geteuid() != 0:
-        print('Run as root')
-        exit(1)
-
-def turn_damon(on_off):
-    return _damon_fs.turn_damon(on_off)
-
-def is_damon_running():
-    return _damon_fs.is_damon_running()
-
 class DamonIntervals:
     sample = None
     aggr = None
@@ -174,6 +146,34 @@ class Kdamond:
     def __init__(self, name, contexts):
         self.name = name
         self.contexts = contexts
+
+features = ['record',
+            'schemes',
+            'init_regions',
+            'vaddr',
+            'fvaddr',
+            'paddr',
+            'init_regions_target_idx',
+            'schemes_speed_limit',
+            'schemes_quotas',
+            'schemes_prioritization',
+            'schemes_wmarks',
+            ]
+
+_damon_fs = None
+
+pr_debug_log = False
+
+def ensure_root_permission():
+    if os.geteuid() != 0:
+        print('Run as root')
+        exit(1)
+
+def turn_damon(on_off):
+    return _damon_fs.turn_damon(on_off)
+
+def is_damon_running():
+    return _damon_fs.is_damon_running()
 
 def apply_kdamonds(kdamonds):
     _damon_fs.apply_kdamonds(kdamonds)
