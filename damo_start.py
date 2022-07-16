@@ -30,8 +30,6 @@ def main(args=None):
     _damon.apply_kdamonds(kdamonds)
     if _damon.turn_damon('on'):
         print('could not turn on damon')
-    while not _damon.is_damon_running():
-        time.sleep(1)
 
 if __name__ == '__main__':
     main()

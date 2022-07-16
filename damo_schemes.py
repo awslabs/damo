@@ -20,8 +20,6 @@ def cleanup_exit(orig_attrs, exit_code):
     if _damon.is_damon_running():
         if _damon.turn_damon('off'):
             print('failed to turn damon off!')
-        while _damon.is_damon_running():
-            time.sleep(1)
     if orig_attrs:
         if _damon.damon_interface() != 'debugfs':
             print('damo_schemes/cleanup_exit: ' +
@@ -66,9 +64,6 @@ def main(args=None):
     if _damon.turn_damon('on'):
         print('could not turn DAMON on')
         cleanup_exit(orig_attrs, -3)
-
-    while not _damon.is_damon_running():
-        time.sleep(1)
 
     print('Press Ctrl+C to stop')
     if args.self_started_target == True:

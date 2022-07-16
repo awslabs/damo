@@ -54,8 +54,6 @@ def cleanup_exit(exit_code):
         if _damon.is_damon_running():
             if _damon.turn_damon('off'):
                 print('failed to turn damon off!')
-            while _damon.is_damon_running():
-                time.sleep(1)
         if data_for_cleanup.orig_attrs:
             if _damon.damon_interface() != 'debugfs':
                 print('damo_record/cleanup_exit: ' +
@@ -156,9 +154,6 @@ def main(args=None):
         if _damon.turn_damon('on'):
             print('could not turn DAMON on')
             cleanup_exit(-2)
-
-        while not _damon.is_damon_running():
-            time.sleep(1)
 
     if not damon_record_supported:
         data_for_cleanup.perf_pipe = subprocess.Popen(['perf', 'record', '-a',
