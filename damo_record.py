@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 """
-Record data access patterns of the target process.
+Record monitored data access patterns.
 """
 
 import argparse
