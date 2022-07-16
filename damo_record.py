@@ -28,29 +28,34 @@ class DataForCleanup:
 data_for_cleanup = DataForCleanup()
 
 def cleanup_exit(exit_code):
-    rfile_mid_format = 'record'
     if data_for_cleanup.perf_pipe:
-        perf_data = data_for_cleanup.rfile_path + '.perf.data'
+        # End the perf
         data_for_cleanup.perf_pipe.send_signal(signal.SIGINT)
         data_for_cleanup.perf_pipe.wait()
+
+        # Get perf script mid result
+        rfile_mid_format = 'perf_script'
+        perf_data = data_for_cleanup.rfile_path + '.perf.data'
         subprocess.call('perf script -i \'%s\' > \'%s\'' %
                 (perf_data, data_for_cleanup.rfile_path),
                 shell=True, executable='/bin/bash')
-        rfile_mid_format = 'perf_script'
 
         if data_for_cleanup.remove_perf_data:
             os.remove(perf_data)
+    else:
+        rfile_mid_format = 'record'
 
-    if not data_for_cleanup.target_is_ongoing and _damon.is_damon_running():
-        if _damon.turn_damon('off'):
-            print('failed to turn damon off!')
-        while _damon.is_damon_running():
-            time.sleep(1)
-    if not data_for_cleanup.target_is_ongoing and data_for_cleanup.orig_attrs:
-        if _damon.damon_interface() != 'debugfs':
-            print('damo_record/cleanup_exit: ' +
-                    'BUG: none-debugfs is in use but orig_attrs is not None')
-        _damon_dbgfs.apply_debugfs_inputs(data_for_cleanup.orig_attrs)
+    if not data_for_cleanup.target_is_ongoing:
+        if _damon.is_damon_running():
+            if _damon.turn_damon('off'):
+                print('failed to turn damon off!')
+            while _damon.is_damon_running():
+                time.sleep(1)
+        if data_for_cleanup.orig_attrs:
+            if _damon.damon_interface() != 'debugfs':
+                print('damo_record/cleanup_exit: ' +
+                        'BUG: none-debugfs is in use but orig_attrs is not None')
+            _damon_dbgfs.apply_debugfs_inputs(data_for_cleanup.orig_attrs)
 
     if (data_for_cleanup.rfile_format != None and
             rfile_mid_format != data_for_cleanup.rfile_format):
