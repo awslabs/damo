@@ -15,7 +15,7 @@ import _convert_damos
 import _damon
 import _damo_paddr_layout
 
-def cleanup_exit(orig_attrs, exit_code):
+def cleanup_exit(exit_code):
     if _damon.is_damon_running():
         if _damon.turn_damon('off'):
             print('failed to turn damon off!')
@@ -24,7 +24,7 @@ def cleanup_exit(orig_attrs, exit_code):
 
 def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
-    cleanup_exit(orig_attrs, signum)
+    cleanup_exit(signum)
 
 def set_argparser(parser):
     _damon.set_implicit_target_schemes_argparser(parser)
@@ -54,7 +54,7 @@ def main(args=None):
     _damon.apply_kdamonds(kdamonds)
     if _damon.turn_damon('on'):
         print('could not turn DAMON on')
-        cleanup_exit(orig_attrs, -3)
+        cleanup_exit(-3)
 
     print('Press Ctrl+C to stop')
     if args.self_started_target == True:
@@ -65,7 +65,7 @@ def main(args=None):
             break
         time.sleep(1)
 
-    cleanup_exit(orig_attrs, 0)
+    cleanup_exit(0)
 
 if __name__ == '__main__':
     main()
