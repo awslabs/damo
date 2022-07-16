@@ -42,7 +42,7 @@ def turn_damon(on_off):
 def is_damon_running():
     return _damon_fs.is_damon_running()
 
-class Intervals:
+class DamonIntervals:
     sample = None
     aggr = None
     ops_update = None
@@ -52,7 +52,7 @@ class Intervals:
         self.aggr = aggr
         self.ops_update = ops_update
 
-class NrRegionsRange:
+class DamonNrRegionsRange:
     min_nr_regions = None
     max_nr_regions = None
 
@@ -60,7 +60,7 @@ class NrRegionsRange:
         self.min_nr_regions = min_
         self.max_nr_regions = max_
 
-class Region:
+class DamonRegion:
     # [star, end)
     start = None
     end = None
@@ -69,7 +69,7 @@ class Region:
         self.start = start
         self.end = end
 
-class Target:
+class DamonTarget:
     pid = None
     regions = None
 
@@ -192,8 +192,8 @@ def damos_from_args(args):
             args.aggr, scheme_version)
 
 def damon_ctx_from_damon_args(args):
-    intervals = Intervals(args.sample, args.aggr, args.updr)
-    nr_regions = NrRegionsRange(args.minr, args.maxr)
+    intervals = DamonIntervals(args.sample, args.aggr, args.updr)
+    nr_regions = DamonNrRegionsRange(args.minr, args.maxr)
     ops = args.ops
 
     init_regions = []
@@ -203,7 +203,7 @@ def damon_ctx_from_damon_args(args):
             try:
                 if len(addrs) != 2:
                     raise Exception ('two addresses not given')
-                region = Region(int(addrs[0]), int(addrs[1]))
+                region = DamonRegion(int(addrs[0]), int(addrs[1]))
                 if region.start >= region.end:
                     raise Exception('start >= end')
                 if init_regions and init_regions[-1].end > region.start:
@@ -218,12 +218,12 @@ def damon_ctx_from_damon_args(args):
             init_regions = _damo_paddr_layout.paddr_region_of(args.numa_node)
         else:
             init_regions = [_damo_paddr_layout.default_paddr_region()]
-        init_regions = [Region(r[0], r[1]) for r in init_regions]
+        init_regions = [DamonRegion(r[0], r[1]) for r in init_regions]
 
     if target_has_pid(ops):
-        target = Target(args.target_pid, init_regions)
+        target = DamonTarget(args.target_pid, init_regions)
     else:
-        target = Target(None, init_regions)
+        target = DamonTarget(None, init_regions)
 
     schemes = damos_from_args(args)
 
