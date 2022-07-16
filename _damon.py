@@ -161,18 +161,6 @@ class DamonCtx:
         self.targets = targets
         self.schemes = schemes
 
-    def set_intervals(self, sample, aggr, ops_update):
-        self.intervals = Intervals(sample, aggr, ops_update)
-
-    def set_nr_regions(self, min_, max_):
-        self.nr_regions = NrRegions(min_, max_)
-
-    def set_ops(self, ops):
-        self.ops = ops
-
-    def set_targets(targets):
-        self.targets = targets
-
     def set_record(rfile_buf, rfile_path):
         if feature_supported('record'):
             self.record = DamonRecord(rfile_buf, rfile_path)
