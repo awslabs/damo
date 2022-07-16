@@ -170,7 +170,15 @@ def ensure_root_permission():
         exit(1)
 
 def turn_damon(on_off):
-    return _damon_fs.turn_damon(on_off)
+    err = _damon_fs.turn_damon(on_off)
+    if err:
+        return err
+    if on_off == 'on':
+        while not is_damon_running():
+            time.sleep(1)
+    else:   # on_off == 'off'
+        while is_damon_running():
+            time.sleep(1)
 
 def is_damon_running():
     return _damon_fs.is_damon_running()
