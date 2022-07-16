@@ -13,19 +13,13 @@ import time
 
 import _convert_damos
 import _damon
-import _damon_dbgfs
 import _damo_paddr_layout
 
 def cleanup_exit(orig_attrs, exit_code):
     if _damon.is_damon_running():
         if _damon.turn_damon('off'):
             print('failed to turn damon off!')
-    if orig_attrs:
-        if _damon.damon_interface() != 'debugfs':
-            print('damo_schemes/cleanup_exit: ' +
-                    'BUG: none-debugfs is in use but orig_attrs is not None')
-        _damon_dbgfs.apply_debugfs_inputs(orig_attrs)
-
+    _damon.restore_attrs(orig_attrs)
     exit(exit_code)
 
 def sighandler(signum, frame):
@@ -52,10 +46,7 @@ def main(args=None):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    if _damon.damon_interface() == 'debugfs':
-        orig_attrs = _damon_dbgfs.current_debugfs_inputs()
-    else:
-        orig_attrs = None
+    orig_attrs = _damon.attrs_to_restore()
 
     _damon.set_implicit_target_args_explicit(args)
     ctx = _damon.damon_ctx_from_damon_args(args)
