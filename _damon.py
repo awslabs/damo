@@ -187,19 +187,6 @@ class Kdamond:
         self.name = name
         self.contexts = contexts
 
-    def on(self):
-        _damon_fs.turn_kdamond_on(self)
-
-    def off(self):
-        _damon_fs.turn_kdamond_off(self)
-
-    def commit(self):
-        _damon_fs.commit_kdamond(self)
-
-    # TODO: Implement
-    def update_schemes_stats(self):
-        pass
-
 def apply_kdamonds(kdamonds):
     _damon_fs.apply_kdamonds(kdamonds)
 
