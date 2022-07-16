@@ -39,7 +39,7 @@ def cleanup_exit(exit_code):
         data_for_cleanup.perf_pipe.send_signal(signal.SIGINT)
         data_for_cleanup.perf_pipe.wait()
 
-        rfile_mid_format = 'perf_script'
+        rfile_current_format = 'perf_script'
         perf_data = data_for_cleanup.rfile_path + '.perf.data'
         subprocess.call('perf script -i \'%s\' > \'%s\'' %
                 (perf_data, data_for_cleanup.rfile_path),
@@ -47,7 +47,7 @@ def cleanup_exit(exit_code):
         if data_for_cleanup.remove_perf_data:
             os.remove(perf_data)
     else:
-        rfile_mid_format = 'record'
+        rfile_current_format = 'record'
 
     if not data_for_cleanup.target_is_ongoing:
         if _damon.is_damon_running():
@@ -56,8 +56,8 @@ def cleanup_exit(exit_code):
         _damon.restore_attrs(data_for_cleanup.orig_attrs)
 
     if (data_for_cleanup.rfile_format != None and
-            rfile_mid_format != data_for_cleanup.rfile_format):
-        change_rfile_format(data_for_cleanup.rfile_path, rfile_mid_format,
+            rfile_current_format != data_for_cleanup.rfile_format):
+        change_rfile_format(data_for_cleanup.rfile_path, rfile_current_format,
                 data_for_cleanup.rfile_format,
                 data_for_cleanup.rfile_permission)
 
