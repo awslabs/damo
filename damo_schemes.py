@@ -59,10 +59,8 @@ def main(args=None):
     print('Press Ctrl+C to stop')
     if args.self_started_target == True:
         os.waitpid(ctx.targets[0].pid, 0)
-    while True:
-        # damon will turn it off by itself if the target tasks are terminated.
-        if not _damon.is_damon_running():
-            break
+    # damon will turn it off by itself if the target tasks are terminated.
+    while _damon.is_damon_running():
         time.sleep(1)
 
     cleanup_exit(0)
