@@ -27,19 +27,24 @@ class DataForCleanup:
 
 data_for_cleanup = DataForCleanup()
 
+def change_rfile_format(rfile_path, src_format, dst_format, dst_permission):
+    rfile_path_mid = rfile_path + '.mid'
+    os.rename(rfile_path, rfile_path_mid)
+    result = _damon_result.parse_damon_result(rfile_path_mid, src_format)
+    _damon_result.write_damon_result(result, rfile_path, dst_format,
+            dst_permission)
+    os.remove(rfile_path_mid)
+
 def cleanup_exit(exit_code):
     if data_for_cleanup.perf_pipe:
-        # End the perf
         data_for_cleanup.perf_pipe.send_signal(signal.SIGINT)
         data_for_cleanup.perf_pipe.wait()
 
-        # Get perf script mid result
         rfile_mid_format = 'perf_script'
         perf_data = data_for_cleanup.rfile_path + '.perf.data'
         subprocess.call('perf script -i \'%s\' > \'%s\'' %
                 (perf_data, data_for_cleanup.rfile_path),
                 shell=True, executable='/bin/bash')
-
         if data_for_cleanup.remove_perf_data:
             os.remove(perf_data)
     else:
@@ -59,14 +64,9 @@ def cleanup_exit(exit_code):
 
     if (data_for_cleanup.rfile_format != None and
             rfile_mid_format != data_for_cleanup.rfile_format):
-        rfile_path_mid = data_for_cleanup.rfile_path + '.mid'
-        os.rename(data_for_cleanup.rfile_path, rfile_path_mid)
-        result = _damon_result.parse_damon_result(rfile_path_mid,
-                rfile_mid_format)
-        _damon_result.write_damon_result(result, data_for_cleanup.rfile_path,
+        change_rfile_format(data_for_cleanup.rfile_path, rfile_mid_format,
                 data_for_cleanup.rfile_format,
                 data_for_cleanup.rfile_permission)
-        os.remove(rfile_path_mid)
 
     os.chmod(data_for_cleanup.rfile_path, data_for_cleanup.rfile_permission)
 
