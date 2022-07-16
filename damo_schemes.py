@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 """
-Apply given operation schemes to the target process.
+Apply given operation schemes.
 """
 
 import argparse
