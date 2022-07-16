@@ -52,7 +52,7 @@ class Intervals:
         self.aggr = aggr
         self.ops_update = ops_update
 
-class NrRegions:
+class NrRegionsRange:
     min_nr_regions = None
     max_nr_regions = None
 
@@ -193,7 +193,7 @@ def damos_from_args(args):
 
 def damon_ctx_from_damon_args(args):
     intervals = Intervals(args.sample, args.aggr, args.updr)
-    nr_regions = NrRegions(args.minr, args.maxr)
+    nr_regions = NrRegionsRange(args.minr, args.maxr)
     ops = args.ops
 
     init_regions = []
