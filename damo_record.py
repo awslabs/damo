@@ -141,9 +141,9 @@ def main(args=None):
 
     if not damon_record_supported:
         # Record the monitoring results using perf
-        data_for_cleanup.perf_pipe = subprocess.Popen(['perf', 'record', '-a',
-            '-e', 'damon:damon_aggregated', '-o',
-            data_for_cleanup.rfile_path + '.perf.data'])
+        data_for_cleanup.perf_pipe = subprocess.Popen([
+            'perf', 'record', '-a', '-e', 'damon:damon_aggregated',
+            '-o', data_for_cleanup.rfile_path + '.perf.data'])
     print('Press Ctrl+C to stop')
 
     if args.self_started_target == True:
