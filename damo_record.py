@@ -91,12 +91,8 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    if args.target == 'ongoing':
-        err = _damon.initialize(args, skip_dirs_population=True)
-    else:
-        err = _damon.initialize(args, skip_dirs_population=False)
-        skip_dirs_population = False
-    err = _damon.initialize(args, skip_dirs_population)
+    err = _damon.initialize(args,
+            skip_dirs_population=args.target != 'ongoing')
     if err != None:
         print(err)
         exit(1)
