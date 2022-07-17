@@ -47,11 +47,8 @@ def main(args=None):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    _damon.set_implicit_target_args_explicit(args)
-    ctx = _damon.damon_ctx_from_damon_args(args)
-    kdamonds = [_damon.Kdamond('0', [ctx])]
-    _damon.apply_kdamonds(kdamonds)
-    if _damon.turn_damon('on'):
+    err, ctx = _damon.turn_implicit_args_damon_on(args)
+    if err:
         print('could not turn DAMON on')
         cleanup_exit(-3)
 
