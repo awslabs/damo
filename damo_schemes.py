@@ -41,7 +41,6 @@ def main(args=None):
     if err != None:
         print(err)
         exit(1)
-    scheme_version = _convert_damos.get_scheme_version()
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
