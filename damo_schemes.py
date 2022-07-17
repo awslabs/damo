@@ -47,7 +47,7 @@ def main(args=None):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    err, ctx = _damon.turn_implicit_args_damon_on(args)
+    err, ctx = _damon.turn_implicit_args_damon_on(args, record_request=None)
     if err:
         print('could not turn DAMON on')
         cleanup_exit(-3)
