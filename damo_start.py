@@ -25,10 +25,8 @@ def main(args=None):
         print(err)
         exit(1)
 
-    ctx = _damon.damon_ctx_from_damon_args(args)
-    kdamonds = [_damon.Kdamond('0', [ctx])]
-    _damon.apply_kdamonds(kdamonds)
-    if _damon.turn_damon('on'):
+    err, ctx = turn_explicit_args_damon_on(args)
+    if err:
         print('could not turn on damon')
 
 if __name__ == '__main__':
