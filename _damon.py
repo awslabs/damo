@@ -133,12 +133,6 @@ class DamonCtx:
         self.targets = targets
         self.schemes = schemes
 
-    def set_record(rfile_buf, rfile_path):
-        if feature_supported('record'):
-            self.record = DamonRecord(rfile_buf, rfile_path)
-        else:
-            print('DamonCtx.set_record() is called but record unsupported')
-
 class Kdamond:
     name = None
     contexts = None
