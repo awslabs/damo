@@ -42,10 +42,10 @@ def main(args=None):
         print(err)
         exit(1)
 
+    orig_attrs = _damon.attrs_to_restore()
+
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
-
-    orig_attrs = _damon.attrs_to_restore()
 
     _damon.set_implicit_target_args_explicit(args)
     ctx = _damon.damon_ctx_from_damon_args(args)
