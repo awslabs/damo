@@ -91,10 +91,10 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    data_for_cleanup.target_is_ongoing = args.target == 'ongoing'
-    if data_for_cleanup.target_is_ongoing:
-        skip_dirs_population = True
+    if args.target == 'ongoing':
+        err = _damon.initialize(args, skip_dirs_population=True)
     else:
+        err = _damon.initialize(args, skip_dirs_population=False)
         skip_dirs_population = False
     err = _damon.initialize(args, skip_dirs_population)
     if err != None:
@@ -115,7 +115,9 @@ def main(args=None):
     if not args.rbuf:
         args.rbuf = 1024 * 1024
 
+    data_for_cleanup.target_is_ongoing = args.target == 'ongoing'
     data_for_cleanup.rfile_format = args.output_type
+    data_for_cleanup.rfile_path = args.out
     data_for_cleanup.remove_perf_data = not args.leave_perf_data
     data_for_cleanup.rfile_permission = int(args.output_permission, 8)
     if (data_for_cleanup.rfile_permission < 0o0 or
@@ -123,11 +125,14 @@ def main(args=None):
         print('wrong --output_permission (%s)' %
                 data_for_cleanup.rfile_permission)
         exit(1)
+    data_for_cleanup.orig_attrs = _damon.attrs_to_restore()
+
+    if os.path.isfile(data_for_cleanup.rfile_path):
+        os.rename(data_for_cleanup.rfile_path,
+                data_for_cleanup.rfile_path + '.old')
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
-
-    data_for_cleanup.orig_attrs = _damon.attrs_to_restore()
 
     if not data_for_cleanup.target_is_ongoing:
         _damon.set_implicit_target_args_explicit(args)
@@ -137,12 +142,6 @@ def main(args=None):
         kdamonds = [_damon.Kdamond('0', [ctx])]
         _damon.apply_kdamonds(kdamonds)
 
-    data_for_cleanup.rfile_path = args.out
-    if os.path.isfile(data_for_cleanup.rfile_path):
-        os.rename(data_for_cleanup.rfile_path,
-                data_for_cleanup.rfile_path + '.old')
-
-    if not data_for_cleanup.target_is_ongoing:
         if _damon.turn_damon('on'):
             print('could not turn DAMON on')
             cleanup_exit(-2)
