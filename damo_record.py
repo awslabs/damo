@@ -90,6 +90,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
+    # Check system requirements
     _damon.ensure_root_permission()
     err = _damon.initialize(args,
             skip_dirs_population=args.target != 'ongoing')
@@ -98,16 +99,16 @@ def main(args=None):
         exit(1)
 
     damon_record_supported = _damon.feature_supported('record')
-
     if not damon_record_supported:
         try:
             subprocess.check_output(['which', 'perf'])
         except:
             print('perf is not installed')
             exit(1)
-
         if args.rbuf:
             print('# \'--rbuf\' will be ignored')
+
+    # Validate/correct options
     if not args.rbuf:
         args.rbuf = 1024 * 1024
 
@@ -131,9 +132,11 @@ def main(args=None):
     signal.signal(signal.SIGTERM, sighandler)
 
     if not data_for_cleanup.target_is_ongoing:
+        # Turn DAMON on
         _damon.set_implicit_target_args_explicit(args)
         ctx = _damon.damon_ctx_from_damon_args(args)
         if damon_record_supported:
+            # Ask DAMON to do the record
             ctx.set_record(args.rbuf, args.out)
         kdamonds = [_damon.Kdamond('0', [ctx])]
         _damon.apply_kdamonds(kdamonds)
@@ -143,6 +146,7 @@ def main(args=None):
             cleanup_exit(-2)
 
     if not damon_record_supported:
+        # Record the monitoring results using perf
         data_for_cleanup.perf_pipe = subprocess.Popen(['perf', 'record', '-a',
             '-e', 'damon:damon_aggregated', '-o',
             data_for_cleanup.rfile_path + '.perf.data'])
