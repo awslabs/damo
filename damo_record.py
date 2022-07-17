@@ -111,14 +111,14 @@ def main(args=None):
     if not args.rbuf:
         args.rbuf = 1024 * 1024
 
-    if os.path.isfile(args.out):
-        os.rename(args.out, args.out + '.old')
-
     output_permission = int(args.output_permission, 8)
     if output_permission < 0o0 or output_permission > 0o777:
         print('wrong --output_permission (%s)' %
                 data_for_cleanup.rfile_permission)
         exit(1)
+
+    if os.path.isfile(args.out):
+        os.rename(args.out, args.out + '.old')
 
     data_for_cleanup.target_is_ongoing = args.target == 'ongoing'
     data_for_cleanup.rfile_format = args.output_type
