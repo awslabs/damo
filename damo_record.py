@@ -114,16 +114,17 @@ def main(args=None):
     if os.path.isfile(args.out):
         os.rename(args.out, args.out + '.old')
 
+    output_permission = int(args.output_permission, 8)
+    if output_permission < 0o0 or output_permission > 0o777:
+        print('wrong --output_permission (%s)' %
+                data_for_cleanup.rfile_permission)
+        exit(1)
+
     data_for_cleanup.target_is_ongoing = args.target == 'ongoing'
     data_for_cleanup.rfile_format = args.output_type
     data_for_cleanup.rfile_path = args.out
     data_for_cleanup.remove_perf_data = not args.leave_perf_data
-    data_for_cleanup.rfile_permission = int(args.output_permission, 8)
-    if (data_for_cleanup.rfile_permission < 0o0 or
-            data_for_cleanup.rfile_permission > 0o777):
-        print('wrong --output_permission (%s)' %
-                data_for_cleanup.rfile_permission)
-        exit(1)
+    data_for_cleanup.rfile_permission = output_permission
     data_for_cleanup.orig_attrs = _damon.attrs_to_restore()
 
     signal.signal(signal.SIGINT, sighandler)
