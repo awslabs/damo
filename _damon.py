@@ -374,4 +374,4 @@ def turn_implicit_args_damon_on(args):
     ctx = damon_ctx_from_damon_args(args)
     kdamonds = [Kdamond('0', [ctx])]
     apply_kdamonds(kdamonds)
-    return turn_damon('on')
+    return turn_damon('on'), ctx
