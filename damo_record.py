@@ -111,6 +111,9 @@ def main(args=None):
     if not args.rbuf:
         args.rbuf = 1024 * 1024
 
+    if os.path.isfile(args.out):
+        os.rename(args.out, args.out + '.old')
+
     data_for_cleanup.target_is_ongoing = args.target == 'ongoing'
     data_for_cleanup.rfile_format = args.output_type
     data_for_cleanup.rfile_path = args.out
@@ -122,10 +125,6 @@ def main(args=None):
                 data_for_cleanup.rfile_permission)
         exit(1)
     data_for_cleanup.orig_attrs = _damon.attrs_to_restore()
-
-    if os.path.isfile(data_for_cleanup.rfile_path):
-        os.rename(data_for_cleanup.rfile_path,
-                data_for_cleanup.rfile_path + '.old')
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
