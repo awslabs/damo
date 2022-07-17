@@ -363,6 +363,12 @@ def set_implicit_target_schemes_argparser(parser):
             type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
 
+def turn_explicit_args_damon_on(args):
+    ctx = damon_ctx_from_damon_args(args)
+    kdamonds = [Kdamond('0', [ctx])]
+    _damon.apply_kdamonds(kdamonds)
+    return turn_damon('on'), ctx
+
 def turn_implicit_args_damon_on(args, record_request):
     set_implicit_target_args_explicit(args)
     ctx = damon_ctx_from_damon_args(args)
