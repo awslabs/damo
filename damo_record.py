@@ -133,15 +133,9 @@ def main(args=None):
 
     if not data_for_cleanup.target_is_ongoing:
         # Turn DAMON on
-        _damon.set_implicit_target_args_explicit(args)
-        ctx = _damon.damon_ctx_from_damon_args(args)
-        if damon_record_supported:
-            # Ask DAMON to do the record
-            ctx.set_record(args.rbuf, args.out)
-        kdamonds = [_damon.Kdamond('0', [ctx])]
-        _damon.apply_kdamonds(kdamonds)
-
-        if _damon.turn_damon('on'):
+        err, ctx = _damon.turn_implicit_args_damon_on(args,
+                record_request=_damon.DamonRecord(args.rbuf, args.out))
+        if err:
             print('could not turn DAMON on')
             cleanup_exit(-2)
 
