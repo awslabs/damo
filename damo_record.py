@@ -93,7 +93,7 @@ def main(args=None):
     # Check system requirements
     _damon.ensure_root_permission()
     err = _damon.initialize(args,
-            skip_dirs_population=args.target != 'ongoing')
+            skip_dirs_population=args.target == 'ongoing')
     if err != None:
         print(err)
         exit(1)
