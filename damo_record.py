@@ -146,7 +146,7 @@ def main(args=None):
             '-o', data_for_cleanup.rfile_path + '.perf.data'])
     print('Press Ctrl+C to stop')
 
-    if args.self_started_target == True:
+    if args.target != 'ongoing' and args.self_started_target == True:
         os.waitpid(ctx.targets[0].pid, 0)
     while _damon.is_damon_running():
         time.sleep(1)
