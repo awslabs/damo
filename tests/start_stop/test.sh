@@ -9,10 +9,6 @@ damo="../../damo"
 testname=$(basename $(pwd))
 
 damon_interfaces=""
-if [ -d "/sys/kernel/debug/damon" ]
-then
-	damon_interfaces+="debugfs "
-fi
 
 if [ -d "/sys/kernel/mm/damon" ]
 then
