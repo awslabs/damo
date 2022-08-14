@@ -15,6 +15,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
+    _damon.ensure_root_permission()
     _damon.initialize(args)
 
     for feature in sorted(_damon.features):
