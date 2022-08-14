@@ -21,6 +21,9 @@ def main(args=None):
 
     _damon.ensure_root_permission()
     err = _damon.initialize(args, skip_dirs_population=True)
+    if err != None:
+        print(err)
+        exit(1)
 
     if not _damon.is_damon_running():
         print('DAMON is not turned on')
