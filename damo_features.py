@@ -16,7 +16,10 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    _damon.initialize(args)
+    err = _damon.initialize(args)
+    if err != None:
+        print(err)
+        exit(1)
 
     for feature in sorted(_damon.features):
         supported = _damon.feature_supported(feature)
