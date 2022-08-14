@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
+import json
+
 import _damon
 
 def set_argparser(parser):
-    parser.add_argument('type', choices=['supported', 'unsupported', 'all'],
-            default='all', nargs='?',
+    parser.add_argument('type', nargs='?',
+            choices=['supported', 'unsupported', 'all', 'json'], default='all',
             help='type of features to listed')
     _damon.set_common_argparser(parser)
 
@@ -21,6 +23,7 @@ def main(args=None):
         print(err)
         exit(1)
 
+    feature_dir = {}
     for feature in sorted(_damon.features):
         supported = _damon.feature_supported(feature)
         if args.type == 'all':
@@ -30,6 +33,10 @@ def main(args=None):
             print(feature)
         elif args.type == 'unsupported' and not supported:
             print(feature)
+        elif args.type == 'json':
+            feature_dir[feature] = supported
+    if args.type == 'json':
+        print(json.dumps(feature_dir, indent=4, sort_keys=True))
 
 if __name__ == '__main__':
     main()
