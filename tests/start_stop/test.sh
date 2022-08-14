@@ -35,6 +35,13 @@ do
 		exit 1
 	fi
 
+	sudo timeout 3 "$damo" record ongoing &> /dev/null
+	if ! "$damo" validate
+	then
+		echo "FAIL $testname2 (invalid record file)"
+		exit 1
+	fi
+
 	sudo "$damo" stop
 	if pidof kdamond.0 > /dev/null
 	then
