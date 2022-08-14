@@ -125,6 +125,9 @@ def update_supported_features():
     if err != None:
         return err
 
+    if is_damon_running():
+        return 'debugfs feature update cannot be done while DAMON running'
+
     if debugfs_record != None:
         feature_supports['record'] = True
     if debugfs_schemes != None:
