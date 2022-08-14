@@ -28,21 +28,22 @@ fi
 for damon_interface in $damon_interfaces
 do
 	testname2="$testname $damon_interface"
-	sudo "$damo" start paddr
+	sudo "$damo" start paddr --damon_interface "$damon_interface"
 	if ! pidof kdamond.0 > /dev/null
 	then
 		echo "FAIL $testname2 (kdamond.0 pid not found after start)"
 		exit 1
 	fi
 
-	sudo timeout 3 "$damo" record ongoing &> /dev/null
+	sudo timeout 3 "$damo" record ongoing \
+		--damon_interface "$damon_interface" &> /dev/null
 	if ! "$damo" validate
 	then
 		echo "FAIL $testname2 (invalid record file)"
 		exit 1
 	fi
 
-	sudo "$damo" stop
+	sudo "$damo" stop --damon_interface "$damon_interface"
 	if pidof kdamond.0 > /dev/null
 	then
 		echo "FAIL $testname2 (kdamond.0 pid found after stop)"
