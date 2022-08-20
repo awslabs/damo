@@ -30,6 +30,7 @@ do
 		echo "FAIL $testname2 (kdamond.0 pid not found after start)"
 		exit 1
 	fi
+	echo "PASS $testname2 start $damon_interface"
 
 	sudo timeout 3 "$damo" record ongoing \
 		--damon_interface "$damon_interface" &> /dev/null
@@ -38,6 +39,7 @@ do
 		echo "FAIL $testname2 (invalid record file)"
 		exit 1
 	fi
+	echo "PASS $testname2 record-ongoing-validate $damon_interface"
 
 	sudo "$damo" tune --aggr 200000 paddr \
 		--damon_interface "$damon_interface" &> /dev/null
@@ -48,6 +50,7 @@ do
 		echo "FAIL $testname2 (invalid record file after tune)"
 		exit 1
 	fi
+	echo "PASS $testname2 tune-record-ongoing-validate $damon_interface"
 
 	sudo "$damo" stop --damon_interface "$damon_interface"
 	if pidof kdamond.0 > /dev/null
@@ -55,6 +58,7 @@ do
 		echo "FAIL $testname2 (kdamond.0 pid found after stop)"
 		exit 1
 	fi
+	echo "PASS $testname2 stop $damon_interface"
 done
 
 rm damon.data
