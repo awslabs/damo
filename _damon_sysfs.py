@@ -224,20 +224,14 @@ def dirs_populated():
             int(_read(contexts_nr_file)) >= 1 and
             int(_read(targets_nr_file)) >= 1)
 
-populated = False
 def ensure_dirs_populated():
     if dirs_populated():
-        return
-
-    global populated
-    if populated:
         return
 
     try:
         _write(kdamonds_nr_file, '1')
         _write(contexts_nr_file, '1')
         _write(targets_nr_file, '1')
-        populated = True
     except Exception as e:
         print(e)
         print('failed populating kdamond and context dirs')
