@@ -8,7 +8,7 @@ damo="../../damo"
 
 cleanup_files()
 {
-	files_to_remove="./damon.data ./damon.data.perf.data"
+	files_to_remove="./damon.data ./damon.data.perf.data ./damon.data.old"
 	for file in $files_to_remove
 	do
 		if [ -f "$file" ]
