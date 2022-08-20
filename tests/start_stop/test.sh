@@ -47,4 +47,7 @@ do
 	fi
 done
 
+rm damon.data
+rm damon.data.old
+
 echo "PASS $(basename $(pwd))"
