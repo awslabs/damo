@@ -81,13 +81,13 @@ def main(args=None):
     for target in result.target_snapshots:
         nr_snapshots = len(result.target_snapshots[target])
         nr_allowed_errors = nr_snapshots * args.allow_error / 100.0
-        nr_aggr_interval_erros = 0
+        nr_aggr_interval_errors = 0
         nr_nr_regions_erros = 0
         for snapshot in result.target_snapshots[target]:
             aggr_interval_us = (snapshot.end_time - snapshot.start_time) / 1000
-            nr_aggr_interval_erros += assert_value_in_range( aggr_interval_us,
+            nr_aggr_interval_errors += assert_value_in_range( aggr_interval_us,
                     args.aggr, 'aggregate interval',
-                    nr_aggr_interval_erros < nr_allowed_errors)
+                    nr_aggr_interval_errors < nr_allowed_errors)
 
             nr_nr_regions_erros += assert_value_in_range(len(snapshot.regions),
                     args.nr_regions, 'nr_regions',
