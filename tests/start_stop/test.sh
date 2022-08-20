@@ -65,7 +65,6 @@ do
 	echo "PASS $testname2 stop"
 done
 
-rm damon.data
-rm damon.data.old
+rm -f damon.data damon.data.old
 
 echo "PASS $(basename $(pwd))"
