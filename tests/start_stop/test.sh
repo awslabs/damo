@@ -41,8 +41,12 @@ do
 	fi
 	echo "PASS $testname2 record-ongoing-validate $damon_interface"
 
-	sudo "$damo" tune --aggr 200000 paddr \
+	if ! sudo "$damo" tune --aggr 200000 paddr \
 		--damon_interface "$damon_interface" &> /dev/null
+	then
+		echo "FAIL $testname2 tune"
+		exit 1
+	fi
 	sudo timeout 3 "$damo" record ongoing \
 		--damon_interface "$damon_interface" &> /dev/null
 	if ! "$damo" validate --aggr 180000 220000
