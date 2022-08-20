@@ -51,6 +51,6 @@ test_report "$damo report heats --guide" "heats_guide"
 
 test_report "$damo report heats" "heats"
 
-rm -fr results
+rm -fr results damon.adjusted.data
 
 echo "PASS" "$(basename "$(pwd)")"
