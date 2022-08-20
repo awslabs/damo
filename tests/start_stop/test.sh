@@ -39,6 +39,16 @@ do
 		exit 1
 	fi
 
+	sudo "$damo" tune --aggr 200000 paddr \
+		--damon_interface "$damon_interface" &> /dev/null
+	sudo timeout 3 "$damo" record ongoing \
+		--damon_interface "$damon_interface" &> /dev/null
+	if ! "$damo" validate --aggr 180000 220000
+	then
+		echo "FAIL $testname2 (invalid record file after tune)"
+		exit 1
+	fi
+
 	sudo "$damo" stop --damon_interface "$damon_interface"
 	if pidof kdamond.0 > /dev/null
 	then
