@@ -43,11 +43,7 @@ def main(args=None):
 
     # Require root permission
     _damon.ensure_root_permission()
-
-    err = _damon.initialize(args, skip_dirs_population=True)
-    if err != None:
-        print(err)
-        exit(1)
+    _damon.ensure_initialized(args, True)
 
     if _damon.is_damon_running():
         _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_stats'})

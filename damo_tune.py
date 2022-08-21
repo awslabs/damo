@@ -19,10 +19,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    err = _damon.initialize(args, skip_dirs_population=True)
-    if err != None:
-        print(err)
-        exit(1)
+    _damon.ensure_initialized(args, True)
 
     if _damon.damon_interface() == 'debugfs':
         print('tune does not support debugfs interface')

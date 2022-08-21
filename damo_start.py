@@ -20,7 +20,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    err = _damon.initialize(args)
+    err = _damon.ensure_initialized(args, False)
     if err != None:
         print(err)
         exit(1)

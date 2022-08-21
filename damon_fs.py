@@ -54,10 +54,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    err = _damon.initialize(args, skip_dirs_population=True)
-    if err != None:
-        print(err)
-        exit(1)
+    _damon.ensure_initialized(args, True)
 
     if args.operation == 'read':
         print(json.dumps(_damon.read_damon_fs(), indent=4, sort_keys=True))

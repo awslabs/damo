@@ -37,10 +37,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    err = _damon.initialize(args)
-    if err != None:
-        print(err)
-        exit(1)
+    _damon.ensure_initialized(args, False)
 
     orig_attrs = _damon.attrs_to_restore()
 
