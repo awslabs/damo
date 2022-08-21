@@ -87,6 +87,10 @@ def chk_handle_record_feature_support(args):
             exit(1)
         if args.rbuf:
             print('# \'--rbuf\' will be ignored')
+
+    if not args.rbuf:
+        args.rbuf = 1024 * 1024
+
     return damon_record_supported
 
 def chk_handle_output_permission(output_permission_option):
@@ -125,10 +129,6 @@ def main(args=None):
     _damon.ensure_initialized(args, args.target == 'ongoing')
 
     damon_record_supported = chk_handle_record_feature_support(args)
-
-    # Validate/correct options
-    if not args.rbuf:
-        args.rbuf = 1024 * 1024
 
     output_permission = chk_handle_output_permission(args.output_permission)
     backup_duplicate_output_file(args.out)
