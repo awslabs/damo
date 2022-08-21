@@ -69,6 +69,14 @@ def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
     cleanup_exit(signum)
 
+def set_data_for_cleanup(data_for_cleanup, args):
+    data_for_cleanup.target_is_ongoing = args.target == 'ongoing'
+    data_for_cleanup.rfile_format = args.output_type
+    data_for_cleanup.rfile_path = args.out
+    data_for_cleanup.remove_perf_data = not args.leave_perf_data
+    data_for_cleanup.rfile_permission = output_permission
+    data_for_cleanup.orig_attrs = _damon.attrs_to_restore()
+
 def set_argparser(parser):
     _damon.set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
@@ -117,12 +125,7 @@ def main(args=None):
     if os.path.isfile(args.out):
         os.rename(args.out, args.out + '.old')
 
-    data_for_cleanup.target_is_ongoing = args.target == 'ongoing'
-    data_for_cleanup.rfile_format = args.output_type
-    data_for_cleanup.rfile_path = args.out
-    data_for_cleanup.remove_perf_data = not args.leave_perf_data
-    data_for_cleanup.rfile_permission = output_permission
-    data_for_cleanup.orig_attrs = _damon.attrs_to_restore()
+    set_data_for_cleanup(data_for_cleanup, args)
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
