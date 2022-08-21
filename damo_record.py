@@ -95,6 +95,10 @@ def chk_handle_output_permission(output_permission_option):
         print('wrong --output_permission (%s)' % output_permission_option)
         exit(1)
 
+def backup_duplicate_output_file(output_file):
+    if os.path.isfile(output_file):
+        os.rename(output_file, output_file + '.old')
+
 def set_argparser(parser):
     _damon.set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
@@ -127,9 +131,7 @@ def main(args=None):
         args.rbuf = 1024 * 1024
 
     output_permission = chk_handle_output_permission(args.output_permission)
-
-    if os.path.isfile(args.out):
-        os.rename(args.out, args.out + '.old')
+    backup_duplicate_output_file(args.out)
 
     set_data_for_cleanup(data_for_cleanup, args)
 
