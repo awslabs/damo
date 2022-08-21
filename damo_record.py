@@ -69,7 +69,7 @@ def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
     cleanup_exit(signum)
 
-def set_data_for_cleanup(data_for_cleanup, args):
+def set_data_for_cleanup(data_for_cleanup, args, output_permission):
     data_for_cleanup.target_is_ongoing = args.target == 'ongoing'
     data_for_cleanup.rfile_format = args.output_type
     data_for_cleanup.rfile_path = args.out
@@ -98,6 +98,7 @@ def chk_handle_output_permission(output_permission_option):
     if output_permission < 0o0 or output_permission > 0o777:
         print('wrong --output_permission (%s)' % output_permission_option)
         exit(1)
+    return output_permission
 
 def backup_duplicate_output_file(output_file):
     if os.path.isfile(output_file):
@@ -134,7 +135,7 @@ def main(args=None):
     backup_duplicate_output_file(args.out)
 
     # Setup for cleanup
-    set_data_for_cleanup(data_for_cleanup, args)
+    set_data_for_cleanup(data_for_cleanup, args, output_permission)
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
