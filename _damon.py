@@ -294,6 +294,18 @@ def initialize(args, skip_dirs_population=False):
 
     return _damon_fs.initialize(skip_dirs_population)
 
+initialized = False
+def ensure_initialized(args, skip_dirs_population):
+    global initialized
+
+    if initialized:
+        return
+    err = initialize(args, skip_dirs_population)
+    if err != None:
+        print(err)
+        exit(1)
+    initialized = True
+
 def commit_inputs():
     if _damon_fs == _damon_dbgfs:
         print('debugfs interface unsupport commit_inputs()')
