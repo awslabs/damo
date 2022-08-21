@@ -70,7 +70,7 @@ def sighandler(signum, frame):
     cleanup_exit(signum)
 
 def set_data_for_cleanup(data_for_cleanup, args, output_permission):
-    data_for_cleanup.target_is_ongoing = args.target == 'ongoing'
+    data_for_cleanup.target_is_ongoing = _damon.is_ongoing_target(args)
     data_for_cleanup.rfile_format = args.output_type
     data_for_cleanup.rfile_path = args.out
     data_for_cleanup.remove_perf_data = not args.leave_perf_data
@@ -127,7 +127,7 @@ def main(args=None):
 
     # Check system requirements
     _damon.ensure_root_permission()
-    _damon.ensure_initialized(args, args.target == 'ongoing')
+    _damon.ensure_initialized(args, _damon.is_ongoing_target(args))
 
     # Check/handle the arguments and options
     damon_record_supported = chk_handle_record_feature_support(args)
@@ -140,8 +140,7 @@ def main(args=None):
     signal.signal(signal.SIGTERM, sighandler)
 
     # Now the real works
-    target_is_ongoing = data_for_cleanup.target_is_ongoing
-    if not target_is_ongoing:
+    if not _damon.is_ongoing_target(args):
         # Turn DAMON on
         err, ctx = _damon.turn_implicit_args_damon_on(args,
                 record_request=_damon.DamonRecord(args.rbuf, args.out))
@@ -156,7 +155,7 @@ def main(args=None):
             '-o', data_for_cleanup.rfile_path + '.perf.data'])
     print('Press Ctrl+C to stop')
 
-    if not target_is_ongoing and args.self_started_target == True:
+    if not _damon.is_ongoing_target(args) and args.self_started_target == True:
         os.waitpid(ctx.targets[0].pid, 0)
     while _damon.is_damon_running():
         time.sleep(1)
