@@ -122,8 +122,7 @@ def main(args=None):
 
     output_permission = int(args.output_permission, 8)
     if output_permission < 0o0 or output_permission > 0o777:
-        print('wrong --output_permission (%s)' %
-                data_for_cleanup.rfile_permission)
+        print('wrong --output_permission (%s)' % args.output_permission)
         exit(1)
 
     if os.path.isfile(args.out):
