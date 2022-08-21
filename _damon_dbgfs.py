@@ -212,9 +212,6 @@ def attr_str(attrs):
             attrs.regions_update_interval, attrs.min_nr_regions,
             attrs.max_nr_regions)
 
-def record_str(attrs):
-    return '%s %s ' % (attrs.rbuf_len, attrs.rfile_path)
-
 class DebugfsInputs:
     attrs = None
     record = None
