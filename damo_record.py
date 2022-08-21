@@ -77,6 +77,18 @@ def set_data_for_cleanup(data_for_cleanup, args):
     data_for_cleanup.rfile_permission = output_permission
     data_for_cleanup.orig_attrs = _damon.attrs_to_restore()
 
+def chk_handle_record_feature_support(args):
+    damon_record_supported = _damon.feature_supported('record')
+    if not damon_record_supported:
+        try:
+            subprocess.check_output(['which', 'perf'])
+        except:
+            print('perf is not installed')
+            exit(1)
+        if args.rbuf:
+            print('# \'--rbuf\' will be ignored')
+    return damon_record_supported
+
 def set_argparser(parser):
     _damon.set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
@@ -102,15 +114,7 @@ def main(args=None):
     _damon.ensure_root_permission()
     _damon.ensure_initialized(args, args.target == 'ongoing')
 
-    damon_record_supported = _damon.feature_supported('record')
-    if not damon_record_supported:
-        try:
-            subprocess.check_output(['which', 'perf'])
-        except:
-            print('perf is not installed')
-            exit(1)
-        if args.rbuf:
-            print('# \'--rbuf\' will be ignored')
+    damon_record_supported = chk_handle_record_feature_support(args)
 
     # Validate/correct options
     if not args.rbuf:
