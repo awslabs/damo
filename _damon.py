@@ -375,6 +375,9 @@ def set_implicit_target_schemes_argparser(parser):
             type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
 
+def is_ongoing_target(args):
+    return args.target == 'ongoing'
+
 def turn_explicit_args_damon_on(args):
     ctx = damon_ctx_from_damon_args(args)
     kdamonds = [Kdamond('0', [ctx])]
