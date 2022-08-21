@@ -128,16 +128,17 @@ def main(args=None):
     _damon.ensure_root_permission()
     _damon.ensure_initialized(args, args.target == 'ongoing')
 
+    # Check/handle the arguments and options
     damon_record_supported = chk_handle_record_feature_support(args)
-
     output_permission = chk_handle_output_permission(args.output_permission)
     backup_duplicate_output_file(args.out)
 
+    # Setup for cleanup
     set_data_for_cleanup(data_for_cleanup, args)
-
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
+    # Now the real works
     if not data_for_cleanup.target_is_ongoing:
         # Turn DAMON on
         err, ctx = _damon.turn_implicit_args_damon_on(args,
