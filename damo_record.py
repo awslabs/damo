@@ -89,6 +89,12 @@ def chk_handle_record_feature_support(args):
             print('# \'--rbuf\' will be ignored')
     return damon_record_supported
 
+def chk_handle_output_permission(output_permission_option):
+    output_permission = int(output_permission_option, 8)
+    if output_permission < 0o0 or output_permission > 0o777:
+        print('wrong --output_permission (%s)' % output_permission_option)
+        exit(1)
+
 def set_argparser(parser):
     _damon.set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
@@ -120,10 +126,7 @@ def main(args=None):
     if not args.rbuf:
         args.rbuf = 1024 * 1024
 
-    output_permission = int(args.output_permission, 8)
-    if output_permission < 0o0 or output_permission > 0o777:
-        print('wrong --output_permission (%s)' % args.output_permission)
-        exit(1)
+    output_permission = chk_handle_output_permission(args.output_permission)
 
     if os.path.isfile(args.out):
         os.rename(args.out, args.out + '.old')
