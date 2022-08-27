@@ -312,19 +312,16 @@ def commit_inputs():
         exit(1)
     return _damon_fs.commit_inputs()
 
-def read_damon_fs(max_depth, depth, dry):
+def _damon_fs_root():
     if _damon_fs == _damon_dbgfs:
-        root = _damon_dbgfs.debugfs_damon
-    else:
-        root = _damon_sysfs.admin_dir
-    return damo_fs.read_files(root, max_depth, depth, dry)
+        return _damon_dbgfs.debugfs_damon
+    return _damon_sysfs.admin_dir
+
+def read_damon_fs(max_depth, depth, dry):
+    return damo_fs.read_files(_damon_fs_root, max_depth, depth, dry)
 
 def write_damon_fs(contents, dry):
-    if _damon_fs == _damon_dbgfs:
-        root = _damon_dbgfs.debugfs_damon
-    else:
-        root = _damon_sysfs.admin_dir
-    damo_fs.write_files(root, contents, dry)
+    damo_fs.write_files(_damon_fs_root, contents, dry)
 
 def damon_interface():
     if _damon_fs == _damon_sysfs:
