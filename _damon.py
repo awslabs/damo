@@ -312,7 +312,7 @@ def commit_inputs():
         exit(1)
     return _damon_fs.commit_inputs()
 
-def read_damon_fs(max_depth=None, depth=1):
+def read_damon_fs(max_depth, depth):
     if _damon_fs == _damon_dbgfs:
         return damon_fs.read_files(_damon_dbgfs.debugfs_damon, max_depth,
                 depth)
