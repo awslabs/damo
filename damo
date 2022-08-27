@@ -19,7 +19,7 @@ import damo_status
 import damo_stop
 import damo_tune
 import damo_validate
-import damon_fs
+import damo_fs
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
     def _format_action(self, action):
@@ -72,9 +72,9 @@ def main():
             help='validate a given record result file')
     damo_validate.set_argparser(parser_validate)
 
-    parser_damon_fs = subparser.add_parser('fs',
+    parser_damo_fs = subparser.add_parser('fs',
             help='manipulate DAMON in a filesystem-like manner')
-    damon_fs.set_argparser(parser_damon_fs)
+    damo_fs.set_argparser(parser_damo_fs)
 
     parser_damo_status = subparser.add_parser('status',
             help='print status of DAMON')
@@ -115,7 +115,7 @@ def main():
     elif args.command == 'validate':
         damo_validate.main(args)
     elif args.command == 'fs':
-        damon_fs.main(args)
+        damo_fs.main(args)
     elif args.command == 'status':
         damo_status.main(args)
     elif args.command == 'start':

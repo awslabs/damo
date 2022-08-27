@@ -12,7 +12,7 @@ import _convert_damos
 import _damo_paddr_layout
 import _damon_dbgfs
 import _damon_sysfs
-import damon_fs
+import damo_fs
 
 class DamonIntervals:
     sample = None
@@ -314,15 +314,15 @@ def commit_inputs():
 
 def read_damon_fs(max_depth, depth):
     if _damon_fs == _damon_dbgfs:
-        return damon_fs.read_files(_damon_dbgfs.debugfs_damon, max_depth,
+        return damo_fs.read_files(_damon_dbgfs.debugfs_damon, max_depth,
                 depth)
-    return damon_fs.read_files(_damon_sysfs.admin_dir, max_depth, depth)
+    return damo_fs.read_files(_damon_sysfs.admin_dir, max_depth, depth)
 
 def write_damon_fs(contents):
     if _damon_fs == _damon_dbgfs:
-        damon_fs.write_files(_damon_dbgfs.debugfs_damon, contents)
+        damo_fs.write_files(_damon_dbgfs.debugfs_damon, contents)
         return
-    damon_fs.write_files(_damon_sysfs.admin_dir, contents)
+    damo_fs.write_files(_damon_sysfs.admin_dir, contents)
 
 def damon_interface():
     if _damon_fs == _damon_sysfs:
