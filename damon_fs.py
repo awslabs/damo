@@ -59,6 +59,9 @@ def main(args=None):
     if args.operation == 'read':
         print(json.dumps(_damon.read_damon_fs(), indent=4, sort_keys=True))
     if args.operation == 'write':
+        if args.content == None:
+            print('\'--content\' should provided for write')
+            exit(1)
         _damon.write_damon_fs(json.loads(args.content))
 
 if __name__ == '__main__':
