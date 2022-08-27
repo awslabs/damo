@@ -3,3 +3,4 @@
 - Test 'fs' and 'status'
 - Support rss recording
 - Support filtering regions with min age
+- Simplify _damon_dbgfs and _damon_sysfs using damo_fs
