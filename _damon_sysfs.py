@@ -56,46 +56,6 @@ schemes_nr_file = os.path.join(schemes_dir, 'nr_schemes')
 def scheme_dir(scheme_idx):
     return os.path.join(schemes_dir, '%d' % scheme_idx)
 
-# This class will be used in a future when we support multiple
-# contexts/kdamonds
-class DamonSysfsFile:
-    indices = None  # e.g., {'kdamond': 0, 'context': 1}
-    extra_path = None
-
-    def __init__(self, indices, extra_path=None):
-        self.indices = indices
-        self.extra_path = extra_path
-
-    def path(self):
-        path = kdamonds_dir
-        for keyword in ['kdamond', 'context', 'scheme', 'target',
-                'region']:
-            if keyword in self.indices:
-                path = os.path.join(path, keyword + 's', self.indices[keyword])
-        if self.extra_path:
-            path = os.path.join(path, self.extra_path)
-        return path
-
-    def __str__(self):
-        return self.path()
-
-    def __repr__(self):
-        return self.path()
-
-    def regions_dir(self):
-        return DamonSysfsFile(file_idx='regions',
-                kdamond_idx=self.kdamond_idx, context_idx=self.context_idx,
-                target_idx=self.target_idx)
-
-    def regions_nr(self):
-        return DamonSysfsFile(file_idx='regions/nr',
-                kdamond_idx=self.kdamond_idx, context_idx=self.context_idx,
-                target_idx=self.target_idx)
-
-    def write(self, content):
-        with open(self.path(), 'w') as f:
-            f.write(content)
-
 def _write(filepath, content):
     if _damon.pr_debug_log:
         print('write %s to %s' % (content, filepath))
