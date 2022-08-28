@@ -50,8 +50,11 @@ def write_files(root, contents, dry):
             except Exception as e:
                 print('writing %s to %s failed (%s)' % (contents[filename],
                     filepath, e))
-        else:
+        elif os.path.isdir(filepath):
             write_files(filepath, contents[filename], dry)
+        else:
+            print('filepath (%s) is neither dir nor file' % (filepath))
+            exit(1)
 
 def set_argparser(parser):
     parser.add_argument('operation', choices=['read', 'write'],
