@@ -293,6 +293,12 @@ def apply_kdamonds(kdamonds):
     subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
             shell=True, executable='/bin/bash')
 
+    if feature_supported('record') and ctx.record_request != None:
+        record_file_input = '%s %s' % (ctx.record_request.rfile_buf,
+                ctx.record_request.rfile_path)
+        with open(debugfs_record, 'w') as f:
+            f.write(record_file_input)
+
     if not debugfs_schemes:
         return 0
 
@@ -305,9 +311,3 @@ def apply_kdamonds(kdamonds):
 
     with open(debugfs_schemes, 'w') as f:
         f.write('\n'.join(scheme_file_input_lines))
-
-    if feature_supported('record') and ctx.record_request != None:
-        record_file_input = '%s %s' % (ctx.record_request.rfile_buf,
-                ctx.record_request.rfile_path)
-        with open(debugfs_record, 'w') as f:
-            f.write(record_file_input)
