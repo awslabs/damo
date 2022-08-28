@@ -303,8 +303,8 @@ def apply_kdamonds(kdamonds):
         scheme_file_input_lines.append(_convert_damos.damos_to_debugfs_input(scheme,
             ctx.intervals.sample, ctx.intervals.aggr, scheme_version))
 
-        with open(debugfs_schemes, 'w') as f:
-            f.write('\n'.join(scheme_file_input_lines))
+    with open(debugfs_schemes, 'w') as f:
+        f.write('\n'.join(scheme_file_input_lines))
 
     if feature_supported('record') and ctx.record_request != None:
         record_file_input = '%s %s' % (ctx.record_request.rfile_buf,
