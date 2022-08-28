@@ -41,8 +41,9 @@ def write_files(root, contents, dry):
     for filename in contents:
         filepath = os.path.join(root, filename)
         if os.path.isfile(filepath):
+            content = contents[filename]
             if dry:
-                print('write \'%s\' to \'%s\'' % (filepath, filename))
+                print('write \'%s\' to \'%s\'' % (content, filepath))
                 continue
             try:
                 with open(filepath, 'w') as f:
