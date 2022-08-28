@@ -321,7 +321,7 @@ def read_damon_fs(max_depth, depth, dry):
     return _damo_fs.read_files(_damon_fs_root(), max_depth, depth, dry)
 
 def write_damon_fs(contents, dry):
-    _damo_fs.write_files(_damon_fs_root(), contents, dry)
+    return _damo_fs.write_files(_damon_fs_root(), contents, dry)
 
 def damon_interface():
     if _damon_fs == _damon_sysfs:

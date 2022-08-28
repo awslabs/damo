@@ -23,16 +23,18 @@ def read_files(root, max_depth, current_depth, dry):
                 contents[filename] = 'read failed (%s)' % e
     return contents
 
+'''Return error'''
 def write_files(root, contents, dry):
     if isinstance(contents, list):
         for c in contents:
-            write_files(root, c, dry)
-        return
+            err = write_files(root, c, dry)
+            if err != None:
+                return err
+        return None
 
     if not isinstance(contents, dict):
-        print('write_files() received none-list, none-dict content: %s' %
+        return ('write_files() received none-list, none-dict content: %s' %
                 contents)
-        exit(1)
 
     for filename in contents:
         filepath = os.path.join(root, filename)
@@ -45,11 +47,10 @@ def write_files(root, contents, dry):
                 with open(filepath, 'w') as f:
                     f.write(contents[filename])
             except Exception as e:
-                print('writing %s to %s failed (%s)' % (contents[filename],
-                    filepath, e))
+                return 'writing %s to %s failed (%s)' % (contents[filename],
+                    filepath, e)
         elif os.path.isdir(filepath):
-            write_files(filepath, contents[filename], dry)
+            return write_files(filepath, contents[filename], dry)
         else:
-            print('filepath (%s) is neither dir nor file' % (filepath))
-            exit(1)
-
+            return 'filepath (%s) is neither dir nor file' % (filepath)
+    return None

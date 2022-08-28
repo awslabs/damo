@@ -30,7 +30,10 @@ def main(args=None):
         if args.content == None:
             print('\'--content\' should provided for write')
             exit(1)
-        _damon.write_damon_fs(json.loads(args.content), args.dry)
+        err = _damon.write_damon_fs(json.loads(args.content), args.dry)
+        if err:
+            print(err)
+            exit(1)
 
 if __name__ == '__main__':
     main()
