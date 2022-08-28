@@ -9,6 +9,7 @@ import os
 import subprocess
 
 import _convert_damos
+import _damo_fs
 import _damon
 
 debugfs = '/sys/kernel/debug'
@@ -22,12 +23,11 @@ debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
 debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
 def turn_damon(on_off):
-    return subprocess.call('echo %s > %s' % (on_off, debugfs_monitor_on),
-            shell=True, executable='/bin/bash')
+    return _damo_fs.write_files('', {debugfs_monitor_on: on_off}, dry=False)
 
 def is_damon_running():
-    with open(debugfs_monitor_on, 'r') as f:
-        return f.read().strip() == 'on'
+    result = _damo_fs.read_files(debugfs_damon, None, 1, dry=False)
+    return result['monitor_on'].strip() == 'on'
 
 feature_supports = None
 
