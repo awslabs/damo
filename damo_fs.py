@@ -33,6 +33,11 @@ def write_files(root, contents, dry):
             write_files(root, c, dry)
         return
 
+    if not isinstance(contents, dict):
+        print('write_files() received none-list, none-dict content: %s' %
+                contents)
+        exit(1)
+
     for filename in contents:
         filepath = os.path.join(root, filename)
         if os.path.isfile(filepath):
