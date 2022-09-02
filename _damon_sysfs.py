@@ -9,6 +9,7 @@ import os
 import time
 import traceback
 
+import _damo_fs
 import _damon
 
 feature_supports = None
