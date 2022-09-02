@@ -270,37 +270,27 @@ def apply_kdamonds(kdamonds):
     if ret:
         return ret
 
+    write_contents = []
     target = ctx.targets[0]
     if _damon.target_has_pid(ctx.ops):
-        try:
-            with open(debugfs_target_ids, 'w') as f:
-                f.write('%d\n' % target.pid)
-        except Exception as e:
-            return e
-
+        write_contents.append({debugfs_target_ids: '%s' % target.pid})
         tid = target.pid
     else:
-        try:
-            with open(debugfs_target_ids, 'w') as f:
-                f.write('paddr\n')
-        except Exception as e:
-            return e
+        write_contents.append({debugfs_target_ids: 'paddr\n'})
         tid = 42
     if feature_supported('init_regions_target_idx'):
         tid = 0
 
     string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in target.regions])
-    subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
-            shell=True, executable='/bin/bash')
+    write_contents.append({debugfs_init_regions: string})
 
     if feature_supported('record') and ctx.record_request != None:
         record_file_input = '%s %s' % (ctx.record_request.rfile_buf,
                 ctx.record_request.rfile_path)
-        with open(debugfs_record, 'w') as f:
-            f.write(record_file_input)
+        write_contents.append({debugfs_record: record_file_input})
 
     if not debugfs_schemes:
-        return 0
+        return _damo_fs.write_files('', write_contents, dry=False)
 
     scheme_version = _convert_damos.get_scheme_version()
 
@@ -309,5 +299,8 @@ def apply_kdamonds(kdamonds):
         scheme_file_input_lines.append(_convert_damos.damos_to_debugfs_input(scheme,
             ctx.intervals.sample, ctx.intervals.aggr, scheme_version))
 
-    with open(debugfs_schemes, 'w') as f:
-        f.write('\n'.join(scheme_file_input_lines))
+    write_contents.append({debugfs_schemes:
+        '\n'.join(scheme_file_input_lines)})
+    err = _damo_fs.write_files('', write_contents, dry=False)
+    if err:
+        print(err)
