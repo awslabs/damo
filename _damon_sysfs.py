@@ -81,6 +81,20 @@ def turn_damon(on_off):
 def is_damon_running():
     return _read(kdamond_state_file).strip() == 'on'
 
+def __apply_mon_attrs(kdamonds, kdamond_idx, context_idx):
+    ctx = kdamonds[kdamond_idx].contexts[context_idx]
+    try:
+        _write(intervals_sample_us_file, '%d' % ctx.intervals.sample)
+        _write(intervals_aggr_us_file, '%d' % ctx.intervals.aggr)
+        _write(intervals_update_us_file, '%d' % ctx.intervals.ops_update)
+        _write(nr_regions_min_file, '%d' % ctx.nr_regions.min_nr_regions)
+        _write(nr_regions_max_file, '%d' % ctx.nr_regions.max_nr_regions)
+    except Exception as e:
+        print('kdamond applying failed: %s' % e)
+        traceback.print_exc()
+        return 1
+    return 0
+
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
         print('Currently only one kdamond is supported')
@@ -92,6 +106,10 @@ def apply_kdamonds(kdamonds):
         print('currently only one target is supported')
         exit(1)
     ensure_dirs_populated()
+    ret = __apply_mon_attrs(kdamonds, 0, 0)
+    if ret != 0:
+        return ret
+
     ctx = kdamonds[0].contexts[0]
     try:
         _write(intervals_sample_us_file, '%d' % ctx.intervals.sample)
