@@ -264,9 +264,8 @@ def apply_kdamonds(kdamonds):
         print('currently only one target is supported')
         exit(1)
     ctx = kdamonds[0].contexts[0]
-    ret = subprocess.call('echo %s > %s' %
-            (attr_str_ctx(ctx), debugfs_attrs), shell=True,
-            executable='/bin/bash')
+    ret = _damo_fs.write_files('', {debugfs_attrs: attr_str_ctx(ctx)},
+            dry=False)
     if ret:
         return ret
 
