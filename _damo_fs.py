@@ -23,7 +23,17 @@ def read_files(root, max_depth, current_depth, dry):
                 contents[filename] = 'read failed (%s)' % e
     return contents
 
-'''Return error'''
+'''
+operations can be either {path: content}, or [operations].  In the former case,
+this function writes content to path, for all path/content pairs in the
+dictionary.  In the latter case, operations in the list is executed
+sequentially.  If the path is for a file, content should be a string.  If the
+path is for a directory, the content should be yet another operations.  In the
+latter case, upper-level path is prefixed to paths of the lower-level
+operations paths.
+
+Return an error string if fails any write, or None otherwise.
+'''
 def write_files(root, operations, dry):
     if isinstance(operations, list):
         for o in operations:
