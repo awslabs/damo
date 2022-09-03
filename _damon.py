@@ -320,7 +320,7 @@ def _damon_fs_root():
 def read_damon_fs():
     return _damo_fs.read_files(_damon_fs_root(), None, 1)
 
-def write_damon_fs(contents, dry):
+def write_damon_fs(contents):
     return _damo_fs.write_files({_damon_fs_root(): contents})
 
 def damon_interface():
