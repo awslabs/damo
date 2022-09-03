@@ -95,22 +95,8 @@ def __apply_mon_attrs(kdamonds, kdamond_idx, context_idx):
         return 1
     return 0
 
-def apply_kdamonds(kdamonds):
-    if len(kdamonds) != 1:
-        print('Currently only one kdamond is supported')
-        exit(1)
-    if len(kdamonds[0].contexts) != 1:
-        print('currently only one damon_ctx is supported')
-        exit(1)
-    if len(kdamonds[0].contexts[0].targets) != 1:
-        print('currently only one target is supported')
-        exit(1)
-    ensure_dirs_populated()
-    ret = __apply_mon_attrs(kdamonds, 0, 0)
-    if ret != 0:
-        return ret
-
-    ctx = kdamonds[0].contexts[0]
+def __apply_schemes(kdamonds, kdamond_idx, context_idx):
+    ctx = kdamonds[kdamond_idx].contexts[context_idx]
     try:
         schemes = ctx.schemes
         _write(schemes_nr_file, '%d' % len(schemes))
@@ -163,7 +149,33 @@ def apply_kdamonds(kdamonds):
             _write(os.path.join(wmarks_dir, 'high'), '%d' % wmarks.high_permil)
             _write(os.path.join(wmarks_dir, 'mid'), '%d' % wmarks.mid_permil)
             _write(os.path.join(wmarks_dir, 'low'), '%d' % wmarks.low_permil)
+    except Exception as e:
+        print('schemes applying failed: %s' % e)
+        traceback.print_exc()
+        return 1
+    return 0
 
+def apply_kdamonds(kdamonds):
+    if len(kdamonds) != 1:
+        print('Currently only one kdamond is supported')
+        exit(1)
+    if len(kdamonds[0].contexts) != 1:
+        print('currently only one damon_ctx is supported')
+        exit(1)
+    if len(kdamonds[0].contexts[0].targets) != 1:
+        print('currently only one target is supported')
+        exit(1)
+    ensure_dirs_populated()
+    ret = __apply_mon_attrs(kdamonds, 0, 0)
+    if ret != 0:
+        return ret
+
+    ret = __apply_schemes(kdamonds, 0, 0)
+    if ret != 0:
+        return ret
+
+    ctx = kdamonds[0].contexts[0]
+    try:
         _write(context_operations_file, ctx.ops)
 
         target = ctx.targets[0]
