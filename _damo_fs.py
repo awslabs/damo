@@ -20,27 +20,16 @@ def read_files(root, max_depth, current_depth):
                 contents[filename] = 'read failed (%s)' % e
     return contents
 
-'''
-operations can be either {path: content}, or [operations].  In the former case,
-this function writes content to path, for all path/content pairs in the
-dictionary.  In the latter case, operations in the list is executed
-sequentially.  If the path is for a file, content should be a string.  If the
-path is for a directory, the content should be yet another operations.  In the
-latter case, upper-level path is prefixed to paths of the lower-level
-operations paths.
-
-Return an error string if fails any write, or None otherwise.
-'''
-def write_files(root, operations):
+def __write_files(root, operations):
     if isinstance(operations, list):
         for o in operations:
-            err = write_files(root, o)
+            err = __write_files(root, o)
             if err != None:
                 return err
         return None
 
     if not isinstance(operations, dict):
-        return ('write_files() received none-list, none-dict content: %s' %
+        return ('__write_files() received none-list, none-dict content: %s' %
                 operations)
 
     for filename in operations:
@@ -53,7 +42,21 @@ def write_files(root, operations):
             except Exception as e:
                 return 'writing %s to %s failed (%s)' % (content, filepath, e)
         elif os.path.isdir(filepath):
-            return write_files(filepath, content)
+            return __write_files(filepath, content)
         else:
             return 'filepath (%s) is neither dir nor file' % (filepath)
     return None
+
+'''
+operations can be either {path: content}, or [operations].  In the former case,
+this function writes content to path, for all path/content pairs in the
+dictionary.  In the latter case, operations in the list is executed
+sequentially.  If the path is for a file, content should be a string.  If the
+path is for a directory, the content should be yet another operations.  In the
+latter case, upper-level path is prefixed to paths of the lower-level
+operations paths.
+
+Return an error string if fails any write, or None otherwise.
+'''
+def write_files(operations):
+    return __write_files('', operations)
