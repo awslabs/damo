@@ -31,10 +31,10 @@ operations paths.
 
 Return an error string if fails any write, or None otherwise.
 '''
-def write_files(root, operations, dry):
+def write_files(root, operations):
     if isinstance(operations, list):
         for o in operations:
-            err = write_files(root, o, dry)
+            err = write_files(root, o)
             if err != None:
                 return err
         return None
@@ -47,9 +47,6 @@ def write_files(root, operations, dry):
         filepath = os.path.join(root, filename)
         if os.path.isfile(filepath):
             content = operations[filename]
-            if dry:
-                print('write \'%s\' to \'%s\'' % (content, filepath))
-                continue
             try:
                 with open(filepath, 'w') as f:
                     f.write(content)

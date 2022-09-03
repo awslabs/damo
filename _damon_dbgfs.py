@@ -23,7 +23,7 @@ debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
 debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
 def turn_damon(on_off):
-    return _damo_fs.write_files('', {debugfs_monitor_on: on_off}, dry=False)
+    return _damo_fs.write_files('', {debugfs_monitor_on: on_off})
 
 def is_damon_running():
     result = _damo_fs.read_files(debugfs_damon, None, 1)
@@ -239,7 +239,7 @@ def apply_debugfs_inputs(debugfs_inputs):
     write_ops.append({debugfs_attrs: debugfs_inputs.attrs})
     write_ops.append({debugfs_record: debugfs_inputs.record})
     write_ops.append({debugfs_schemes: debugfs_inputs.schemes})
-    _damo_fs.write_files('', write_ops, dry=False)
+    _damo_fs.write_files('', write_ops)
 
 def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
@@ -259,8 +259,7 @@ def apply_kdamonds(kdamonds):
         print('currently only one target is supported')
         exit(1)
     ctx = kdamonds[0].contexts[0]
-    ret = _damo_fs.write_files('', {debugfs_attrs: attr_str_ctx(ctx)},
-            dry=False)
+    ret = _damo_fs.write_files('', {debugfs_attrs: attr_str_ctx(ctx)})
     if ret:
         return ret
 
@@ -284,7 +283,7 @@ def apply_kdamonds(kdamonds):
         write_contents.append({debugfs_record: record_file_input})
 
     if not debugfs_schemes:
-        return _damo_fs.write_files('', write_contents, dry=False)
+        return _damo_fs.write_files('', write_contents)
 
     scheme_version = _convert_damos.get_scheme_version()
 
@@ -295,6 +294,6 @@ def apply_kdamonds(kdamonds):
 
     write_contents.append({debugfs_schemes:
         '\n'.join(scheme_file_input_lines)})
-    err = _damo_fs.write_files('', write_contents, dry=False)
+    err = _damo_fs.write_files('', write_contents)
     if err:
         print(err)
