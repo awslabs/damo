@@ -112,12 +112,6 @@ def apply_kdamonds(kdamonds):
 
     ctx = kdamonds[0].contexts[0]
     try:
-        _write(intervals_sample_us_file, '%d' % ctx.intervals.sample)
-        _write(intervals_aggr_us_file, '%d' % ctx.intervals.aggr)
-        _write(intervals_update_us_file, '%d' % ctx.intervals.ops_update)
-        _write(nr_regions_min_file, '%d' % ctx.nr_regions.min_nr_regions)
-        _write(nr_regions_max_file, '%d' % ctx.nr_regions.max_nr_regions)
-
         schemes = ctx.schemes
         _write(schemes_nr_file, '%d' % len(schemes))
         for idx, scheme in enumerate(schemes):
