@@ -3,7 +3,7 @@
 
 import os
 
-def read_files(root, max_depth, current_depth, dry):
+def read_files(root, max_depth, current_depth):
     contents = {}
     for filename in os.listdir(root):
         filepath = os.path.join(root, filename)
@@ -11,11 +11,8 @@ def read_files(root, max_depth, current_depth, dry):
             if max_depth != None and current_depth + 1 > max_depth:
                 continue
             contents[filename] = read_files(filepath, max_depth,
-                    current_depth + 1, dry)
+                    current_depth + 1)
         else:
-            if dry:
-                print('read \'%s\'' % filepath)
-                continue
             try:
                 with open(filepath, 'r') as f:
                     contents[filename] = f.read()
@@ -59,7 +56,7 @@ def write_files(root, operations, dry):
             except Exception as e:
                 return 'writing %s to %s failed (%s)' % (content, filepath, e)
         elif os.path.isdir(filepath):
-            return write_files(filepath, content, dry)
+            return write_files(filepath, content)
         else:
             return 'filepath (%s) is neither dir nor file' % (filepath)
     return None
