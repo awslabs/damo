@@ -3,6 +3,8 @@
 
 import os
 
+import _damon
+
 def read_files(root, max_depth, current_depth):
     contents = {}
     for filename in os.listdir(root):
@@ -38,6 +40,8 @@ def __write_files(root, operations):
             content = operations[filename]
             try:
                 with open(filepath, 'w') as f:
+                    if _damon.pr_debug_log:
+                        print('write \'%s\' to \'%s\'' % (content, f))
                     f.write(content)
             except Exception as e:
                 return 'writing %s to %s failed (%s)' % (content, filepath, e)
