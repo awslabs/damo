@@ -21,7 +21,7 @@ def main(args=None):
     _damon.ensure_initialized(args, True)
 
     if args.operation == 'read':
-        content = _damon.read_damon_fs(None, 1)
+        content = _damon.read_damon_fs()
         print(json.dumps(content, indent=4, sort_keys=True))
     if args.operation == 'write':
         if args.content == None:

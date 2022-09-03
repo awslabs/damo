@@ -317,8 +317,8 @@ def _damon_fs_root():
         return _damon_dbgfs.debugfs_damon
     return _damon_sysfs.admin_dir
 
-def read_damon_fs(max_depth, depth):
-    return _damo_fs.read_files(_damon_fs_root(), max_depth, depth)
+def read_damon_fs():
+    return _damo_fs.read_files(_damon_fs_root(), None, 1)
 
 def write_damon_fs(contents, dry):
     return _damo_fs.write_files({_damon_fs_root(): contents})
