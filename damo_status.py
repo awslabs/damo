@@ -46,9 +46,8 @@ def main(args=None):
     _damon.ensure_initialized(args, True)
 
     if _damon.is_damon_running():
-        _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_stats'},
-                dry=False)
-    content = _damon.read_damon_fs(None, 1, False)
+        _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_stats'})
+    content = _damon.read_damon_fs(None, 1)
     if args.target == 'all':
         print(json.dumps(content, indent=4, sort_keys=True))
     elif args.target == 'schemes_stats':
