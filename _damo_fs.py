@@ -5,14 +5,14 @@ import os
 
 import _damon
 
-def read_files(root, max_depth, current_depth):
+def __read_files(root, max_depth, current_depth):
     contents = {}
     for filename in os.listdir(root):
         filepath = os.path.join(root, filename)
         if os.path.isdir(filepath):
             if max_depth != None and current_depth + 1 > max_depth:
                 continue
-            contents[filename] = read_files(filepath, max_depth,
+            contents[filename] = __read_files(filepath, max_depth,
                     current_depth + 1)
         else:
             try:
@@ -21,6 +21,9 @@ def read_files(root, max_depth, current_depth):
             except Exception as e:
                 contents[filename] = 'read failed (%s)' % e
     return contents
+
+def read_files(root, max_depth):
+    return __read_files(root, max_depth, 1)
 
 def __write_files(root, operations):
     if isinstance(operations, list):
