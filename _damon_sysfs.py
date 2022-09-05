@@ -120,6 +120,24 @@ def __apply_scheme_access_pattern(kdamonds, kdamond_idx, context_idx,
         'age', 'max'), '%d' % (scheme.access_pattern.max_age_us /
         ctx.intervals.aggr))
 
+def __apply_scheme_quotas(kdamonds, kdamond_idx, context_idx, scheme_idx):
+    ctx = kdamonds[kdamond_idx].contexts[context_idx]
+    scheme = ctx.schemes[scheme_idx]
+    quotas_dir = os.path.join(scheme_dir(scheme_idx), 'quotas')
+    _write(os.path.join(quotas_dir, 'ms'), '%d' %
+            scheme.quotas.time_ms)
+    _write(os.path.join(quotas_dir, 'bytes'), '%d' %
+            scheme.quotas.sz_bytes)
+    _write(os.path.join(quotas_dir, 'reset_interval_ms'), '%d' %
+            scheme.quotas.reset_interval_ms)
+    weights_dir = os.path.join(quotas_dir, 'weights')
+    _write(os.path.join(weights_dir, 'sz_permil'), '%d' %
+            scheme.quotas.weight_sz_permil)
+    _write(os.path.join(weights_dir, 'nr_accesses_permil'), '%d' %
+            scheme.quotas.weight_nr_accesses_permil)
+    _write(os.path.join(weights_dir, 'age_permil'), '%d' %
+            scheme.quotas.weight_age_permil)
+
 def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     try:
@@ -131,21 +149,7 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
 
             _write(os.path.join(scheme_dir(idx), 'action'), scheme.action)
 
-            # quotas
-            quotas_dir = os.path.join(scheme_dir(idx), 'quotas')
-            _write(os.path.join(quotas_dir, 'ms'), '%d' %
-                    scheme.quotas.time_ms)
-            _write(os.path.join(quotas_dir, 'bytes'), '%d' %
-                    scheme.quotas.sz_bytes)
-            _write(os.path.join(quotas_dir, 'reset_interval_ms'), '%d' %
-                    scheme.quotas.reset_interval_ms)
-            weights_dir = os.path.join(quotas_dir, 'weights')
-            _write(os.path.join(weights_dir, 'sz_permil'), '%d' %
-                    scheme.quotas.weight_sz_permil)
-            _write(os.path.join(weights_dir, 'nr_accesses_permil'), '%d' %
-                    scheme.quotas.weight_nr_accesses_permil)
-            _write(os.path.join(weights_dir, 'age_permil'), '%d' %
-                    scheme.quotas.weight_age_permil)
+            __apply_scheme_quotas(kdamonds, kdamond_idx, context_idx, idx)
 
             # watermarks
             wmarks = scheme.watermarks
