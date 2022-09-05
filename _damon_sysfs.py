@@ -99,76 +99,91 @@ def __apply_mon_attrs(kdamonds, kdamond_idx, context_idx):
         return 1
     return 0
 
-def __apply_scheme_access_pattern(kdamonds, kdamond_idx, context_idx,
+def build_scheme_access_pattern_wops(kdamonds, kdamond_idx, context_idx,
         scheme_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     scheme = ctx.schemes[scheme_idx]
 
+    write_ops = []
     max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
-    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern', 'sz',
-        'min'), '%d' % scheme.access_pattern.min_sz_bytes)
-    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern', 'sz',
-        'max'), '%d' % scheme.access_pattern.max_sz_bytes)
-    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern',
-        'nr_accesses', 'min'),
+    write_ops.append({os.path.join(scheme_dir(scheme_idx),
+        'access_pattern', 'sz', 'min'):
+        '%d' % scheme.access_pattern.min_sz_bytes})
+    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
+        'sz', 'max'):
+        '%d' % scheme.access_pattern.max_sz_bytes})
+    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
+        'nr_accesses', 'min'):
         '%d' % int(scheme.access_pattern.min_nr_accesses_permil *
-            max_nr_accesses / 1000))
-    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern',
-        'nr_accesses', 'max'),
+            max_nr_accesses / 1000)})
+    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
+        'nr_accesses', 'max'):
         '%d' % int(scheme.access_pattern.max_nr_accesses_permil *
-            max_nr_accesses / 1000))
-    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern',
-        'age', 'min'), '%d' % (scheme.access_pattern.min_age_us /
-        ctx.intervals.aggr))
-    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern',
-        'age', 'max'), '%d' % (scheme.access_pattern.max_age_us /
-        ctx.intervals.aggr))
+            max_nr_accesses / 1000)})
+    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
+        'age', 'min'):
+        '%d' % (scheme.access_pattern.min_age_us / ctx.intervals.aggr)})
+    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
+        'age', 'max'):
+        '%d' % (scheme.access_pattern.max_age_us /
+        ctx.intervals.aggr)})
+    return write_ops
 
-def __apply_scheme_quotas(kdamonds, kdamond_idx, context_idx, scheme_idx):
+def build_scheme_quotas_wops(kdamonds, kdamond_idx, context_idx, scheme_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     scheme = ctx.schemes[scheme_idx]
     quotas_dir = os.path.join(scheme_dir(scheme_idx), 'quotas')
-    _write(os.path.join(quotas_dir, 'ms'), '%d' %
-            scheme.quotas.time_ms)
-    _write(os.path.join(quotas_dir, 'bytes'), '%d' %
-            scheme.quotas.sz_bytes)
-    _write(os.path.join(quotas_dir, 'reset_interval_ms'), '%d' %
-            scheme.quotas.reset_interval_ms)
-    weights_dir = os.path.join(quotas_dir, 'weights')
-    _write(os.path.join(weights_dir, 'sz_permil'), '%d' %
-            scheme.quotas.weight_sz_permil)
-    _write(os.path.join(weights_dir, 'nr_accesses_permil'), '%d' %
-            scheme.quotas.weight_nr_accesses_permil)
-    _write(os.path.join(weights_dir, 'age_permil'), '%d' %
-            scheme.quotas.weight_age_permil)
 
-def __apply_scheme_watermarks(kdamonds, kdamond_idx, context_idx, scheme_idx):
+    write_ops = []
+    write_ops.append({os.path.join(quotas_dir, 'ms'): '%d' %
+            scheme.quotas.time_ms})
+    write_ops.append({os.path.join(quotas_dir, 'bytes'): '%d' %
+            scheme.quotas.sz_bytes})
+    write_ops.append({os.path.join(quotas_dir, 'reset_interval_ms'): '%d' %
+            scheme.quotas.reset_interval_ms})
+    weights_dir = os.path.join(quotas_dir, 'weights')
+    write_ops.append({os.path.join(weights_dir, 'sz_permil'): '%d' %
+            scheme.quotas.weight_sz_permil})
+    write_ops.append({os.path.join(weights_dir, 'nr_accesses_permil'): '%d' %
+            scheme.quotas.weight_nr_accesses_permil})
+    write_ops.append({os.path.join(weights_dir, 'age_permil'): '%d' %
+            scheme.quotas.weight_age_permil})
+    return write_ops
+
+def build_scheme_watermarks_wops(kdamonds, kdamond_idx, context_idx,
+        scheme_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     scheme = ctx.schemes[scheme_idx]
     wmarks = scheme.watermarks
     wmarks_dir = os.path.join(scheme_dir(scheme_idx), 'watermarks')
-    _write(os.path.join(wmarks_dir, 'metric'), wmarks.metric)
-    _write(os.path.join(wmarks_dir, 'interval_us'), '%d' %
-            wmarks.interval_us)
-    _write(os.path.join(wmarks_dir, 'high'), '%d' % wmarks.high_permil)
-    _write(os.path.join(wmarks_dir, 'mid'), '%d' % wmarks.mid_permil)
-    _write(os.path.join(wmarks_dir, 'low'), '%d' % wmarks.low_permil)
+
+    write_ops = []
+    write_ops.append({os.path.join(wmarks_dir, 'metric'): wmarks.metric})
+    write_ops.append({os.path.join(wmarks_dir, 'interval_us'): '%d' %
+            wmarks.interval_us})
+    write_ops.append({os.path.join(wmarks_dir, 'high'): '%d' %
+        wmarks.high_permil})
+    write_ops.append({os.path.join(wmarks_dir, 'mid'): '%d' %
+        wmarks.mid_permil})
+    write_ops.append({os.path.join(wmarks_dir, 'low'): '%d' %
+        wmarks.low_permil})
+    return write_ops
 
 def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
-    try:
-        schemes = ctx.schemes
-        _write(schemes_nr_file, '%d' % len(schemes))
-        for idx, scheme in enumerate(schemes):
-            __apply_scheme_access_pattern(kdamonds, kdamond_idx, context_idx,
-                    idx)
-
-            _write(os.path.join(scheme_dir(idx), 'action'), scheme.action)
-
-            __apply_scheme_quotas(kdamonds, kdamond_idx, context_idx, idx)
-            __apply_scheme_watermarks(kdamonds, kdamond_idx, context_idx, idx)
-
-    except Exception as e:
+    schemes = ctx.schemes
+    wops = [{schemes_nr_file: '%d' % len(schemes)}]
+    for idx, scheme in enumerate(schemes):
+        wops += build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
+                context_idx, idx)
+        wops.append({os.path.join(scheme_dir(idx), 'action'):
+            scheme.action})
+        wops += build_scheme_quotas_wops(kdamonds, kdamond_idx,
+                context_idx, idx)
+        wops += build_scheme_watermarks_wops(kdamonds, kdamond_idx,
+                context_idx, idx)
+    err = _damo_fs.write_files(wops)
+    if err:
         print('schemes applying failed: %s' % e)
         traceback.print_exc()
         return 1
