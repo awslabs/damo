@@ -276,11 +276,11 @@ def update_supported_features():
     ensure_dirs_populated()
     if not os.path.isfile(context_avail_operations_file):
         for feature in ['vaddr', 'paddr', 'fvaddr', 'vaddr']:
-            try:
-                _write(context_operations_file, feature)
-                feature_supports[feature] = True
-            except IOError:
+            err = _damo_fs.write_files({context_operations_file: feature})
+            if err != None:
                 feature_supports[feature] = False
+            else:
+                feature_supports[feature] = True
         return None
 
     avail_ops = _read(context_avail_operations_file).strip().split()
