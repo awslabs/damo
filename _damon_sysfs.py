@@ -209,17 +209,17 @@ def apply_kdamonds(kdamonds):
         return ret
 
     ctx = kdamonds[0].contexts[0]
-    try:
-        _write(context_operations_file, ctx.ops)
-
-        target = ctx.targets[0]
-        if _damon.target_has_pid(ctx.ops):
-            _write(target_pid_file, '%d' % ctx.targets[0].pid)
-        _write(regions_nr_file, '%d' % len(target.regions))
-        for idx, region in enumerate(target.regions):
-            _write(region_start_file(idx), '%d' % region.start)
-            _write(region_end_file(idx), '%d' % region.end)
-    except Exception as e:
+    wops = []
+    wops.append({context_operations_file: ctx.ops})
+    target = ctx.targets[0]
+    if _damon.target_has_pid(ctx.ops):
+        wops.append({target_pid_file: '%d' % ctx.targets[0].pid})
+    wops.append({regions_nr_file: '%d' % len(target.regions)})
+    for idx, region in enumerate(target.regions):
+        wops.append({region_start_file(idx): '%d' % region.start})
+        wops.append({region_end_file(idx): '%d' % region.end})
+    err = _damo_fs.write_ops(wops)
+    if err != None:
         print('kdamond applying failed: %s' % e)
         traceback.print_exc()
         return 1
