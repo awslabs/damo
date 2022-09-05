@@ -83,14 +83,18 @@ def is_damon_running():
 
 def __apply_mon_attrs(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
-    try:
-        _write(intervals_sample_us_file, '%d' % ctx.intervals.sample)
-        _write(intervals_aggr_us_file, '%d' % ctx.intervals.aggr)
-        _write(intervals_update_us_file, '%d' % ctx.intervals.ops_update)
-        _write(nr_regions_min_file, '%d' % ctx.nr_regions.min_nr_regions)
-        _write(nr_regions_max_file, '%d' % ctx.nr_regions.max_nr_regions)
-    except Exception as e:
-        print('kdamond applying failed: %s' % e)
+    write_ops = []
+    write_ops.append({intervals_sample_us_file: '%d' % ctx.intervals.sample})
+    write_ops.append({intervals_aggr_us_file: '%d' % ctx.intervals.aggr})
+    write_ops.append({intervals_update_us_file: '%d' %
+        ctx.intervals.ops_update})
+    write_ops.append({nr_regions_min_file: '%d' %
+        ctx.nr_regions.min_nr_regions})
+    write_ops.append({nr_regions_max_file: '%d' %
+        ctx.nr_regions.max_nr_regions})
+    err = _damo_fs.write_files(write_ops)
+    if err != None:
+        print('kdamond applying failed: %s' % err)
         traceback.print_exc()
         return 1
     return 0
