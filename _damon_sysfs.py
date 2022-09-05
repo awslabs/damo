@@ -138,6 +138,18 @@ def __apply_scheme_quotas(kdamonds, kdamond_idx, context_idx, scheme_idx):
     _write(os.path.join(weights_dir, 'age_permil'), '%d' %
             scheme.quotas.weight_age_permil)
 
+def __apply_scheme_watermarks(kdamonds, kdamond_idx, context_idx, scheme_idx):
+    ctx = kdamonds[kdamond_idx].contexts[context_idx]
+    scheme = ctx.schemes[scheme_idx]
+    wmarks = scheme.watermarks
+    wmarks_dir = os.path.join(scheme_dir(scheme_idx), 'watermarks')
+    _write(os.path.join(wmarks_dir, 'metric'), wmarks.metric)
+    _write(os.path.join(wmarks_dir, 'interval_us'), '%d' %
+            wmarks.interval_us)
+    _write(os.path.join(wmarks_dir, 'high'), '%d' % wmarks.high_permil)
+    _write(os.path.join(wmarks_dir, 'mid'), '%d' % wmarks.mid_permil)
+    _write(os.path.join(wmarks_dir, 'low'), '%d' % wmarks.low_permil)
+
 def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     try:
@@ -150,16 +162,8 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
             _write(os.path.join(scheme_dir(idx), 'action'), scheme.action)
 
             __apply_scheme_quotas(kdamonds, kdamond_idx, context_idx, idx)
+            __apply_scheme_watermarks(kdamonds, kdamond_idx, context_idx, idx)
 
-            # watermarks
-            wmarks = scheme.watermarks
-            wmarks_dir = os.path.join(scheme_dir(idx), 'watermarks')
-            _write(os.path.join(wmarks_dir, 'metric'), wmarks.metric)
-            _write(os.path.join(wmarks_dir, 'interval_us'), '%d' %
-                    wmarks.interval_us)
-            _write(os.path.join(wmarks_dir, 'high'), '%d' % wmarks.high_permil)
-            _write(os.path.join(wmarks_dir, 'mid'), '%d' % wmarks.mid_permil)
-            _write(os.path.join(wmarks_dir, 'low'), '%d' % wmarks.low_permil)
     except Exception as e:
         print('schemes applying failed: %s' % e)
         traceback.print_exc()
