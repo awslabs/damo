@@ -57,12 +57,6 @@ schemes_nr_file = os.path.join(schemes_dir, 'nr_schemes')
 def scheme_dir(scheme_idx):
     return os.path.join(schemes_dir, '%d' % scheme_idx)
 
-def _write(filepath, content):
-    if _damon.pr_debug_log:
-        print('write %s to %s' % (content, filepath))
-    with open(filepath, 'w') as f:
-        f.write(content)
-
 def _read(filepath):
     with open(filepath, 'r') as f:
         return f.read()
