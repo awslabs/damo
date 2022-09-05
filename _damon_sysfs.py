@@ -218,7 +218,7 @@ def apply_kdamonds(kdamonds):
     for idx, region in enumerate(target.regions):
         wops.append({region_start_file(idx): '%d' % region.start})
         wops.append({region_end_file(idx): '%d' % region.end})
-    err = _damo_fs.write_ops(wops)
+    err = _damo_fs.write_files(wops)
     if err != None:
         print('kdamond applying failed: %s' % e)
         traceback.print_exc()
