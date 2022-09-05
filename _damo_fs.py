@@ -22,8 +22,8 @@ def __read_files(root, max_depth, current_depth):
                 contents[filename] = 'read failed (%s)' % e
     return contents
 
-def read_files(root, max_depth):
-    return __read_files(root, max_depth, 1)
+def read_files_recursive(root):
+    return __read_files(root, None, 1)
 
 def __write_files(root, operations):
     if isinstance(operations, list):

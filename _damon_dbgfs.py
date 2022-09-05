@@ -26,7 +26,7 @@ def turn_damon(on_off):
     return _damo_fs.write_files({debugfs_monitor_on: on_off})
 
 def is_damon_running():
-    result = _damo_fs.read_files(debugfs_damon, None)
+    result = _damo_fs.read_files_recursive(debugfs_damon)
     return result['monitor_on'].strip() == 'on'
 
 feature_supports = None

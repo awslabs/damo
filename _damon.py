@@ -318,7 +318,7 @@ def _damon_fs_root():
     return _damon_sysfs.admin_dir
 
 def read_damon_fs():
-    return _damo_fs.read_files(_damon_fs_root(), None)
+    return _damo_fs.read_files_recursive(_damon_fs_root())
 
 def write_damon_fs(contents):
     return _damo_fs.write_files({_damon_fs_root(): contents})
