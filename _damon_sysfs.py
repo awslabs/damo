@@ -241,7 +241,7 @@ def ensure_dirs_populated():
 
     wops = [{kdamonds_nr_file: '1'}]
     wops.append({contexts_nr_file: '1'})
-    wops.append({target_nr_file: '1'})
+    wops.append({targets_nr_file: '1'})
     err = _damo_fs.write_files(wops)
     if err != None:
         print(err)
