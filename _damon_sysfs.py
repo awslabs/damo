@@ -245,12 +245,12 @@ def ensure_dirs_populated():
     if dirs_populated():
         return
 
-    try:
-        _write(kdamonds_nr_file, '1')
-        _write(contexts_nr_file, '1')
-        _write(targets_nr_file, '1')
-    except Exception as e:
-        print(e)
+    wops = [{kdamonds_nr_file: '1'}]
+    wops.append({contexts_nr_file: '1'})
+    wops.append({target_nr_file: '1'})
+    err = _damo_fs.write_files(wops)
+    if err != None:
+        print(err)
         print('failed populating kdamond and context dirs')
         exit(1)
 
