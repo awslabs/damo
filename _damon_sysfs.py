@@ -225,12 +225,11 @@ def apply_kdamonds(kdamonds):
         return 1
 
 def commit_inputs():
-    try:
-        _write(kdamond_state_file, 'commit')
-        return 0
-    except Exception as e:
-        print(e)
+    err = _damo_fs.write_files({kdamond_state_file: 'commit'})
+    if err != None:
+        print(err)
         return 1
+    return 0
 
 def feature_supported(feature):
     if feature_supports == None:
