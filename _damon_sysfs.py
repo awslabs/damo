@@ -95,32 +95,39 @@ def __apply_mon_attrs(kdamonds, kdamond_idx, context_idx):
         return 1
     return 0
 
+def __apply_scheme_access_pattern(kdamonds, kdamond_idx, context_idx,
+        scheme_idx):
+    ctx = kdamonds[kdamond_idx].contexts[context_idx]
+    scheme = ctx.schemes[scheme_idx]
+
+    max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
+    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern', 'sz',
+        'min'), '%d' % scheme.access_pattern.min_sz_bytes)
+    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern', 'sz',
+        'max'), '%d' % scheme.access_pattern.max_sz_bytes)
+    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern',
+        'nr_accesses', 'min'),
+        '%d' % int(scheme.access_pattern.min_nr_accesses_permil *
+            max_nr_accesses / 1000))
+    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern',
+        'nr_accesses', 'max'),
+        '%d' % int(scheme.access_pattern.max_nr_accesses_permil *
+            max_nr_accesses / 1000))
+    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern',
+        'age', 'min'), '%d' % (scheme.access_pattern.min_age_us /
+        ctx.intervals.aggr))
+    _write(os.path.join(scheme_dir(scheme_idx), 'access_pattern',
+        'age', 'max'), '%d' % (scheme.access_pattern.max_age_us /
+        ctx.intervals.aggr))
+
 def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     try:
         schemes = ctx.schemes
         _write(schemes_nr_file, '%d' % len(schemes))
         for idx, scheme in enumerate(schemes):
-            # access pattern
-            max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
-            _write(os.path.join(scheme_dir(idx), 'access_pattern', 'sz',
-                'min'), '%d' % scheme.access_pattern.min_sz_bytes)
-            _write(os.path.join(scheme_dir(idx), 'access_pattern', 'sz',
-                'max'), '%d' % scheme.access_pattern.max_sz_bytes)
-            _write(os.path.join(scheme_dir(idx), 'access_pattern',
-                'nr_accesses', 'min'),
-                '%d' % int(scheme.access_pattern.min_nr_accesses_permil *
-                    max_nr_accesses / 1000))
-            _write(os.path.join(scheme_dir(idx), 'access_pattern',
-                'nr_accesses', 'max'),
-                '%d' % int(scheme.access_pattern.max_nr_accesses_permil *
-                    max_nr_accesses / 1000))
-            _write(os.path.join(scheme_dir(idx), 'access_pattern',
-                'age', 'min'), '%d' % (scheme.access_pattern.min_age_us /
-                ctx.intervals.aggr))
-            _write(os.path.join(scheme_dir(idx), 'access_pattern',
-                'age', 'max'), '%d' % (scheme.access_pattern.max_age_us /
-                ctx.intervals.aggr))
+            __apply_scheme_access_pattern(kdamonds, kdamond_idx, context_idx,
+                    idx)
 
             _write(os.path.join(scheme_dir(idx), 'action'), scheme.action)
 
