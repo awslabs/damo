@@ -112,13 +112,11 @@ def build_scheme_access_pattern_wops(kdamonds, kdamond_idx, context_idx,
         scheme_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     scheme = ctx.schemes[scheme_idx]
-
     access_pattern_dir = os.path.join(scheme_dir_of(kdamond_idx, context_idx,
         scheme_idx), 'access_pattern')
 
     max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
-
-    write_ops = {
+    return {
         access_pattern_dir: {
             'sz': {
                 'min': '%d' % scheme.access_pattern.min_sz_bytes,
@@ -140,16 +138,14 @@ def build_scheme_access_pattern_wops(kdamonds, kdamond_idx, context_idx,
             }
         }
     }
-    return write_ops
 
 def build_scheme_quotas_wops(kdamonds, kdamond_idx, context_idx, scheme_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     scheme = ctx.schemes[scheme_idx]
-
     quotas_dir = os.path.join(scheme_dir_of(kdamond_idx, context_idx,
         scheme_idx), 'quotas')
 
-    write_ops = {
+    return {
         quotas_dir: {
             'ms': '%d' % scheme.quotas.time_ms,
             'bytes': '%d' % scheme.quotas.sz_bytes,
@@ -162,7 +158,6 @@ def build_scheme_quotas_wops(kdamonds, kdamond_idx, context_idx, scheme_idx):
             },
         }
     }
-    return write_ops
 
 def build_scheme_watermarks_wops(kdamonds, kdamond_idx, context_idx,
         scheme_idx):
@@ -188,8 +183,8 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     schemes = ctx.schemes
     wops = [{schemes_nr_file: '%d' % len(schemes)}]
     for idx, scheme in enumerate(schemes):
-        wops += [build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
-                context_idx, idx)]
+        wops.append(build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
+                context_idx, idx))
         wops.append({os.path.join(scheme_dir(idx), 'action'):
             scheme.action})
         wops.append(build_scheme_quotas_wops(kdamonds, kdamond_idx,
