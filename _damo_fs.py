@@ -44,7 +44,7 @@ def __write_files(root, operations):
             try:
                 with open(filepath, 'w') as f:
                     if _damon.pr_debug_log:
-                        print('write \'%s\' to \'%s\'' % (content, f))
+                        print('write \'%s\' to \'%s\'' % (content, filepath))
                     f.write(content)
             except Exception as e:
                 return 'writing %s to %s failed (%s)' % (content, filepath, e)
