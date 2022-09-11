@@ -164,19 +164,18 @@ def build_scheme_watermarks_wops(kdamonds, kdamond_idx, context_idx,
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     scheme = ctx.schemes[scheme_idx]
     wmarks = scheme.watermarks
-    wmarks_dir = os.path.join(scheme_dir(scheme_idx), 'watermarks')
+    wmarks_dir = os.path.join(scheme_dir_of(kdamond_idx, context_idx,
+        scheme_idx), 'watermarks')
 
-    write_ops = []
-    write_ops.append({os.path.join(wmarks_dir, 'metric'): wmarks.metric})
-    write_ops.append({os.path.join(wmarks_dir, 'interval_us'): '%d' %
-            wmarks.interval_us})
-    write_ops.append({os.path.join(wmarks_dir, 'high'): '%d' %
-        wmarks.high_permil})
-    write_ops.append({os.path.join(wmarks_dir, 'mid'): '%d' %
-        wmarks.mid_permil})
-    write_ops.append({os.path.join(wmarks_dir, 'low'): '%d' %
-        wmarks.low_permil})
-    return write_ops
+    return {
+        wmarks_dir: {
+            'metric': wmarks.metric,
+            'interval_us': '%d' % wmarks.interval_us,
+            'high': '%d' % wmarks.high_permil,
+            'mid': '%d' % wmarks.mid_permil,
+            'low': '%d' % wmarks.low_permil,
+        }
+    }
 
 def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
@@ -184,13 +183,13 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     wops = [{schemes_nr_file: '%d' % len(schemes)}]
     for idx, scheme in enumerate(schemes):
         wops.append(build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
-                context_idx, idx))
+            context_idx, idx))
         wops.append({os.path.join(scheme_dir(idx), 'action'):
             scheme.action})
         wops.append(build_scheme_quotas_wops(kdamonds, kdamond_idx,
-                context_idx, idx))
-        wops += build_scheme_watermarks_wops(kdamonds, kdamond_idx,
-                context_idx, idx)
+            context_idx, idx))
+        wops.append(build_scheme_watermarks_wops(kdamonds, kdamond_idx,
+            context_idx, idx))
     err = _damo_fs.write_files(wops)
     if err:
         print('schemes applying failed: %s' % err)
