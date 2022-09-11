@@ -77,15 +77,23 @@ def is_damon_running():
 
 def __apply_mon_attrs(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
-    write_ops = []
-    write_ops.append({intervals_sample_us_file: '%d' % ctx.intervals.sample})
-    write_ops.append({intervals_aggr_us_file: '%d' % ctx.intervals.aggr})
-    write_ops.append({intervals_update_us_file: '%d' %
-        ctx.intervals.ops_update})
-    write_ops.append({nr_regions_min_file: '%d' %
-        ctx.nr_regions.min_nr_regions})
-    write_ops.append({nr_regions_max_file: '%d' %
-        ctx.nr_regions.max_nr_regions})
+    ctx_dir = os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx,
+            'contexts', '%s' % context_idx)
+    attrs_dir = os.path.join(ctx_dir, 'monitoring_attrs')
+
+    write_ops = {
+            attrs_dir: {
+                'intervals': {
+                    'sample_us': '%d' % ctx.intervals.sample,
+                    'aggr_us': '%d' % ctx.intervals.aggr,
+                    'update_us': '%d' % ctx.intervals.ops_update,
+                },
+                'nr_regions': {
+                    'min': '%d' % ctx.nr_regions.min_nr_regions,
+                    'max': '%d' % ctx.nr_regions.max_nr_regions,
+                },
+            }
+    }
     err = _damo_fs.write_files(write_ops)
     if err != None:
         print('kdamond applying failed: %s' % err)
