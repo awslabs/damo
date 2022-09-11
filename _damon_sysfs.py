@@ -186,7 +186,7 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
                 context_idx, idx)
     err = _damo_fs.write_files(wops)
     if err:
-        print('schemes applying failed: %s' % e)
+        print('schemes applying failed: %s' % err)
         traceback.print_exc()
         return 1
     return 0
