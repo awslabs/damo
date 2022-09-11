@@ -145,22 +145,23 @@ def build_scheme_access_pattern_wops(kdamonds, kdamond_idx, context_idx,
 def build_scheme_quotas_wops(kdamonds, kdamond_idx, context_idx, scheme_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     scheme = ctx.schemes[scheme_idx]
-    quotas_dir = os.path.join(scheme_dir(scheme_idx), 'quotas')
 
-    write_ops = []
-    write_ops.append({os.path.join(quotas_dir, 'ms'): '%d' %
-            scheme.quotas.time_ms})
-    write_ops.append({os.path.join(quotas_dir, 'bytes'): '%d' %
-            scheme.quotas.sz_bytes})
-    write_ops.append({os.path.join(quotas_dir, 'reset_interval_ms'): '%d' %
-            scheme.quotas.reset_interval_ms})
-    weights_dir = os.path.join(quotas_dir, 'weights')
-    write_ops.append({os.path.join(weights_dir, 'sz_permil'): '%d' %
-            scheme.quotas.weight_sz_permil})
-    write_ops.append({os.path.join(weights_dir, 'nr_accesses_permil'): '%d' %
-            scheme.quotas.weight_nr_accesses_permil})
-    write_ops.append({os.path.join(weights_dir, 'age_permil'): '%d' %
-            scheme.quotas.weight_age_permil})
+    quotas_dir = os.path.join(scheme_dir_of(kdamond_idx, context_idx,
+        scheme_idx), 'quotas')
+
+    write_ops = {
+        quotas_dir: {
+            'ms': '%d' % scheme.quotas.time_ms,
+            'bytes': '%d' % scheme.quotas.sz_bytes,
+            'reset_interval_ms': '%d' % scheme.quotas.reset_interval_ms,
+            'weights': {
+                'sz_permil': '%d' % scheme.quotas.weight_sz_permil,
+                'nr_accesses_permil': '%d' %
+                scheme.quotas.weight_nr_accesses_permil,
+                'age_permil': '%d' % scheme.quotas.weight_age_permil,
+            },
+        }
+    }
     return write_ops
 
 def build_scheme_watermarks_wops(kdamonds, kdamond_idx, context_idx,
@@ -191,8 +192,8 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
                 context_idx, idx)]
         wops.append({os.path.join(scheme_dir(idx), 'action'):
             scheme.action})
-        wops += build_scheme_quotas_wops(kdamonds, kdamond_idx,
-                context_idx, idx)
+        wops.append(build_scheme_quotas_wops(kdamonds, kdamond_idx,
+                context_idx, idx))
         wops += build_scheme_watermarks_wops(kdamonds, kdamond_idx,
                 context_idx, idx)
     err = _damo_fs.write_files(wops)
