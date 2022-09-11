@@ -49,7 +49,9 @@ def __write_files(root, operations):
             except Exception as e:
                 return 'writing %s to %s failed (%s)' % (content, filepath, e)
         elif os.path.isdir(filepath):
-            return __write_files(filepath, content)
+            err = __write_files(filepath, content)
+            if err != None:
+                return err
         else:
             return 'filepath (%s) is neither dir nor file' % (filepath)
     return None
