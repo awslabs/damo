@@ -184,8 +184,8 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     for idx, scheme in enumerate(schemes):
         wops.append(build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
             context_idx, idx))
-        wops.append({os.path.join(scheme_dir(idx), 'action'):
-            scheme.action})
+        wops.append({os.path.join(scheme_dir_of(kdamond_idx, context_idx, idx),
+            'action'): scheme.action})
         wops.append(build_scheme_quotas_wops(kdamonds, kdamond_idx,
             context_idx, idx))
         wops.append(build_scheme_watermarks_wops(kdamonds, kdamond_idx,
