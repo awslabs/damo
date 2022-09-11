@@ -39,8 +39,8 @@ def __write_files(root, operations):
 
     for filename in operations:
         filepath = os.path.join(root, filename)
+        content = operations[filename]
         if os.path.isfile(filepath):
-            content = operations[filename]
             try:
                 with open(filepath, 'w') as f:
                     if _damon.pr_debug_log:
