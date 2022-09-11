@@ -106,29 +106,36 @@ def build_scheme_access_pattern_wops(kdamonds, kdamond_idx, context_idx,
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     scheme = ctx.schemes[scheme_idx]
 
-    write_ops = []
+    ctx_dir = os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx,
+            'contexts', '%s' % context_idx)
+    scheme_dir = os.path.join(ctx_dir, 'schemes', '%s' % scheme_idx)
+
     max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
-    write_ops.append({os.path.join(scheme_dir(scheme_idx),
-        'access_pattern', 'sz', 'min'):
-        '%d' % scheme.access_pattern.min_sz_bytes})
-    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
-        'sz', 'max'):
-        '%d' % scheme.access_pattern.max_sz_bytes})
-    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
-        'nr_accesses', 'min'):
-        '%d' % int(scheme.access_pattern.min_nr_accesses_permil *
-            max_nr_accesses / 1000)})
-    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
-        'nr_accesses', 'max'):
-        '%d' % int(scheme.access_pattern.max_nr_accesses_permil *
-            max_nr_accesses / 1000)})
-    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
-        'age', 'min'):
-        '%d' % (scheme.access_pattern.min_age_us / ctx.intervals.aggr)})
-    write_ops.append({os.path.join(scheme_dir(scheme_idx), 'access_pattern',
-        'age', 'max'):
-        '%d' % (scheme.access_pattern.max_age_us /
-        ctx.intervals.aggr)})
+
+    write_ops = {
+        scheme_dir: {
+            'access_pattern': {
+                'sz': {
+                    'min': '%d' % scheme.access_pattern.min_sz_bytes,
+                    'max': '%d' % scheme.access_pattern.max_sz_bytes,
+                },
+                'nr_accesses': {
+                    'min': '%d' %
+                    int(scheme.access_pattern.min_nr_accesses_permil *
+                        max_nr_accesses / 1000),
+                    'max': '%d' %
+                    int(scheme.access_pattern.max_nr_accesses_permil *
+                        max_nr_accesses / 1000),
+                },
+                'age': {
+                    'min': '%d' % (scheme.access_pattern.min_age_us /
+                        ctx.intervals.aggr),
+                    'max': '%d' % (scheme.access_pattern.max_age_us /
+                        ctx.intervals.aggr),
+                }
+            }
+        }
+    }
     return write_ops
 
 def build_scheme_quotas_wops(kdamonds, kdamond_idx, context_idx, scheme_idx):
@@ -176,8 +183,8 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     schemes = ctx.schemes
     wops = [{schemes_nr_file: '%d' % len(schemes)}]
     for idx, scheme in enumerate(schemes):
-        wops += build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
-                context_idx, idx)
+        wops += [build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
+                context_idx, idx)]
         wops.append({os.path.join(scheme_dir(idx), 'action'):
             scheme.action})
         wops += build_scheme_quotas_wops(kdamonds, kdamond_idx,
