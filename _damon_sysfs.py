@@ -113,31 +113,30 @@ def build_scheme_access_pattern_wops(kdamonds, kdamond_idx, context_idx,
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     scheme = ctx.schemes[scheme_idx]
 
-    scheme_dir = scheme_dir_of(kdamond_idx, context_idx, scheme_idx)
+    access_pattern_dir = os.path.join(scheme_dir_of(kdamond_idx, context_idx,
+        scheme_idx), 'access_pattern')
 
     max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
 
     write_ops = {
-        scheme_dir: {
-            'access_pattern': {
-                'sz': {
-                    'min': '%d' % scheme.access_pattern.min_sz_bytes,
-                    'max': '%d' % scheme.access_pattern.max_sz_bytes,
-                },
-                'nr_accesses': {
-                    'min': '%d' %
-                    int(scheme.access_pattern.min_nr_accesses_permil *
-                        max_nr_accesses / 1000),
-                    'max': '%d' %
-                    int(scheme.access_pattern.max_nr_accesses_permil *
-                        max_nr_accesses / 1000),
-                },
-                'age': {
-                    'min': '%d' % (scheme.access_pattern.min_age_us /
-                        ctx.intervals.aggr),
-                    'max': '%d' % (scheme.access_pattern.max_age_us /
-                        ctx.intervals.aggr),
-                }
+        access_pattern_dir: {
+            'sz': {
+                'min': '%d' % scheme.access_pattern.min_sz_bytes,
+                'max': '%d' % scheme.access_pattern.max_sz_bytes,
+            },
+            'nr_accesses': {
+                'min': '%d' %
+                int(scheme.access_pattern.min_nr_accesses_permil *
+                    max_nr_accesses / 1000),
+                'max': '%d' %
+                int(scheme.access_pattern.max_nr_accesses_permil *
+                    max_nr_accesses / 1000),
+            },
+            'age': {
+                'min': '%d' % (scheme.access_pattern.min_age_us /
+                    ctx.intervals.aggr),
+                'max': '%d' % (scheme.access_pattern.max_age_us /
+                    ctx.intervals.aggr),
             }
         }
     }
