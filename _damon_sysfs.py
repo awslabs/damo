@@ -199,7 +199,7 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
 
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
-        print('Currently only one kdamond is supported')
+        print('currently only one kdamond is supported')
         exit(1)
     if len(kdamonds[0].contexts) != 1:
         print('currently only one damon_ctx is supported')
