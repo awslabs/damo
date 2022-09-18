@@ -32,7 +32,6 @@ attrs_nr_regions_dir = os.path.join(context_attrs_dir, 'nr_regions')
 context_targets_dir = os.path.join(context_dir, 'targets')
 targets_nr_file = os.path.join(context_targets_dir, 'nr_targets')
 target_dir = os.path.join(context_targets_dir, '0')
-target_pid_file = os.path.join(target_dir, 'pid_target')
 target_regions_dir = os.path.join(target_dir, 'regions')
 regions_nr_file = os.path.join(target_regions_dir, 'nr_regions')
 
@@ -65,6 +64,10 @@ def ctx_dir_of(kdamond_idx, context_idx):
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes', '%s' %
             scheme_idx)
+
+def target_dir_of(kdamond_idx, context_idx, target_idx):
+    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'targets', '%s' %
+            target_idx)
 
 def __turn_damon(kdamond_idx, on_off):
     kdamond_dir = kdamond_dir_of(kdamond_idx)
@@ -228,7 +231,8 @@ def apply_kdamonds(kdamonds):
     wops.append({ctx_dir_of(0, 0): {'operations': ctx.ops}})
     target = ctx.targets[0]
     if _damon.target_has_pid(ctx.ops):
-        wops.append({target_pid_file: '%d' % ctx.targets[0].pid})
+        wops.append({target_dir_of(0, 0, 0):
+            {'pid_target': '%s' % ctx.targets[0].pid}})
     wops.append({regions_nr_file: '%d' % len(target.regions)})
     for idx, region in enumerate(target.regions):
         wops.append({region_start_file(idx): '%d' % region.start})
