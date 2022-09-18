@@ -25,10 +25,6 @@ contexts_dir = os.path.join(kdamond_dir, 'contexts')
 contexts_nr_file = os.path.join(contexts_dir, 'nr_contexts')
 context_dir = os.path.join(contexts_dir, '0')
 context_avail_operations_file = os.path.join(context_dir, 'avail_operations')
-context_operations_file = os.path.join(context_dir, 'operations')
-context_attrs_dir = os.path.join(context_dir, 'monitoring_attrs')
-attrs_intervals_dir = os.path.join(context_attrs_dir, 'intervals')
-attrs_nr_regions_dir = os.path.join(context_attrs_dir, 'nr_regions')
 context_targets_dir = os.path.join(context_dir, 'targets')
 targets_nr_file = os.path.join(context_targets_dir, 'nr_targets')
 
@@ -297,7 +293,8 @@ def update_supported_features():
     ensure_dirs_populated()
     if not os.path.isfile(context_avail_operations_file):
         for feature in ['vaddr', 'paddr', 'fvaddr', 'vaddr']:
-            err = _damo_fs.write_files({context_operations_file: feature})
+            err = _damo_fs.write_files({ctx_dir_of(0, 0):
+                {'operations': feature}})
             if err != None:
                 feature_supports[feature] = False
             else:
