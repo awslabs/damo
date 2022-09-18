@@ -31,18 +31,6 @@ attrs_intervals_dir = os.path.join(context_attrs_dir, 'intervals')
 attrs_nr_regions_dir = os.path.join(context_attrs_dir, 'nr_regions')
 context_targets_dir = os.path.join(context_dir, 'targets')
 targets_nr_file = os.path.join(context_targets_dir, 'nr_targets')
-target_dir = os.path.join(context_targets_dir, '0')
-target_regions_dir = os.path.join(target_dir, 'regions')
-regions_nr_file = os.path.join(target_regions_dir, 'nr_regions')
-
-def region_dir(region_idx):
-    return os.path.join(target_regions_dir, '%d' % region_idx)
-
-def region_start_file(region_idx):
-    return os.path.join(region_dir(region_idx), 'start')
-
-def region_end_file(region_idx):
-    return os.path.join(region_dir(region_idx), 'end')
 
 schemes_dir = os.path.join(context_dir, 'schemes')
 schemes_nr_file = os.path.join(schemes_dir, 'nr_schemes')
