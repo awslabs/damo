@@ -58,6 +58,14 @@ def _read(filepath):
 def kdamond_dir_of(kdamond_idx):
     return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx)
 
+def ctx_dir_of(kdamond_idx, context_idx):
+    return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', '%s' %
+            context_idx)
+
+def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
+    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes', '%s' %
+            scheme_idx)
+
 def __turn_damon(kdamond_idx, on_off):
     kdamond_dir = kdamond_dir_of(kdamond_idx)
 
@@ -81,14 +89,6 @@ def turn_damon(on_off):
 
 def is_damon_running():
     return _read(kdamond_state_file).strip() == 'on'
-
-def ctx_dir_of(kdamond_idx, context_idx):
-    return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', '%s' %
-            context_idx)
-
-def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
-    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes', '%s' %
-            scheme_idx)
 
 def __apply_mon_attrs(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
