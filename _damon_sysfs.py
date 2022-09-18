@@ -83,8 +83,8 @@ def is_damon_running():
     return _read(kdamond_state_file).strip() == 'on'
 
 def ctx_dir_of(kdamond_idx, context_idx):
-    return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx,
-            'contexts', '%s' % context_idx)
+    return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', '%s' %
+            context_idx)
 
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes', '%s' %
