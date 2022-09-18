@@ -225,7 +225,7 @@ def apply_kdamonds(kdamonds):
 
     ctx = kdamonds[0].contexts[0]
     wops = []
-    wops.append({context_operations_file: ctx.ops})
+    wops.append({ctx_dir_of(0, 0): {'operations': ctx.ops}})
     target = ctx.targets[0]
     if _damon.target_has_pid(ctx.ops):
         wops.append({target_pid_file: '%d' % ctx.targets[0].pid})
