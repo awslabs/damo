@@ -239,12 +239,20 @@ def apply_kdamonds(kdamonds):
         traceback.print_exc()
         return 1
 
-def commit_inputs():
-    err = _damo_fs.write_files({kdamond_state_file: 'commit'})
+def __commit_inputs(kdamond_idx):
+    err = _damo_fs.write_files(
+            {
+                kdamond_dir_of(kdamond_idx): {
+                    'state': 'commit',
+                }
+            })
     if err != None:
         print(err)
         return 1
     return 0
+
+def commit_inputs():
+    return __commit_inputs(0)
 
 def feature_supported(feature):
     if feature_supports == None:
