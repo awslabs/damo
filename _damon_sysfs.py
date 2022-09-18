@@ -72,13 +72,17 @@ def turn_damon(on_off):
         time.sleep(0.5)
     return __turn_damon(0, on_off)
 
-def is_damon_running():
-    files_to_read = {kdamond_state_file: None}
+def __is_damon_running(kdamond_idx):
+    file_to_read = os.path.join(kdamond_dir_of(kdamond_idx), 'state')
+    files_to_read = {file_to_read: None}
     err = _damo_fs.read_files_of(files_to_read)
     if err != None:
         print(err)
         return False
-    return files_to_read[kdamond_state_file].strip() == 'on'
+    return files_to_read[file_to_read].strip() == 'on'
+
+def is_damon_running():
+    return __is_damon_running(0)
 
 def __apply_mon_attrs(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
