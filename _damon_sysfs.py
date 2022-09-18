@@ -28,10 +28,6 @@ context_avail_operations_file = os.path.join(context_dir, 'avail_operations')
 context_targets_dir = os.path.join(context_dir, 'targets')
 targets_nr_file = os.path.join(context_targets_dir, 'nr_targets')
 
-def _read(filepath):
-    with open(filepath, 'r') as f:
-        return f.read()
-
 def kdamond_dir_of(kdamond_idx):
     return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx)
 
@@ -259,9 +255,16 @@ def feature_supported(feature):
     return feature_supports[feature]
 
 def dirs_populated():
-    return (int(_read(kdamonds_nr_file)) >= 1 and
-            int(_read(contexts_nr_file)) >= 1 and
-            int(_read(targets_nr_file)) >= 1)
+    files_to_read = {kdamonds_nr_file: None,
+            contexts_nr_file: None,
+            targets_nr_file: None}
+    err = _damo_fs.read_files_of(files_to_read)
+    if err:
+        print(err)
+        return False
+    return (int(files_to_read[kdamonds_nr_file]) >= 1 and
+            int(files_to_read[contexts_nr_file]) >= 1 and
+            int(files_to_read[targets_nr_file]) >= 1)
 
 def ensure_dirs_populated():
     if dirs_populated():
@@ -306,7 +309,12 @@ def update_supported_features():
                 feature_supports[feature] = True
         return None
 
-    avail_ops = _read(context_avail_operations_file).strip().split()
+    files_to_read = {context_avail_operations_file: None}
+    err = _damo_fs.read_files_of(files_to_read)
+    if err != None:
+        print(err)
+        return None
+    avail_ops = files_to_read[context_avail_operations_file].strip().split()
     for feature in ['vaddr', 'paddr', 'fvaddr']:
         feature_supports[feature] = feature in avail_ops
 
