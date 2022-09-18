@@ -55,16 +55,29 @@ def _read(filepath):
     with open(filepath, 'r') as f:
         return f.read()
 
+def kdamond_dir_of(kdamond_idx):
+    return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx)
+
+def __turn_damon(kdamond_idx, on_off):
+    kdamond_dir = kdamond_dir_of(kdamond_idx)
+
+    write_ops = {
+        kdamond_dir: {
+            'state': on_off,
+            }
+    }
+    err = _damo_fs.write_files(write_ops)
+    if err != None:
+        print(err)
+        return 1
+    return 0
+
 def turn_damon(on_off):
     if on_off == 'on':
         # In case of vaddr, too early monitoring shows unstable mapping changes.
         # Give the process a time to have stable memory mapping.
         time.sleep(0.5)
-    err = _damo_fs.write_files({kdamond_state_file: on_off})
-    if err != None:
-        print(err)
-        return 1
-    return 0
+    return __turn_damon(0, on_off)
 
 def is_damon_running():
     return _read(kdamond_state_file).strip() == 'on'
