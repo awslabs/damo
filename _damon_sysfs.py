@@ -32,12 +32,6 @@ attrs_nr_regions_dir = os.path.join(context_attrs_dir, 'nr_regions')
 context_targets_dir = os.path.join(context_dir, 'targets')
 targets_nr_file = os.path.join(context_targets_dir, 'nr_targets')
 
-schemes_dir = os.path.join(context_dir, 'schemes')
-schemes_nr_file = os.path.join(schemes_dir, 'nr_schemes')
-
-def scheme_dir(scheme_idx):
-    return os.path.join(schemes_dir, '%d' % scheme_idx)
-
 def _read(filepath):
     with open(filepath, 'r') as f:
         return f.read()
@@ -186,7 +180,8 @@ def build_scheme_watermarks_wops(kdamonds, kdamond_idx, context_idx,
 def __apply_schemes(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     schemes = ctx.schemes
-    wops = [{schemes_nr_file: '%d' % len(schemes)}]
+    wops = [{ctx_dir_of(kdamond_idx, context_idx):
+        {'schemes': {'nr_schemes': '%d' % len(schemes)}}}]
     for idx, scheme in enumerate(schemes):
         wops.append(build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
             context_idx, idx))
