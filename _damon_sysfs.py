@@ -69,6 +69,14 @@ def target_dir_of(kdamond_idx, context_idx, target_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'targets', '%s' %
             target_idx)
 
+def regions_dir_of(kdamond_idx, context_idx, target_idx):
+    return os.path.join(target_dir_of(kdamond_idx, context_idx, target_idx),
+            'regions')
+
+def region_dir_of(kdamond_idx, context_idx, target_idx, region_idx):
+    return os.path.join(regions_dir_of(kdamond_idx, context_idx, target_idx),
+            '%s' % region_idx)
+
 def __turn_damon(kdamond_idx, on_off):
     kdamond_dir = kdamond_dir_of(kdamond_idx)
 
@@ -233,13 +241,16 @@ def apply_kdamonds(kdamonds):
     if _damon.target_has_pid(ctx.ops):
         wops.append({target_dir_of(0, 0, 0):
             {'pid_target': '%s' % ctx.targets[0].pid}})
-    wops.append({regions_nr_file: '%d' % len(target.regions)})
+    wops.append({regions_dir_of(0, 0, 0): {
+        'nr_regions': '%d' % len(target.regions)}})
     for idx, region in enumerate(target.regions):
-        wops.append({region_start_file(idx): '%d' % region.start})
-        wops.append({region_end_file(idx): '%d' % region.end})
+        wops.append({region_dir_of(0, 0, 0, idx): {
+            'start': '%d' % region.start,
+            'end': '%d' % region.end,
+        }})
     err = _damo_fs.write_files(wops)
     if err != None:
-        print('kdamond applying failed: %s' % e)
+        print('kdamond applying failed: %s' % err)
         traceback.print_exc()
         return 1
 
