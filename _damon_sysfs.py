@@ -102,31 +102,6 @@ def file_ops_for_monitoring_attrs(kdamonds, kdamond_idx, context_idx):
         }
     }
 
-def __apply_mon_attrs(kdamonds, kdamond_idx, context_idx):
-    ctx = kdamonds[kdamond_idx].contexts[context_idx]
-    attrs_dir = os.path.join(ctx_dir_of(kdamond_idx, context_idx),
-            'monitoring_attrs')
-
-    write_ops = {
-            attrs_dir: {
-                'intervals': {
-                    'sample_us': '%d' % ctx.intervals.sample,
-                    'aggr_us': '%d' % ctx.intervals.aggr,
-                    'update_us': '%d' % ctx.intervals.ops_update,
-                },
-                'nr_regions': {
-                    'min': '%d' % ctx.nr_regions.min_nr_regions,
-                    'max': '%d' % ctx.nr_regions.max_nr_regions,
-                },
-            }
-    }
-    err = _damo_fs.write_files(write_ops)
-    if err != None:
-        print('kdamond applying failed: %s' % err)
-        traceback.print_exc()
-        return 1
-    return 0
-
 def build_scheme_access_pattern_wops(kdamonds, kdamond_idx, context_idx,
         scheme_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
