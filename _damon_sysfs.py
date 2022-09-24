@@ -73,13 +73,12 @@ def turn_damon(on_off):
     return __turn_damon(0, on_off)
 
 def __is_damon_running(kdamond_idx):
-    file_to_read = os.path.join(kdamond_dir_of(kdamond_idx), 'state')
-    files_to_read = {file_to_read: None}
-    err = _damo_fs.read_files_of(files_to_read)
+    content, err = _damo_fs.read_file(os.path.join(
+        kdamond_dir_of(kdamond_idx), 'state'))
     if err != None:
         print(err)
         return False
-    return files_to_read[file_to_read].strip() == 'on'
+    return content.strip() == 'on'
 
 def is_damon_running():
     return __is_damon_running(0)
@@ -313,12 +312,11 @@ def update_supported_features():
                 feature_supports[feature] = True
         return None
 
-    files_to_read = {context_avail_operations_file: None}
-    err = _damo_fs.read_files_of(files_to_read)
+    content, err = _damo_fs.read_file(context_avail_operations_file)
     if err != None:
         print(err)
         return None
-    avail_ops = files_to_read[context_avail_operations_file].strip().split()
+    avail_ops = content.strip().split()
     for feature in ['vaddr', 'paddr', 'fvaddr']:
         feature_supports[feature] = feature in avail_ops
 
