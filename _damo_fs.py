@@ -23,11 +23,9 @@ def __read_files(root, max_depth, current_depth):
             contents[filename] = __read_files(filepath, max_depth,
                     current_depth + 1)
         else:
-            try:
-                with open(filepath, 'r') as f:
-                    contents[filename] = f.read()
-            except Exception as e:
-                contents[filename] = 'read failed (%s)' % e
+            contents[filename], err = read_single_file(filepath)
+            if err != None:
+                contents[filename] = 'read failed (%s)' % err
     return contents
 
 def read_files_recursive(root):
