@@ -46,14 +46,12 @@ def __read_files_of(root, files_to_read):
     for filename in files_to_read:
         filepath = os.path.join(root, filename)
         if os.path.isfile(filepath):
-            try:
-                with open(filepath, 'r') as f:
-                    content = f.read()
-                    if _damon.pr_debug_log:
-                        print('read \'%s\': \'%s\'' % (filepath, content))
-            except Exception as e:
+            files_to_read[filename], err = read_single_file(filepath)
+            if err != None:
                 return 'reading %s failed (%s)' % (filepath, e)
-            files_to_read[filename] = content
+            if _damon.pr_debug_log:
+                print('read \'%s\': \'%s\'' % (filepath,
+                    files_to_read[filename]))
         elif os.path.isdir(filepath):
             err = __read_files_of(filepath, files_to_read[filename])
             if err != None:
