@@ -83,23 +83,17 @@ def __is_damon_running(kdamond_idx):
 def is_damon_running():
     return __is_damon_running(0)
 
-def file_ops_for_monitoring_attrs(kdamonds, kdamond_idx, context_idx):
-    ctx = kdamonds[kdamond_idx].contexts[context_idx]
-    attrs_dir = os.path.join(ctx_dir_of(kdamond_idx, context_idx),
-            'monitoring_attrs')
-
+def file_ops_for_monitoring_attrs(ctx):
     return {
-        attrs_dir: {
-            'intervals': {
-                'sample_us': '%d' % ctx.intervals.sample,
-                'aggr_us': '%d' % ctx.intervals.aggr,
-                'update_us': '%d' % ctx.intervals.ops_update,
-            },
-            'nr_regions': {
-                'min': '%d' % ctx.nr_regions.min_nr_regions,
-                'max': '%d' % ctx.nr_regions.max_nr_regions,
-            },
-        }
+        'intervals': {
+            'sample_us': '%d' % ctx.intervals.sample,
+            'aggr_us': '%d' % ctx.intervals.aggr,
+            'update_us': '%d' % ctx.intervals.ops_update,
+        },
+        'nr_regions': {
+            'min': '%d' % ctx.nr_regions.min_nr_regions,
+            'max': '%d' % ctx.nr_regions.max_nr_regions,
+        },
     }
 
 def build_scheme_access_pattern_wops(kdamonds, kdamond_idx, context_idx,
@@ -199,11 +193,12 @@ def apply_kdamonds(kdamonds):
         exit(1)
     ensure_dirs_populated()
 
+    ctx = kdamonds[0].contexts[0]
     wops = []
-    wops.append(file_ops_for_monitoring_attrs(kdamonds, 0, 0))
+    attrs_dir = os.path.join(ctx_dir_of(0, 0), 'monitoring_attrs')
+    wops.append({attrs_dir: file_ops_for_monitoring_attrs(ctx)})
     wops.append(file_ops_for_schemes(kdamonds, 0, 0))
 
-    ctx = kdamonds[0].contexts[0]
     wops.append({ctx_dir_of(0, 0): {'operations': ctx.ops}})
     target = ctx.targets[0]
     if _damon.target_has_pid(ctx.ops):
