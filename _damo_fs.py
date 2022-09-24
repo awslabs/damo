@@ -6,7 +6,7 @@ import os
 import _damon
 
 '''Returns content and error'''
-def read_single_file(filepath):
+def read_file(filepath):
     try:
         with open(filepath, 'r') as f:
             return f.read(), None
@@ -23,7 +23,7 @@ def __read_files(root, max_depth, current_depth):
             contents[filename] = __read_files(filepath, max_depth,
                     current_depth + 1)
         else:
-            contents[filename], err = read_single_file(filepath)
+            contents[filename], err = read_file(filepath)
             if err != None:
                 contents[filename] = 'read failed (%s)' % err
     return contents
@@ -46,7 +46,7 @@ def __read_files_of(root, files_to_read):
     for filename in files_to_read:
         filepath = os.path.join(root, filename)
         if os.path.isfile(filepath):
-            files_to_read[filename], err = read_single_file(filepath)
+            files_to_read[filename], err = read_file(filepath)
             if err != None:
                 return 'reading %s failed (%s)' % (filepath, e)
             if _damon.pr_debug_log:
