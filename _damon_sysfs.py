@@ -96,89 +96,67 @@ def file_ops_for_monitoring_attrs(ctx):
         },
     }
 
-def build_scheme_access_pattern_wops(kdamonds, kdamond_idx, context_idx,
-        scheme_idx):
-    ctx = kdamonds[kdamond_idx].contexts[context_idx]
-    scheme = ctx.schemes[scheme_idx]
-    access_pattern_dir = os.path.join(scheme_dir_of(kdamond_idx, context_idx,
-        scheme_idx), 'access_pattern')
-
+def file_ops_for_scheme_access_pattern(pattern, ctx):
     max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
+
     return {
-        access_pattern_dir: {
-            'sz': {
-                'min': '%d' % scheme.access_pattern.min_sz_bytes,
-                'max': '%d' % scheme.access_pattern.max_sz_bytes,
-            },
-            'nr_accesses': {
-                'min': '%d' %
-                int(scheme.access_pattern.min_nr_accesses_permil *
-                    max_nr_accesses / 1000),
-                'max': '%d' %
-                int(scheme.access_pattern.max_nr_accesses_permil *
-                    max_nr_accesses / 1000),
-            },
-            'age': {
-                'min': '%d' % (scheme.access_pattern.min_age_us /
-                    ctx.intervals.aggr),
-                'max': '%d' % (scheme.access_pattern.max_age_us /
-                    ctx.intervals.aggr),
-            }
-        }
+        'sz': {
+            'min': '%d' % pattern.min_sz_bytes,
+            'max': '%d' % pattern.max_sz_bytes,
+        },
+        'nr_accesses': {
+            'min': '%d' % int(
+                pattern.min_nr_accesses_permil * max_nr_accesses / 1000),
+            'max': '%d' % int(
+                pattern.max_nr_accesses_permil * max_nr_accesses / 1000),
+        },
+        'age': {
+            'min': '%d' % (pattern.min_age_us / ctx.intervals.aggr),
+            'max': '%d' % (pattern.max_age_us / ctx.intervals.aggr),
+        },
     }
 
-def build_scheme_quotas_wops(kdamonds, kdamond_idx, context_idx, scheme_idx):
-    ctx = kdamonds[kdamond_idx].contexts[context_idx]
-    scheme = ctx.schemes[scheme_idx]
-    quotas_dir = os.path.join(scheme_dir_of(kdamond_idx, context_idx,
-        scheme_idx), 'quotas')
-
+def file_ops_for_scheme_quotas(quotas):
     return {
-        quotas_dir: {
-            'ms': '%d' % scheme.quotas.time_ms,
-            'bytes': '%d' % scheme.quotas.sz_bytes,
-            'reset_interval_ms': '%d' % scheme.quotas.reset_interval_ms,
-            'weights': {
-                'sz_permil': '%d' % scheme.quotas.weight_sz_permil,
-                'nr_accesses_permil': '%d' %
-                scheme.quotas.weight_nr_accesses_permil,
-                'age_permil': '%d' % scheme.quotas.weight_age_permil,
-            },
-        }
+        'ms': '%d' % quotas.time_ms,
+        'bytes': '%d' % quotas.sz_bytes,
+        'reset_interval_ms': '%d' % quotas.reset_interval_ms,
+        'weights': {
+            'sz_permil': '%d' % quotas.weight_sz_permil,
+            'nr_accesses_permil': '%d' % quotas.weight_nr_accesses_permil,
+            'age_permil': '%d' % quotas.weight_age_permil,
+        },
     }
 
-def build_scheme_watermarks_wops(kdamonds, kdamond_idx, context_idx,
-        scheme_idx):
-    ctx = kdamonds[kdamond_idx].contexts[context_idx]
-    scheme = ctx.schemes[scheme_idx]
-    wmarks = scheme.watermarks
-    wmarks_dir = os.path.join(scheme_dir_of(kdamond_idx, context_idx,
-        scheme_idx), 'watermarks')
-
+def file_ops_for_scheme_watermarks(wmarks):
     return {
-        wmarks_dir: {
-            'metric': wmarks.metric,
-            'interval_us': '%d' % wmarks.interval_us,
-            'high': '%d' % wmarks.high_permil,
-            'mid': '%d' % wmarks.mid_permil,
-            'low': '%d' % wmarks.low_permil,
-        }
+        'metric': wmarks.metric,
+        'interval_us': '%d' % wmarks.interval_us,
+        'high': '%d' % wmarks.high_permil,
+        'mid': '%d' % wmarks.mid_permil,
+        'low': '%d' % wmarks.low_permil,
     }
 
 def file_ops_for_schemes(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     schemes = ctx.schemes
     schemes_dir = os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
+
+
+    # nr_schmes should be written before schemes files
     wops = [{schemes_dir: {'nr_schemes': '%d' % len(schemes)}}]
+
+    schemes_wops = {}
     for idx, scheme in enumerate(schemes):
-        wops.append(build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
-            context_idx, idx))
-        wops.append({os.path.join(scheme_dir_of(kdamond_idx, context_idx, idx),
-            'action'): scheme.action})
-        wops.append(build_scheme_quotas_wops(kdamonds, kdamond_idx,
-            context_idx, idx))
-        wops.append(build_scheme_watermarks_wops(kdamonds, kdamond_idx,
-            context_idx, idx))
+        scheme_dir = schme_dir_of(kdamond_idx, context_idx, idx)
+        scheme_wops[scheme_dir] = {
+            'access_pattern': file_ops_for_scheme_access_pattern(
+                scheme.access_pattern, ctx),
+            'action': scheme.action,
+            'quotas': file_ops_for_scheme_quotas(scheme.quotas),
+            'watermarks': file_ops_for_scheme_watermarks(scheme.watermarks),
+        }
+    wops.append(schemes_wops)
     return wops
 
 def apply_kdamonds(kdamonds):
