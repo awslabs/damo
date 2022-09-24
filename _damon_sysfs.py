@@ -177,11 +177,11 @@ def build_scheme_watermarks_wops(kdamonds, kdamond_idx, context_idx,
         }
     }
 
-def __apply_schemes(kdamonds, kdamond_idx, context_idx):
+def file_ops_for_schemes(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     schemes = ctx.schemes
-    wops = [{ctx_dir_of(kdamond_idx, context_idx):
-        {'schemes': {'nr_schemes': '%d' % len(schemes)}}}]
+    schemes_dir = os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
+    wops = [{schemes_dir: {'nr_schemes': '%d' % len(schemes)}}]
     for idx, scheme in enumerate(schemes):
         wops.append(build_scheme_access_pattern_wops(kdamonds, kdamond_idx,
             context_idx, idx))
@@ -191,12 +191,7 @@ def __apply_schemes(kdamonds, kdamond_idx, context_idx):
             context_idx, idx))
         wops.append(build_scheme_watermarks_wops(kdamonds, kdamond_idx,
             context_idx, idx))
-    err = _damo_fs.write_files(wops)
-    if err:
-        print('schemes applying failed: %s' % err)
-        traceback.print_exc()
-        return 1
-    return 0
+    return wops
 
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
@@ -213,12 +208,10 @@ def apply_kdamonds(kdamonds):
     if ret != 0:
         return ret
 
-    ret = __apply_schemes(kdamonds, 0, 0)
-    if ret != 0:
-        return ret
+    wops = []
+    wops.append(file_ops_for_schemes(kdamonds, 0, 0))
 
     ctx = kdamonds[0].contexts[0]
-    wops = []
     wops.append({ctx_dir_of(0, 0): {'operations': ctx.ops}})
     target = ctx.targets[0]
     if _damon.target_has_pid(ctx.ops):
