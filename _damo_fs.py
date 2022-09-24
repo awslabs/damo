@@ -5,6 +5,14 @@ import os
 
 import _damon
 
+'''Returns content and error'''
+def read_single_file(filepath):
+    try:
+        with open(filepath, 'r') as f:
+            return f.read(), None
+    except Exception as e:
+        return None, e
+
 def __read_files(root, max_depth, current_depth):
     contents = {}
     for filename in os.listdir(root):
