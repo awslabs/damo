@@ -193,21 +193,25 @@ def apply_kdamonds(kdamonds):
         exit(1)
     ensure_dirs_populated()
 
-    ctx = kdamonds[0].contexts[0]
-    wops = []
-    attrs_dir = os.path.join(ctx_dir_of(0, 0), 'monitoring_attrs')
-    wops.append({attrs_dir: file_ops_for_monitoring_attrs(ctx)})
-    wops.append(file_ops_for_schemes(kdamonds, 0, 0))
+    kd_idx = 0  # kdamond index
+    ctx_idx = 0
+    target_idx = 0
 
-    wops.append({ctx_dir_of(0, 0): {'operations': ctx.ops}})
-    target = ctx.targets[0]
+    ctx = kdamonds[kd_idx].contexts[ctx_idx]
+    wops = []
+    attrs_dir = os.path.join(ctx_dir_of(kd_idx, ctx_idx), 'monitoring_attrs')
+    wops.append({attrs_dir: file_ops_for_monitoring_attrs(ctx)})
+    wops.append(file_ops_for_schemes(kdamonds, kd_idx, ctx_idx))
+
+    wops.append({ctx_dir_of(kd_idx, ctx_idx): {'operations': ctx.ops}})
+    target = ctx.targets[target_idx]
     if _damon.target_has_pid(ctx.ops):
-        wops.append({target_dir_of(0, 0, 0):
-            {'pid_target': '%s' % ctx.targets[0].pid}})
-    wops.append({regions_dir_of(0, 0, 0): {
+        wops.append({target_dir_of(kd_idx, ctx_idx, target_idx):
+            {'pid_target': '%s' % ctx.targets[target_idx].pid}})
+    wops.append({regions_dir_of(kd_idx, ctx_idx, target_idx): {
         'nr_regions': '%d' % len(target.regions)}})
     for idx, region in enumerate(target.regions):
-        wops.append({region_dir_of(0, 0, 0, idx): {
+        wops.append({region_dir_of(kd_idx, ctx_idx, target_idx, idx): {
             'start': '%d' % region.start,
             'end': '%d' % region.end,
         }})
