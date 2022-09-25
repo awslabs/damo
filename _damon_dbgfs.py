@@ -288,9 +288,11 @@ def apply_kdamonds(kdamonds):
     for scheme in ctx.schemes:
         scheme_file_input_lines.append(_convert_damos.damos_to_debugfs_input(scheme,
             ctx.intervals.sample, ctx.intervals.aggr, scheme_version))
+    scheme_file_input = '\n'.join(scheme_file_input_lines)
+    if scheme_file_input == '':
+        scheme_file_input = '\n'
 
-    write_contents.append({debugfs_schemes:
-        '\n'.join(scheme_file_input_lines)})
+    write_contents.append({debugfs_schemes: scheme_file_input})
     err = _damo_fs.write_files(write_contents)
     if err:
         print(err)
