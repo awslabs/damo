@@ -234,18 +234,21 @@ def dirs_populated_for(kdamond_idx, ctx_idx):
 def dirs_populated():
     return dirs_populated_for(0, 0)
 
-def ensure_dirs_populated():
+def ensure_dirs_populated_for(kdamond_idx, context_idx):
     if dirs_populated():
         return
 
-    wops = [{nr_kdamonds_file: '1'}]
-    wops.append({contexts_nr_file: '1'})
-    wops.append({targets_nr_file: '1'})
+    wops = [{nr_kdamonds_file: '1'},
+            {nr_contexts_file_of(kdamond_idx): '1'},
+            {nr_targets_file_of(kdamond_idx, context_idx): '1'}]
     err = _damo_fs.write_files(wops)
     if err != None:
         print(err)
         print('failed populating kdamond and context dirs')
         exit(1)
+
+def ensure_dirs_populated():
+    return ensure_dirs_populated_for(0, 0)
 
 def damon_sysfs_missed():
     'Return none-None if DAMON sysfs interface is not found'
