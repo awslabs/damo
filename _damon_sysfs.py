@@ -19,14 +19,6 @@ root_dir = '/sys/kernel/mm/damon'
 admin_dir = os.path.join(root_dir, 'admin')
 kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
 nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
-kdamond_dir = os.path.join(kdamonds_dir, '0')
-kdamond_state_file = os.path.join(kdamond_dir, 'state')
-contexts_dir = os.path.join(kdamond_dir, 'contexts')
-contexts_nr_file = os.path.join(contexts_dir, 'nr_contexts')
-context_dir = os.path.join(contexts_dir, '0')
-context_avail_operations_file = os.path.join(context_dir, 'avail_operations')
-context_targets_dir = os.path.join(context_dir, 'targets')
-targets_nr_file = os.path.join(context_targets_dir, 'nr_targets')
 
 def kdamond_dir_of(kdamond_idx):
     return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx)
