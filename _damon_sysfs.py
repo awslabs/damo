@@ -18,7 +18,7 @@ feature_supports = None
 root_dir = '/sys/kernel/mm/damon'
 admin_dir = os.path.join(root_dir, 'admin')
 kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
-kdamonds_nr_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
+nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 kdamond_dir = os.path.join(kdamonds_dir, '0')
 kdamond_state_file = os.path.join(kdamond_dir, 'state')
 contexts_dir = os.path.join(kdamond_dir, 'contexts')
@@ -220,14 +220,14 @@ def feature_supported(feature):
     return feature_supports[feature]
 
 def dirs_populated_for(kdamond_idx, ctx_idx):
-    files_to_read = {kdamonds_nr_file: None,
+    files_to_read = {nr_kdamonds_file: None,
             nr_contexts_file_of(kdamond_idx): None,
             nr_targets_file_of(kdamond_idx, ctx_idx): None}
     err = _damo_fs.read_files_of(files_to_read)
     if err:
         print(err)
         return False
-    return (int(files_to_read[kdamonds_nr_file]) >= 1 and
+    return (int(files_to_read[nr_kdamonds_file]) >= 1 and
             int(files_to_read[nr_contexts_file_of(kdamond_idx)]) >= 1 and
             int(files_to_read[nr_targets_file_of(kdamond_idx, ctx_idx)]) >= 1)
 
@@ -238,7 +238,7 @@ def ensure_dirs_populated():
     if dirs_populated():
         return
 
-    wops = [{kdamonds_nr_file: '1'}]
+    wops = [{nr_kdamonds_file: '1'}]
     wops.append({contexts_nr_file: '1'})
     wops.append({targets_nr_file: '1'})
     err = _damo_fs.write_files(wops)
