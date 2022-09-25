@@ -53,13 +53,8 @@ def region_dir_of(kdamond_idx, context_idx, target_idx, region_idx):
 
 def __turn_damon(kdamond_idx, on_off):
     kdamond_dir = kdamond_dir_of(kdamond_idx)
-
-    write_ops = {
-        kdamond_dir: {
-            'state': on_off,
-            }
-    }
-    err = _damo_fs.write_files(write_ops)
+    state_filepath = os.path.join(kdamond_dir, 'state')
+    err = _damo_fs.write_file(state_filepath, on_off)
     if err != None:
         print(err)
         return 1
@@ -200,12 +195,8 @@ def apply_kdamonds(kdamonds):
         return 1
 
 def __commit_inputs(kdamond_idx):
-    err = _damo_fs.write_files(
-            {
-                kdamond_dir_of(kdamond_idx): {
-                    'state': 'commit',
-                }
-            })
+    state_filepath = os.path.join(kdamond_dir_of(kdamond_idx), 'state')
+    err = _damo_fs.write_file(state_filepath, 'commit')
     if err != None:
         print(err)
         return 1
@@ -266,8 +257,8 @@ def update_supported_features():
     ensure_dirs_populated()
     if not os.path.isfile(context_avail_operations_file):
         for feature in ['vaddr', 'paddr', 'fvaddr', 'vaddr']:
-            err = _damo_fs.write_files({ctx_dir_of(0, 0):
-                {'operations': feature}})
+            operations_filepath = os.path.join(ctx_dir_of(0, 0), 'operations')
+            err = _damo_fs.write_file(operations_filepath, feature)
             if err != None:
                 feature_supports[feature] = False
             else:
