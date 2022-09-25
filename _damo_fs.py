@@ -64,6 +64,19 @@ def __read_files_of(root, files_to_read):
 def read_files_of(files_to_read):
     return __read_files_of('', files_to_read)
 
+'''
+Returns None if success error string otherwise
+'''
+def write_file(filepath, content):
+    if _damon.pr_debug_log:
+        print('write \'%s\' to \'%s\'' % (content, filepath))
+    try:
+        with open(filepath, 'w') as f:
+            f.write(content)
+    except Exception as e:
+        return 'writing %s to %s failed (%s)' % (content, filepath, e)
+    return None
+
 def __write_files(root, operations):
     if isinstance(operations, list):
         for o in operations:
