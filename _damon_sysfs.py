@@ -31,6 +31,9 @@ targets_nr_file = os.path.join(context_targets_dir, 'nr_targets')
 def kdamond_dir_of(kdamond_idx):
     return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx)
 
+def nr_contexts_file_of(kdamond_idx):
+    return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', 'nr_contexts')
+
 def ctx_dir_of(kdamond_idx, context_idx):
     return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', '%s' %
             context_idx)
@@ -38,6 +41,12 @@ def ctx_dir_of(kdamond_idx, context_idx):
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes', '%s' %
             scheme_idx)
+
+def targets_dir_of(kdamond_idx, context_idx):
+    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'targets')
+
+def nr_targets_file_of(kdamond_idx, context_idx):
+    return os.path.join(targets_dir_of(kdamond_idx, context_idx), 'nr_targets')
 
 def target_dir_of(kdamond_idx, context_idx, target_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'targets', '%s' %
@@ -210,17 +219,20 @@ def feature_supported(feature):
         update_supported_features()
     return feature_supports[feature]
 
-def dirs_populated():
+def dirs_populated_for(kdamond_idx, ctx_idx):
     files_to_read = {kdamonds_nr_file: None,
-            contexts_nr_file: None,
-            targets_nr_file: None}
+            nr_contexts_file_of(kdamond_idx): None,
+            nr_targets_file_of(kdamond_idx, ctx_idx): None}
     err = _damo_fs.read_files_of(files_to_read)
     if err:
         print(err)
         return False
     return (int(files_to_read[kdamonds_nr_file]) >= 1 and
-            int(files_to_read[contexts_nr_file]) >= 1 and
-            int(files_to_read[targets_nr_file]) >= 1)
+            int(files_to_read[nr_contexts_file_of(kdamond_idx)]) >= 1 and
+            int(files_to_read[nr_targets_file_of(kdamond_idx, ctx_idx)]) >= 1)
+
+def dirs_populated():
+    return dirs_populated_for(0, 0)
 
 def ensure_dirs_populated():
     if dirs_populated():
