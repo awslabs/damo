@@ -23,6 +23,9 @@ nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 def kdamond_dir_of(kdamond_idx):
     return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx)
 
+def state_file_of(kdamond_idx):
+    return os.path.join(kdamond_dir_of(kdamond_idx), 'state')
+
 def nr_contexts_file_of(kdamond_idx):
     return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', 'nr_contexts')
 
@@ -53,9 +56,7 @@ def region_dir_of(kdamond_idx, context_idx, target_idx, region_idx):
             '%s' % region_idx)
 
 def __turn_damon(kdamond_idx, on_off):
-    kdamond_dir = kdamond_dir_of(kdamond_idx)
-    state_filepath = os.path.join(kdamond_dir, 'state')
-    err = _damo_fs.write_file(state_filepath, on_off)
+    err = _damo_fs.write_file(state_file_of(kdamond_idx), on_off)
     if err != None:
         print(err)
         return 1
@@ -196,8 +197,7 @@ def apply_kdamonds(kdamonds):
         return 1
 
 def __commit_inputs(kdamond_idx):
-    state_filepath = os.path.join(kdamond_dir_of(kdamond_idx), 'state')
-    err = _damo_fs.write_file(state_filepath, 'commit')
+    err = _damo_fs.write_file(state_file_of(kdamond_idx), 'commit')
     if err != None:
         print(err)
         return 1
