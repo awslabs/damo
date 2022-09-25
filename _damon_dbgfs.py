@@ -257,11 +257,10 @@ def apply_kdamonds(kdamonds):
         print('currently only one target is supported')
         exit(1)
     ctx = kdamonds[0].contexts[0]
-    ret = _damo_fs.write_files({debugfs_attrs: attr_str_ctx(ctx)})
-    if ret:
-        return ret
 
     write_contents = []
+    write_contents.append({debugfs_attrs: attr_str_ctx(ctx)})
+
     target = ctx.targets[0]
     if _damon.target_has_pid(ctx.ops):
         write_contents.append({debugfs_target_ids: '%s' % target.pid})
