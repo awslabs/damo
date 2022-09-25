@@ -9,9 +9,12 @@ import _damon
 def read_file(filepath):
     try:
         with open(filepath, 'r') as f:
-            return f.read(), None
+            content = f.read()
     except Exception as e:
         return None, e
+    if _damon.pr_debug_log:
+        print('read \'%s\': \'%s\'' % (filepath, content))
+    return content, None
 
 def __read_files(root, max_depth, current_depth):
     contents = {}
@@ -49,9 +52,6 @@ def __read_files_of(root, files_to_read):
             files_to_read[filename], err = read_file(filepath)
             if err != None:
                 return 'reading %s failed (%s)' % (filepath, e)
-            if _damon.pr_debug_log:
-                print('read \'%s\': \'%s\'' % (filepath,
-                    files_to_read[filename]))
         elif os.path.isdir(filepath):
             err = __read_files_of(filepath, files_to_read[filename])
             if err != None:
