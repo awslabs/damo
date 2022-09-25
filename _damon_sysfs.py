@@ -148,8 +148,8 @@ def file_ops_for_schemes(kdamonds, kdamond_idx, context_idx):
 
     schemes_wops = {}
     for idx, scheme in enumerate(schemes):
-        scheme_dir = schme_dir_of(kdamond_idx, context_idx, idx)
-        scheme_wops[scheme_dir] = {
+        scheme_dir = scheme_dir_of(kdamond_idx, context_idx, idx)
+        schemes_wops[scheme_dir] = {
             'access_pattern': file_ops_for_scheme_access_pattern(
                 scheme.access_pattern, ctx),
             'action': scheme.action,
