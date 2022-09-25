@@ -270,7 +270,9 @@ def update_supported_features():
     feature_supports['record'] = False
 
     ensure_dirs_populated()
-    if not os.path.isfile(context_avail_operations_file):
+    avail_operations_filepath = os.path.join(ctx_dir_of(0, 0),
+            'avail_operations')
+    if not os.path.isfile(avail_operations_filepath):
         for feature in ['vaddr', 'paddr', 'fvaddr', 'vaddr']:
             operations_filepath = os.path.join(ctx_dir_of(0, 0), 'operations')
             err = _damo_fs.write_file(operations_filepath, feature)
@@ -280,7 +282,7 @@ def update_supported_features():
                 feature_supports[feature] = True
         return None
 
-    content, err = _damo_fs.read_file(context_avail_operations_file)
+    content, err = _damo_fs.read_file(avail_operations_filepath)
     if err != None:
         print(err)
         return None
