@@ -235,11 +235,9 @@ def current_debugfs_inputs():
             debugfs_inputs.schemes = '\n'.join(schemes)
 
 def apply_debugfs_inputs(debugfs_inputs):
-    write_ops = []
-    write_ops.append({debugfs_attrs: debugfs_inputs.attrs})
-    write_ops.append({debugfs_record: debugfs_inputs.record})
-    write_ops.append({debugfs_schemes: debugfs_inputs.schemes})
-    _damo_fs.write_files(write_ops)
+    _damo_fs.write_files([{debugfs_attrs: debugfs_inputs.attrs},
+            {debugfs_record: debugfs_inputs.record},
+            {debugfs_schemes: debugfs_inputs.schemes}])
 
 def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
