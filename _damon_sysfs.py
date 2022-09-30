@@ -259,10 +259,6 @@ def apply_kdamonds(kdamonds):
         print('directory populating failed')
         exit(1)
 
-    kd_idx = 0  # kdamond index
-    ctx_idx = 0
-    target_idx = 0
-
     err = _damo_fs.write_files({kdamonds_dir: file_ops_for_kdamonds(kdamonds)})
     if err != None:
         print('kdamond applying failed: %s' % err)
