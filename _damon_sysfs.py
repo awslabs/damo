@@ -40,8 +40,8 @@ def nr_schemes_file_of(kdamond_idx, context_idx):
     return os.path.join(schemes_dir_of(kdamond_idx, context_idx), 'nr_schemes')
 
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
-    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes', '%s' %
-            scheme_idx)
+    return os.path.join(schemes_dir_of(kdamond_idx, context_idx),
+            '%s' % scheme_idx)
 
 def targets_dir_of(kdamond_idx, context_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'targets')
