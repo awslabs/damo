@@ -220,6 +220,14 @@ def file_ops_for_targets(ctx):
             regions_wops['%d' % idx] = region_wops
     return wops
 
+def file_ops_for_ctx(ctx):
+    return [
+            {'operations': ctx.ops},
+            {'monitoring_attrs': file_ops_for_monitoring_attrs(ctx)},
+            {'targets': file_ops_for_targets(ctx)},
+            {'schemes': file_ops_for_schemes(ctx)},
+    ]
+
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
         print('currently only one kdamond is supported')
@@ -240,13 +248,16 @@ def apply_kdamonds(kdamonds):
     ctx_idx = 0
     target_idx = 0
 
-    ctx = kdamonds[kd_idx].contexts[ctx_idx]
-    wops = []
-    wops.append({ctx_dir_of(kd_idx, ctx_idx): {'operations': ctx.ops}})
-    wops.append({attrs_dir_of(kd_idx, ctx_idx):
-        file_ops_for_monitoring_attrs(ctx)})
-    wops.append({targets_dir_of(kd_idx, ctx_idx): file_ops_for_targets(ctx)})
-    wops.append({schemes_dir_of(kd_idx, ctx_idx): file_ops_for_schemes(ctx)})
+    wops = {
+        kdamonds_dir: {
+            '%d' % kd_idx: {
+                'contexts': {
+                    '%d' % ctx_idx: file_ops_for_ctx(
+                        kdamonds[kd_idx].contexts[ctx_idx])
+                }
+            }
+        }
+    }
     err = _damo_fs.write_files(wops)
     if err != None:
         print('kdamond applying failed: %s' % err)
