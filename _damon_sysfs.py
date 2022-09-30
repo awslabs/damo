@@ -33,6 +33,10 @@ def ctx_dir_of(kdamond_idx, context_idx):
     return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', '%s' %
             context_idx)
 
+def attrs_dir_of(kdamond_idx, context_idx):
+    return os.path.join(ctx_dir_of(kdamond_idx, context_idx),
+            'monitoring_attrs')
+
 def schemes_dir_of(kdamond_idx, context_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
 
@@ -216,11 +220,9 @@ def apply_kdamonds(kdamonds):
 
     ctx = kdamonds[kd_idx].contexts[ctx_idx]
     wops = []
-    attrs_dir = os.path.join(ctx_dir_of(kd_idx, ctx_idx), 'monitoring_attrs')
-    wops.append({attrs_dir: file_ops_for_monitoring_attrs(ctx)})
-    schemes_dir = schemes_dir_of(kd_idx, ctx_idx)
-    wops.append({schemes_dir: file_ops_for_schemes(ctx)})
-
+    wops.append({attrs_dir_of(kd_idx, ctx_idx):
+        file_ops_for_monitoring_attrs(ctx)})
+    wops.append({schemes_dir_of(kd_idx, ctx_idx): file_ops_for_schemes(ctx)})
     wops.append({ctx_dir_of(kd_idx, ctx_idx): {'operations': ctx.ops}})
     target = ctx.targets[target_idx]
     if _damon.target_has_pid(ctx.ops):
