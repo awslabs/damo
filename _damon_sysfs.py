@@ -144,14 +144,12 @@ def file_ops_for_scheme_watermarks(wmarks):
         'low': '%d' % wmarks.low_permil,
     }
 
-def file_ops_for_schemes(kdamonds, kdamond_idx, context_idx):
-    ctx = kdamonds[kdamond_idx].contexts[context_idx]
+def file_ops_for_schemes(ctx):
     schemes = ctx.schemes
 
     schemes_wops = {}
     for idx, scheme in enumerate(schemes):
-        scheme_dir = scheme_dir_of(kdamond_idx, context_idx, idx)
-        schemes_wops[scheme_dir] = {
+        schemes_wops['%d' % idx] = {
             'access_pattern': file_ops_for_scheme_access_pattern(
                 scheme.access_pattern, ctx),
             'action': scheme.action,
@@ -220,7 +218,8 @@ def apply_kdamonds(kdamonds):
     wops = []
     attrs_dir = os.path.join(ctx_dir_of(kd_idx, ctx_idx), 'monitoring_attrs')
     wops.append({attrs_dir: file_ops_for_monitoring_attrs(ctx)})
-    wops.append(file_ops_for_schemes(kdamonds, kd_idx, ctx_idx))
+    schemes_dir = schemes_dir_of(kd_idx, ctx_idx)
+    wops.append({schemes_dir: file_ops_for_schemes(ctx)})
 
     wops.append({ctx_dir_of(kd_idx, ctx_idx): {'operations': ctx.ops}})
     target = ctx.targets[target_idx]
