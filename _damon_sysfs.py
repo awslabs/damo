@@ -242,11 +242,11 @@ def apply_kdamonds(kdamonds):
 
     ctx = kdamonds[kd_idx].contexts[ctx_idx]
     wops = []
+    wops.append({ctx_dir_of(kd_idx, ctx_idx): {'operations': ctx.ops}})
     wops.append({attrs_dir_of(kd_idx, ctx_idx):
         file_ops_for_monitoring_attrs(ctx)})
-    wops.append({schemes_dir_of(kd_idx, ctx_idx): file_ops_for_schemes(ctx)})
-    wops.append({ctx_dir_of(kd_idx, ctx_idx): {'operations': ctx.ops}})
     wops.append({targets_dir_of(kd_idx, ctx_idx): file_ops_for_targets(ctx)})
+    wops.append({schemes_dir_of(kd_idx, ctx_idx): file_ops_for_schemes(ctx)})
     err = _damo_fs.write_files(wops)
     if err != None:
         print('kdamond applying failed: %s' % err)
