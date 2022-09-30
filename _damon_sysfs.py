@@ -212,7 +212,11 @@ def apply_kdamonds(kdamonds):
     if len(kdamonds[0].contexts[0].targets) != 1:
         print('currently only one target is supported')
         exit(1)
-    ensure_dirs_populated2(kdamonds)
+    err = ensure_dirs_populated2(kdamonds)
+    if err != None:
+        print(err)
+        print('directory populating failed')
+        exit(1)
 
     kd_idx = 0  # kdamond index
     ctx_idx = 0
