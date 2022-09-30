@@ -166,6 +166,44 @@ def file_ops_for_schemes(kdamonds, kdamond_idx, context_idx):
     wops.append(schemes_wops)
     return wops
 
+def ensure_dirs_populated2(kdamonds):
+    wops = []
+    nr_kdamonds, err = read_file(nr_kdamonds_file)
+    if err != None:
+        return err
+    if int(nr_kdamonds) != len(kdamonds):
+        wops += [{nr_kdamonds_file: '%d' % len(kdamonds)}]
+    for kd_idx, kdamond in enumerate(kdamonds):
+        nr_contexts, err = read_file(nr_contexts_file_of(kd_idx))
+        if err != None:
+            return err
+        if int(nr_contexts) != len(kdamond.contexts):
+            wops += [{nr_contexts_file_of(kd_idx):
+                '%d' % len(kdamond.contexts)}]
+        for ctx_idx, ctx in enumerate(kdamond.contexts):
+            nr_targets, err = read_file(nr_targets_file_of(kd_idx, ctx_idx))
+            if err != None:
+                return err
+            if int(nr_targets) != len(ctx.targets):
+                wops += [{nr_targets_file_of(kd_idx, ctx_idx):
+                    '%d' % len(ctx.targets)}]
+            for target_idx, target in enumerate(ctx.targets):
+                nr_regions, err = read_file(nr_regions_file_of(kd_idx, ctx_idx,
+                    target_idx))
+                if err != None:
+                    return err
+                if int(nr_regions) != len(target.regions):
+                    wops += [{nr_regions_file_of(kd_idx, ctx_idx, target_idx):
+                        '%d' % len(target.regions)}]
+        nr_schemes, err = read_file(nr_schemes_file_of(kd_idx, ctx_idx))
+        if err != None:
+            return err
+        if int(nr_schemes) != len(ctx.schemes):
+            wops += [{nr_schemes_file_of(kd_idx, ctx_idx):
+                '%d' % len(ctx.schemes)}]
+
+    return _damo_fs.write_files(wops)
+
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
         print('currently only one kdamond is supported')
