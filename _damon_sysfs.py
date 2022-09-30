@@ -33,6 +33,12 @@ def ctx_dir_of(kdamond_idx, context_idx):
     return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', '%s' %
             context_idx)
 
+def schemes_dir_of(kdamond_idx, context_idx):
+    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
+
+def nr_schemes_file_of(kdamond_idx, context_idx):
+    return os.path.join(schemes_dir_of(kdamond_idx, context_idx), 'nr_schemes')
+
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes', '%s' %
             scheme_idx)
@@ -50,6 +56,10 @@ def target_dir_of(kdamond_idx, context_idx, target_idx):
 def regions_dir_of(kdamond_idx, context_idx, target_idx):
     return os.path.join(target_dir_of(kdamond_idx, context_idx, target_idx),
             'regions')
+
+def nr_regions_file_of(kdamond_idx, context_idx, target_idx):
+    return os.path.join(regions_dir_of(kdamond_idx, context_idx, target_idx),
+            'nr_regions')
 
 def region_dir_of(kdamond_idx, context_idx, target_idx, region_idx):
     return os.path.join(regions_dir_of(kdamond_idx, context_idx, target_idx),
