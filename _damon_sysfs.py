@@ -202,6 +202,24 @@ def ensure_dirs_populated2(kdamonds):
 
     return _damo_fs.write_files(wops)
 
+def file_ops_for_targets(ctx):
+    wops = {}
+    for target_idx, target in enumerate(ctx.targets):
+        target_wops = {}
+        if _damon.target_has_pid(ctx.ops):
+            target_wops['pid_target'] = '%s' % target.pid
+        wops['%d' % target_idx] = target_wops
+
+        regions_wops = {}
+        target_wops['regions'] = regions_wops
+        for idx, region in enumerate(target.regions):
+            region_wops = {
+                    'start': '%d' % region.start,
+                    'end': '%d' % region.end
+            }
+            regions_wops['%d' % idx] = region_wops
+    return wops
+
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
         print('currently only one kdamond is supported')
@@ -228,15 +246,7 @@ def apply_kdamonds(kdamonds):
         file_ops_for_monitoring_attrs(ctx)})
     wops.append({schemes_dir_of(kd_idx, ctx_idx): file_ops_for_schemes(ctx)})
     wops.append({ctx_dir_of(kd_idx, ctx_idx): {'operations': ctx.ops}})
-    target = ctx.targets[target_idx]
-    if _damon.target_has_pid(ctx.ops):
-        wops.append({target_dir_of(kd_idx, ctx_idx, target_idx):
-            {'pid_target': '%s' % ctx.targets[target_idx].pid}})
-    for idx, region in enumerate(target.regions):
-        wops.append({region_dir_of(kd_idx, ctx_idx, target_idx, idx): {
-            'start': '%d' % region.start,
-            'end': '%d' % region.end,
-        }})
+    wops.append({targets_dir_of(kd_idx, ctx_idx): file_ops_for_targets(ctx)})
     err = _damo_fs.write_files(wops)
     if err != None:
         print('kdamond applying failed: %s' % err)
