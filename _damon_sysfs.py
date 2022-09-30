@@ -228,6 +228,12 @@ def file_ops_for_ctx(ctx):
             {'schemes': file_ops_for_schemes(ctx)},
     ]
 
+def file_ops_for_kdamond(kdamond):
+    ctxs_wops = {}
+    for ctx_id, ctx in enumerate(kdamond.contexts):
+        ctxs_wops['%d' % ctx_id] = file_ops_for_ctx(ctx)
+    return {'contexts': ctxs_wops}
+
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
         print('currently only one kdamond is supported')
@@ -248,17 +254,11 @@ def apply_kdamonds(kdamonds):
     ctx_idx = 0
     target_idx = 0
 
-    wops = {
-        kdamonds_dir: {
-            '%d' % kd_idx: {
-                'contexts': {
-                    '%d' % ctx_idx: file_ops_for_ctx(
-                        kdamonds[kd_idx].contexts[ctx_idx])
-                }
-            }
-        }
-    }
-    err = _damo_fs.write_files(wops)
+    kdamonds_wops = {}
+    for kd_idx, kdamond in enumerate(kdamonds):
+        kdamonds_wops['%d' % kd_idx] = file_ops_for_kdamond(kdamond)
+    kdamonds_wops = {kdamonds_dir: kdamonds_wops}
+    err = _damo_fs.write_files(kdamonds_wops)
     if err != None:
         print('kdamond applying failed: %s' % err)
         traceback.print_exc()
