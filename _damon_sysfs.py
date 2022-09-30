@@ -147,11 +147,6 @@ def file_ops_for_scheme_watermarks(wmarks):
 def file_ops_for_schemes(kdamonds, kdamond_idx, context_idx):
     ctx = kdamonds[kdamond_idx].contexts[context_idx]
     schemes = ctx.schemes
-    schemes_dir = os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
-
-
-    # nr_schmes should be written before schemes files
-    wops = [{schemes_dir: {'nr_schemes': '%d' % len(schemes)}}]
 
     schemes_wops = {}
     for idx, scheme in enumerate(schemes):
@@ -163,8 +158,7 @@ def file_ops_for_schemes(kdamonds, kdamond_idx, context_idx):
             'quotas': file_ops_for_scheme_quotas(scheme.quotas),
             'watermarks': file_ops_for_scheme_watermarks(scheme.watermarks),
         }
-    wops.append(schemes_wops)
-    return wops
+    return schemes_wops
 
 def ensure_dirs_populated2(kdamonds):
     wops = []
@@ -214,7 +208,7 @@ def apply_kdamonds(kdamonds):
     if len(kdamonds[0].contexts[0].targets) != 1:
         print('currently only one target is supported')
         exit(1)
-    ensure_dirs_populated()
+    ensure_dirs_populated2(kdamonds)
 
     kd_idx = 0  # kdamond index
     ctx_idx = 0
@@ -231,8 +225,6 @@ def apply_kdamonds(kdamonds):
     if _damon.target_has_pid(ctx.ops):
         wops.append({target_dir_of(kd_idx, ctx_idx, target_idx):
             {'pid_target': '%s' % ctx.targets[target_idx].pid}})
-    wops.append({regions_dir_of(kd_idx, ctx_idx, target_idx): {
-        'nr_regions': '%d' % len(target.regions)}})
     for idx, region in enumerate(target.regions):
         wops.append({region_dir_of(kd_idx, ctx_idx, target_idx, idx): {
             'start': '%d' % region.start,
