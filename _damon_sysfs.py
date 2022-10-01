@@ -215,19 +215,15 @@ def wops_for_ctx(ctx):
     ]
 
 def wops_for_ctxs(ctxs):
-    ctxs_wops = {}
-    for ctx_id, ctx in enumerate(ctxs):
-        ctxs_wops['%d' % ctx_id] = wops_for_ctx(ctx)
-    return ctxs_wops
+    return {'%d' % ctx_idx: wops_for_ctx(ctx) for
+            ctx_idx, ctx in enumerate(ctxs)}
 
 def wops_for_kdamond(kdamond):
     return {'contexts': wops_for_ctxs(kdamond.contexts)}
 
 def wops_for_kdamonds(kdamonds):
-    kdamonds_wops = {}
-    for kd_idx, kdamond in enumerate(kdamonds):
-        kdamonds_wops['%d' % kd_idx] = wops_for_kdamond(kdamond)
-    return kdamonds_wops
+    return {'%d' % kd_idx: wops_for_kdamond(kdamond) for
+            kd_idx, kdamond in enumerate(kdamonds)}
 
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
