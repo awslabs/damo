@@ -345,7 +345,4 @@ def initialize(skip_dirs_population=False):
     err = update_supported_features()
     if err:
         return err
-
-    if not skip_dirs_population:
-        ensure_dirs_populated()
     return None
