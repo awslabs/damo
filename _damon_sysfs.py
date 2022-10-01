@@ -318,7 +318,11 @@ def update_supported_features():
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
 
-    ensure_dirs_populated_for_features_check()
+    kdamonds_for_feature_check = [_damon.Kdamond(name=None,
+        contexts=[_damon.DamonCtx(intervals=None, nr_regions=None, ops=None,
+            targets=[_damon.DamonTarget(pid=None, regions=[])],
+            schemes=[])])]
+    ensure_dirs_populated_for(kdamonds_for_feature_check)
     avail_operations_filepath = os.path.join(ctx_dir_of(0, 0),
             'avail_operations')
     if not os.path.isfile(avail_operations_filepath):
