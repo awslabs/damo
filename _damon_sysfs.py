@@ -195,15 +195,12 @@ def wops_regions(regions):
         for region_idx, region in enumerate(regions)}
 
 def wops_for_targets(ctx):
-    wops = {}
-    for target_idx, target in enumerate(ctx.targets):
-        target_wops = {}
-        if _damon.target_has_pid(ctx.ops):
-            target_wops['pid_target'] = '%s' % target.pid
-        wops['%d' % target_idx] = target_wops
-
-        target_wops['regions'] = wops_regions(target.regions)
-    return wops
+    return {
+            '%d' % target_idx: {
+                'pid_target': '%s' %
+                target.pid if _damon.target_has_pid(ctx.ops) else '',
+                'regions': wops_regions(target.regions)
+                } for target_idx, target in enumerate(ctx.targets)}
 
 def wops_for_ctx(ctx):
     return [
