@@ -268,37 +268,6 @@ def feature_supported(feature):
         update_supported_features()
     return feature_supports[feature]
 
-def dirs_populated_for(kdamond_idx, ctx_idx):
-    files_to_read = {nr_kdamonds_file: None,
-            nr_contexts_file_of(kdamond_idx): None,
-            nr_targets_file_of(kdamond_idx, ctx_idx): None}
-    err = _damo_fs.read_files_of(files_to_read)
-    if err:
-        print(err)
-        return False
-    return (int(files_to_read[nr_kdamonds_file]) >= 1 and
-            int(files_to_read[nr_contexts_file_of(kdamond_idx)]) >= 1 and
-            int(files_to_read[nr_targets_file_of(kdamond_idx, ctx_idx)]) >= 1)
-
-def dirs_populated():
-    return dirs_populated_for(0, 0)
-
-def ensure_dirs_populated_for_kdamond_context(kdamond_idx, context_idx):
-    if dirs_populated():
-        return
-
-    wops = [{nr_kdamonds_file: '1'},
-            {nr_contexts_file_of(kdamond_idx): '1'},
-            {nr_targets_file_of(kdamond_idx, context_idx): '1'}]
-    err = _damo_fs.write_files(wops)
-    if err != None:
-        print(err)
-        print('failed populating kdamond and context dirs')
-        exit(1)
-
-def ensure_dirs_populated_for_features_check():
-    return ensure_dirs_populated_for_kdamond_context(0, 0)
-
 def damon_sysfs_missed():
     'Return none-None if DAMON sysfs interface is not found'
     if not os.path.isdir(kdamonds_dir):
