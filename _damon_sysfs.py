@@ -137,7 +137,7 @@ def wops_for_schemes(ctx):
         }
     return schemes_wops
 
-def wops_regions(regions):
+def wops_for_regions(regions):
     return {'%d' % region_idx: {
         'start': '%d' % region.start,
         'end': '%d' % region.end}
@@ -148,7 +148,7 @@ def wops_for_targets(ctx):
             '%d' % target_idx: {
                 'pid_target': '%s' %
                 target.pid if _damon.target_has_pid(ctx.ops) else '',
-                'regions': wops_regions(target.regions)
+                'regions': wops_for_regions(target.regions)
                 } for target_idx, target in enumerate(ctx.targets)}
 
 def wops_for_monitoring_attrs(ctx):
