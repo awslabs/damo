@@ -94,7 +94,7 @@ def __is_damon_running(kdamond_idx):
 def is_damon_running():
     return __is_damon_running(0)
 
-def file_ops_for_monitoring_attrs(ctx):
+def wops_for_monitoring_attrs(ctx):
     return {
         'intervals': {
             'sample_us': '%d' % ctx.intervals.sample,
@@ -107,7 +107,7 @@ def file_ops_for_monitoring_attrs(ctx):
         },
     }
 
-def file_ops_for_scheme_access_pattern(pattern, ctx):
+def wops_for_scheme_access_pattern(pattern, ctx):
     max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
 
     return {
@@ -127,7 +127,7 @@ def file_ops_for_scheme_access_pattern(pattern, ctx):
         },
     }
 
-def file_ops_for_scheme_quotas(quotas):
+def wops_for_scheme_quotas(quotas):
     return {
         'ms': '%d' % quotas.time_ms,
         'bytes': '%d' % quotas.sz_bytes,
@@ -139,7 +139,7 @@ def file_ops_for_scheme_quotas(quotas):
         },
     }
 
-def file_ops_for_scheme_watermarks(wmarks):
+def wops_for_scheme_watermarks(wmarks):
     return {
         'metric': wmarks.metric,
         'interval_us': '%d' % wmarks.interval_us,
@@ -148,17 +148,17 @@ def file_ops_for_scheme_watermarks(wmarks):
         'low': '%d' % wmarks.low_permil,
     }
 
-def file_ops_for_schemes(ctx):
+def wops_for_schemes(ctx):
     schemes = ctx.schemes
 
     schemes_wops = {}
     for idx, scheme in enumerate(schemes):
         schemes_wops['%d' % idx] = {
-            'access_pattern': file_ops_for_scheme_access_pattern(
+            'access_pattern': wops_for_scheme_access_pattern(
                 scheme.access_pattern, ctx),
             'action': scheme.action,
-            'quotas': file_ops_for_scheme_quotas(scheme.quotas),
-            'watermarks': file_ops_for_scheme_watermarks(scheme.watermarks),
+            'quotas': wops_for_scheme_quotas(scheme.quotas),
+            'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
         }
     return schemes_wops
 
@@ -202,7 +202,7 @@ def ensure_dirs_populated2(kdamonds):
 
     return _damo_fs.write_files(wops)
 
-def file_ops_for_targets(ctx):
+def wops_for_targets(ctx):
     wops = {}
     for target_idx, target in enumerate(ctx.targets):
         target_wops = {}
@@ -220,27 +220,27 @@ def file_ops_for_targets(ctx):
             regions_wops['%d' % idx] = region_wops
     return wops
 
-def file_ops_for_ctx(ctx):
+def wops_for_ctx(ctx):
     return [
             {'operations': ctx.ops},
-            {'monitoring_attrs': file_ops_for_monitoring_attrs(ctx)},
-            {'targets': file_ops_for_targets(ctx)},
-            {'schemes': file_ops_for_schemes(ctx)},
+            {'monitoring_attrs': wops_for_monitoring_attrs(ctx)},
+            {'targets': wops_for_targets(ctx)},
+            {'schemes': wops_for_schemes(ctx)},
     ]
 
-def file_ops_for_ctxs(ctxs):
+def wops_for_ctxs(ctxs):
     ctxs_wops = {}
     for ctx_id, ctx in enumerate(ctxs):
-        ctxs_wops['%d' % ctx_id] = file_ops_for_ctx(ctx)
+        ctxs_wops['%d' % ctx_id] = wops_for_ctx(ctx)
     return ctxs_wops
 
-def file_ops_for_kdamond(kdamond):
-    return {'contexts': file_ops_for_ctxs(kdamond.contexts)}
+def wops_for_kdamond(kdamond):
+    return {'contexts': wops_for_ctxs(kdamond.contexts)}
 
-def file_ops_for_kdamonds(kdamonds):
+def wops_for_kdamonds(kdamonds):
     kdamonds_wops = {}
     for kd_idx, kdamond in enumerate(kdamonds):
-        kdamonds_wops['%d' % kd_idx] = file_ops_for_kdamond(kdamond)
+        kdamonds_wops['%d' % kd_idx] = wops_for_kdamond(kdamond)
     return kdamonds_wops
 
 def apply_kdamonds(kdamonds):
@@ -259,7 +259,7 @@ def apply_kdamonds(kdamonds):
         print('directory populating failed')
         exit(1)
 
-    err = _damo_fs.write_files({kdamonds_dir: file_ops_for_kdamonds(kdamonds)})
+    err = _damo_fs.write_files({kdamonds_dir: wops_for_kdamonds(kdamonds)})
     if err != None:
         print('kdamond applying failed: %s' % err)
         traceback.print_exc()
