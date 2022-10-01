@@ -188,6 +188,12 @@ def ensure_dirs_populated_for(kdamonds):
             _damo_fs.write_file_ensure(nr_schemes_file_of(kd_idx, ctx_idx),
                     '%d' % len(ctx.schemes))
 
+def wops_regions(regions):
+    return {'%d' % region_idx: {
+        'start': '%d' % region.start,
+        'end': '%d' % region.end}
+        for region_idx, region in enumerate(regions)}
+
 def wops_for_targets(ctx):
     wops = {}
     for target_idx, target in enumerate(ctx.targets):
@@ -196,14 +202,7 @@ def wops_for_targets(ctx):
             target_wops['pid_target'] = '%s' % target.pid
         wops['%d' % target_idx] = target_wops
 
-        regions_wops = {}
-        target_wops['regions'] = regions_wops
-        for idx, region in enumerate(target.regions):
-            region_wops = {
-                    'start': '%d' % region.start,
-                    'end': '%d' % region.end
-            }
-            regions_wops['%d' % idx] = region_wops
+        target_wops['regions'] = wops_regions(target.regions)
     return wops
 
 def wops_for_ctx(ctx):
