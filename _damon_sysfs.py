@@ -151,44 +151,42 @@ def wops_for_schemes(ctx):
     return schemes_wops
 
 def ensure_dirs_populated_for(kdamonds):
-    wops = []
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
     if err != None:
         return err
     if int(nr_kdamonds) != len(kdamonds):
-        wops += [{nr_kdamonds_file: '%d' % len(kdamonds)}]
+        _damo_fs.wirte_file_ensure(nr_kdamonds_file, '%d' % len(kdamonds))
     for kd_idx, kdamond in enumerate(kdamonds):
         nr_contexts, err = _damo_fs.read_file(nr_contexts_file_of(kd_idx))
         if err != None:
             return err
         if int(nr_contexts) != len(kdamond.contexts):
-            wops += [{nr_contexts_file_of(kd_idx):
-                '%d' % len(kdamond.contexts)}]
+            _damo_fs.write_file_ensure(nr_contexts_file_of(kd_idx),
+                    '%d' % len(kdamond.contexts))
         for ctx_idx, ctx in enumerate(kdamond.contexts):
             nr_targets, err = _damo_fs.read_file(
                     nr_targets_file_of(kd_idx, ctx_idx))
             if err != None:
                 return err
             if int(nr_targets) != len(ctx.targets):
-                wops += [{nr_targets_file_of(kd_idx, ctx_idx):
-                    '%d' % len(ctx.targets)}]
+                _damo_fs.write_file_ensure(nr_targets_file_of(kd_idx, ctx_idx),
+                        '%d' % len(ctx.targets))
             for target_idx, target in enumerate(ctx.targets):
                 nr_regions, err = _damo_fs.read_file(
                         nr_regions_file_of(kd_idx, ctx_idx, target_idx))
                 if err != None:
                     return err
                 if int(nr_regions) != len(target.regions):
-                    wops += [{nr_regions_file_of(kd_idx, ctx_idx, target_idx):
-                        '%d' % len(target.regions)}]
+                    _damo_fs.write_file_ensure(
+                            nr_regions_file_of(kd_idx, ctx_idx, target_idx),
+                            '%d' % len(target.regions))
         nr_schemes, err = _damo_fs.read_file(
                 nr_schemes_file_of(kd_idx, ctx_idx))
         if err != None:
             return err
         if int(nr_schemes) != len(ctx.schemes):
-            wops += [{nr_schemes_file_of(kd_idx, ctx_idx):
-                '%d' % len(ctx.schemes)}]
-
-    return _damo_fs.write_files(wops)
+            _damo_fs.write_file_ensure(nr_schemes_file_of(kd_idx, ctx_idx),
+                    '%d' % len(ctx.schemes))
 
 def wops_for_targets(ctx):
     wops = {}
@@ -241,11 +239,7 @@ def apply_kdamonds(kdamonds):
     if len(kdamonds[0].contexts[0].targets) != 1:
         print('currently only one target is supported')
         exit(1)
-    err = ensure_dirs_populated_for(kdamonds)
-    if err != None:
-        print(err)
-        print('directory populating failed')
-        exit(1)
+    ensure_dirs_populated_for(kdamonds)
 
     err = _damo_fs.write_files({kdamonds_dir: wops_for_kdamonds(kdamonds)})
     if err != None:
