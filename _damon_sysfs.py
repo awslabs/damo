@@ -283,7 +283,7 @@ def update_supported_features():
 
     kdamonds_for_feature_check = [_damon.Kdamond(name=None,
         contexts=[_damon.DamonCtx(intervals=None, nr_regions=None, ops=None,
-            targets=[_damon.DamonTarget(pid=None, regions=[])],
+            targets=[],
             schemes=[])])]
     ensure_dirs_populated_for(kdamonds_for_feature_check)
     avail_operations_filepath = os.path.join(ctx_dir_of(0, 0),
