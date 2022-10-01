@@ -283,7 +283,7 @@ def dirs_populated_for(kdamond_idx, ctx_idx):
 def dirs_populated():
     return dirs_populated_for(0, 0)
 
-def ensure_dirs_populated_for(kdamond_idx, context_idx):
+def ensure_dirs_populated_for_kdamond_context(kdamond_idx, context_idx):
     if dirs_populated():
         return
 
@@ -296,8 +296,8 @@ def ensure_dirs_populated_for(kdamond_idx, context_idx):
         print('failed populating kdamond and context dirs')
         exit(1)
 
-def ensure_dirs_populated():
-    return ensure_dirs_populated_for(0, 0)
+def ensure_dirs_populated_for_features_check():
+    return ensure_dirs_populated_for_kdamond_context(0, 0)
 
 def damon_sysfs_missed():
     'Return none-None if DAMON sysfs interface is not found'
@@ -318,7 +318,7 @@ def update_supported_features():
     feature_supports = {x: True for x in _damon.features}
     feature_supports['record'] = False
 
-    ensure_dirs_populated()
+    ensure_dirs_populated_for_features_check()
     avail_operations_filepath = os.path.join(ctx_dir_of(0, 0),
             'avail_operations')
     if not os.path.isfile(avail_operations_filepath):
