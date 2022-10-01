@@ -82,16 +82,24 @@ def __is_damon_running(kdamond_idx):
 def is_damon_running():
     return __is_damon_running(0)
 
-def wops_for_monitoring_attrs(ctx):
+def wops_for_scheme_watermarks(wmarks):
     return {
-        'intervals': {
-            'sample_us': '%d' % ctx.intervals.sample,
-            'aggr_us': '%d' % ctx.intervals.aggr,
-            'update_us': '%d' % ctx.intervals.ops_update,
-        },
-        'nr_regions': {
-            'min': '%d' % ctx.nr_regions.min_nr_regions,
-            'max': '%d' % ctx.nr_regions.max_nr_regions,
+        'metric': wmarks.metric,
+        'interval_us': '%d' % wmarks.interval_us,
+        'high': '%d' % wmarks.high_permil,
+        'mid': '%d' % wmarks.mid_permil,
+        'low': '%d' % wmarks.low_permil,
+    }
+
+def wops_for_scheme_quotas(quotas):
+    return {
+        'ms': '%d' % quotas.time_ms,
+        'bytes': '%d' % quotas.sz_bytes,
+        'reset_interval_ms': '%d' % quotas.reset_interval_ms,
+        'weights': {
+            'sz_permil': '%d' % quotas.weight_sz_permil,
+            'nr_accesses_permil': '%d' % quotas.weight_nr_accesses_permil,
+            'age_permil': '%d' % quotas.weight_age_permil,
         },
     }
 
@@ -115,27 +123,6 @@ def wops_for_scheme_access_pattern(pattern, ctx):
         },
     }
 
-def wops_for_scheme_quotas(quotas):
-    return {
-        'ms': '%d' % quotas.time_ms,
-        'bytes': '%d' % quotas.sz_bytes,
-        'reset_interval_ms': '%d' % quotas.reset_interval_ms,
-        'weights': {
-            'sz_permil': '%d' % quotas.weight_sz_permil,
-            'nr_accesses_permil': '%d' % quotas.weight_nr_accesses_permil,
-            'age_permil': '%d' % quotas.weight_age_permil,
-        },
-    }
-
-def wops_for_scheme_watermarks(wmarks):
-    return {
-        'metric': wmarks.metric,
-        'interval_us': '%d' % wmarks.interval_us,
-        'high': '%d' % wmarks.high_permil,
-        'mid': '%d' % wmarks.mid_permil,
-        'low': '%d' % wmarks.low_permil,
-    }
-
 def wops_for_schemes(ctx):
     schemes = ctx.schemes
 
@@ -149,6 +136,52 @@ def wops_for_schemes(ctx):
             'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
         }
     return schemes_wops
+
+def wops_regions(regions):
+    return {'%d' % region_idx: {
+        'start': '%d' % region.start,
+        'end': '%d' % region.end}
+        for region_idx, region in enumerate(regions)}
+
+def wops_for_targets(ctx):
+    return {
+            '%d' % target_idx: {
+                'pid_target': '%s' %
+                target.pid if _damon.target_has_pid(ctx.ops) else '',
+                'regions': wops_regions(target.regions)
+                } for target_idx, target in enumerate(ctx.targets)}
+
+def wops_for_monitoring_attrs(ctx):
+    return {
+        'intervals': {
+            'sample_us': '%d' % ctx.intervals.sample,
+            'aggr_us': '%d' % ctx.intervals.aggr,
+            'update_us': '%d' % ctx.intervals.ops_update,
+        },
+        'nr_regions': {
+            'min': '%d' % ctx.nr_regions.min_nr_regions,
+            'max': '%d' % ctx.nr_regions.max_nr_regions,
+        },
+    }
+
+def wops_for_ctx(ctx):
+    return [
+            {'operations': ctx.ops},
+            {'monitoring_attrs': wops_for_monitoring_attrs(ctx)},
+            {'targets': wops_for_targets(ctx)},
+            {'schemes': wops_for_schemes(ctx)},
+    ]
+
+def wops_for_ctxs(ctxs):
+    return {'%d' % ctx_idx: wops_for_ctx(ctx) for
+            ctx_idx, ctx in enumerate(ctxs)}
+
+def wops_for_kdamond(kdamond):
+    return {'contexts': wops_for_ctxs(kdamond.contexts)}
+
+def wops_for_kdamonds(kdamonds):
+    return {'%d' % kd_idx: wops_for_kdamond(kdamond) for
+            kd_idx, kdamond in enumerate(kdamonds)}
 
 def ensure_dirs_populated_for(kdamonds):
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
@@ -187,39 +220,6 @@ def ensure_dirs_populated_for(kdamonds):
         if int(nr_schemes) != len(ctx.schemes):
             _damo_fs.write_file_ensure(nr_schemes_file_of(kd_idx, ctx_idx),
                     '%d' % len(ctx.schemes))
-
-def wops_regions(regions):
-    return {'%d' % region_idx: {
-        'start': '%d' % region.start,
-        'end': '%d' % region.end}
-        for region_idx, region in enumerate(regions)}
-
-def wops_for_targets(ctx):
-    return {
-            '%d' % target_idx: {
-                'pid_target': '%s' %
-                target.pid if _damon.target_has_pid(ctx.ops) else '',
-                'regions': wops_regions(target.regions)
-                } for target_idx, target in enumerate(ctx.targets)}
-
-def wops_for_ctx(ctx):
-    return [
-            {'operations': ctx.ops},
-            {'monitoring_attrs': wops_for_monitoring_attrs(ctx)},
-            {'targets': wops_for_targets(ctx)},
-            {'schemes': wops_for_schemes(ctx)},
-    ]
-
-def wops_for_ctxs(ctxs):
-    return {'%d' % ctx_idx: wops_for_ctx(ctx) for
-            ctx_idx, ctx in enumerate(ctxs)}
-
-def wops_for_kdamond(kdamond):
-    return {'contexts': wops_for_ctxs(kdamond.contexts)}
-
-def wops_for_kdamonds(kdamonds):
-    return {'%d' % kd_idx: wops_for_kdamond(kdamond) for
-            kd_idx, kdamond in enumerate(kdamonds)}
 
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
