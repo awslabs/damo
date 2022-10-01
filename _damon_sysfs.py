@@ -150,7 +150,7 @@ def wops_for_schemes(ctx):
         }
     return schemes_wops
 
-def ensure_dirs_populated2(kdamonds):
+def ensure_dirs_populated_for(kdamonds):
     wops = []
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
     if err != None:
@@ -241,7 +241,7 @@ def apply_kdamonds(kdamonds):
     if len(kdamonds[0].contexts[0].targets) != 1:
         print('currently only one target is supported')
         exit(1)
-    err = ensure_dirs_populated2(kdamonds)
+    err = ensure_dirs_populated_for(kdamonds)
     if err != None:
         print(err)
         print('directory populating failed')
