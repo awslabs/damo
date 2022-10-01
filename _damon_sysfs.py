@@ -33,19 +33,11 @@ def ctx_dir_of(kdamond_idx, context_idx):
     return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', '%s' %
             context_idx)
 
-def attrs_dir_of(kdamond_idx, context_idx):
-    return os.path.join(ctx_dir_of(kdamond_idx, context_idx),
-            'monitoring_attrs')
-
 def schemes_dir_of(kdamond_idx, context_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
 
 def nr_schemes_file_of(kdamond_idx, context_idx):
     return os.path.join(schemes_dir_of(kdamond_idx, context_idx), 'nr_schemes')
-
-def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
-    return os.path.join(schemes_dir_of(kdamond_idx, context_idx),
-            '%s' % scheme_idx)
 
 def targets_dir_of(kdamond_idx, context_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'targets')
@@ -64,10 +56,6 @@ def regions_dir_of(kdamond_idx, context_idx, target_idx):
 def nr_regions_file_of(kdamond_idx, context_idx, target_idx):
     return os.path.join(regions_dir_of(kdamond_idx, context_idx, target_idx),
             'nr_regions')
-
-def region_dir_of(kdamond_idx, context_idx, target_idx, region_idx):
-    return os.path.join(regions_dir_of(kdamond_idx, context_idx, target_idx),
-            '%s' % region_idx)
 
 def __turn_damon(kdamond_idx, on_off):
     err = _damo_fs.write_file(state_file_of(kdamond_idx), on_off)
