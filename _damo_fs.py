@@ -11,7 +11,7 @@ def read_file(filepath):
         with open(filepath, 'r') as f:
             content = f.read()
     except Exception as e:
-        return None, e
+        return None, 'reading %s failed (%s)' % (filepath, e)
     if _damon.pr_debug_log:
         print('read \'%s\': \'%s\'' % (filepath, content))
     return content, None
