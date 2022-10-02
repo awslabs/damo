@@ -44,6 +44,15 @@ def values_for_restore(filepath, read_val):
         return 'paddr\n'
     return read_val
 
+'''Return value to write back to the filepath for restoring, and error'''
+def read_value_for_restore(filepath):
+    err = True
+    read_val, err = _damo_fs.read_file(filepath)
+    if err != None:
+        return None, err
+    err = None
+    return values_for_restore(filepath, read_val), err
+
 def test_debugfs_file(path, input_str, expected):
     orig_val, err = _damo_fs.read_file(path)
     if err != None:
