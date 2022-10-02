@@ -37,14 +37,18 @@ def feature_supported(feature):
 
     return feature_supports[feature]
 
+def values_for_restore(filepath, read_val):
+    if read_val == '':
+        return '\n'
+    if os.path.basename(filepath) == 'target_ids' and read_val == '42\n':
+        return 'paddr\n'
+    return read_val
+
 def test_debugfs_file(path, input_str, expected):
     orig_val, err = _damo_fs.read_file(path)
     if err != None:
         return False
-    if orig_val == '':
-        orig_val = '\n'
-    if os.path.basename(path) == 'target_ids' and orig_val == '42\n':
-        orig_val = 'paddr\n'
+    orig_val = values_for_restore(filepath, orig_val)
     err = _damo_fs.write_file(path, input_str)
     if err != None:
         return False
