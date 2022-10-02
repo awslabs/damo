@@ -80,14 +80,12 @@ def test_init_regions_version(paddr_supported):
     # Save previous values
     with open(debugfs_target_ids, 'r') as f:
         orig_target_ids = f.read()
-        if orig_target_ids == '':
-            orig_target_ids = '\n'
-        if orig_target_ids == '42\n':
-            orig_target_ids = 'paddr\n'
+        orig_target_ids = values_for_restore(debugfs_target_ids,
+                orig_target_ids)
     with open(debugfs_init_regions, 'r') as f:
         orig_init_regions = f.read()
-        if orig_init_regions == '':
-            orig_init_regions = '\n'
+        orig_init_regions = values_for_restore(debugfs_init_regions,
+                orig_init_regions)
 
     # Test
     with open(debugfs_target_ids, 'w') as f:
