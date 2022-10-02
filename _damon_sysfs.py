@@ -188,7 +188,7 @@ def ensure_dirs_populated_for(kdamonds):
     if err != None:
         return err
     if int(nr_kdamonds) != len(kdamonds):
-        _damo_fs.wirte_file_ensure(nr_kdamonds_file, '%d' % len(kdamonds))
+        _damo_fs.write_file_ensure(nr_kdamonds_file, '%d' % len(kdamonds))
     for kd_idx, kdamond in enumerate(kdamonds):
         nr_contexts, err = _damo_fs.read_file(nr_contexts_file_of(kd_idx))
         if err != None:
