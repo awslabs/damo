@@ -38,23 +38,26 @@ def feature_supported(feature):
     return feature_supports[feature]
 
 def test_debugfs_file(path, input_str, expected):
-    passed = False
-    with open(path, 'r') as f:
-        orig_value = f.read()
-        if orig_value == '':
-            orig_value = '\n'
-    if os.path.basename(path) == 'target_ids' and orig_value == '42\n':
-        orig_value = 'paddr\n'
-    try:
-        with open(path, 'w') as f:
-            f.write(input_str)
-        with open(path, 'r') as f:
-            if f.read() == expected:
-                passed = True
-    except Exception as e:
+    orig_val, err = _damo_fs.read_file(path)
+    if err != None:
+        return False
+    if orig_val == '':
+        orig_val = '\n'
+    if os.path.basename(path) == 'target_ids' and orig_val == '42\n':
+        orig_val = 'paddr\n'
+    err = _damo_fs.write_file(path, input_str)
+    if err != None:
+        return False
+    content, err = _damo_fs.read_file(path)
+    if err != None:
+        return False
+    if content == expected:
+        passed = True
+    else:
         passed = False
-    with open(path, 'w') as f:
-        f.write(orig_value)
+    err = _damo_fs.write_file(path, orig_val)
+    if err != None:
+        return False
     return passed
 
 def test_debugfs_file_schemes(nr_fields):
