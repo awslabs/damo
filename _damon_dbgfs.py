@@ -54,10 +54,9 @@ def read_value_for_restore(filepath):
     return values_for_restore(filepath, read_val), err
 
 def test_debugfs_file(path, input_str, expected):
-    orig_val, err = _damo_fs.read_file(path)
+    orig_val, err = read_value_for_restore(path)
     if err != None:
         return False
-    orig_val = values_for_restore(filepath, orig_val)
     err = _damo_fs.write_file(path, input_str)
     if err != None:
         return False
