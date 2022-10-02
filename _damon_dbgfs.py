@@ -94,16 +94,15 @@ def test_init_regions_version(paddr_supported):
         raise Exception('debugfs init_regions read failed')
 
     # Test
-    with open(debugfs_target_ids, 'w') as f:
-        if paddr_supported:
-            f.write('paddr\n')
-        else:
-            f.write('%d\n' % os.getpid())
-
     if paddr_supported:
+        with open(debugfs_target_ids, 'w') as f:
+            f.write('paddr\n')
         v1_input = '42 100 200'
     else:
+        with open(debugfs_target_ids, 'w') as f:
+            f.write('%d\n' % os.getpid())
         v1_input = '%d 100 200' % os.getpid()
+
     try:
         with open(debugfs_init_regions, 'w') as f:
             f.write(v1_input)
