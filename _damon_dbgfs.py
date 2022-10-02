@@ -107,7 +107,8 @@ def test_init_regions_version(paddr_supported):
         with open(debugfs_init_regions, 'w') as f:
             f.write(v1_input)
     except IOError as e:
-        version = 2
+        # We check if the write was success below anyway.
+        pass
     with open(debugfs_init_regions, 'r') as f:
         if f.read().strip() == v1_input:
             version = 1
