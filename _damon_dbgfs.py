@@ -95,35 +95,31 @@ def test_init_regions_version(paddr_supported):
 
     # Test
     if paddr_supported:
-        with open(debugfs_target_ids, 'w') as f:
-            f.write('paddr\n')
+        err = _damo_fs.write_file(debugfs_target_ids, 'paddr\n')
+        if err != None:
+            raise Exception(err)
         v1_input = '42 100 200'
     else:
-        with open(debugfs_target_ids, 'w') as f:
-            f.write('%d\n' % os.getpid())
+        err = _damo_fs.write_file(debugfs_target_ids, '%d\n' % os.getpid())
+        if err != None:
+            raise Exception(err)
         v1_input = '%d 100 200' % os.getpid()
 
-    try:
-        with open(debugfs_init_regions, 'w') as f:
-            f.write(v1_input)
-    except IOError as e:
-        # We check if the write was success below anyway.
-        pass
-    with open(debugfs_init_regions, 'r') as f:
-        if f.read().strip() == v1_input:
-            version = 1
-        else:
-            version = 2
+    # We check if the write was success below anyway, so ignore error
+    err = _damo_fs.write_file(debugfs_init_regions, v1_input)
+    read_val, err = _damo_fs.read_file(debugfs_init_regions)
+    if err != None:
+        raise Exception(err)
+    if read_val.strip() == v1_input:
+        version = 1
+    else:
+        version = 2
 
-    # Restore previous values
-    try:
-        with open(debugfs_target_ids, 'w') as f:
-            f.write(orig_target_ids)
-        with open(debugfs_init_regions, 'w') as f:
-            f.write(orig_init_regions)
-    except IOError:
-        # Previous value might be invalid now (e.g., process terminated)
-        pass
+    # Previous value might be invalid now (e.g., process terminated), so ignore
+    # error
+    err = _damo_fs.write_file(debugfs_target_ids, orig_target_ids)
+    err = _damo_fs.write_file(debugfs_init_regions, orig_init_regions)
+
     return version
 
 def update_supported_features():
