@@ -306,11 +306,11 @@ def ensure_initialized(args, skip_dirs_population):
         exit(1)
     initialized = True
 
-def commit_inputs():
+def commit_inputs(kdamonds):
     if _damon_fs == _damon_dbgfs:
         print('debugfs interface unsupport commit_inputs()')
         exit(1)
-    return _damon_fs.commit_inputs()
+    return _damon_fs.commit_inputs(kdamonds)
 
 def _damon_fs_root():
     if _damon_fs == _damon_dbgfs:

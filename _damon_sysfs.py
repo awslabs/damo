@@ -246,8 +246,12 @@ def __commit_inputs(kdamond_idx):
         return 1
     return 0
 
-def commit_inputs():
-    return __commit_inputs(0)
+def commit_inputs(kdamonds):
+    for kdamond_idx in range(len(kdamonds)):
+        err = __commit_inputs(kdamond_idx)
+        if err != 0:
+            return err
+    return 0
 
 def feature_supported(feature):
     if feature_supports == None:
