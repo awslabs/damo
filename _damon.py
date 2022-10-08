@@ -377,6 +377,12 @@ def set_implicit_target_schemes_argparser(parser):
 def is_ongoing_target(args):
     return args.target == 'ongoing'
 
+def apply_explicit_args_damon(args):
+    ctx = damon_ctx_from_damon_args(args)
+    kdamonds = [Kdamond('0', [ctx])]
+    apply_kdamonds(kdamonds)
+    return kdamonds
+
 def turn_explicit_args_damon_on(args):
     ctx = damon_ctx_from_damon_args(args)
     kdamonds = [Kdamond('0', [ctx])]
