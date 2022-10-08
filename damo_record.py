@@ -16,6 +16,7 @@ import _damon_result
 import _damo_paddr_layout
 
 class DataForCleanup:
+    kdamonds = None
     target_is_ongoing = False
     orig_attrs = None
     rfile_path = None
@@ -51,7 +52,7 @@ def cleanup_exit(exit_code):
 
     if not data_for_cleanup.target_is_ongoing:
         if _damon.is_damon_running():
-            if _damon.turn_damon('off'):
+            if _damon.turn_damon('off', data_for_cleanup.kdamonds):
                 print('failed to turn damon off!')
         _damon.restore_attrs(data_for_cleanup.orig_attrs)
 
@@ -147,6 +148,8 @@ def main(args=None):
         if err:
             print('could not turn DAMON on')
             cleanup_exit(-2)
+        data_for_cleanup.kdamonds = kdamonds
+
 
     if not damon_record_supported:
         # Record the monitoring results using perf

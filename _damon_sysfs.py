@@ -64,12 +64,16 @@ def __turn_damon(kdamond_idx, on_off):
         return 1
     return 0
 
-def turn_damon(on_off):
+def turn_damon(on_off, kdamonds):
     if on_off == 'on':
         # In case of vaddr, too early monitoring shows unstable mapping changes.
         # Give the process a time to have stable memory mapping.
         time.sleep(0.5)
-    return __turn_damon(0, on_off)
+    for kdamond_idx in range(len(kdamonds)):
+        err = __turn_damon(kdamond_idx, on_off)
+        if err != 0:
+            return err
+    return 0
 
 def __is_damon_running(kdamond_idx):
     content, err = _damo_fs.read_file(os.path.join(

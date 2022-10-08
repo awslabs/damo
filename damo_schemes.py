@@ -17,7 +17,7 @@ import _damo_paddr_layout
 
 def cleanup_exit(exit_code):
     if _damon.is_damon_running():
-        if _damon.turn_damon('off'):
+        if _damon.turn_damon('off', kdamonds):
             print('failed to turn damon off!')
     _damon.restore_attrs(orig_attrs)
     exit(exit_code)
@@ -31,6 +31,8 @@ def set_argparser(parser):
 
 def main(args=None):
     global orig_attrs
+    global kdamonds
+
     if not args:
         parser = argparse.ArgumentParser()
         set_argparser(parser)
@@ -40,6 +42,7 @@ def main(args=None):
     _damon.ensure_initialized(args, False)
 
     orig_attrs = _damon.attrs_to_restore()
+    kdamonds = None
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)

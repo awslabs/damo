@@ -163,8 +163,8 @@ def ensure_root_permission():
         print('Run as root')
         exit(1)
 
-def turn_damon(on_off):
-    err = _damon_fs.turn_damon(on_off)
+def turn_damon(on_off, kdamonds):
+    err = _damon_fs.turn_damon(on_off, kdamonds)
     if err:
         return err
     if on_off == 'on':
@@ -385,7 +385,7 @@ def apply_explicit_args_damon(args):
 
 def turn_explicit_args_damon_on(args):
     kdamonds = apply_explicit_args_damon(args)
-    return turn_damon('on'), kdamonds[0].contexts[0]
+    return turn_damon('on', kdamonds), kdamonds[0].contexts[0]
 
 def turn_implicit_args_damon_on(args, record_request):
     set_implicit_target_args_explicit(args)
@@ -394,4 +394,4 @@ def turn_implicit_args_damon_on(args, record_request):
         ctx.record_request = record_request
     kdamonds = [Kdamond('0', [ctx])]
     apply_kdamonds(kdamonds)
-    return turn_damon('on'), kdamonds
+    return turn_damon('on', kdamonds), kdamonds
