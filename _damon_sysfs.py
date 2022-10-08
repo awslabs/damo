@@ -243,6 +243,55 @@ def apply_kdamonds(kdamonds):
         traceback.print_exc()
         return 1
 
+def files_content_to_scheme(scheme_name, files_content):
+    return None
+
+def files_content_to_target(target_name, files_content):
+    return None
+
+def files_content_to_context(context_name, files_content):
+    intervals_content = mon_attrs_content['intervals']
+    intervals = _damon.DamonIntervals(
+            int(intervals_content['sample_us']),
+            int(intervals_content['aggr_us']),
+            int(intervals_content['ops_update']),
+    nr_regions_content = monitoring_attrs['nr_regions'])
+    nr_regions = _damon.DamonNrRegionsRange(
+            int(nr_regions_content['min']),
+            int(nr_regions_content['max']))
+    ops = files_content['operations'].strip()
+
+    targets_content = files_content['targets']
+    targets = []
+    for target_name in targets_content:
+        targets.append(files_content_to_target(target_name,
+            targets_content[target_name]))
+
+    schemes_content = files_content['schemes']
+    schemes = []
+    for scheme_name in schemes_content:
+        schemes.append(files_content_to_scheme(scheme_name,
+            schemes_content[scheme_name]))
+
+    return _damon.DamonCtx(context_name, intervals, nr_regions, ops, targets,
+            schemes)
+
+def files_content_to_kdamond(kdamond_name, files_content):
+    contexts_content = files_content['contexts']
+    contexts = []
+    for ctx_name in contexts_content:
+        contexts.append(files_content_to_context(ctx_name,
+            contexts_content[ctx_name]))
+    return _damon.Kdamond(kdamond_name, contexts)
+
+def current_kdamonds():
+    files_contents = _damo_fs.read_files_recursive(kdamonds_dir)
+    kdamonds = []
+    for kdamond_name in files_contents:
+        kdamonds.append(files_content_to_kdamond(
+            kdamond_name, files_contents[kdamond_name]))
+    return kdamonds
+
 def __commit_inputs(kdamond_idx):
     err = _damo_fs.write_file(state_file_of(kdamond_idx), 'commit')
     if err != None:
