@@ -42,10 +42,12 @@ class DamonRegion:
         self.end = end
 
 class DamonTarget:
+    name = None
     pid = None
     regions = None
 
-    def __init__(self, pid, regions):
+    def __init__(self, name, pid, regions):
+        self.name = name
         self.pid = pid
         self.regions = regions
 
@@ -98,12 +100,14 @@ class DamosWatermarks:
         self.low_permil = low
 
 class Damos:
+    name = None
     access_pattern = None
     action = None
     quotas = None
     watermarks = None
 
-    def __init__(self, access_pattern, action, quotas, watermarks):
+    def __init__(self, name, access_pattern, action, quotas, watermarks):
+        self.name = name
         self.access_pattern = access_pattern
         self.action = action
         self.quotas = quotas
@@ -118,6 +122,7 @@ class DamonRecord:
         self.rfile_path = rfile_path
 
 class DamonCtx:
+    name = None
     intervals = None
     nr_regions = None
     ops = None
@@ -126,7 +131,8 @@ class DamonCtx:
     # For old downstream kernels that supports record feature
     record_request = None
 
-    def __init__(self, intervals, nr_regions, ops, targets, schemes):
+    def __init__(self, name, intervals, nr_regions, ops, targets, schemes):
+        self.name = name
         self.intervals = intervals
         self.nr_regions = nr_regions
         self.ops = ops
@@ -237,13 +243,13 @@ def damon_ctx_from_damon_args(args):
         init_regions = [DamonRegion(r[0], r[1]) for r in init_regions]
 
     if target_has_pid(ops):
-        target = DamonTarget(args.target_pid, init_regions)
+        target = DamonTarget('0', args.target_pid, init_regions)
     else:
-        target = DamonTarget(None, init_regions)
+        target = DamonTarget('0', None, init_regions)
 
     schemes = damos_from_args(args)
 
-    return DamonCtx(intervals, nr_regions, ops, [target], schemes)
+    return DamonCtx('0', intervals, nr_regions, ops, [target], schemes)
 
 def set_implicit_target_args_explicit(args):
     args.self_started_target = False
