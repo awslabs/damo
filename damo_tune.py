@@ -29,9 +29,7 @@ def main(args=None):
         print('DAMON is not turned on')
         exit(1)
 
-    ctx = _damon.damon_ctx_from_damon_args(args)
-    kdamonds = [_damon.Kdamond('0', [ctx])]
-    _damon.apply_kdamonds(kdamonds)
+    _damon.apply_explicit_args_damon(args)
     if _damon.commit_inputs():
         print('could not commit inputs')
 
