@@ -242,10 +242,8 @@ def damon_ctx_from_damon_args(args):
             init_regions = [_damo_paddr_layout.default_paddr_region()]
         init_regions = [DamonRegion(r[0], r[1]) for r in init_regions]
 
-    if target_has_pid(ops):
-        target = DamonTarget('0', args.target_pid, init_regions)
-    else:
-        target = DamonTarget('0', None, init_regions)
+    target = DamonTarget('0', args.target_pid if target_has_pid(ops) else None,
+            init_regions)
 
     schemes = damos_from_args(args)
 
