@@ -44,14 +44,15 @@ def main(args=None):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    err, ctx = _damon.turn_implicit_args_damon_on(args, record_request=None)
+    err, kdamonds = _damon.turn_implicit_args_damon_on(args,
+            record_request=None)
     if err:
         print('could not turn DAMON on')
         cleanup_exit(-3)
 
     print('Press Ctrl+C to stop')
     if args.self_started_target == True:
-        os.waitpid(ctx.targets[0].pid, 0)
+        os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
     # damon will turn it off by itself if the target tasks are terminated.
     while _damon.is_damon_running():
         time.sleep(1)

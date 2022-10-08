@@ -142,7 +142,7 @@ def main(args=None):
     # Now the real works
     if not _damon.is_ongoing_target(args):
         # Turn DAMON on
-        err, ctx = _damon.turn_implicit_args_damon_on(args,
+        err, kdamonds = _damon.turn_implicit_args_damon_on(args,
                 record_request=_damon.DamonRecord(args.rbuf, args.out))
         if err:
             print('could not turn DAMON on')
@@ -156,7 +156,7 @@ def main(args=None):
     print('Press Ctrl+C to stop')
 
     if not _damon.is_ongoing_target(args) and args.self_started_target == True:
-        os.waitpid(ctx.targets[0].pid, 0)
+        os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
     while _damon.is_damon_running():
         time.sleep(1)
 

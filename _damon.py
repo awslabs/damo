@@ -394,4 +394,4 @@ def turn_implicit_args_damon_on(args, record_request):
         ctx.record_request = record_request
     kdamonds = [Kdamond('0', [ctx])]
     apply_kdamonds(kdamonds)
-    return turn_damon('on'), ctx
+    return turn_damon('on'), kdamonds
