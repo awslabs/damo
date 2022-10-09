@@ -317,12 +317,16 @@ def files_content_to_context(context_name, files_content):
     targets_content = files_content['targets']
     targets = []
     for target_name in targets_content:
+        if target_name == 'nr_targets':
+            continue
         targets.append(files_content_to_target(target_name,
             targets_content[target_name]))
 
     schemes_content = files_content['schemes']
     schemes = []
     for scheme_name in schemes_content:
+        if scheme_name == 'nr_schemes':
+            continue
         schemes.append(files_content_to_scheme(scheme_name,
             schemes_content[scheme_name]))
 
@@ -333,6 +337,8 @@ def files_content_to_kdamond(kdamond_name, files_content):
     contexts_content = files_content['contexts']
     contexts = []
     for ctx_name in contexts_content:
+        if ctx_name == 'nr_contexts':
+            continue
         contexts.append(files_content_to_context(ctx_name,
             contexts_content[ctx_name]))
     return _damon.Kdamond(kdamond_name, contexts)
@@ -341,6 +347,8 @@ def current_kdamonds():
     files_contents = _damo_fs.read_files_recursive(kdamonds_dir)
     kdamonds = []
     for kdamond_name in files_contents:
+        if kdamond_name == 'nr_kdamonds':
+            continue
         kdamonds.append(files_content_to_kdamond(
             kdamond_name, files_contents[kdamond_name]))
     return kdamonds
