@@ -303,12 +303,13 @@ def files_content_to_target(target_name, files_content):
     return _damon.DamonTarget(target_name, pid, regions)
 
 def files_content_to_context(context_name, files_content):
+    mon_attrs_content = files_content['monitoring_attrs']
     intervals_content = mon_attrs_content['intervals']
     intervals = _damon.DamonIntervals(
             int(intervals_content['sample_us']),
             int(intervals_content['aggr_us']),
-            int(intervals_content['ops_update']),
-    nr_regions_content = monitoring_attrs['nr_regions'])
+            int(intervals_content['update_us']))
+    nr_regions_content = mon_attrs_content['nr_regions']
     nr_regions = _damon.DamonNrRegionsRange(
             int(nr_regions_content['min']),
             int(nr_regions_content['max']))
