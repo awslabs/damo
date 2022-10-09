@@ -117,9 +117,9 @@ def wops_for_scheme_access_pattern(pattern, ctx):
         },
         'nr_accesses': {
             'min': '%d' % int(
-                pattern.min_nr_accesses_permil * max_nr_accesses / 1000),
+                pattern.min_nr_accesses_percent * max_nr_accesses / 100),
             'max': '%d' % int(
-                pattern.max_nr_accesses_permil * max_nr_accesses / 1000),
+                pattern.max_nr_accesses_percent * max_nr_accesses / 100),
         },
         'age': {
             'min': '%d' % (pattern.min_age_us / ctx.intervals.aggr),

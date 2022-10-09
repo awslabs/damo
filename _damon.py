@@ -54,17 +54,17 @@ class DamonTarget:
 class DamosAccessPattern:
     min_sz_bytes = None
     max_sz_bytes = None
-    min_nr_accesses_permil = None
-    max_nr_accesses_permil = None
+    min_nr_accesses_percent = None
+    max_nr_accesses_percent = None
     min_age_us = None
     max_age_us = None
 
-    def __init__(self, min_sz_bytes, max_sz_bytes, min_nr_accesses_permil,
-            max_nr_accesses_permil, min_age_us, max_age_us):
+    def __init__(self, min_sz_bytes, max_sz_bytes, min_nr_accesses_percent,
+            max_nr_accesses_percent, min_age_us, max_age_us):
         self.min_sz_bytes = min_sz_bytes
         self.max_sz_bytes = max_sz_bytes
-        self.min_nr_accesses_permil = min_nr_accesses_permil
-        self.max_nr_accesses_permil = max_nr_accesses_permil
+        self.min_nr_accesses_percent = min_nr_accesses_percent
+        self.max_nr_accesses_percent = max_nr_accesses_percent
         self.min_age_us = min_age_us
         self.max_age_us = max_age_us
 

@@ -90,12 +90,12 @@ def text_to_nr_accesses(txt, max_nr_accesses):
 
     return int(float(txt) * max_nr_accesses / 100)
 
-def text_percent_to_nr_accesses_permil(txt):
+def text_nr_accesses_percent(txt):
     if txt == 'min':
-        return 0
+        return 0.0
     if txt == 'max':
-        return 1000
-    return float(txt) * 10
+        return 100.0
+    return float(txt)
 
 damos_wmark_metric_to_int = {'none': 0, 'free_mem_rate': 1}
 
@@ -112,8 +112,8 @@ def damo_scheme_to_damos(line, scheme_version, idx):
     try:
         min_sz = text_to_bytes(fields[0])
         max_sz = text_to_bytes(fields[1])
-        min_nr_accesses = text_percent_to_nr_accesses_permil(fields[2])
-        max_nr_accesses = text_percent_to_nr_accesses_permil(fields[3])
+        min_nr_accesses = text_nr_accesses_percent(fields[2])
+        max_nr_accesses = text_nr_accesses_percent(fields[3])
         min_age_us = text_to_us(fields[4])
         max_age_us = text_to_us(fields[5])
         action_txt = fields[6].lower()
@@ -179,8 +179,8 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
     max_nr_accesses = aggr_interval / sample_interval
     v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
             pattern.min_sz_bytes, pattern.max_sz_bytes,
-            int(pattern.min_nr_accesses_permil * max_nr_accesses / 1000),
-            int(pattern.max_nr_accesses_permil * max_nr_accesses / 1000),
+            int(pattern.min_nr_accesses_percent * max_nr_accesses / 100),
+            int(pattern.max_nr_accesses_percent * max_nr_accesses / 100),
             pattern.min_age_us / aggr_interval,
             pattern.max_age_us / aggr_interval,
             damos_action_to_int[damos.action])
