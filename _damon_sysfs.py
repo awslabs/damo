@@ -246,8 +246,22 @@ def apply_kdamonds(kdamonds):
 def files_content_to_scheme(scheme_name, files_content):
     return None
 
+def files_content_to_regions(files_content):
+    regions = []
+    for region_idx in range(int(files_content['nr_regions'])):
+        region_name = '%d' % region_idx
+        regions.append(_damon.DamonRegion(
+            files_content[region_name]['start'],
+            files_content[region_name]['end']))
+    return regions
+
 def files_content_to_target(target_name, files_content):
-    return None
+    try:
+        pid = int(files_content['pid_target'])
+    except:
+        pid = None
+    regions = files_content_to_regions(files_content['regions'])
+    return _damon.DamonTarget(target_name, pid, regions)
 
 def files_content_to_context(context_name, files_content):
     intervals_content = mon_attrs_content['intervals']
