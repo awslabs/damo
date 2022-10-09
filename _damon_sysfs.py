@@ -126,8 +126,10 @@ def wops_for_scheme_access_pattern(pattern, ctx):
                 else pattern.max_nr_accesses),
         },
         'age': {
-            'min': '%d' % (pattern.min_age_us / ctx.intervals.aggr),
-            'max': '%d' % (pattern.max_age_us / ctx.intervals.aggr),
+            'min': '%d' % (pattern.min_age / ctx.intervals.aggr
+                if pattern.age_unit == 'usec' else pattern.min_age),
+            'max': '%d' % (pattern.max_age / ctx.intervals.aggr
+                if pattern.age_unit == 'usec' else pattern.max_age),
         },
     }
 
@@ -256,7 +258,8 @@ def files_content_to_access_pattern(files_content):
             files_content['nr_accesses']['max'],
             'sample_intervals', # nr_accesses_unit
             files_content['age']['min'],
-            files_content['age']['max'])
+            files_content['age']['max'],
+            'aggr_intervals') # age_unit
 
 def files_content_to_quotas(files_content):
     return _damon.DamosQuota(

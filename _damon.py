@@ -57,18 +57,21 @@ class DamosAccessPattern:
     min_nr_accesses = None
     max_nr_accesses = None
     nr_accesses_unit = None # 'percent' or 'sample_intervals'
-    min_age_us = None
-    max_age_us = None
+    min_age = None
+    max_age = None
+    age_unit = None # 'usec' or 'aggr_intervals'
 
-    def __init__(self, min_sz_bytes, max_sz_bytes, min_nr_accesses,
-            max_nr_accesses, nr_accesses_unit, min_age_us, max_age_us):
+    def __init__(self, min_sz_bytes, max_sz_bytes,
+            min_nr_accesses, max_nr_accesses, nr_accesses_unit,
+            min_age, max_age, age_unit):
         self.min_sz_bytes = min_sz_bytes
         self.max_sz_bytes = max_sz_bytes
         self.min_nr_accesses = min_nr_accesses
         self.max_nr_accesses = max_nr_accesses
         self.nr_accesses_unit = nr_accesses_unit
-        self.min_age_us = min_age_us
-        self.max_age_us = max_age_us
+        self.min_age = min_age
+        self.max_age = max_age
+        self.age_unit = age_unit
 
 class DamosQuota:
     time_ms = None
