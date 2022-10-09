@@ -117,9 +117,13 @@ def wops_for_scheme_access_pattern(pattern, ctx):
         },
         'nr_accesses': {
             'min': '%d' % int(
-                pattern.min_nr_accesses_percent * max_nr_accesses / 100),
+                pattern.min_nr_accesses * max_nr_accesses / 100
+                if pattern.nr_accesses_unit == 'percent'
+                else pattern.min_nr_accesses),
             'max': '%d' % int(
-                pattern.max_nr_accesses_percent * max_nr_accesses / 100),
+                pattern.max_nr_accesses * max_nr_accesses / 100
+                if pattern.nr_accesses_unit == 'percent'
+                else pattern.max_nr_accesses),
         },
         'age': {
             'min': '%d' % (pattern.min_age_us / ctx.intervals.aggr),
@@ -250,6 +254,7 @@ def files_content_to_access_pattern(files_content):
             # TODO: Convert this raw values to permil
             files_content['nr_accesses']['min'],
             files_content['nr_accesses']['max'],
+            'sample_intervals', # nr_accesses_unit
             files_content['age']['min'],
             files_content['age']['max'])
 

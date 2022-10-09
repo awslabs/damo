@@ -114,6 +114,7 @@ def damo_scheme_to_damos(line, scheme_version, idx):
         max_sz = text_to_bytes(fields[1])
         min_nr_accesses = text_nr_accesses_percent(fields[2])
         max_nr_accesses = text_nr_accesses_percent(fields[3])
+        nr_accesses_unit = 'percent'
         min_age_us = text_to_us(fields[4])
         max_age_us = text_to_us(fields[5])
         action_txt = fields[6].lower()
@@ -163,7 +164,8 @@ def damo_scheme_to_damos(line, scheme_version, idx):
         raise
 
     return _damon.Damos('%d' % idx, _damon.DamosAccessPattern(min_sz, max_sz,
-        min_nr_accesses, max_nr_accesses, min_age_us, max_age_us),
+        min_nr_accesses, max_nr_accesses, nr_accesses_unit,
+        min_age_us, max_age_us),
         action_txt,
         _damon.DamosQuota(quota_ms, quota_sz, window_ms, weight_sz,
             weight_nr_accesses, weight_age),
@@ -179,8 +181,12 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
     max_nr_accesses = aggr_interval / sample_interval
     v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
             pattern.min_sz_bytes, pattern.max_sz_bytes,
-            int(pattern.min_nr_accesses_percent * max_nr_accesses / 100),
-            int(pattern.max_nr_accesses_percent * max_nr_accesses / 100),
+            int(pattern.min_nr_accesses * max_nr_accesses / 100
+                if pattern.nr_accesses_unit == 'percent'
+                else pattern.min_nr_accesses),
+            int(pattern.max_nr_accesses * max_nr_accesses / 100
+                if pattern.nr_accesses_unit == 'percent'
+                else pattern.max_nr_accesses),
             pattern.min_age_us / aggr_interval,
             pattern.max_age_us / aggr_interval,
             damos_action_to_int[damos.action])
