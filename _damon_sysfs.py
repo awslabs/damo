@@ -243,8 +243,39 @@ def apply_kdamonds(kdamonds):
         traceback.print_exc()
         return 1
 
+def files_content_to_access_pattern(files_content):
+    return _damon.DamosAccessPattern(
+            files_content['sz']['min'],
+            files_content['sz']['max'],
+            # TODO: Convert this raw values to permil
+            files_content['nr_accesses']['min'],
+            files_content['nr_accesses']['max'],
+            files_content['age']['min'],
+            files_content['age']['max'])
+
+def files_content_to_quotas(files_content):
+    return _damon.DamosQuota(
+            files_content['ms'],
+            files_content['bytes'],
+            files_content['reset_interval_ms'],
+            files_content['weights']['sz_permil'],
+            files_content['weights']['nr_accesses_permil'],
+            files_content['weights']['age_permil'])
+
+def files_content_to_watermarks(files_content):
+    return _damon.DamosWatermarks(
+            files_content['metric'],
+            files_content['interval_us'],
+            files_content['high_permil'],
+            files_content['mid_permil'],
+            files_content['low_permil'])
+
 def files_content_to_scheme(scheme_name, files_content):
-    return None
+    return _damon.Damos(scheme_name,
+            files_content_to_access_pattern(files_content['access_pattern']),
+            files_content['action'],
+            files_content_to_quotas(files_content['quotas']),
+            files_content_to_watermarks(files_content['watermarks']))
 
 def files_content_to_regions(files_content):
     regions = []
