@@ -7,6 +7,7 @@ Contains core functions for DAMON control.
 
 import os
 import subprocess
+import time
 
 import _convert_damos
 import _damo_paddr_layout
