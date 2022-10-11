@@ -273,6 +273,9 @@ def apply_kdamonds(kdamonds):
         write_contents.append({debugfs_target_ids: '%s' % target.pid})
         tid = target.pid
     else:
+        if not feature_supported('paddr'):
+            print('paddr is not supported')
+            exit(1)
         write_contents.append({debugfs_target_ids: 'paddr\n'})
         tid = 42
     if feature_supported('init_regions_target_idx'):
