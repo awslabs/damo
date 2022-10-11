@@ -281,8 +281,10 @@ def apply_kdamonds(kdamonds):
     if feature_supported('init_regions_target_idx'):
         tid = 0
 
-    string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in target.regions])
-    write_contents.append({debugfs_init_regions: string})
+    if feature_supported('init_regions'):
+        string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in
+            target.regions])
+        write_contents.append({debugfs_init_regions: string})
 
     if feature_supported('record') and ctx.record_request != None:
         record_file_input = '%s %s' % (ctx.record_request.rfile_buf,
