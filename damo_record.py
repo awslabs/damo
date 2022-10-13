@@ -52,7 +52,10 @@ def cleanup_exit(exit_code):
 
     if not data_for_cleanup.target_is_ongoing:
         if _damon.is_damon_running():
-            if _damon.turn_damon('off', data_for_cleanup.kdamonds):
+            if data_for_cleanup.kdamonds == None:
+                # turn on failed
+                pass
+            elif _damon.turn_damon('off', data_for_cleanup.kdamonds):
                 print('failed to turn damon off!')
         _damon.restore_attrs(data_for_cleanup.orig_attrs)
 
