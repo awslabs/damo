@@ -40,6 +40,7 @@ import os
 import platform
 
 import _damon
+import _damon_dbgfs
 
 uint_max = 2**32 - 1
 ulong_max = 2**64 - 1
@@ -173,55 +174,6 @@ def damo_scheme_to_damos(line, scheme_version, idx):
         _damon.DamosWatermarks(wmarks_txt, wmarks_interval, wmarks_high,
             wmarks_mid, wmarks_low))
 
-def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
-        scheme_version):
-    pattern = damos.access_pattern
-    quotas = damos.quotas
-    watermarks = damos.watermarks
-
-    max_nr_accesses = aggr_interval / sample_interval
-    v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
-            pattern.min_sz_bytes, pattern.max_sz_bytes,
-            int(pattern.min_nr_accesses * max_nr_accesses / 100
-                if pattern.nr_accesses_unit == 'percent'
-                else pattern.min_nr_accesses),
-            int(pattern.max_nr_accesses * max_nr_accesses / 100
-                if pattern.nr_accesses_unit == 'percent'
-                else pattern.max_nr_accesses),
-            (pattern.min_age / aggr_interval if pattern.age_unit == 'usec'
-                else pattern.min_age),
-            (pattern.max_age / aggr_interval if pattern.age_unit == 'usec'
-                else pattern.max_age),
-            damos_action_to_int[damos.action])
-    v1_scheme = '%s\t%d\t%d' % (v0_scheme,
-            quotas.sz_bytes, quotas.reset_interval_ms)
-    v2_scheme = '%s\t%d\t%d\t%d' % (v1_scheme,
-            quotas.weight_sz_permil, quotas.weight_nr_accesses_permil,
-            quotas.weight_age_permil)
-    v3_scheme = '%s\t%d\t%d\t%d\t%d\t%d' % (v2_scheme,
-            text_to_damos_wmark_metric(watermarks.metric),
-            watermarks.interval_us, watermarks.high_permil,
-            watermarks.mid_permil, watermarks.low_permil)
-    v4_scheme = '%s\t' % v0_scheme + '\t'.join('%d' % x for x in [quotas.time_ms,
-        quotas.sz_bytes, quotas.reset_interval_ms, quotas.weight_sz_permil,
-        quotas.weight_nr_accesses_permil, quotas.weight_age_permil,
-        text_to_damos_wmark_metric(watermarks.metric), watermarks.interval_us,
-        watermarks.high_permil, watermarks.mid_permil, watermarks.low_permil])
-
-    if scheme_version == 0:
-        return v0_scheme
-    elif scheme_version == 1:
-        return v1_scheme
-    elif scheme_version == 2:
-        return v2_scheme
-    elif scheme_version == 3:
-        return v3_scheme
-    elif scheme_version == 4:
-        return v4_scheme
-    else:
-        print('Unsupported scheme version: %d' % scheme_version)
-        exit(1)
-
 def damo_schemes_split_remove_comments(schemes):
     raw_lines = schemes.split('\n')
     clean_lines = []
@@ -256,8 +208,9 @@ def convert(schemes, target, sample_interval, aggr_interval, scheme_version):
     for idx, line in enumerate(damo_schemes_split_remove_comments(schemes)):
         damos = damo_scheme_to_damos(line, scheme_version, idx)
         damos_list.append(damos)
-        debugfs_schemes_input_lines.append(damos_to_debugfs_input(damos,
-            sample_interval, aggr_interval, scheme_version))
+        debugfs_schemes_input_lines.append(
+                _damon_dbgfs.damos_to_debugfs_input(damos, sample_interval,
+                    aggr_interval, scheme_version))
     if target == 'debugfs schemes input':
         return '\n'.join(debugfs_schemes_input_lines)
     elif target == 'damos':

@@ -253,6 +253,56 @@ def attr_str_ctx(damon_ctx):
             intervals.ops_update, nr_regions.min_nr_regions,
             nr_regions.max_nr_regions)
 
+def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
+        scheme_version):
+    pattern = damos.access_pattern
+    quotas = damos.quotas
+    watermarks = damos.watermarks
+
+    max_nr_accesses = aggr_interval / sample_interval
+    v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
+            pattern.min_sz_bytes, pattern.max_sz_bytes,
+            int(pattern.min_nr_accesses * max_nr_accesses / 100
+                if pattern.nr_accesses_unit == 'percent'
+                else pattern.min_nr_accesses),
+            int(pattern.max_nr_accesses * max_nr_accesses / 100
+                if pattern.nr_accesses_unit == 'percent'
+                else pattern.max_nr_accesses),
+            (pattern.min_age / aggr_interval if pattern.age_unit == 'usec'
+                else pattern.min_age),
+            (pattern.max_age / aggr_interval if pattern.age_unit == 'usec'
+                else pattern.max_age),
+            _convert_damos.damos_action_to_int[damos.action])
+    v1_scheme = '%s\t%d\t%d' % (v0_scheme,
+            quotas.sz_bytes, quotas.reset_interval_ms)
+    v2_scheme = '%s\t%d\t%d\t%d' % (v1_scheme,
+            quotas.weight_sz_permil, quotas.weight_nr_accesses_permil,
+            quotas.weight_age_permil)
+    v3_scheme = '%s\t%d\t%d\t%d\t%d\t%d' % (v2_scheme,
+            _convert_damos.text_to_damos_wmark_metric(watermarks.metric),
+            watermarks.interval_us, watermarks.high_permil,
+            watermarks.mid_permil, watermarks.low_permil)
+    v4_scheme = '%s\t' % v0_scheme + '\t'.join('%d' % x for x in [quotas.time_ms,
+        quotas.sz_bytes, quotas.reset_interval_ms, quotas.weight_sz_permil,
+        quotas.weight_nr_accesses_permil, quotas.weight_age_permil,
+        _convert_damos.text_to_damos_wmark_metric(watermarks.metric),
+        watermarks.interval_us, watermarks.high_permil, watermarks.mid_permil,
+        watermarks.low_permil])
+
+    if scheme_version == 0:
+        return v0_scheme
+    elif scheme_version == 1:
+        return v1_scheme
+    elif scheme_version == 2:
+        return v2_scheme
+    elif scheme_version == 3:
+        return v3_scheme
+    elif scheme_version == 4:
+        return v4_scheme
+    else:
+        print('Unsupported scheme version: %d' % scheme_version)
+        exit(1)
+
 def apply_kdamonds(kdamonds):
     if len(kdamonds) != 1:
         print('Currently only one kdamond is supported')
@@ -298,7 +348,7 @@ def apply_kdamonds(kdamonds):
 
     scheme_file_input_lines = []
     for scheme in ctx.schemes:
-        scheme_file_input_lines.append(_convert_damos.damos_to_debugfs_input(scheme,
+        scheme_file_input_lines.append(damos_to_debugfs_input(scheme,
             ctx.intervals.sample, ctx.intervals.aggr, scheme_version))
     scheme_file_input = '\n'.join(scheme_file_input_lines)
     if scheme_file_input == '':
