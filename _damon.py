@@ -214,10 +214,7 @@ def damos_from_args(args):
     if not 'schemes' in args:
         return schemes
 
-    scheme_version = _convert_damos.get_scheme_version()
-
-    return _convert_damos.convert(args.schemes, 'damos', args.sample,
-            args.aggr, scheme_version)
+    return _convert_damos.damo_schemes_to_damos(args.schemes)
 
 def damon_ctx_from_damon_args(args):
     intervals = DamonIntervals(args.sample, args.aggr, args.updr)

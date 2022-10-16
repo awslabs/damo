@@ -198,6 +198,18 @@ def get_scheme_version():
         scheme_version = 4
     return scheme_version
 
+def damo_schemes_to_damos(damo_schemes):
+    if os.path.isfile(damo_schemes):
+        with open(damo_schemes, 'r') as f:
+            damo_schemes = f.read()
+
+    damos_list = []
+    for idx, line in enumerate(
+            damo_schemes_split_remove_comments(damo_schemes)):
+        damos = damo_scheme_to_damos(line, '%d' % idx)
+        damos_list.append(damos)
+    return damos_list
+
 def convert(schemes, target, sample_interval, aggr_interval, scheme_version):
     if os.path.isfile(schemes):
         with open(schemes, 'r') as f:
