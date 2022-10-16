@@ -379,6 +379,19 @@ def damon_sysfs_missed():
         return 'damon sysfs dir (%s) not found' % kdamonds_dir
     return None
 
+features_sysfs_support_from_begining = [
+        'schemes',
+        'init_regions',
+        'vaddr',
+        'fvaddr',
+        'paddr',
+        'init_regions_target_idx',
+        'schemes_speed_limit',
+        'schemes_quotas',
+        'schemes_prioritization',
+        'schemes_wmarks',
+        ]
+
 def update_supported_features():
     global feature_supports
 
@@ -389,8 +402,8 @@ def update_supported_features():
     missed = damon_sysfs_missed()
     if missed != None:
         return missed
-    feature_supports = {x: True for x in _damon.features}
-    feature_supports['record'] = False
+    for feature in features_sysfs_support_from_begining:
+        feature_supports[feature] = True
 
     if not os.path.isdir(ctx_dir_of(0, 0)):
         kdamonds_for_feature_check = [_damon.Kdamond(name=None,
