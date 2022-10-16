@@ -12,7 +12,7 @@ test_convert_file() {
 			scheme_name=$(basename "$input")
 
 			expected=$(cat "./expects/$scheme_name.v$version")
-			converted=$(../../_convert_damos.py \
+			converted=$(../../_damo_schemes_to_dbgfs_input.py \
 				--scheme_version "$version" "$input")
 			if [ ! "$expected" = "$converted" ]
 			then
@@ -33,7 +33,7 @@ test_convert_txt() {
 			expected=$(cat "./expects/$scheme_name.v$version")
 
 			input_txt=$(cat "$input_file")
-			converted=$(../../_convert_damos.py \
+			converted=$(../../_damo_schemes_to_dbgfs_input.py \
 				--scheme_version "$version" "$input_txt")
 			if [ ! "$expected" = "$converted" ]
 			then
