@@ -8,8 +8,8 @@ Contains core functions for DAMON debugfs control.
 import os
 import subprocess
 
-import _convert_damos
 import _damo_fs
+import _damo_schemes_input
 import _damon
 
 debugfs = '/sys/kernel/debug'
@@ -284,20 +284,20 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
                 else pattern.min_age),
             (pattern.max_age / aggr_interval if pattern.age_unit == 'usec'
                 else pattern.max_age),
-            _convert_damos.damos_action_to_int[damos.action])
+            _damo_schemes_input.damos_action_to_int[damos.action])
     v1_scheme = '%s\t%d\t%d' % (v0_scheme,
             quotas.sz_bytes, quotas.reset_interval_ms)
     v2_scheme = '%s\t%d\t%d\t%d' % (v1_scheme,
             quotas.weight_sz_permil, quotas.weight_nr_accesses_permil,
             quotas.weight_age_permil)
     v3_scheme = '%s\t%d\t%d\t%d\t%d\t%d' % (v2_scheme,
-            _convert_damos.text_to_damos_wmark_metric(watermarks.metric),
+            _damo_schemes_input.text_to_damos_wmark_metric(watermarks.metric),
             watermarks.interval_us, watermarks.high_permil,
             watermarks.mid_permil, watermarks.low_permil)
     v4_scheme = '%s\t' % v0_scheme + '\t'.join('%d' % x for x in [quotas.time_ms,
         quotas.sz_bytes, quotas.reset_interval_ms, quotas.weight_sz_permil,
         quotas.weight_nr_accesses_permil, quotas.weight_age_permil,
-        _convert_damos.text_to_damos_wmark_metric(watermarks.metric),
+        _damo_schemes_input.text_to_damos_wmark_metric(watermarks.metric),
         watermarks.interval_us, watermarks.high_permil, watermarks.mid_permil,
         watermarks.low_permil])
 

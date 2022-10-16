@@ -11,7 +11,6 @@ import signal
 import subprocess
 import time
 
-import _convert_damos
 import _damon
 import _damo_paddr_layout
 

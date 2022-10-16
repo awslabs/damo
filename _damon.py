@@ -9,11 +9,11 @@ import os
 import subprocess
 import time
 
-import _convert_damos
+import _damo_fs
 import _damo_paddr_layout
+import _damo_schemes_input
 import _damon_dbgfs
 import _damon_sysfs
-import _damo_fs
 
 class DamonIntervals:
     sample = None
@@ -214,7 +214,7 @@ def damos_from_args(args):
     if not 'schemes' in args:
         return schemes
 
-    return _convert_damos.damo_schemes_to_damos(args.schemes)
+    return _damo_schemes_input.damo_schemes_to_damos(args.schemes)
 
 def damon_ctx_from_damon_args(args):
     intervals = DamonIntervals(args.sample, args.aggr, args.updr)

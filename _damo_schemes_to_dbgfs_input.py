@@ -3,7 +3,7 @@
 
 import argparse
 
-import _convert_damos
+import _damo_schemes_input
 
 def main():
     parser = argparse.ArgumentParser()
@@ -21,7 +21,7 @@ def main():
     aggr_interval = args.aggr
     scheme_ver = args.scheme_version
 
-    print(_convert_damos.damo_schemes_to_debugfs_input(args.input,
+    print(_damo_schemes_input.damo_schemes_to_debugfs_input(args.input,
         sample_interval, aggr_interval, scheme_ver))
 
 if __name__ == '__main__':
