@@ -210,7 +210,8 @@ def damo_schemes_to_damos(damo_schemes):
         damos_list.append(damos)
     return damos_list
 
-def convert(schemes, sample_interval, aggr_interval, scheme_version):
+def damo_schemes_to_debugfs_input(schemes, sample_interval, aggr_interval,
+        scheme_version):
     if os.path.isfile(schemes):
         with open(schemes, 'r') as f:
             schemes = f.read()
@@ -239,7 +240,8 @@ def main():
     aggr_interval = args.aggr
     scheme_ver = args.scheme_version
 
-    print(convert(args.input, sample_interval, aggr_interval, scheme_ver))
+    print(damo_schemes_to_debugfs_input(args.input, sample_interval,
+        aggr_interval, scheme_ver))
 
 if __name__ == '__main__':
     main()
