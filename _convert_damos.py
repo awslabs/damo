@@ -212,17 +212,12 @@ def damo_schemes_to_damos(damo_schemes):
 
 def damo_schemes_to_debugfs_input(schemes, sample_interval, aggr_interval,
         scheme_version):
-    if os.path.isfile(schemes):
-        with open(schemes, 'r') as f:
-            schemes = f.read()
-
-    debugfs_schemes_input_lines = []
-    for idx, line in enumerate(damo_schemes_split_remove_comments(schemes)):
-        damos = damo_scheme_to_damos(line, '%d' % idx)
-        debugfs_schemes_input_lines.append(
+    lines = []
+    for damos in damo_schemes_to_damos(schemes):
+        lines.append(
                 _damon_dbgfs.damos_to_debugfs_input(damos, sample_interval,
                     aggr_interval, scheme_version))
-    return '\n'.join(debugfs_schemes_input_lines)
+    return '\n'.join(lines)
 
 def main():
     parser = argparse.ArgumentParser()
