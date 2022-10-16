@@ -186,18 +186,6 @@ def damo_schemes_split_remove_comments(schemes):
         clean_lines.append(line)
     return clean_lines
 
-def get_scheme_version():
-    scheme_version = 0
-    if _damon.feature_supported('schemes_speed_limit'):
-        scheme_version = 1
-    if _damon.feature_supported('schemes_prioritization'):
-        scheme_version = 2
-    if _damon.feature_supported('schemes_wmarks'):
-        scheme_version = 3
-    if _damon.feature_supported('schemes_quotas'):
-        scheme_version = 4
-    return scheme_version
-
 def damo_schemes_to_damos(damo_schemes):
     if os.path.isfile(damo_schemes):
         with open(damo_schemes, 'r') as f:

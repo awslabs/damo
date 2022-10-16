@@ -253,6 +253,18 @@ def attr_str_ctx(damon_ctx):
             intervals.ops_update, nr_regions.min_nr_regions,
             nr_regions.max_nr_regions)
 
+def get_scheme_version():
+    scheme_version = 0
+    if feature_supported('schemes_speed_limit'):
+        scheme_version = 1
+    if feature_supported('schemes_prioritization'):
+        scheme_version = 2
+    if feature_supported('schemes_wmarks'):
+        scheme_version = 3
+    if feature_supported('schemes_quotas'):
+        scheme_version = 4
+    return scheme_version
+
 def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         scheme_version):
     pattern = damos.access_pattern
@@ -344,7 +356,7 @@ def apply_kdamonds(kdamonds):
     if not debugfs_schemes:
         return _damo_fs.write_files(write_contents)
 
-    scheme_version = _convert_damos.get_scheme_version()
+    scheme_version = get_scheme_version()
 
     scheme_file_input_lines = []
     for scheme in ctx.schemes:
