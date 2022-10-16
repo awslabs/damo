@@ -103,7 +103,7 @@ damos_wmark_metric_to_int = {'none': 0, 'free_mem_rate': 1}
 def text_to_damos_wmark_metric(txt):
     return damos_wmark_metric_to_int[txt.lower()]
 
-def damo_scheme_to_damos(line, scheme_version, idx):
+def damo_scheme_to_damos(line, idx):
     fields = line.split()
     expected_lengths = [7, 9, 12, 17, 18]
     if not len(fields) in expected_lengths:
@@ -206,7 +206,7 @@ def convert(schemes, target, sample_interval, aggr_interval, scheme_version):
     damos_list = []
     debugfs_schemes_input_lines = []
     for idx, line in enumerate(damo_schemes_split_remove_comments(schemes)):
-        damos = damo_scheme_to_damos(line, scheme_version, idx)
+        damos = damo_scheme_to_damos(line, idx)
         damos_list.append(damos)
         debugfs_schemes_input_lines.append(
                 _damon_dbgfs.damos_to_debugfs_input(damos, sample_interval,
