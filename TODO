@@ -6,3 +6,4 @@
 - Simplify _damon_dbgfs and _damon_sysfs using damo_fs
 - Make stateful (maybe we need .damo file)
 - Use kdamond.name instead of the index
+- Support json format DAMOS and target (kdamonds, including schemes)
