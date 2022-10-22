@@ -284,9 +284,9 @@ def files_content_to_watermarks(files_content):
     return _damon.DamosWatermarks(
             files_content['metric'],
             files_content['interval_us'],
-            files_content['high_permil'],
-            files_content['mid_permil'],
-            files_content['low_permil'])
+            files_content['high'],
+            files_content['mid'],
+            files_content['low'])
 
 def files_content_to_scheme(scheme_name, files_content):
     return _damon.Damos(scheme_name,
