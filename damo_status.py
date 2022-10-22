@@ -76,15 +76,18 @@ def main(args=None):
 
     if _damon.is_damon_running():
         _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_stats'})
-        _damon.write_damon_fs({'kdamonds/0/state':
-            'update_schemes_tried_regions'})
     content = _damon.read_damon_fs()
     if args.target == 'all':
         print(json.dumps(content, indent=4, sort_keys=True))
     elif args.target == 'schemes_stats':
         pr_schemes_stats(content)
     elif args.target == 'schemes_tried_regions':
-        pr_schemes_tried_regions(content)
+        if not _damon.feature_supported('schemes_tried_regions'):
+            print('schemes_tried_regions not supported')
+            exit(1)
+        _damon.write_damon_fs({'kdamonds/0/state':
+            'update_schemes_tried_regions'})
+        pr_schemes_tried_regions(_damon.read_damon_fs())
     elif args.target == 'damon_interface':
         print(_damon.damon_interface())
 
