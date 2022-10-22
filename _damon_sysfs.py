@@ -261,31 +261,31 @@ def apply_kdamonds(kdamonds):
 
 def files_content_to_access_pattern(files_content):
     return _damon.DamosAccessPattern(
-            files_content['sz']['min'],
-            files_content['sz']['max'],
-            files_content['nr_accesses']['min'],
-            files_content['nr_accesses']['max'],
+            int(files_content['sz']['min']),
+            int(files_content['sz']['max']),
+            int(files_content['nr_accesses']['min']),
+            int(files_content['nr_accesses']['max']),
             'sample_intervals', # nr_accesses_unit
-            files_content['age']['min'],
-            files_content['age']['max'],
+            int(files_content['age']['min']),
+            int(files_content['age']['max']),
             'aggr_intervals') # age_unit
 
 def files_content_to_quotas(files_content):
     return _damon.DamosQuota(
-            files_content['ms'],
-            files_content['bytes'],
-            files_content['reset_interval_ms'],
-            files_content['weights']['sz_permil'],
-            files_content['weights']['nr_accesses_permil'],
-            files_content['weights']['age_permil'])
+            int(files_content['ms']),
+            int(files_content['bytes']),
+            int(files_content['reset_interval_ms']),
+            int(files_content['weights']['sz_permil']),
+            int(files_content['weights']['nr_accesses_permil']),
+            int(files_content['weights']['age_permil']))
 
 def files_content_to_watermarks(files_content):
     return _damon.DamosWatermarks(
-            files_content['metric'],
-            files_content['interval_us'],
-            files_content['high'],
-            files_content['mid'],
-            files_content['low'])
+            files_content['metric'].strip(),
+            int(files_content['interval_us']),
+            int(files_content['high']),
+            int(files_content['mid']),
+            int(files_content['low']))
 
 def files_content_to_scheme(scheme_name, files_content):
     return _damon.Damos(scheme_name,
