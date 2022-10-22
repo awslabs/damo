@@ -164,6 +164,7 @@ features = ['record',       # was in DAMON patchset, but not merged in mainline
             'schemes_quotas',           # merged in v5.16 (1cd243030059)
             'schemes_prioritization',   # merged in v5.16 (38683e003153)
             'schemes_wmarks',           # merged in v5.16 (ee801b7dd782)
+            'schemes_tried_regions'     # developing on top of v6.0
             ]
 
 _damon_fs = None

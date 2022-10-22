@@ -39,6 +39,10 @@ def schemes_dir_of(kdamond_idx, context_idx):
 def nr_schemes_file_of(kdamond_idx, context_idx):
     return os.path.join(schemes_dir_of(kdamond_idx, context_idx), 'nr_schemes')
 
+def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
+    return os.path.join(schemes_dir_of(kdamond_idx, context_idx),
+            '%s' % scheme_idx)
+
 def targets_dir_of(kdamond_idx, context_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'targets')
 
@@ -411,11 +415,17 @@ def update_supported_features():
     for feature in features_sysfs_support_from_begining:
         feature_supports[feature] = True
 
-    if not os.path.isdir(ctx_dir_of(0, 0)):
+    if not os.path.isdir(scheme_dir_of(0, 0, 0)):
         kdamonds_for_feature_check = [_damon.Kdamond(name=None,
             contexts=[_damon.DamonCtx(name='0', intervals=None,
-                nr_regions=None, ops=None, targets=[], schemes=[])])]
+                nr_regions=None, ops=None, targets=[],
+                schemes=[_damon.Damos(name='0', access_pattern=None,
+                    action='stat', quotas=None, watermarks=None)])])]
         ensure_dirs_populated_for(kdamonds_for_feature_check)
+
+    if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'tried_regions')):
+        feature_supports['schemes_tried_regions'] = True
+
     avail_operations_filepath = os.path.join(ctx_dir_of(0, 0),
             'avail_operations')
     if not os.path.isfile(avail_operations_filepath):
