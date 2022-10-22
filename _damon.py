@@ -153,17 +153,17 @@ class Kdamond:
         self.name = name
         self.contexts = contexts
 
-features = ['record',
-            'schemes',
-            'init_regions',
-            'vaddr',
-            'fvaddr',
-            'paddr',
-            'init_regions_target_idx',
-            'schemes_speed_limit',
-            'schemes_quotas',
-            'schemes_prioritization',
-            'schemes_wmarks',
+features = ['record',       # was in DAMON patchset, but not merged in mainline
+            'schemes',      # merged in v5.16
+            'init_regions', # merged in v5.16 (90bebce9fcd6)
+            'vaddr',        # merged in v5.15, thebeginning
+            'fvaddr',       # merged in v5.19 (b82434471cd2)
+            'paddr',        # merged in v5.16 (a28397beb55b)
+            'init_regions_target_idx',  # merged in v5.18 (144760f8e0c3)
+            'schemes_speed_limit',      # merged in v5.16 (2b8a248d5873)
+            'schemes_quotas',           # merged in v5.16 (1cd243030059)
+            'schemes_prioritization',   # merged in v5.16 (38683e003153)
+            'schemes_wmarks',           # merged in v5.16 (ee801b7dd782)
             ]
 
 _damon_fs = None
