@@ -263,7 +263,6 @@ def files_content_to_access_pattern(files_content):
     return _damon.DamosAccessPattern(
             files_content['sz']['min'],
             files_content['sz']['max'],
-            # TODO: Convert this raw values to permil
             files_content['nr_accesses']['min'],
             files_content['nr_accesses']['max'],
             'sample_intervals', # nr_accesses_unit
