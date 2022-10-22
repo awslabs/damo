@@ -57,8 +57,11 @@ def pr_schemes_tried_regions(damon_fs_content):
                 nr_tried_regions = len(tried_regions)
                 for r in range(nr_tried_regions):
                     region = tried_regions['%d' % r]
-                    print('%d-%d: nr_accesses %d, age %d' % (
-                        int(region['start']), int(region['end']),
+                    start = int(region['start'])
+                    end = int(region['end'])
+
+                    print('%d-%d (%d): nr_accesses %d, age %d' % (
+                        start, end, end - start,
                         int(region['nr_accesses']), int(region['age'])))
 
 def main(args=None):
