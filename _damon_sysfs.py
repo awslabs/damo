@@ -87,6 +87,8 @@ def is_damon_running():
     return __is_damon_running(0)
 
 def wops_for_scheme_watermarks(wmarks):
+    if wmarks == None:
+        return {}
     return {
         'metric': wmarks.metric,
         'interval_us': '%d' % wmarks.interval_us,
@@ -96,6 +98,8 @@ def wops_for_scheme_watermarks(wmarks):
     }
 
 def wops_for_scheme_quotas(quotas):
+    if quotas == None:
+        return {}
     return {
         'ms': '%d' % quotas.time_ms,
         'bytes': '%d' % quotas.sz_bytes,
@@ -108,6 +112,8 @@ def wops_for_scheme_quotas(quotas):
     }
 
 def wops_for_scheme_access_pattern(pattern, ctx):
+    if pattern == None:
+        return {}
     max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
 
     return {
