@@ -354,8 +354,7 @@ def files_content_to_kdamond(kdamond_name, files_content):
             contexts_content[ctx_name]))
     return _damon.Kdamond(kdamond_name, contexts)
 
-def current_kdamonds():
-    files_contents = _damo_fs.read_files_recursive(kdamonds_dir)
+def files_content_to_kdamonds(files_contents):
     kdamonds = []
     for kdamond_name in files_contents:
         if kdamond_name == 'nr_kdamonds':
@@ -363,6 +362,10 @@ def current_kdamonds():
         kdamonds.append(files_content_to_kdamond(
             kdamond_name, files_contents[kdamond_name]))
     return kdamonds
+
+def current_kdamonds():
+    return files_content_to_kdamonds(
+            _damo_fs.read_files_recursive(kdamonds_dir))
 
 def __commit_inputs(kdamond_idx):
     err = _damo_fs.write_file(state_file_of(kdamond_idx), 'commit')
