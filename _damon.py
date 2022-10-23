@@ -74,6 +74,16 @@ class DamosAccessPattern:
         self.max_age = max_age
         self.age_unit = age_unit
 
+    def __eq__(self, other):
+        return (type(self) == type(other) and
+                self.min_sz_bytes ==
+                other.min_sz_bytes and self.max_sz_bytes == other.max_sz_bytes
+                and self.min_nr_accesses == other.min_nr_accesses and
+                self.max_nr_accesses == other.max_nr_accesses and
+                self.nr_accesses_unit == other.nr_accesses_unit and
+                self.min_age == other.min_age and self.max_age == other.max_age
+                and self.age_unit == other.age_unit)
+
 class DamosQuota:
     time_ms = None
     sz_bytes = None
@@ -91,6 +101,14 @@ class DamosQuota:
         self.weight_nr_accesses_permil = weight_nr_accesses_permil
         self.weight_age_permil = weight_age_permil
 
+    def __eq__(self, other):
+        return (type(self) == type(other) and self.time_ms == other.time_ms and
+                self.sz_bytes == other.sz_bytes and self.reset_interval_ms ==
+                other.reset_interval_ms and self.weight_sz_permil ==
+                other.weight_sz_permil and self.weight_nr_accesses_permil ==
+                other.weight_nr_accesses_permil and self.weight_age_permil ==
+                other.weight_age_permil)
+
 class DamosWatermarks:
     metric = None
     interval_us = None
@@ -105,6 +123,12 @@ class DamosWatermarks:
         self.mid_permil = mid
         self.low_permil = low
 
+    def __eq__(self, other):
+        return (type(self) == type(other) and self.metric == other.metric and
+                self.interval_us == other.interval_us and self.high_permil ==
+                other.high_permil and self.mid_permil == other.mid_permil and
+                self.low_permil == other.low_permil)
+
 class Damos:
     name = None
     access_pattern = None
@@ -118,6 +142,12 @@ class Damos:
         self.action = action
         self.quotas = quotas
         self.watermarks = watermarks
+
+    def __eq__(self, other):
+        return (type(self) == type(other) and self.name == other.name and
+                self.access_pattern == other.access_pattern and self.action ==
+                other.action and self.quotas == other.action and self.quotas ==
+                other.quotas and self.watermarks == other.watermarks)
 
 class DamonRecord:
     rfile_buf = None
