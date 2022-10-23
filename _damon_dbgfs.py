@@ -288,7 +288,7 @@ def files_content_to_kdamonds(files_content):
     for line in files_content['schemes'].split('\n'):
         if line.strip() == '':
             continue
-        schemes.append(debugfs_output_to_damos(line))
+        schemes.append(debugfs_output_to_damos(line, intervals))
 
     ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, targets, schemes)
     return [_damon.Kdamond('0', [ctx])]
@@ -309,12 +309,27 @@ def get_scheme_version():
         scheme_version = 4
     return scheme_version
 
-def debugfs_output_to_damos(output):
+def debugfs_output_to_damos(output, intervals_us):
     # last five fields are stat
     fields = [int(x) for x in output.strip().split()][:-5]
+    # convert nr_accesses from sample intervals to percent
+    max_nr_accesses = intervals_us.aggr / intervals_us.sample
+    fields[2] = float(fields[2]) * 100 / max_nr_accesses
+    fields[3] = float(fields[3]) * 100 / max_nr_accesses
+    # convert ages in update_interval to us
+    fields[4] = intervals_us.aggr * fields[4]
+    fields[5] = intervals_us.aggr * fields[5]
     action_map = {0: 'willneed', 1: 'cold', 2: 'pageout', 3: 'hugepage', 4:
             'nohugepage', 5: 'stat', 6: 'lru_prio', 7: 'lru_deprio'}
     fields[6] = action_map[fields[6]]
+
+    # convert quotas reset interval to microsec
+    if len(fields) <= 17:
+        if len(fields) >= 9:
+            fields[8] = fields[8] * 1000
+    elif len(fields) == 18:
+        fields[9] = fields[9] * 1000
+
     wmarks_metric_map = {0: 'none', 1: 'free_mem_rate'}
     if len(fields) == 17:
         fields[12] = wmarks_metric_map[fields[12]]
