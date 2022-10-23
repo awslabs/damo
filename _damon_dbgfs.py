@@ -350,7 +350,7 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         print('Unsupported scheme version: %d' % scheme_version)
         exit(1)
 
-def apply_kdamonds(kdamonds):
+def wops_for_kdamonds(kdamonds):
     if len(kdamonds) != 1:
         print('Currently only one kdamond is supported')
         exit(1)
@@ -402,6 +402,9 @@ def apply_kdamonds(kdamonds):
         scheme_file_input = '\n'
 
     write_contents.append({debugfs_schemes: scheme_file_input})
-    err = _damo_fs.write_files(write_contents)
+    return write_contents
+
+def apply_kdamonds(kdamonds):
+    err = _damo_fs.write_files(wops_for_kdamonds(kdamonds))
     if err:
         print(err)
