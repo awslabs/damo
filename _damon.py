@@ -146,8 +146,8 @@ class Damos:
     def __eq__(self, other):
         return (type(self) == type(other) and self.name == other.name and
                 self.access_pattern == other.access_pattern and self.action ==
-                other.action and self.quotas == other.action and self.quotas ==
-                other.quotas and self.watermarks == other.watermarks)
+                other.action and self.quotas == other.quotas and
+                self.watermarks == other.watermarks)
 
 class DamonRecord:
     rfile_buf = None
