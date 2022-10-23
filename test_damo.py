@@ -9,8 +9,15 @@ import _damon_sysfs
 
 class TestDamonDbgfs(unittest.TestCase):
     def test_files_content_to_kdamonds(self):
-        dbgfs_read_txt = r'''
+        _damon_dbgfs.feature_supports = {'init_regions': True, 'schemes': True,
+                'schemes_stat_qt_exceed': True, 'init_regions_target_idx':
+                True, 'schemes_prioritization': True, 'schemes_tried_regions':
+                False, 'record': False, 'schemes_quotas': True, 'fvaddr':
+                False, 'paddr': True, 'schemes_wmarks': True,
+                'schemes_speed_limit': True, 'schemes_stat_succ': True,
+                'vaddr': True}
 
+        dbgfs_read_txt = r'''
 {
     "attrs": "5000 100000 1000000 10 1000\n",
     "init_regions": "0 1 100\n0 100 200\n1 20 40\n1 50 100\n",
