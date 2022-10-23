@@ -285,7 +285,7 @@ def files_content_to_kdamonds(files_content):
         record_request = _damon.DamonRecord(int(fields[0]), fields[1].strip())
 
     ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, targets, [])
-    return _damon.Kdamond('0', [ctx])
+    return [_damon.Kdamond('0', [ctx])]
 
 def current_kdamonds():
     return files_content_to_kdamonds(
