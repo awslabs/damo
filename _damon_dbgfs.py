@@ -284,7 +284,13 @@ def files_content_to_kdamonds(files_content):
         fields = files_content['record'].strip().split()
         record_request = _damon.DamonRecord(int(fields[0]), fields[1].strip())
 
-    ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, targets, [])
+    schemes = []
+    for line in files_content['schemes'].split('\n'):
+        if line.strip() == '':
+            continue
+        schemes.append(debugfs_output_to_damos(line))
+
+    ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, targets, schemes)
     return [_damon.Kdamond('0', [ctx])]
 
 def current_kdamonds():
