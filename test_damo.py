@@ -45,13 +45,12 @@ class TestDamonDbgfs(unittest.TestCase):
 }
 '''
         expected_wops = r'''
-{
-    "attrs": "5000 100000 1000000 10 1000\n",
-    "init_regions": "0 1 100 0 100 200\n",
-    "schemes": "4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
-    "target_ids": "4242\n"
-}
+[{"/sys/kernel/debug/damon/attrs": "5000 100000 1000000 10 1000 "},
+{"/sys/kernel/debug/damon/target_ids": "4242"},
+{"/sys/kernel/debug/damon/init_regions": "0 1 100 0 100 200"},
+{"/sys/kernel/debug/damon/schemes": "4096\t18446744073709551615\t0\t0\t0\t0\t5\t0\t584792941\t1\t0\t0\t0\t0\t0\t0\t0\t0"}]
 '''
+
 	dbgfs_dict = json.loads(dbgfs_read_txt)
         kdamonds = _damon_dbgfs.files_content_to_kdamonds(dbgfs_dict)
         wops = _damon_dbgfs.wops_for_kdamonds(kdamonds)
