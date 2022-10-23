@@ -86,11 +86,79 @@ class TestDamonSysfs(unittest.TestCase):
     }
 }
 '''
+
+        expected_wops = r'''
+{
+    "0": {
+        "contexts": {
+            "0": [
+                {
+                    "operations": "paddr"
+                },
+                {
+                    "monitoring_attrs": {
+                        "intervals": {
+                            "aggr_us": "200000",
+                            "sample_us": "5000",
+                            "update_us": "1000000"
+                        },
+                        "nr_regions": {
+                            "max": "1000",
+                            "min": "10"
+                        }
+                    }
+                },
+                {
+                    "targets": {}
+                },
+                {
+                    "schemes": {
+                        "0": {
+                            "access_pattern": {
+                                "age": {
+                                    "max": "0",
+                                    "min": "0"
+                                },
+                                "nr_accesses": {
+                                    "max": "0",
+                                    "min": "0"
+                                },
+                                "sz": {
+                                    "max": "0",
+                                    "min": "0"
+                                }
+                            },
+                            "action": "stat\n",
+                            "quotas": {
+                                "bytes": "0",
+                                "ms": "0",
+                                "reset_interval_ms": "0",
+                                "weights": {
+                                    "age_permil": "0",
+                                    "nr_accesses_permil": "0",
+                                    "sz_permil": "0"
+                                }
+                            },
+                            "watermarks": {
+                                "high": "0",
+                                "interval_us": "0",
+                                "low": "0",
+                                "metric": "none",
+                                "mid": "0"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+'''
+
         sysfs_dict = json.loads(sysfs_read_txt)['kdamonds']
         kdamonds = _damon_sysfs.files_content_to_kdamonds(sysfs_dict)
         wops = _damon_sysfs.wops_for_kdamonds(kdamonds)
-
-        self.assertEqual(sysfs_dict, wops)
+        self.assertEqual(json.loads(expected_wops), wops)
 
 if __name__ == '__main__':
     unittest.main()
