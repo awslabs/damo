@@ -303,6 +303,21 @@ def get_scheme_version():
         scheme_version = 4
     return scheme_version
 
+def debugfs_output_to_damos(output):
+    # last five fields are stat
+    fields = [int(x) for x in output.strip().split()][:-5]
+    action_map = {0: 'willneed', 1: 'cold', 2: 'pageout', 3: 'hugepage', 4:
+            'nohugepage', 5: 'stat', 6: 'lru_prio', 7: 'lru_deprio'}
+    fields[6] = action_map[fields[6]]
+    wmarks_metric_map = {0: 'none', 1: 'free_mem_rate'}
+    if len(fields) == 17:
+        fields[12] = wmarks_metric_map[fields[12]]
+    elif len(fields) == 18:
+        fields[13] = wmarks_metric_map[fields[13]]
+
+    line = ' '.join('%s' % x for x in fields) # remove stats
+    return _damo_schemes_input.damo_scheme_to_damos(line, '0')
+
 def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         scheme_version):
     pattern = damos.access_pattern
