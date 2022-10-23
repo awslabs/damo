@@ -20,21 +20,21 @@ class TestDamonDbgfs(unittest.TestCase):
         dbgfs_read_txt = r'''
 {
     "attrs": "5000 100000 1000000 10 1000\n",
-    "init_regions": "0 1 100\n0 100 200\n1 20 40\n1 50 100\n",
+    "init_regions": "0 1 100\n0 100 200\n",
     "kdamond_pid": "none\n",
     "mk_contexts": "read failed (reading /sys/kernel/debug/damon/mk_contexts failed ([Errno 22] Invalid argument))",
     "monitor_on": "off\n",
     "rm_contexts": "read failed (reading /sys/kernel/debug/damon/rm_contexts failed ([Errno 22] Invalid argument))",
     "schemes": "4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
-    "target_ids": "4242 4243\n"
+    "target_ids": "4242\n"
 }
 '''
         expected_wops = r'''
 {
     "attrs": "5000 100000 1000000 10 1000\n",
-    "init_regions": "0 1 100 0 100 200 1 20 40 1 50 100\n",
+    "init_regions": "0 1 100 0 100 200\n",
     "schemes": "4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
-    "target_ids": "4242 4243\n"
+    "target_ids": "4242\n"
 }
 '''
 	dbgfs_dict = json.loads(dbgfs_read_txt)
