@@ -56,6 +56,9 @@ def text_to_bytes(txt):
     if txt == 'max':
         return ulong_max
 
+    if not txt[-1] in unit_to_bytes:
+        return int(txt)
+
     unit = txt[-1]
     number = float(txt[:-1])
     return int(number * unit_to_bytes[unit])
@@ -68,6 +71,9 @@ def text_to_us(txt):
         return 0
     if txt == 'max':
         return uint_max
+
+    if not txt[-2:] in unit_to_usecs and not txt[-1] in unit_to_usecs:
+        return float(txt)
 
     unit = txt[-2:]
     if unit in ['us', 'ms']:
