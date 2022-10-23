@@ -253,6 +253,41 @@ def attr_str_ctx(damon_ctx):
             intervals.ops_update, nr_regions.min_nr_regions,
             nr_regions.max_nr_regions)
 
+def current_kdamonds():
+    files_content = _damo_fs.read_files_recursive(debugfs_damon)
+    attrs = [int(x) for x in files_content['attrs'].strip().split()]
+
+    intervals = _damon.DamonIntervals(attrs[0], attrs[1], attrs[2])
+    nr_regions = _damon.DamonNrRegionsRange(attrs[3], attrs[4])
+
+    target_ids = [int(x) for x in files_content['target_ids'].strip().split()]
+    fields = [int(x) for x in files_content['init_regions'].strip().split()]
+    regions_dict = {}
+    for i in range(0, len(fields), 3):
+        id_or_index = fields[i]
+        if not id_or_index in regions_dict:
+            regions_dict[id_or_index] = []
+        regions_dict[id_or_index].append(_damon.DamonRegion(
+                fields[i + 1], fields[i + 2]))
+    ops = 'vaddr'
+    is_paddr = False
+    if 42 in target_ids:
+        ops = 'paddr'
+    targets = []
+    for idx, target_id in enumerate(target_ids):
+        targets.append(_damon.DamonTarget(name='%d' % idx,
+            pid=target_id if not is_paddr else None,
+            regions=regions_dict[idx
+                if feature_supported('init_regions_target_idx')
+                else target_id]))
+
+    if feature_supported('record'):
+        fields = files_content['record'].strip().split()
+        record_request = _damon.DamonRecord(int(fields[0]), fields[1].strip())
+
+    ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, targets, [])
+    return _damon.Kdamond('0', [ctx])
+
 def get_scheme_version():
     scheme_version = 0
     if feature_supported('schemes_speed_limit'):
