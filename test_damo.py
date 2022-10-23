@@ -8,6 +8,19 @@ import _damon
 import _damon_dbgfs
 import _damon_sysfs
 
+class TestDamon(unittest.TestCase):
+    def test_damos_eq(self):
+        damos = _damon.Damos('0',
+                access_pattern=_damon.DamosAccessPattern(4096,
+                    18446744073709551615, 0.0, 0.0, 'percent', 1000000,
+                    4294900000, 'usec'),
+                action='stat',
+                quotas=_damon.DamosQuota(time_ms=0, sz_bytes=584792941,
+                    reset_interval_ms=1000, weight_sz_permil=0,
+                    weight_nr_accesses_permil=0, weight_age_permil=0),
+                watermarks=_damon.DamosWatermarks(0,0,0,0,0))
+        self.assertEqual(damos, damos)
+
 class TestDamonDbgfs(unittest.TestCase):
     def test_debugfs_output_to_damos(self):
         damos = _damon_dbgfs.debugfs_output_to_damos("4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n")
