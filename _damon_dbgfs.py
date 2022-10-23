@@ -253,8 +253,7 @@ def attr_str_ctx(damon_ctx):
             intervals.ops_update, nr_regions.min_nr_regions,
             nr_regions.max_nr_regions)
 
-def current_kdamonds():
-    files_content = _damo_fs.read_files_recursive(debugfs_damon)
+def files_content_to_kdamonds(files_content):
     attrs = [int(x) for x in files_content['attrs'].strip().split()]
 
     intervals = _damon.DamonIntervals(attrs[0], attrs[1], attrs[2])
@@ -287,6 +286,10 @@ def current_kdamonds():
 
     ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, targets, [])
     return _damon.Kdamond('0', [ctx])
+
+def current_kdamonds():
+    return files_content_to_kdamonds(
+            _damo_fs.read_files_recursive(debugfs_damon))
 
 def get_scheme_version():
     scheme_version = 0
