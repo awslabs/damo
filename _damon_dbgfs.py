@@ -337,7 +337,11 @@ def debugfs_output_to_damos(output, intervals_us):
         fields[13] = wmarks_metric_map[fields[13]]
 
     line = ' '.join('%s' % x for x in fields) # remove stats
-    return _damo_schemes_input.damo_scheme_to_damos(line, '0')
+    damos, err = _damo_schemes_input.damo_scheme_to_damos(line, '0')
+    if err != None:
+        print('debugfs output to damos conversion failed (%s)' % err)
+        exit(1)
+    return damos
 
 def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         scheme_version):

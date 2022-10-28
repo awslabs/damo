@@ -110,11 +110,12 @@ def text_to_damos_wmark_metric(txt):
     return damos_wmark_metric_to_int[txt.lower()]
 
 def damo_scheme_to_damos(line, name):
+    '''Returns Damos object and err'''
     fields = line.split()
     expected_lengths = [7, 9, 12, 17, 18]
     if not len(fields) in expected_lengths:
-        print('expected %s fields, but \'%s\'' % (expected_lengths, line))
-        exit(1)
+        return None, 'expected %s fields, but \'%s\'' % (expected_lengths,
+                line)
 
     try:
         min_sz = text_to_bytes(fields[0])
@@ -168,8 +169,7 @@ def damo_scheme_to_damos(line, name):
             wmarks_low = int(fields[17])
 
     except:
-        print('wrong input field')
-        raise
+        return None, 'wrong input field'
 
     return _damon.Damos(name, _damon.DamosAccessPattern(min_sz, max_sz,
         min_nr_accesses, max_nr_accesses, nr_accesses_unit,
@@ -178,7 +178,7 @@ def damo_scheme_to_damos(line, name):
         _damon.DamosQuota(quota_ms, quota_sz, window_ms, weight_sz,
             weight_nr_accesses, weight_age),
         _damon.DamosWatermarks(wmarks_txt, wmarks_interval, wmarks_high,
-            wmarks_mid, wmarks_low))
+            wmarks_mid, wmarks_low)), None
 
 def damo_schemes_split_remove_comments(schemes):
     raw_lines = schemes.split('\n')
@@ -200,7 +200,11 @@ def damo_schemes_to_damos(damo_schemes):
     damos_list = []
     for idx, line in enumerate(
             damo_schemes_split_remove_comments(damo_schemes)):
-        damos = damo_scheme_to_damos(line, '%d' % idx)
+        damos, err = damo_scheme_to_damos(line, '%d' % idx)
+        if err != None:
+            print('given scheme is neither file nor proper scheme string (%s)'
+                    % err)
+            exit(1)
         damos_list.append(damos)
     return damos_list
 
