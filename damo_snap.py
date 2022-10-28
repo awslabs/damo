@@ -9,9 +9,12 @@ import argparse
 
 import _damo_fmt_nr
 import _damon
+import _damon_result
 
 def set_argparser(parser):
     _damon.set_common_argparser(parser)
+    parser.add_argument('--store_to', default='damon.snap.data',
+            help='file to store the snapshot')
     parser.add_argument('--raw_number', action='store_true',
             help='use machine-friendly raw numbers')
 
@@ -47,6 +50,16 @@ def main(args=None):
         print('%012x-%012x (%12s) %11d %5d' % (r.start, r.end,
             _damo_fmt_nr.format_sz(sz, args.raw_number), r.nr_accesses, r.age))
     print('wss: %s' % _damo_fmt_nr.format_sz(wss, args.raw_number))
+
+    damon_result = _damon_result.DAMONResult()
+    damon_result.start_time = 0
+    damon_result.end_time = 100000
+    damon_result.nr_snapshots = 1
+    damon_result.target_snapshots[0] = [_damon_result.DAMONSnapshot(0, 0.1,
+        0)]
+    damon_result.target_snapshots[0][0].regions = tried_regions
+    _damon_result.write_damon_result(damon_result, args.store_to, 'perf_script',
+            int('600', 8))
 
 if __name__ == '__main__':
     main()
