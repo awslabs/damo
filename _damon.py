@@ -421,11 +421,10 @@ def set_implicit_target_schemes_argparser(parser):
             type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
 
-def set_explicit_target_schemes_argparser(parser):
+def set_explicit_target_no_default_schemes_argparser(parser):
     set_explicit_target_monitoring_argparser(parser)
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
-            type=str, default='damon.schemes',
-            help='data access monitoring-based operation schemes')
+            type=str, help='data access monitoring-based operation schemes')
 
 def is_ongoing_target(args):
     return args.target == 'ongoing'
