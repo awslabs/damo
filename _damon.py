@@ -234,6 +234,12 @@ def restore_attrs(attrs):
 def is_damon_running():
     return _damon_fs.is_damon_running()
 
+def current_kdamonds():
+    if _damon_fs != _damon_sysfs:
+        print('current_kdamonds() is not supported by debugfs at the moment')
+        exit(1)
+    return _damon_fs.current_kdamonds()
+
 def apply_kdamonds(kdamonds):
     _damon_fs.apply_kdamonds(kdamonds)
 
