@@ -11,13 +11,18 @@ import _damon
 
 def pr_schemes_tried_regions(tried_regions_content):
     nr_tried_regions = len(tried_regions_content)
+    wss = 0
     for r in range(nr_tried_regions):
         region = tried_regions_content['%d' % r]
         start, end, nr_accesses, age = [int(x) for x in [
             region['start'], region['end'],
             region['nr_accesses'], region['age']]]
-        print('%d-%d (%d): nr_accesses %d, age %d' % (start, end, end - start, 
+        sz = end - start
+        if nr_accesses > 0:
+            wss += sz
+        print('%d-%d (%d): nr_accesses %d, age %d' % (start, end, sz, 
             nr_accesses, age))
+    print('wss: %d' % wss)
 
 def set_argparser(parser):
     _damon.set_common_argparser(parser)
