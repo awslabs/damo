@@ -40,7 +40,11 @@ def main(args=None):
         exit(1)
 
     tried_regions = _damon.tried_regions_of(0, 0, 0)
+    kdamonds = _damon.current_kdamonds()
+    aggr_interval_us = kdamonds[0].contexts[0].intervals.aggr
     wss = 0
+    print('# snapshot in last %s' %
+            _damo_fmt_nr.format_time(aggr_interval_us * 1000, args.raw_number))
     print('# %10s %12s  %12s  %11s %5s' %
             ('start_addr', 'end_addr', 'length', 'nr_accesses', 'age'))
     for r in tried_regions:
@@ -53,7 +57,7 @@ def main(args=None):
 
     damon_result = _damon_result.DAMONResult()
     damon_result.start_time = 0
-    damon_result.end_time = 100000000
+    damon_result.end_time = aggr_interval_us
     damon_result.nr_snapshots = 1
     damon_result.target_snapshots[0] = [_damon_result.DAMONSnapshot(0, 100000000,
         0)]
