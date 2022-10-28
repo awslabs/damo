@@ -355,6 +355,9 @@ def _damon_fs_root():
         return _damon_dbgfs.debugfs_damon
     return _damon_sysfs.admin_dir
 
+def read_damon_fs_from(path):
+    return _damo_fs.read_files_recursive(os.path.join(_damon_fs_root(), path))
+
 def read_damon_fs():
     return _damo_fs.read_files_recursive(_damon_fs_root())
 
