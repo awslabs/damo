@@ -350,6 +350,12 @@ def commit_inputs(kdamonds):
         exit(1)
     return _damon_fs.commit_inputs(kdamonds)
 
+def tried_regions_of(kdamond_idx, ctx_idx, scheme_idx):
+    if _damon_fs == _damon_dbgfs:
+        print('debugfs interface unsupport tried_regions_of()')
+        exit(1)
+    return _damon_fs.tried_regions_of(kdamond_idx, ctx_idx, scheme_idx)
+
 def _damon_fs_root():
     if _damon_fs == _damon_dbgfs:
         return _damon_dbgfs.debugfs_damon
