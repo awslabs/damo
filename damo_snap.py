@@ -9,21 +9,6 @@ import argparse
 
 import _damon
 
-def pr_schemes_tried_regions(tried_regions_content):
-    nr_tried_regions = len(tried_regions_content)
-    wss = 0
-    for r in range(nr_tried_regions):
-        region = tried_regions_content['%d' % r]
-        start, end, nr_accesses, age = [int(x) for x in [
-            region['start'], region['end'],
-            region['nr_accesses'], region['age']]]
-        sz = end - start
-        if nr_accesses > 0:
-            wss += sz
-        print('%d-%d (%d): nr_accesses %d, age %d' % (start, end, sz, 
-            nr_accesses, age))
-    print('wss: %d' % wss)
-
 def set_argparser(parser):
     _damon.set_common_argparser(parser)
 
@@ -48,9 +33,15 @@ def main(args=None):
         print('DAMON is not turned on')
         exit(1)
 
-    _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_tried_regions'})
-    pr_schemes_tried_regions(_damon.read_damon_fs_from(
-        'kdamonds/0/contexts/0/schemes/0/tried_regions/'))
+    tried_regions = _damon.tried_regions_of(0, 0, 0)
+    wss = 0
+    for region in tried_regions:
+        sz = region.end - region.start
+        if region.nr_accesses > 0:
+            wss += sz
+        print('%d-%d (%d): nr_accesses %d, age %d' % (region.start, region.end,
+            sz, region.nr_accesses, region.age))
+    print('wss: %d' % wss)
 
 if __name__ == '__main__':
     main()
