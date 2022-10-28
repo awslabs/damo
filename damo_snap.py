@@ -7,10 +7,13 @@ Snap DAMON monitoring results.
 
 import argparse
 
+import _damo_fmt_nr
 import _damon
 
 def set_argparser(parser):
     _damon.set_common_argparser(parser)
+    parser.add_argument('--raw_number', action='store_true',
+            help='use machine-friendly raw numbers')
 
 def main(args=None):
     if not args:
@@ -35,13 +38,15 @@ def main(args=None):
 
     tried_regions = _damon.tried_regions_of(0, 0, 0)
     wss = 0
-    for region in tried_regions:
-        sz = region.end - region.start
-        if region.nr_accesses > 0:
+    print('# %10s %12s  %12s  %11s %5s' %
+            ('start_addr', 'end_addr', 'length', 'nr_accesses', 'age'))
+    for r in tried_regions:
+        sz = r.end - r.start
+        if r.nr_accesses > 0:
             wss += sz
-        print('%d-%d (%d): nr_accesses %d, age %d' % (region.start, region.end,
-            sz, region.nr_accesses, region.age))
-    print('wss: %d' % wss)
+        print('%012x-%012x (%12s) %11d %5d' % (r.start, r.end,
+            _damo_fmt_nr.format_sz(sz, args.raw_number), r.nr_accesses, r.age))
+    print('wss: %s' % _damo_fmt_nr.format_sz(wss, args.raw_number))
 
 if __name__ == '__main__':
     main()
