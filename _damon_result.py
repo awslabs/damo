@@ -277,8 +277,8 @@ def write_damon_perf_script(result, file_path, file_permission):
                         'damon:damon_aggregated:',
                         'target_id=%s' % snapshot.target_id,
                         'nr_regions=%d' % len(snapshot.regions),
-                        '%d-%d: %d x' % (region.start, region.end,
-                            region.nr_accesses)]) + '\n')
+                        '%d-%d: %d %s' % (region.start, region.end,
+                            region.nr_accesses, region.age)]) + '\n')
 
 def write_damon_result(result, file_path, file_type, file_permission):
     if file_type == 'record':
