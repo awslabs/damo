@@ -53,9 +53,9 @@ def main(args=None):
 
     damon_result = _damon_result.DAMONResult()
     damon_result.start_time = 0
-    damon_result.end_time = 100000
+    damon_result.end_time = 100000000
     damon_result.nr_snapshots = 1
-    damon_result.target_snapshots[0] = [_damon_result.DAMONSnapshot(0, 0.1,
+    damon_result.target_snapshots[0] = [_damon_result.DAMONSnapshot(0, 100000000,
         0)]
     damon_result.target_snapshots[0][0].regions = tried_regions
     _damon_result.write_damon_result(damon_result, args.store_to, 'perf_script',
