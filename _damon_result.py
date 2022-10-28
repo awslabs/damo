@@ -281,6 +281,18 @@ def write_damon_perf_script(result, file_path, file_permission):
                             region.nr_accesses, region.age)]) + '\n')
 
 def write_damon_result(result, file_path, file_type, file_permission):
+    for target_snapshots in result.target_snapshots.values():
+        if len(target_snapshots) == 1:
+            # we cannot know start/end time of single snapshot from the file
+            # to allow it with later read, write a fake snapshot
+            snapshot = target_snapshots[0]
+            snap_duration = snapshot.end_time - snapshot.start_time
+            fake_snapshot = DAMONSnapshot(snapshot.end_time,
+                    snapshot.end_time + snap_duration, snapshot.target_id)
+            # -1 nr_accesses/ -1 age means fake
+            fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
+            target_snapshots.append(fake_snapshot)
+            result.nr_snapshots += 1
     if file_type == 'record':
         write_damon_record(result, file_path, 2, file_permission)
     elif file_type == 'perf_script':
