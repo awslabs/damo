@@ -226,6 +226,13 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
 
         snapshots[0].start_time = snapshots[0].end_time - snapshot_time
 
+        # cut out the fake snapshot for end time
+        if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
+            region = snapshots[1].regions[0]
+            if (region.start == 0 and region.end == 0 and
+                    region.nr_accesses == -1 and region.age == -1):
+                del snapshots[1]
+
     return result, f, fmt_version
 
 def parse_damon_result(result_file, file_type):
