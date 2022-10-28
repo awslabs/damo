@@ -242,7 +242,7 @@ def target_has_pid(ops):
 
 def damos_from_args(args):
     schemes = []
-    if not 'schemes' in args:
+    if not 'schemes' in args or args.schemes == None:
         return schemes
 
     return _damo_schemes_input.damo_schemes_to_damos(args.schemes)
