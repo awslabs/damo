@@ -11,7 +11,7 @@ import _damon
 import _damo_paddr_layout
 
 def set_argparser(parser):
-    _damon.set_explicit_target_monitoring_argparser(parser)
+    _damon.set_explicit_target_schemes_argparser(parser)
 
 def main(args=None):
     if not args:
