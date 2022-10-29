@@ -230,6 +230,13 @@ class DamonRecord:
         self.rfile_buf = rfile_buf
         self.rfile_path = rfile_path
 
+    def __str__(self):
+        return 'path: %s, buffer sz: %s' % (self.rfile_path,
+                _damo_fmt_nr.format_sz(self.rfile_buf))
+
+    def __eq__(self, other):
+        return self.__str__() == other.__str__()
+
 class DamonCtx:
     name = None
     intervals = None
@@ -248,6 +255,21 @@ class DamonCtx:
         self.targets = targets
         self.schemes = schemes
 
+    def __str__(self):
+        lines = ['name: %s' % self.name]
+        lines.append('intervals: %s' % self.intervals)
+        lines.append('nr_regions: %s' % self.nr_regions)
+        lines.append('ops: %s' % self.ops)
+        lines.append('targets')
+        for target in self.targets:
+            lines.append(indent_lines('%s' % target, 4))
+        for scheme in self.schemes:
+            lines.append(indent_lines('%s' % scheme, 4))
+        return '\n'.join(lines)
+
+    def __eq__(self, other):
+        return self.__str__() == other.__str__()
+
 class Kdamond:
     name = None
     contexts = None
@@ -255,6 +277,13 @@ class Kdamond:
     def __init__(self, name, contexts):
         self.name = name
         self.contexts = contexts
+
+    def __str__(self):
+        lines = ['name: %s' % self.name]
+        for ctx in self.contexts:
+            lines.append('contexts')
+            lines.append(indent_lines('%s' % ctx, 4))
+        return '\n'.join(lines)
 
 features = ['record',       # was in DAMON patchset, but not merged in mainline
             'schemes',      # merged in v5.16
