@@ -18,7 +18,7 @@ import _damo_paddr_layout
 class DataForCleanup:
     kdamonds = None
     target_is_ongoing = False
-    orig_attrs = None
+    orig_kdamonds = None
     rfile_path = None
     rfile_format = None
     rfile_permission = None
@@ -57,7 +57,7 @@ def cleanup_exit(exit_code):
                 pass
             elif _damon.turn_damon('off', data_for_cleanup.kdamonds):
                 print('failed to turn damon off!')
-        _damon.restore_attrs(data_for_cleanup.orig_attrs)
+        _damon.apply_kdamonds(data_for_cleanup.orig_kdamonds)
 
     if (data_for_cleanup.rfile_format != None and
             rfile_current_format != data_for_cleanup.rfile_format):
@@ -79,7 +79,7 @@ def set_data_for_cleanup(data_for_cleanup, args, output_permission):
     data_for_cleanup.rfile_path = args.out
     data_for_cleanup.remove_perf_data = not args.leave_perf_data
     data_for_cleanup.rfile_permission = output_permission
-    data_for_cleanup.orig_attrs = _damon.attrs_to_restore()
+    data_for_cleanup.orig_kdamonds = _damon.current_kdamonds()
 
 def chk_handle_record_feature_support(args):
     damon_record_supported = _damon.feature_supported('record')
