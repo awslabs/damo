@@ -315,7 +315,10 @@ def files_content_to_damos_tried_regions(files_content):
     for i in range(len(files_content)):
         regions.append(_damon.DamosTriedRegion(
             int(files_content['%d' % i]['start']),
-            int(files_content['%d' % i]['end'])))
+            int(files_content['%d' % i]['end']),
+            int(files_content['%d' % i]['nr_accesses']),
+            int(files_content['%d' % i]['age']),
+            ))
     return regions
 
 def files_content_to_scheme(scheme_name, files_content):

@@ -217,14 +217,19 @@ class DamosStats:
 class DamosTriedRegion:
     start = None
     end = None
+    nr_accesses = None
+    age = None
 
-    def __init__(self, start, end):
+    def __init__(self, start, end, nr_accesses, age):
         self.start = start
         self.end = end
+        self.nr_accesses = nr_accesses
+        self.age = age
 
     def __str__(self):
-        return '[%d, %d) (%s)' % (self.start, self.end,
-                _damo_fmt_nr.format_sz(self.end - self.start, False))
+        return '[%d, %d) (%s): nr_accesses: %d, age: %d' % (self.start,
+                self.end, _damo_fmt_nr.format_sz(self.end - self.start, False),
+                self.nr_accesses, self.age)
 
 class Damos:
     name = None
