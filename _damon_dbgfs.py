@@ -291,6 +291,7 @@ def files_content_to_kdamonds(files_content):
         schemes.append(debugfs_output_to_damos(line, intervals))
 
     ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, targets, schemes)
+    ctx.record_request = record_request
     return [_damon.Kdamond('0', [ctx])]
 
 def current_kdamonds():
