@@ -205,6 +205,15 @@ class DamosStats:
         self.sz_applied = sz_applied
         self.qt_exceeds = qt_exceeds
 
+    def __str__(self):
+        return '\n'.join([
+            'tried %d times (%s)' % (self.nr_tried,
+            _damo_fmt_nr.format_sz(self.sz_tried, False)),
+            'applied %d times (%s)' % (self.nr_applied,
+            _damo_fmt_nr.format_sz(self.sz_applied, False)),
+            'quota exceeded %d times' % self.qt_exceeds,
+            ])
+
 class Damos:
     name = None
     access_pattern = None
@@ -231,6 +240,8 @@ class Damos:
         lines.append(indent_lines('%s' % self.quotas, 4))
         lines.append('watermarks')
         lines.append(indent_lines('%s' % self.watermarks, 4))
+        lines.append('statistics')
+        lines.append(indent_lines('%s' % self.stats, 4))
         return '\n'.join(lines)
 
     def __eq__(self, other):
