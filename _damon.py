@@ -9,6 +9,7 @@ import os
 import subprocess
 import time
 
+import _damo_fmt_nr
 import _damo_fs
 import _damo_paddr_layout
 import _damo_schemes_input
@@ -25,6 +26,13 @@ class DamonIntervals:
         self.aggr = aggr
         self.ops_update = ops_update
 
+    def __str__(self):
+        return 'sample %d us, aggr %d us, update %d us' % (
+                self.sample, self.aggr, self.ops_update)
+
+    def __eq__(self, other):
+        return self.__str__() == other.__str__()
+
 class DamonNrRegionsRange:
     min_nr_regions = None
     max_nr_regions = None
@@ -32,6 +40,12 @@ class DamonNrRegionsRange:
     def __init__(self, min_, max_):
         self.min_nr_regions = min_
         self.max_nr_regions = max_
+
+    def __str__(self):
+        return '[%d, %d]' % (self.min_nr_regions, self.max_nr_regions)
+
+    def __eq__(self, other):
+        return self.__str__() == other.__str__()
 
 class DamonRegion:
     # [star, end)
@@ -42,6 +56,12 @@ class DamonRegion:
         self.start = start
         self.end = end
 
+    def __str__(self):
+        return '[%d, %d)' % (self.start, self.end)
+
+    def __eq__(self, other):
+        return self.__str__() == other.__str__()
+
 class DamonTarget:
     name = None
     pid = None
@@ -51,6 +71,15 @@ class DamonTarget:
         self.name = name
         self.pid = pid
         self.regions = regions
+
+    def __str__(self):
+        lines = ['name: %s' % self.name, 'pid: %s' % self.pid]
+        for region in self.regions:
+            lines.append('region %s' % region)
+        return '\n'.join(lines)
+
+    def __eq__(self, other):
+        return self.__str__() == other.__str__()
 
 class DamosAccessPattern:
     min_sz_bytes = None
