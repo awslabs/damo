@@ -265,20 +265,6 @@ def apply_kdamonds(kdamonds):
         traceback.print_exc()
         return 1
 
-def tried_regions_of(kdamond_idx, ctx_idx, scheme_idx):
-    _damo_fs.write_files({state_file_of(kdamond_idx):
-        'update_schemes_tried_regions'})
-    files_content = _damo_fs.read_files_recursive(
-            os.path.join(scheme_dir_of(kdamond_idx, ctx_idx, scheme_idx),
-                'tried_regions'))
-    regions = []
-    for r in range(len(files_content)):
-        region = files_content['%d' % r]
-        regions.append(_damon_result.DAMONRegion(*[int(x) for x in [
-            region['start'], region['end'],
-            region['nr_accesses'], region['age']]]))
-    return regions
-
 def files_content_to_access_pattern(files_content):
     return _damon.DamosAccessPattern(
             int(files_content['sz']['min']),
