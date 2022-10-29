@@ -309,6 +309,7 @@ class DamonCtx:
         lines.append('targets')
         for target in self.targets:
             lines.append(indent_lines('%s' % target, 4))
+        lines.append('schemes')
         for scheme in self.schemes:
             lines.append(indent_lines('%s' % scheme, 4))
         return '\n'.join(lines)
