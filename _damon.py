@@ -324,14 +324,18 @@ class DamonCtx:
 
 class Kdamond:
     name = None
+    state = None
+    pid = None
     contexts = None
 
-    def __init__(self, name, contexts):
+    def __init__(self, name, state, pid, contexts):
         self.name = name
+        self.state = state
+        self.pid = pid
         self.contexts = contexts
 
     def __str__(self):
-        lines = ['name: %s' % self.name]
+        lines = ['%s (%s, pid %s)' % (self.name, self.state, self.pid)]
         for ctx in self.contexts:
             lines.append('contexts')
             lines.append(indent_lines('%s' % ctx, 4))

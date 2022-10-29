@@ -266,7 +266,9 @@ def files_content_to_kdamonds(files_content):
     ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, targets, schemes)
     if feature_supported('record'):
         ctx.record_request = record_request
-    return [_damon.Kdamond('0', [ctx])]
+    state = files_content['monitor_on'].strip()
+    pid = files_content['kdamond_pid'].strip()
+    return [_damon.Kdamond('0', state, pid, [ctx])]
 
 def current_kdamonds():
     return files_content_to_kdamonds(
