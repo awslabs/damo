@@ -278,7 +278,7 @@ def files_content_to_kdamonds(files_content):
             pid=target_id if not is_paddr else None,
             regions=regions_dict[idx
                 if feature_supported('init_regions_target_idx')
-                else target_id]))
+                else target_id] if len(regions_dict) > 0 else []))
 
     if feature_supported('record'):
         fields = files_content['record'].strip().split()
