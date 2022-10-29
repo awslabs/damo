@@ -446,7 +446,8 @@ def update_supported_features():
             contexts=[_damon.DamonCtx(name='0', intervals=None,
                 nr_regions=None, ops=None, targets=[],
                 schemes=[_damon.Damos(name='0', access_pattern=None,
-                    action='stat', quotas=None, watermarks=None)])])]
+                    action='stat', quotas=None, watermarks=None, stats=None)
+                    ])])]
         ensure_dirs_populated_for(kdamonds_for_feature_check)
 
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'tried_regions')):

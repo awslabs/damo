@@ -223,7 +223,7 @@ class Damos:
     stats = None
 
     def __init__(self, name, access_pattern, action, quotas, watermarks,
-            stats=None):
+            stats):
         self.name = name
         self.access_pattern = access_pattern
         self.action = action

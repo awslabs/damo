@@ -178,7 +178,7 @@ def damo_scheme_to_damos(line, name):
         _damon.DamosQuota(quota_ms, quota_sz, window_ms, weight_sz,
             weight_nr_accesses, weight_age),
         _damon.DamosWatermarks(wmarks_txt, wmarks_interval, wmarks_high,
-            wmarks_mid, wmarks_low)), None
+            wmarks_mid, wmarks_low), None), None
 
 def damo_schemes_split_remove_comments(schemes):
     raw_lines = schemes.split('\n')

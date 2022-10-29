@@ -18,7 +18,8 @@ class TestDamon(unittest.TestCase):
                 quotas=_damon.DamosQuota(time_ms=0, sz_bytes=584792941,
                     reset_interval_ms=1000, weight_sz_permil=0,
                     weight_nr_accesses_permil=0, weight_age_permil=0),
-                watermarks=_damon.DamosWatermarks(0,0,0,0,0))
+                watermarks=_damon.DamosWatermarks(0,0,0,0,0),
+                stats=None)
         self.assertEqual(damos, damos)
 
 class TestDamonDbgfs(unittest.TestCase):
@@ -33,7 +34,8 @@ class TestDamonDbgfs(unittest.TestCase):
                 quotas=_damon.DamosQuota(time_ms=0, sz_bytes=584792941,
                     reset_interval_ms=1000, weight_sz_permil=0,
                     weight_nr_accesses_permil=0, weight_age_permil=0),
-                watermarks=_damon.DamosWatermarks('none',0,0,0,0))
+                watermarks=_damon.DamosWatermarks('none',0,0,0,0),
+                stats=None)
 
         self.assertEqual(damos, expected)
 
