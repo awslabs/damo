@@ -217,20 +217,6 @@ def turn_damon(on_off, kdamonds):
         while is_damon_running():
             time.sleep(1)
 
-def attrs_to_restore():
-    if _damon_fs == _damon_dbgfs:
-        return _damon_fs.current_debugfs_inputs()
-    else:
-        return None
-
-def restore_attrs(attrs):
-    if attrs == None:
-        return
-    if _damon_fs != _damon_dbgfs:
-        print('BUG: restore_attrs() called with !None while !debugfs is used')
-        return
-    _damon_fs.apply_debugfs_inputs(attrs)
-
 def is_damon_running():
     return _damon_fs.is_damon_running()
 
