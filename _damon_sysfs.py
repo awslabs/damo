@@ -302,12 +302,21 @@ def files_content_to_watermarks(files_content):
             int(files_content['mid']),
             int(files_content['low']))
 
+def files_content_to_damos_stats(files_content):
+    return _damon.DamosStats(
+            int(files_content['nr_tried']),
+            int(files_content['sz_tried']),
+            int(files_content['nr_applied']),
+            int(files_content['sz_applied']),
+            int(files_content['qt_exceeds']))
+
 def files_content_to_scheme(scheme_name, files_content):
     return _damon.Damos(scheme_name,
             files_content_to_access_pattern(files_content['access_pattern']),
             files_content['action'],
             files_content_to_quotas(files_content['quotas']),
-            files_content_to_watermarks(files_content['watermarks']))
+            files_content_to_watermarks(files_content['watermarks']),
+            files_content_to_damos_stats(files_content['stats']))
 
 def files_content_to_regions(files_content):
     regions = []
