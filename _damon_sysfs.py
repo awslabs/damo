@@ -310,13 +310,25 @@ def files_content_to_damos_stats(files_content):
             int(files_content['sz_applied']),
             int(files_content['qt_exceeds']))
 
+def files_content_to_damos_tried_regions(files_content):
+    regions = []
+    for i in range(len(files_content)):
+        regions.append(_damon.DamosTriedRegion(
+            int(files_content['%d' % i]['start']),
+            int(files_content['%d' % i]['end'])))
+    return regions
+
 def files_content_to_scheme(scheme_name, files_content):
     return _damon.Damos(scheme_name,
             files_content_to_access_pattern(files_content['access_pattern']),
             files_content['action'],
             files_content_to_quotas(files_content['quotas']),
             files_content_to_watermarks(files_content['watermarks']),
-            files_content_to_damos_stats(files_content['stats']))
+            files_content_to_damos_stats(files_content['stats']),
+            files_content_to_damos_tried_regions(
+                files_content['tried_regions'])
+                if feature_supported('schemes_tried_regions') else None
+            )
 
 def files_content_to_regions(files_content):
     regions = []
