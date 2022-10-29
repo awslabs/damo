@@ -335,8 +335,8 @@ def files_content_to_regions(files_content):
     for region_idx in range(int(files_content['nr_regions'])):
         region_name = '%d' % region_idx
         regions.append(_damon.DamonRegion(
-            files_content[region_name]['start'],
-            files_content[region_name]['end']))
+            int(files_content[region_name]['start']),
+            int(files_content[region_name]['end'])))
     return regions
 
 def files_content_to_target(target_name, files_content):
