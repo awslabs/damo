@@ -103,6 +103,16 @@ class DamosAccessPattern:
         self.max_age = max_age
         self.age_unit = age_unit
 
+    def __str__(self):
+        return '\n'.join([
+            'sz: [%s, %s]' % (_damo_fmt_nr.format_sz(self.min_sz_bytes, False),
+                _damo_fmt_nr.format_sz(self.max_sz_bytes, False)),
+            'nr_accesses: [%d%s, %d%s]' % (
+                self.min_nr_accesses, self.nr_accesses_unit,
+                self.max_nr_accesses, self.nr_accesses_unit),
+            'age: [%d%s, %d%s]' % (self.min_age, self.age_unit,
+                self.max_age, self.age_unit)])
+
     def __eq__(self, other):
         return (type(self) == type(other) and
                 self.min_sz_bytes ==
@@ -130,6 +140,18 @@ class DamosQuota:
         self.weight_nr_accesses_permil = weight_nr_accesses_permil
         self.weight_age_permil = weight_age_permil
 
+    def __str__(self):
+        return '\n'.join([
+            '%s / %s per %s' % (
+                _damo_fmt_nr.format_sz(self.time_ms * 1000000, False),
+                _damo_fmt_nr.format_time(self.sz_bytes, False),
+                _damo_fmt_nr.format_sz(self.reset_interval_ms * 1000000,
+                    False)),
+            'priority: sz %d permil, nr_accesses %d permil, age %d permil' % (
+                self.weight_sz_permil, self.weight_nr_accesses_permil,
+                self.weight_age_permil),
+            ])
+
     def __eq__(self, other):
         return (type(self) == type(other) and self.time_ms == other.time_ms and
                 self.sz_bytes == other.sz_bytes and self.reset_interval_ms ==
@@ -152,11 +174,22 @@ class DamosWatermarks:
         self.mid_permil = mid
         self.low_permil = low
 
+    def __str__(self):
+        return '\n'.join([
+            '%s/%s/%s permil' % (self.high_permil, self.mid_permil,
+                self.low_permil),
+            'metric %s, interval %s' % (self.metric,
+                _damo_fmt_nr.format_time(self.interval_us * 1000, False))
+            ])
+
     def __eq__(self, other):
         return (type(self) == type(other) and self.metric == other.metric and
                 self.interval_us == other.interval_us and self.high_permil ==
                 other.high_permil and self.mid_permil == other.mid_permil and
                 self.low_permil == other.low_permil)
+
+def indent_lines(string, indent_width):
+    return '\n'.join([' ' * indent_width + l for l in string.split('\n')])
 
 class Damos:
     name = None
@@ -171,6 +204,17 @@ class Damos:
         self.action = action
         self.quotas = quotas
         self.watermarks = watermarks
+
+    def __str__(self):
+        lines = ['name: %s' % self.name]
+        lines.append('target access pattern')
+        lines.append(indent_lines('%s' % self.access_pattern, 4))
+        lines.append('action: %s' % self.action.strip())
+        lines.append('quotas')
+        lines.append(indent_lines('%s' % self.quotas, 4))
+        lines.append('watermarks')
+        lines.append(indent_lines('%s' % self.watermarks, 4))
+        return '\n'.join(lines)
 
     def __eq__(self, other):
         return (type(self) == type(other) and self.name == other.name and
