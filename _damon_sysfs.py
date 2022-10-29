@@ -243,14 +243,14 @@ def ensure_dirs_populated_for(kdamonds):
                     '%d' % len(ctx.schemes))
 
 def apply_kdamonds(kdamonds):
-    if len(kdamonds) != 1:
-        print('currently only one kdamond is supported')
+    if len(kdamonds) > 1:
+        print('currently only <=one kdamond is supported')
         exit(1)
-    if len(kdamonds[0].contexts) != 1:
-        print('currently only one damon_ctx is supported')
+    if len(kdamonds[0].contexts) > 1:
+        print('currently only <=one damon_ctx is supported')
         exit(1)
-    if len(kdamonds[0].contexts[0].targets) != 1:
-        print('currently only one target is supported')
+    if len(kdamonds[0].contexts[0].targets) > 1:
+        print('currently only <=one target is supported')
         exit(1)
     ensure_dirs_populated_for(kdamonds)
 
