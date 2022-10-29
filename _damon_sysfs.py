@@ -91,6 +91,11 @@ def __is_damon_running(kdamond_idx):
 def is_damon_running():
     return __is_damon_running(0)
 
+'Return error'''
+def update_damos_tried_regions(kdamond_idx):
+    return _damo_fs.write_files({state_file_of(kdamond_idx):
+        'update_schemes_tried_regions'})
+
 def wops_for_scheme_watermarks(wmarks):
     if wmarks == None:
         return {}

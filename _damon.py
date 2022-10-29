@@ -374,6 +374,11 @@ def turn_damon(on_off, kdamonds):
 def is_damon_running():
     return _damon_fs.is_damon_running()
 
+def update_damos_tried_regions(kdamond_idx):
+    if _damon_fs == _damon_dbgfs:
+        return 'DAMON debugfs doesn\'t support schemes tried regions'
+    return _damon_fs.update_damos_tried_regions(kdamond_idx)
+
 def current_kdamonds():
     return _damon_fs.current_kdamonds()
 
