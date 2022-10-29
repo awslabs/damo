@@ -24,7 +24,8 @@ fi
 for damon_interface in $damon_interfaces
 do
 	testname2="$testname $damon_interface"
-	sudo "$damo" start paddr --damon_interface "$damon_interface"
+	sudo "$damo" start paddr --damon_interface "$damon_interface" \
+		-c monitoring.damos
 	if ! pidof kdamond.0 > /dev/null
 	then
 		echo "FAIL $testname2 (kdamond.0 pid not found after start)"
@@ -40,6 +41,16 @@ do
 		exit 1
 	fi
 	echo "PASS $testname2 record-ongoing-validate"
+
+	for i in {1..10}
+	do
+		if ! sudo "$damo" snap &> /dev/null
+		then
+			echo "FAIL $testname2 snap $i failed"
+			exit 1
+		fi
+	done
+	echo "PASS $testname2 snap $i"
 
 	if ! sudo "$damo" tune --aggr 200000 paddr \
 		--damon_interface "$damon_interface" &> /dev/null
