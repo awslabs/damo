@@ -219,33 +219,6 @@ def attr_str(attrs):
             attrs.regions_update_interval, attrs.min_nr_regions,
             attrs.max_nr_regions)
 
-class DebugfsInputs:
-    attrs = None
-    record = None
-    schemes = None
-
-def current_debugfs_inputs():
-    debugfs_inputs = DebugfsInputs()
-
-    with open(debugfs_attrs, 'r') as f:
-        debugfs_inputs.attrs = f.read().strip()
-
-    if debugfs_record:
-        with open(debugfs_record, 'r') as f:
-            debugfs_inputs.record = f.read().strip()
-
-    if debugfs_schemes:
-        with open(debugfs_schemes, 'r') as f:
-            # The last two fields in each line are statistics.
-            schemes = [' '.join(x.split()[:-2]) for x in
-                    f.read().strip().split('\n')]
-            debugfs_inputs.schemes = '\n'.join(schemes)
-
-def apply_debugfs_inputs(debugfs_inputs):
-    _damo_fs.write_files([{debugfs_attrs: debugfs_inputs.attrs},
-            {debugfs_record: debugfs_inputs.record},
-            {debugfs_schemes: debugfs_inputs.schemes}])
-
 def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
     nr_regions = damon_ctx.nr_regions
