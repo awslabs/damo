@@ -285,7 +285,8 @@ def get_scheme_version():
     return scheme_version
 
 def debugfs_output_to_damos(output, intervals_us):
-    # last five fields are stat
+    fields = [int(x) for x in output.strip().split()]
+    stat_fields = fields[-5:]
     fields = [int(x) for x in output.strip().split()][:-5]
     # convert nr_accesses from sample intervals to percent
     max_nr_accesses = intervals_us.aggr / intervals_us.sample
@@ -316,6 +317,7 @@ def debugfs_output_to_damos(output, intervals_us):
     if err != None:
         print('debugfs output to damos conversion failed (%s)' % err)
         exit(1)
+    damos.stats = _damon.DamosStats(*stat_fields)
     return damos
 
 def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
