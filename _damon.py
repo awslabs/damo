@@ -191,19 +191,36 @@ class DamosWatermarks:
 def indent_lines(string, indent_width):
     return '\n'.join([' ' * indent_width + l for l in string.split('\n')])
 
+class DamosStats:
+    nr_tried = None
+    sz_tried = None
+    nr_applied = None
+    sz_applied = None
+    qt_exceeds = None
+
+    def __init__(self, nr_tried, sz_tried, nr_applied, sz_applied, qt_exceeds):
+        self.nr_tried = nr_tried
+        self.sz_tried = sz_tried
+        self.nr_applied = nr_applied
+        self.sz_applied = sz_applied
+        self.qt_exceeds = qt_exceeds
+
 class Damos:
     name = None
     access_pattern = None
     action = None
     quotas = None
     watermarks = None
+    stats = None
 
-    def __init__(self, name, access_pattern, action, quotas, watermarks):
+    def __init__(self, name, access_pattern, action, quotas, watermarks,
+            stats=None):
         self.name = name
         self.access_pattern = access_pattern
         self.action = action
         self.quotas = quotas
         self.watermarks = watermarks
+        self.stats = stats
 
     def __str__(self):
         lines = ['name: %s' % self.name]
