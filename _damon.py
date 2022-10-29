@@ -214,6 +214,18 @@ class DamosStats:
             'quota exceeded %d times' % self.qt_exceeds,
             ])
 
+class DamosTriedRegion:
+    start = None
+    end = None
+
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+    def __str__(self):
+        return '[%d, %d) (%s)' % (self.start, self.end,
+                _damo_fmt_nr.format_sz(self.end - self.start, False))
+
 class Damos:
     name = None
     access_pattern = None
@@ -221,15 +233,17 @@ class Damos:
     quotas = None
     watermarks = None
     stats = None
+    tried_regions = None
 
     def __init__(self, name, access_pattern, action, quotas, watermarks,
-            stats):
+            stats, tried_regions=None):
         self.name = name
         self.access_pattern = access_pattern
         self.action = action
         self.quotas = quotas
         self.watermarks = watermarks
         self.stats = stats
+        self.tried_regions = tried_regions
 
     def __str__(self):
         lines = ['name: %s' % self.name]
@@ -242,6 +256,10 @@ class Damos:
         lines.append(indent_lines('%s' % self.watermarks, 4))
         lines.append('statistics')
         lines.append(indent_lines('%s' % self.stats, 4))
+        if self.tried_regions != None:
+            lines.append('tried regions')
+            for region in self.tried_regions:
+                lines.append(indent_lines('%s' % region, 4))
         return '\n'.join(lines)
 
     def __eq__(self, other):
