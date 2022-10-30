@@ -110,11 +110,11 @@ class DamosAccessPattern:
         return '\n'.join([
             'sz: [%s, %s]' % (_damo_fmt_nr.format_sz(self.min_sz_bytes, False),
                 _damo_fmt_nr.format_sz(self.max_sz_bytes, False)),
-            'nr_accesses: [%d%s, %d%s]' % (
-                self.min_nr_accesses, self.nr_accesses_unit,
-                self.max_nr_accesses, self.nr_accesses_unit),
-            'age: [%d%s, %d%s]' % (self.min_age, self.age_unit,
-                self.max_age, self.age_unit)])
+            'nr_accesses: [%d, %d] (%s)' % (
+                self.min_nr_accesses, self.max_nr_accesses,
+                self.nr_accesses_unit),
+            'age: [%d, %d] (%s)' % (self.min_age, self.max_age,
+                self.age_unit)])
 
     def __eq__(self, other):
         return (type(self) == type(other) and
