@@ -442,6 +442,8 @@ features_sysfs_support_from_begining = [
         'schemes_quotas',
         'schemes_prioritization',
         'schemes_wmarks',
+        'schemes_stat_succ',
+        'schemes_stat_qt_exceed',
         ]
 
 def update_supported_features():
