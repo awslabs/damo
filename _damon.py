@@ -73,7 +73,7 @@ class DamonTarget:
         self.regions = regions
 
     def __str__(self):
-        lines = ['name: %s' % self.name, 'pid: %s' % self.pid]
+        lines = ['%s (pid: %s)' % (self.name, self.pid)]
         for region in self.regions:
             lines.append('region %s' % region)
         return '\n'.join(lines)
@@ -251,10 +251,9 @@ class Damos:
         self.tried_regions = tried_regions
 
     def __str__(self):
-        lines = ['name: %s' % self.name]
+        lines = ['%s (action: %s)' % (self.name, self.action)]
         lines.append('target access pattern')
         lines.append(indent_lines('%s' % self.access_pattern, 4))
-        lines.append('action: %s' % self.action.strip())
         lines.append('quotas')
         lines.append(indent_lines('%s' % self.quotas, 4))
         lines.append('watermarks')
@@ -307,10 +306,9 @@ class DamonCtx:
         self.schemes = schemes
 
     def __str__(self):
-        lines = ['name: %s' % self.name]
+        lines = ['%s (ops: %s)' % (self.name, self.ops)]
         lines.append('intervals: %s' % self.intervals)
         lines.append('nr_regions: %s' % self.nr_regions)
-        lines.append('ops: %s' % self.ops)
         lines.append('targets')
         for target in self.targets:
             lines.append(indent_lines('%s' % target, 4))
