@@ -96,6 +96,20 @@ class TestDamonDbgfs(unittest.TestCase):
 
 class TestDamonSysfs(unittest.TestCase):
     def test_json_kdamonds_convert(self):
+        _damon_sysfs.feature_supports = {
+                'fvaddr': True,
+                'init_regions': True,
+                'init_regions_target_idx': True,
+                'paddr': True,
+                'record': False,
+                'schemes': True,
+                'schemes_prioritization': True,
+                'schemes_quotas': True,
+                'schemes_speed_limit': True,
+                'schemes_tried_regions': True,
+                'schemes_wmarks': True,
+                'vaddr': True}
+
         sysfs_read_txt = r'''
 {
     "kdamonds": {
