@@ -362,6 +362,30 @@ def ensure_root_permission():
         print('Run as root')
         exit(1)
 
+# DAMON status reading
+
+def is_damon_running():
+    return _damon_fs.is_damon_running()
+
+def current_kdamonds():
+    return _damon_fs.current_kdamonds()
+
+# DAMON control
+
+def apply_kdamonds(kdamonds):
+    _damon_fs.apply_kdamonds(kdamonds)
+
+def commit_inputs(kdamonds):
+    if _damon_fs == _damon_dbgfs:
+        print('debugfs interface unsupport commit_inputs()')
+        exit(1)
+    return _damon_fs.commit_inputs(kdamonds)
+
+def update_damos_tried_regions(kdamond_idx):
+    if _damon_fs == _damon_dbgfs:
+        return 'DAMON debugfs doesn\'t support schemes tried regions'
+    return _damon_fs.update_damos_tried_regions(kdamond_idx)
+
 def turn_damon(on_off, kdamonds):
     err = _damon_fs.turn_damon(on_off, kdamonds)
     if err:
@@ -372,20 +396,6 @@ def turn_damon(on_off, kdamonds):
     else:   # on_off == 'off'
         while is_damon_running():
             time.sleep(1)
-
-def is_damon_running():
-    return _damon_fs.is_damon_running()
-
-def update_damos_tried_regions(kdamond_idx):
-    if _damon_fs == _damon_dbgfs:
-        return 'DAMON debugfs doesn\'t support schemes tried regions'
-    return _damon_fs.update_damos_tried_regions(kdamond_idx)
-
-def current_kdamonds():
-    return _damon_fs.current_kdamonds()
-
-def apply_kdamonds(kdamonds):
-    _damon_fs.apply_kdamonds(kdamonds)
 
 def target_has_pid(ops):
     return ops in ['vaddr', 'fvaddr']
@@ -493,12 +503,6 @@ def ensure_initialized(args, skip_dirs_population):
         print(err)
         exit(1)
     initialized = True
-
-def commit_inputs(kdamonds):
-    if _damon_fs == _damon_dbgfs:
-        print('debugfs interface unsupport commit_inputs()')
-        exit(1)
-    return _damon_fs.commit_inputs(kdamonds)
 
 def _damon_fs_root():
     if _damon_fs == _damon_dbgfs:
