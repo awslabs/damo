@@ -29,6 +29,13 @@ def is_damon_running():
     result = _damo_fs.read_files_recursive(debugfs_damon)
     return result['monitor_on'].strip() == 'on'
 
+def is_kdamond_running(kdamond_name):
+    content, err = _damo_fs.read_file(debugfs_monitor_on)
+    if err != None:
+        print(err)
+        return False
+    return content.strip() == 'on'
+
 feature_supports = None
 
 def feature_supported(feature):

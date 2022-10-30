@@ -88,6 +88,9 @@ def __is_damon_running(kdamond_idx):
         return False
     return content.strip() == 'on'
 
+def is_kdamond_running(kdamond_name):
+    return __is_damon_running(kdamond_name)
+
 def is_damon_running():
     return __is_damon_running(0)
 
