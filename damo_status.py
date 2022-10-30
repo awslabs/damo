@@ -78,7 +78,9 @@ def main(args=None):
         _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_stats'})
     content = _damon.read_damon_fs()
     if args.target == 'kdamonds':
-        print('\n\n'.join(['%s' % k for k in _damon.current_kdamonds()]))
+        print('kdamonds')
+        print(_damon.indent_lines(
+            '\n\n'.join(['%s' % k for k in _damon.current_kdamonds()]), 4))
     if args.target == 'all':
         print(json.dumps(content, indent=4, sort_keys=True))
     elif args.target == 'schemes_stats':
