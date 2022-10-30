@@ -322,6 +322,11 @@ def debugfs_output_to_damos(output, intervals_us):
     damos.stats = _damon.DamosStats(*stat_fields)
     return damos
 
+'Return error'
+def update_schemes_stats(kdamond_idx):
+    # DAMON debugfs updates stats always
+    return None
+
 def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         scheme_version):
     pattern = damos.access_pattern

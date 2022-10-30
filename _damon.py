@@ -381,6 +381,9 @@ def commit_inputs(kdamonds):
         exit(1)
     return _damon_fs.commit_inputs(kdamonds)
 
+def update_schemes_stats(kdamond_idx):
+    return _damon_fs.update_schemes_stats(kdamond_idx)
+
 def update_damos_tried_regions(kdamond_idx):
     if _damon_fs == _damon_dbgfs:
         return 'DAMON debugfs doesn\'t support schemes tried regions'
