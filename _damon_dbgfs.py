@@ -295,8 +295,12 @@ def get_scheme_version():
 
 def debugfs_output_to_damos(output, intervals_us):
     fields = [int(x) for x in output.strip().split()]
-    stat_fields = fields[-5:]
-    fields = [int(x) for x in output.strip().split()][:-5]
+    if feature_supported('schemes_stat_succ'):
+        nr_stat_fields = 5
+    else:
+        nr_stat_fields = 2
+    stat_fields = fields[-1 * nr_stat_fields:]
+    fields = [int(x) for x in output.strip().split()][:-1 * nr_stat_fields]
     # convert nr_accesses from sample intervals to percent
     max_nr_accesses = intervals_us.aggr / intervals_us.sample
     fields[2] = float(fields[2]) * 100 / max_nr_accesses
