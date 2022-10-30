@@ -216,7 +216,7 @@ class TestDamonSysfs(unittest.TestCase):
                                     "min": "0"
                                 }
                             },
-                            "action": "stat\n",
+                            "action": "stat",
                             "quotas": {
                                 "bytes": "0",
                                 "ms": "0",
