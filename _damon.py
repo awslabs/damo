@@ -59,7 +59,8 @@ class DamonRegion:
         self.end = end
 
     def __str__(self):
-        return '[%d, %d)' % (self.start, self.end)
+        return '[%d, %d) (%s)' % (self.start, self.end,
+                _damo_fmt_nr.format_sz(self.end - self.start, False))
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
