@@ -9,7 +9,7 @@ import os
 import subprocess
 import time
 
-import _damo_fmt_nr
+import _damo_fmt_str
 import _damo_fs
 import _damo_paddr_layout
 import _damo_schemes_input
@@ -28,9 +28,9 @@ class DamonIntervals:
 
     def __str__(self):
         return 'sample %s, aggr %s, update %s' % (
-                _damo_fmt_nr.format_time(self.sample * 1000, False),
-                _damo_fmt_nr.format_time(self.aggr * 1000, False),
-                _damo_fmt_nr.format_time(self.ops_update * 1000, False))
+                _damo_fmt_str.format_time(self.sample * 1000, False),
+                _damo_fmt_str.format_time(self.aggr * 1000, False),
+                _damo_fmt_str.format_time(self.ops_update * 1000, False))
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
@@ -60,7 +60,7 @@ class DamonRegion:
 
     def __str__(self):
         return '[%d, %d) (%s)' % (self.start, self.end,
-                _damo_fmt_nr.format_sz(self.end - self.start, False))
+                _damo_fmt_str.format_sz(self.end - self.start, False))
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
@@ -108,8 +108,8 @@ class DamosAccessPattern:
 
     def __str__(self):
         return '\n'.join([
-            'sz: [%s, %s]' % (_damo_fmt_nr.format_sz(self.min_sz_bytes, False),
-                _damo_fmt_nr.format_sz(self.max_sz_bytes, False)),
+            'sz: [%s, %s]' % (_damo_fmt_str.format_sz(self.min_sz_bytes, False),
+                _damo_fmt_str.format_sz(self.max_sz_bytes, False)),
             'nr_accesses: [%d, %d] (%s)' % (
                 self.min_nr_accesses, self.max_nr_accesses,
                 self.nr_accesses_unit),
@@ -146,9 +146,9 @@ class DamosQuota:
     def __str__(self):
         return '\n'.join([
             '%s / %s per %s' % (
-                _damo_fmt_nr.format_sz(self.time_ms * 1000000, False),
-                _damo_fmt_nr.format_time(self.sz_bytes, False),
-                _damo_fmt_nr.format_time(self.reset_interval_ms * 1000000,
+                _damo_fmt_str.format_sz(self.time_ms * 1000000, False),
+                _damo_fmt_str.format_time(self.sz_bytes, False),
+                _damo_fmt_str.format_time(self.reset_interval_ms * 1000000,
                     False)),
             'priority: sz %d permil, nr_accesses %d permil, age %d permil' % (
                 self.weight_sz_permil, self.weight_nr_accesses_permil,
@@ -182,7 +182,7 @@ class DamosWatermarks:
             '%s/%s/%s permil' % (self.high_permil, self.mid_permil,
                 self.low_permil),
             'metric %s, interval %s' % (self.metric,
-                _damo_fmt_nr.format_time(self.interval_us * 1000, False))
+                _damo_fmt_str.format_time(self.interval_us * 1000, False))
             ])
 
     def __eq__(self, other):
@@ -211,9 +211,9 @@ class DamosStats:
     def __str__(self):
         return '\n'.join([
             'tried %d times (%s)' % (self.nr_tried,
-            _damo_fmt_nr.format_sz(self.sz_tried, False)),
+            _damo_fmt_str.format_sz(self.sz_tried, False)),
             'applied %d times (%s)' % (self.nr_applied,
-            _damo_fmt_nr.format_sz(self.sz_applied, False)),
+            _damo_fmt_str.format_sz(self.sz_applied, False)),
             'quota exceeded %d times' % self.qt_exceeds,
             ])
 
@@ -231,7 +231,7 @@ class DamosTriedRegion:
 
     def __str__(self):
         return '[%d, %d) (%s): nr_accesses: %d, age: %d' % (self.start,
-                self.end, _damo_fmt_nr.format_sz(self.end - self.start, False),
+                self.end, _damo_fmt_str.format_sz(self.end - self.start, False),
                 self.nr_accesses, self.age)
 
 class Damos:
@@ -285,7 +285,7 @@ class DamonRecord:
 
     def __str__(self):
         return 'path: %s, buffer sz: %s' % (self.rfile_path,
-                _damo_fmt_nr.format_sz(self.rfile_buf))
+                _damo_fmt_str.format_sz(self.rfile_buf))
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()

@@ -7,7 +7,7 @@ Snap DAMON monitoring results.
 
 import argparse
 
-import _damo_fmt_nr
+import _damo_fmt_str
 import _damon
 import _damon_result
 
@@ -45,7 +45,7 @@ def main(args=None):
     aggr_interval_us = kdamonds[0].contexts[0].intervals.aggr
     wss = 0
     print('# snapshot in last %s' %
-            _damo_fmt_nr.format_time(aggr_interval_us * 1000, args.raw_number))
+            _damo_fmt_str.format_time(aggr_interval_us * 1000, args.raw_number))
     print('# %10s %12s  %12s  %11s %5s' %
             ('start_addr', 'end_addr', 'length', 'nr_accesses', 'age'))
     for r in tried_regions:
@@ -53,8 +53,8 @@ def main(args=None):
         if r.nr_accesses > 0:
             wss += sz
         print('%012x-%012x (%12s) %11d %5d' % (r.start, r.end,
-            _damo_fmt_nr.format_sz(sz, args.raw_number), r.nr_accesses, r.age))
-    print('wss: %s' % _damo_fmt_nr.format_sz(wss, args.raw_number))
+            _damo_fmt_str.format_sz(sz, args.raw_number), r.nr_accesses, r.age))
+    print('wss: %s' % _damo_fmt_str.format_sz(wss, args.raw_number))
 
     damon_result = _damon_result.DAMONResult()
     damon_result.start_time = 0

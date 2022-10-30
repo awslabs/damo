@@ -9,7 +9,7 @@ import tempfile
 
 import _damo_dist
 import _damon_result
-import _damo_fmt_nr
+import _damo_fmt_str
 
 import damo_adjust
 
@@ -37,12 +37,12 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
     for tid in wss_dists.keys():
         wss_dist = wss_dists[tid]
         print('# target_id\t%s' % tid)
-        print('# avr:\t%s' % _damo_fmt_nr.format_sz(
+        print('# avr:\t%s' % _damo_fmt_str.format_sz(
             sum(wss_dist) / len(wss_dist), raw_number))
 
         if pr_all_wss:
             for idx, wss in enumerate(wss_dist):
-                print('%s %s' % (idx, _damo_fmt_nr.format_sz(wss, raw_number)))
+                print('%s %s' % (idx, _damo_fmt_str.format_sz(wss, raw_number)))
             return
 
         if nr_cols_bar > 0:
@@ -65,7 +65,7 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
                 wss_idx -= 1
             wss = wss_dist[wss_idx]
             line = '%3d %15s' % (percentile,
-                _damo_fmt_nr.format_sz(wss, raw_number))
+                _damo_fmt_str.format_sz(wss, raw_number))
             if nr_cols_bar > 0:
                 cols = int(wss / sz_per_col)
                 remaining_cols = nr_cols_bar - cols
