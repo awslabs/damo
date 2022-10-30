@@ -428,7 +428,7 @@ def wops_for_kdamonds(kdamonds):
         write_contents.append({debugfs_record: record_file_input})
 
     if not debugfs_schemes:
-        return _damo_fs.write_files(write_contents)
+        return write_contents
 
     scheme_version = get_scheme_version()
 
