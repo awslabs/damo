@@ -32,3 +32,5 @@ def format_time(time_ns, machine_friendly):
         return '%.3f us' % (time_ns / 1000)
     return '%d ns' % time_ns
 
+def indent_lines(string, indent_width):
+    return '\n'.join([' ' * indent_width + l for l in string.split('\n')])

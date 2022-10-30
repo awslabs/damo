@@ -3,6 +3,7 @@
 
 import json
 
+import _damo_fmt_str
 import _damon
 
 def set_argparser(parser):
@@ -79,7 +80,7 @@ def main(args=None):
     content = _damon.read_damon_fs()
     if args.target == 'kdamonds':
         print('kdamonds')
-        print(_damon.indent_lines(
+        print(_damo_fmt_str.indent_lines(
             '\n\n'.join(['%s' % k for k in _damon.current_kdamonds()]), 4))
     if args.target == 'all':
         print(json.dumps(content, indent=4, sort_keys=True))

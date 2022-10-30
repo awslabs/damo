@@ -191,9 +191,6 @@ class DamosWatermarks:
                 other.high_permil and self.mid_permil == other.mid_permil and
                 self.low_permil == other.low_permil)
 
-def indent_lines(string, indent_width):
-    return '\n'.join([' ' * indent_width + l for l in string.split('\n')])
-
 class DamosStats:
     nr_tried = None
     sz_tried = None
@@ -256,17 +253,17 @@ class Damos:
     def __str__(self):
         lines = ['%s (action: %s)' % (self.name, self.action)]
         lines.append('target access pattern')
-        lines.append(indent_lines('%s' % self.access_pattern, 4))
+        lines.append(_damo_fmt_str.indent_lines('%s' % self.access_pattern, 4))
         lines.append('quotas')
-        lines.append(indent_lines('%s' % self.quotas, 4))
+        lines.append(_damo_fmt_str.indent_lines('%s' % self.quotas, 4))
         lines.append('watermarks')
-        lines.append(indent_lines('%s' % self.watermarks, 4))
+        lines.append(_damo_fmt_str.indent_lines('%s' % self.watermarks, 4))
         lines.append('statistics')
-        lines.append(indent_lines('%s' % self.stats, 4))
+        lines.append(_damo_fmt_str.indent_lines('%s' % self.stats, 4))
         if self.tried_regions != None:
             lines.append('tried regions')
             for region in self.tried_regions:
-                lines.append(indent_lines('%s' % region, 4))
+                lines.append(_damo_fmt_str.indent_lines('%s' % region, 4))
         return '\n'.join(lines)
 
     def __eq__(self, other):
@@ -314,10 +311,10 @@ class DamonCtx:
         lines.append('nr_regions: %s' % self.nr_regions)
         lines.append('targets')
         for target in self.targets:
-            lines.append(indent_lines('%s' % target, 4))
+            lines.append(_damo_fmt_str.indent_lines('%s' % target, 4))
         lines.append('schemes')
         for scheme in self.schemes:
-            lines.append(indent_lines('%s' % scheme, 4))
+            lines.append(_damo_fmt_str.indent_lines('%s' % scheme, 4))
         return '\n'.join(lines)
 
     def __eq__(self, other):
@@ -339,7 +336,7 @@ class Kdamond:
         lines = ['%s (state: %s, pid: %s)' % (self.name, self.state, self.pid)]
         for ctx in self.contexts:
             lines.append('contexts')
-            lines.append(indent_lines('%s' % ctx, 4))
+            lines.append(_damo_fmt_str.indent_lines('%s' % ctx, 4))
         return '\n'.join(lines)
 
 features = ['record',       # was in DAMON patchset, but not merged in mainline
