@@ -39,7 +39,7 @@ def main(args=None):
         print('DAMON is not turned on')
         exit(1)
 
-    _damon.update_damos_tried_regions(0)
+    _damon.update_schemes_tried_regions(0)
     kdamonds = _damon.current_kdamonds()
     tried_regions = kdamonds[0].contexts[0].schemes[0].tried_regions
     aggr_interval_us = kdamonds[0].contexts[0].intervals.aggr

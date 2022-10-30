@@ -384,10 +384,10 @@ def commit_inputs(kdamonds):
 def update_schemes_stats(kdamond_idx):
     return _damon_fs.update_schemes_stats(kdamond_idx)
 
-def update_damos_tried_regions(kdamond_idx):
+def update_schemes_tried_regions(kdamond_idx):
     if _damon_fs == _damon_dbgfs:
         return 'DAMON debugfs doesn\'t support schemes tried regions'
-    return _damon_fs.update_damos_tried_regions(kdamond_idx)
+    return _damon_fs.update_schemes_tried_regions(kdamond_idx)
 
 def turn_damon(on_off, kdamonds):
     err = _damon_fs.turn_damon(on_off, kdamonds)

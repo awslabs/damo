@@ -97,7 +97,7 @@ def update_schemes_stats(kdamond_idx):
         'update_schemes_stats'})
 
 'Return error'
-def update_damos_tried_regions(kdamond_idx):
+def update_schemes_tried_regions(kdamond_idx):
     return _damo_fs.write_files({state_file_of(kdamond_idx):
         'update_schemes_tried_regions'})
 
