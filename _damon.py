@@ -145,7 +145,7 @@ class DamosQuota:
             '%s / %s per %s' % (
                 _damo_fmt_nr.format_sz(self.time_ms * 1000000, False),
                 _damo_fmt_nr.format_time(self.sz_bytes, False),
-                _damo_fmt_nr.format_sz(self.reset_interval_ms * 1000000,
+                _damo_fmt_nr.format_time(self.reset_interval_ms * 1000000,
                     False)),
             'priority: sz %d permil, nr_accesses %d permil, age %d permil' % (
                 self.weight_sz_permil, self.weight_nr_accesses_permil,
