@@ -575,7 +575,7 @@ def is_ongoing_target(args):
 
 def apply_explicit_args_damon(args):
     ctx = damon_ctx_from_damon_args(args)
-    kdamonds = [Kdamond('0', [ctx])]
+    kdamonds = [Kdamond(name='0', state=None, pid=None, contexts=[ctx])]
     apply_kdamonds(kdamonds)
     return kdamonds
 
@@ -588,6 +588,6 @@ def turn_implicit_args_damon_on(args, record_request):
     ctx = damon_ctx_from_damon_args(args)
     if feature_supported('record'):
         ctx.record_request = record_request
-    kdamonds = [Kdamond('0', [ctx])]
+    kdamonds = [Kdamond('0', state=None, pid=None, contexts=[ctx])]
     apply_kdamonds(kdamonds)
     return turn_damon('on', kdamonds), kdamonds
