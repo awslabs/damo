@@ -27,8 +27,10 @@ class DamonIntervals:
         self.ops_update = ops_update
 
     def __str__(self):
-        return 'sample %d us, aggr %d us, update %d us' % (
-                self.sample, self.aggr, self.ops_update)
+        return 'sample %s, aggr %s, update %s' % (
+                _damo_fmt_nr.format_time(self.sample * 1000, False),
+                _damo_fmt_nr.format_time(self.aggr * 1000, False),
+                _damo_fmt_nr.format_time(self.ops_update * 1000, False))
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
