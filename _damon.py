@@ -339,6 +339,8 @@ class Kdamond:
             lines.append(_damo_fmt_str.indent_lines('%s' % ctx, 4))
         return '\n'.join(lines)
 
+# System check
+
 features = ['record',       # was in DAMON patchset, but not merged in mainline
             'schemes',      # merged in v5.16
             'init_regions', # merged in v5.16 (90bebce9fcd6)
@@ -363,6 +365,64 @@ def ensure_root_permission():
     if os.geteuid() != 0:
         print('Run as root')
         exit(1)
+
+def feature_supported(feature):
+    return _damon_fs.feature_supported(feature)
+
+def initialize(args, skip_dirs_population=False):
+    global _damon_fs
+    if args.damon_interface == 'sysfs':
+        _damon_fs = _damon_sysfs
+    elif args.damon_interface == 'debugfs':
+        _damon_fs = _damon_dbgfs
+    elif args.damon_interface == 'auto':
+        err = _damon_sysfs.initialize(skip_dirs_population)
+        if err == None:
+            _damon_fs = _damon_sysfs
+        else:
+            _damon_fs = _damon_dbgfs
+
+    global pr_debug_log
+    if args.debug_damon:
+        pr_debug_log = True
+
+    return _damon_fs.initialize(skip_dirs_population)
+
+initialized = False
+def ensure_initialized(args, skip_dirs_population):
+    global initialized
+
+    if initialized:
+        return
+    err = initialize(args, skip_dirs_population)
+    if err != None:
+        print(err)
+        exit(1)
+    initialized = True
+
+def damon_interface():
+    if _damon_fs == _damon_sysfs:
+        return 'sysfs'
+    elif _damon_fs == _damon_dbgfs:
+        return 'debugfs'
+    print('something wrong')
+    raise Exception
+
+# DAMON fs read/write
+
+def _damon_fs_root():
+    if _damon_fs == _damon_dbgfs:
+        return _damon_dbgfs.debugfs_damon
+    return _damon_sysfs.admin_dir
+
+def read_damon_fs_from(path):
+    return _damo_fs.read_files_recursive(os.path.join(_damon_fs_root(), path))
+
+def read_damon_fs():
+    return _damo_fs.read_files_recursive(_damon_fs_root())
+
+def write_damon_fs(contents):
+    return _damo_fs.write_files({_damon_fs_root(): contents})
 
 # DAMON status reading
 
@@ -404,6 +464,8 @@ def turn_damon(on_off, kdamonds):
     else:   # on_off == 'off'
         while is_damon_running():
             time.sleep(1)
+
+# Kdamonds construction from command line arguments
 
 def target_has_pid(ops):
     return ops in ['vaddr', 'fvaddr']
@@ -478,61 +540,31 @@ def set_implicit_target_args_explicit(args):
 
     return
 
-def feature_supported(feature):
-    return _damon_fs.feature_supported(feature)
+# Command line processing helpers
 
-def initialize(args, skip_dirs_population=False):
-    global _damon_fs
-    if args.damon_interface == 'sysfs':
-        _damon_fs = _damon_sysfs
-    elif args.damon_interface == 'debugfs':
-        _damon_fs = _damon_dbgfs
-    elif args.damon_interface == 'auto':
-        err = _damon_sysfs.initialize(skip_dirs_population)
-        if err == None:
-            _damon_fs = _damon_sysfs
-        else:
-            _damon_fs = _damon_dbgfs
+def is_ongoing_target(args):
+    return args.target == 'ongoing'
 
-    global pr_debug_log
-    if args.debug_damon:
-        pr_debug_log = True
+def apply_explicit_args_damon(args):
+    ctx = damon_ctx_from_damon_args(args)
+    kdamonds = [Kdamond(name='0', state=None, pid=None, contexts=[ctx])]
+    apply_kdamonds(kdamonds)
+    return kdamonds
 
-    return _damon_fs.initialize(skip_dirs_population)
+def turn_explicit_args_damon_on(args):
+    kdamonds = apply_explicit_args_damon(args)
+    return turn_damon('on', kdamonds), kdamonds[0].contexts[0]
 
-initialized = False
-def ensure_initialized(args, skip_dirs_population):
-    global initialized
+def turn_implicit_args_damon_on(args, record_request):
+    set_implicit_target_args_explicit(args)
+    ctx = damon_ctx_from_damon_args(args)
+    if feature_supported('record'):
+        ctx.record_request = record_request
+    kdamonds = [Kdamond('0', state=None, pid=None, contexts=[ctx])]
+    apply_kdamonds(kdamonds)
+    return turn_damon('on', kdamonds), kdamonds
 
-    if initialized:
-        return
-    err = initialize(args, skip_dirs_population)
-    if err != None:
-        print(err)
-        exit(1)
-    initialized = True
-
-def _damon_fs_root():
-    if _damon_fs == _damon_dbgfs:
-        return _damon_dbgfs.debugfs_damon
-    return _damon_sysfs.admin_dir
-
-def read_damon_fs_from(path):
-    return _damo_fs.read_files_recursive(os.path.join(_damon_fs_root(), path))
-
-def read_damon_fs():
-    return _damo_fs.read_files_recursive(_damon_fs_root())
-
-def write_damon_fs(contents):
-    return _damo_fs.write_files({_damon_fs_root(): contents})
-
-def damon_interface():
-    if _damon_fs == _damon_sysfs:
-        return 'sysfs'
-    elif _damon_fs == _damon_dbgfs:
-        return 'debugfs'
-    print('something wrong')
-    raise Exception
+# Commandline options setup helpers
 
 def set_common_argparser(parser):
     parser.add_argument('--damon_interface',
@@ -581,25 +613,3 @@ def set_explicit_target_no_default_schemes_argparser(parser):
     set_explicit_target_monitoring_argparser(parser)
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
             type=str, help='data access monitoring-based operation schemes')
-
-def is_ongoing_target(args):
-    return args.target == 'ongoing'
-
-def apply_explicit_args_damon(args):
-    ctx = damon_ctx_from_damon_args(args)
-    kdamonds = [Kdamond(name='0', state=None, pid=None, contexts=[ctx])]
-    apply_kdamonds(kdamonds)
-    return kdamonds
-
-def turn_explicit_args_damon_on(args):
-    kdamonds = apply_explicit_args_damon(args)
-    return turn_damon('on', kdamonds), kdamonds[0].contexts[0]
-
-def turn_implicit_args_damon_on(args, record_request):
-    set_implicit_target_args_explicit(args)
-    ctx = damon_ctx_from_damon_args(args)
-    if feature_supported('record'):
-        ctx.record_request = record_request
-    kdamonds = [Kdamond('0', state=None, pid=None, contexts=[ctx])]
-    apply_kdamonds(kdamonds)
-    return turn_damon('on', kdamonds), kdamonds
