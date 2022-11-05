@@ -33,6 +33,39 @@ schemes written in the human readable format:
     # If a regions of a size >=2MiB keeps small access frequency for >=100ms,
     # avoid the region using huge pages (call madvise() with MADV_NOHUGEPAGE).
     2M      max     0       25      100ms   max nohugepage
+
+JSON is also supported, like below:
+    [
+	{
+	    "name": "0",
+	    "action": "stat",
+	    "access_pattern": {
+		"min_sz_bytes": 0,
+		"max_sz_bytes": 0,
+		"min_nr_accesses": 0,
+		"max_nr_accesses": 0,
+		"nr_accesses_unit": "sample_intervals",
+		"min_age": 0,
+		"max_age": 0,
+		"age_unit": "aggr_intervals"
+	    },
+	    "quotas": {
+		"time_ms": 0,
+		"sz_bytes": 0,
+		"reset_interval_ms": 0,
+		"weight_sz_permil": 0,
+		"weight_nr_accesses_permil": 0,
+		"weight_age_permil": 0
+	    },
+	    "watermarks": {
+		"metric": "none",
+		"interval_us": 0,
+		"high_permil": 0,
+		"mid_permil": 0,
+		"low_permil": 0
+	    }
+	}
+    ]
 """
 
 import argparse
