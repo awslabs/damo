@@ -36,6 +36,7 @@ schemes written in the human readable format:
 """
 
 import argparse
+import json
 import os
 import platform
 
@@ -196,6 +197,13 @@ def damo_schemes_to_damos(damo_schemes):
     if os.path.isfile(damo_schemes):
         with open(damo_schemes, 'r') as f:
             damo_schemes = f.read()
+
+    try:
+        kvpair = json.loads(damo_schemes)
+        return [_damon.kvpair_to_Damos(kv) for kv in kvpair]
+    except:
+        # The input is not json file
+        pass
 
     damos_list = []
     for idx, line in enumerate(
