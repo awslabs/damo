@@ -34,6 +34,12 @@ class TestDamon(unittest.TestCase):
         ctx_again = _damon.kvpair_to_DamonCtx(ctx_kvpair)
         self.assertEqual(ctx, ctx_again)
 
+
+        kdamond = _damon.Kdamond('bar', 'off', 123, [ctx])
+        kvpair = kdamond.to_kvpair()
+        kdamond_again = _damon.kvpair_to_Kdamond(kvpair)
+        self.assertEqual(kdamond, kdamond_again)
+
     def test_damos_eq(self):
         damos = _damon.Damos('0',
                 access_pattern=_damon.DamosAccessPattern(4096,

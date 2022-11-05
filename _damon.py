@@ -441,6 +441,9 @@ class Kdamond:
             lines.append(_damo_fmt_str.indent_lines('%s' % ctx, 4))
         return '\n'.join(lines)
 
+    def __eq__(self, other):
+        return self.__str__() == other.__str__()
+
     def to_kvpair(self):
         kv = {}
         kv['name'] = self.name
