@@ -363,6 +363,13 @@ class DamonRecord:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
+    def to_kvpair(self):
+        return {attr: getattr(self, attr) for attr in ['rfile_buf',
+            'rfile_path']}
+
+def kvpair_to_DamonRecord(kv):
+    return DamonRecord(kv['rfile_buf'], kv['rfile_path'])
+
 class DamonCtx:
     name = None
     intervals = None
@@ -396,6 +403,25 @@ class DamonCtx:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
+    def to_kvpair(self):
+        kv = {}
+        kv['name'] = self.name
+        kv['intervals'] = self.intervals.to_kvpair()
+        kv['nr_regions'] = self.nr_regions.to_kvpair()
+        kv['ops'] = self.ops
+        kv['targets'] = [t.to_kvpair() for t in self.targets]
+        kv['schemes'] = [s.to_kvpair() for s in self.schemes]
+        kv['record_request'] = (self.record_request.to_kvpair() if
+                self.record_request != None else None)
+        return kv
+
+def kvpair_to_DamonCtx(kv):
+    return DamonCtx(kv['name'], kvpair_to_DamonIntervals(kv['intervals']),
+            kvpair_to_DamonNrRegionsRange(kv['nr_regions']),
+            kv['ops'],
+            [kvpair_to_DamonTarget(t) for t in kv['targets']],
+            [kvpair_to_Damos(s) for s in kv['schemes']])
+
 class Kdamond:
     name = None
     state = None
@@ -414,6 +440,18 @@ class Kdamond:
             lines.append('contexts')
             lines.append(_damo_fmt_str.indent_lines('%s' % ctx, 4))
         return '\n'.join(lines)
+
+    def to_kvpair(self):
+        kv = {}
+        kv['name'] = self.name
+        kv['state'] = self.state
+        kv['pid'] = self.pid
+        kv['contexts'] = [c.to_kvpair() for c in self.contexts]
+        return kv
+
+def kvpair_to_Kdamond(kv):
+    return Kdamond(kv['name'], kv['state'], kv['pid'],
+        [kvpair_to_DamonCtx(c) for c in kv['contexts']])
 
 # System check
 
