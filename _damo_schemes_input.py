@@ -77,49 +77,12 @@ import platform
 import _damon
 import _damon_dbgfs
 
+import _damo_fmt_str
+
 uint_max = 2**32 - 1
 ulong_max = 2**64 - 1
 if platform.architecture()[0] != '64bit':
     ulong_max = 2**32 - 1
-
-unit_to_bytes = {'B': 1, 'K': 1024, 'M': 1024 * 1024, 'G': 1024 * 1024 * 1024,
-        'T': 1024 * 1024 * 1024 * 1024}
-
-def text_to_bytes(txt):
-    if txt == 'min':
-        return 0
-    if txt == 'max':
-        return ulong_max
-
-    if not txt[-1] in unit_to_bytes:
-        return int(txt)
-
-    unit = txt[-1]
-    number = float(txt[:-1])
-    return int(number * unit_to_bytes[unit])
-
-unit_to_usecs = {'us': 1, 'ms': 1000, 's': 1000 * 1000, 'm': 60 * 1000 * 1000,
-        'h': 60 * 60 * 1000 * 1000, 'd': 24 * 60 * 60 * 1000 * 1000}
-
-def text_to_us(txt):
-    if txt == 'min':
-        return 0
-    if txt == 'max':
-        return uint_max
-
-    if not txt[-2:] in unit_to_usecs and not txt[-1] in unit_to_usecs:
-        return float(txt)
-
-    unit = txt[-2:]
-    if unit in ['us', 'ms']:
-        number = float(txt[:-2])
-    else:
-        unit = txt[-1]
-        number = float(txt[:-1])
-    return number * unit_to_usecs[unit]
-
-def text_to_ms(txt):
-    return int(text_to_us(txt) / 1000)
 
 damos_action_to_int = {'willneed': 0, 'cold': 1, 'pageout': 2, 'hugepage': 3,
         'nohugepage': 4, 'stat': 5, 'lru_prio': 6, 'lru_deprio': 7}
@@ -153,13 +116,13 @@ def damo_scheme_to_damos(line, name):
                 line)
 
     try:
-        min_sz = text_to_bytes(fields[0])
-        max_sz = text_to_bytes(fields[1])
+        min_sz = _damo_fmt_str.text_to_bytes(fields[0])
+        max_sz = _damo_fmt_str.text_to_bytes(fields[1])
         min_nr_accesses = text_nr_accesses_percent(fields[2])
         max_nr_accesses = text_nr_accesses_percent(fields[3])
         nr_accesses_unit = 'percent'
-        min_age = text_to_us(fields[4])
-        max_age = text_to_us(fields[5])
+        min_age = _damo_fmt_str.text_to_us(fields[4])
+        max_age = _damo_fmt_str.text_to_us(fields[5])
         age_unit = 'usec'
         action_txt = fields[6].lower()
         quota_ms = 0
@@ -176,8 +139,8 @@ def damo_scheme_to_damos(line, name):
         wmarks_low = 0
         if len(fields) <= 17:
             if len(fields) >= 9:
-                quota_sz = text_to_bytes(fields[7])
-                window_ms = text_to_ms(fields[8])
+                quota_sz = _damo_fmt_str.text_to_bytes(fields[7])
+                window_ms = _damo_fmt_str.text_to_ms(fields[8])
             if len(fields) >= 12:
                 weight_sz = int(fields[9])
                 weight_nr_accesses = int(fields[10])
@@ -185,20 +148,20 @@ def damo_scheme_to_damos(line, name):
             if len(fields) == 17:
                 wmarks_txt = fields[12].lower()
                 wmarks_metric = text_to_damos_wmark_metric(fields[12])
-                wmarks_interval = text_to_us(fields[13])
+                wmarks_interval = _damo_fmt_str.text_to_us(fields[13])
                 wmarks_high = int(fields[14])
                 wmarks_mid = int(fields[15])
                 wmarks_low = int(fields[16])
         elif len(fields) == 18:
-            quota_ms = text_to_ms(fields[7])
-            quota_sz = text_to_bytes(fields[8])
-            window_ms = text_to_ms(fields[9])
+            quota_ms = _damo_fmt_str.text_to_ms(fields[7])
+            quota_sz = _damo_fmt_str.text_to_bytes(fields[8])
+            window_ms = _damo_fmt_str.text_to_ms(fields[9])
             weight_sz = int(fields[10])
             weight_nr_accesses = int(fields[11])
             weight_age = int(fields[12])
             wmarks_txt = fields[13].lower()
             wmarks_metric = text_to_damos_wmark_metric(fields[13])
-            wmarks_interval = text_to_us(fields[14])
+            wmarks_interval = _damo_fmt_str.text_to_us(fields[14])
             wmarks_high = int(fields[15])
             wmarks_mid = int(fields[16])
             wmarks_low = int(fields[17])
