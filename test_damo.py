@@ -12,7 +12,43 @@ import _damo_schemes_input
 
 class TestDamos(unittest.TestCase):
     def test_damo_schemes_to_damos(self):
-        txt = '''
+        inputs = [
+                # no comment
+                '''
+                [
+                    {
+                        "name": "0",
+                        "action": "stat",
+                        "access_pattern": {
+                            "min_sz_bytes": 0,
+                            "max_sz_bytes": 0,
+                            "min_nr_accesses": 0,
+                            "max_nr_accesses": 0,
+                            "nr_accesses_unit": "sample_intervals",
+                            "min_age": 0,
+                            "max_age": 0,
+                            "age_unit": "aggr_intervals"
+                        },
+                        "quotas": {
+                            "time_ms": 0,
+                            "sz_bytes": 0,
+                            "reset_interval_ms": 0,
+                            "weight_sz_permil": 0,
+                            "weight_nr_accesses_permil": 0,
+                            "weight_age_permil": 0
+                        },
+                        "watermarks": {
+                            "metric": "none",
+                            "interval_us": 0,
+                            "high_permil": 0,
+                            "mid_permil": 0,
+                            "low_permil": 0
+                        }
+                    }
+                ]
+                ''',
+                # with comments
+                '''
                 [
                     {
                         # some comment
@@ -45,15 +81,17 @@ class TestDamos(unittest.TestCase):
                         }
                     }
                 ]
-                '''
-        damos_list = _damo_schemes_input.damo_schemes_to_damos(txt)
-        expected = _damon.Damos('0',
-                    _damon.DamosAccessPattern(0, 0, 0, 0, 'sample_intervals',
-                        0, 0, 'aggr_intervals'),
-                    'stat',
-                    _damon.DamosQuota(0, 0, 0, 0, 0, 0),
-                    _damon.DamosWatermarks('none', 0, 0, 0, 0), None, None)
-        self.assertEqual(damos_list[0], expected)
+                ''',
+        ]
+        for txt in inputs:
+            damos_list = _damo_schemes_input.damo_schemes_to_damos(txt)
+            expected = _damon.Damos('0',
+                        _damon.DamosAccessPattern(0, 0, 0, 0,
+                            'sample_intervals', 0, 0, 'aggr_intervals'),
+                        'stat',
+                        _damon.DamosQuota(0, 0, 0, 0, 0, 0),
+                        _damon.DamosWatermarks('none', 0, 0, 0, 0), None, None)
+            self.assertEqual(damos_list[0], expected)
 
 class TestDamon(unittest.TestCase):
     def test_kvpairs_transition(self):
