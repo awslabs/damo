@@ -30,6 +30,14 @@ class TestDamon(unittest.TestCase):
 
 class TestDamonDbgfs(unittest.TestCase):
     def test_debugfs_output_to_damos(self):
+        _damon_dbgfs.feature_supports = {'init_regions': True, 'schemes': True,
+                'schemes_stat_qt_exceed': True, 'init_regions_target_idx':
+                True, 'schemes_prioritization': True, 'schemes_tried_regions':
+                False, 'record': False, 'schemes_quotas': True, 'fvaddr':
+                False, 'paddr': True, 'schemes_wmarks': True,
+                'schemes_speed_limit': True, 'schemes_stat_succ': True,
+                'vaddr': True}
+
         damos = _damon_dbgfs.debugfs_output_to_damos("4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
                 _damon.DamonIntervals(5000, 100000, 1000000))
         expected = _damon.Damos('0',
