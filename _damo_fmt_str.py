@@ -46,6 +46,9 @@ unit_to_bytes = {'B': 1, 'K': 1024, 'M': 1024 * 1024, 'G': 1024 * 1024 * 1024,
         'T': 1024 * 1024 * 1024 * 1024}
 
 def text_to_bytes(txt):
+    if type(txt) != str:
+        return txt
+
     if txt == 'min':
         return 0
     if txt == 'max':
@@ -62,6 +65,9 @@ unit_to_usecs = {'us': 1, 'ms': 1000, 's': 1000 * 1000, 'm': 60 * 1000 * 1000,
         'h': 60 * 60 * 1000 * 1000, 'd': 24 * 60 * 60 * 1000 * 1000}
 
 def text_to_us(txt):
+    if type(txt) != str:
+        return txt
+
     if txt == 'min':
         return 0
     if txt == 'max':
@@ -79,9 +85,15 @@ def text_to_us(txt):
     return number * unit_to_usecs[unit]
 
 def text_to_ms(txt):
+    if type(txt) != str:
+        return txt
+
     return int(text_to_us(txt) / 1000)
 
 def text_to_percent(txt):
+    if type(txt) != str:
+        return txt
+
     if txt == 'min':
         return 0.0
     if txt == 'max':
