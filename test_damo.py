@@ -9,6 +9,12 @@ import _damon_dbgfs
 import _damon_sysfs
 
 class TestDamon(unittest.TestCase):
+    def test_kvpair_transition(self):
+        target = _damon.DamonTarget('foo', 1234, [_damon.DamonRegion(10, 20)])
+        target_kvpair = target.to_kvpair()
+        target_again = _damon.kvpair_to_DamonTarget(target_kvpair)
+        self.assertEqual(target, target_again)
+
     def test_damos_eq(self):
         damos = _damon.Damos('0',
                 access_pattern=_damon.DamosAccessPattern(4096,

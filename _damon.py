@@ -35,6 +35,14 @@ class DamonIntervals:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
+    def to_kvpair(self):
+        return {attr: getattr(self, attr) for attr in
+                ['sample', 'aggr', 'ops_update']}
+
+def kvpair_to_DamonIntervals(kvpair):
+    return DamonIntervals(
+            kvpair['sample'], kvpair['aggr'], kvpair['ops_update'])
+
 class DamonNrRegionsRange:
     min_nr_regions = None
     max_nr_regions = None
@@ -48,6 +56,14 @@ class DamonNrRegionsRange:
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
+
+    def to_kvpair(self):
+        return {attr: getattr(self, attr) for attr in
+                ['min_nr_regions', 'max_nr_regions']}
+
+def kvpair_to_DamonNrRegionsRange(kvpair):
+    return DamonNrRegionsRange(
+            kvpair['min_nr_regions'], kvpair['max_nr_regions'])
 
 class DamonRegion:
     # [star, end)
@@ -64,6 +80,12 @@ class DamonRegion:
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
+
+    def to_kvpair(self):
+        return {attr: getattr(self, attr) for attr in ['start', 'end']}
+
+def kvpair_to_DamonRegion(kvpair):
+    return DamonRegion(kvpair['start'], kvpair['end'])
 
 class DamonTarget:
     name = None
@@ -83,6 +105,15 @@ class DamonTarget:
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
+
+    def to_kvpair(self):
+        kvp = {attr: getattr(self, attr) for attr in ['name', 'pid']}
+        kvp['regions'] = [r.to_kvpair() for r in self.regions]
+        return kvp
+
+def kvpair_to_DamonTarget(kvpair):
+    regions = [kvpair_to_DamonRegion(kvp) for kvp in kvpair['regions']]
+    return DamonTarget(kvpair['name'], kvpair['pid'], regions)
 
 class DamosAccessPattern:
     min_sz_bytes = None
