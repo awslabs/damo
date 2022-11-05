@@ -83,7 +83,7 @@ def main(args=None):
     if args.target == 'kdamonds':
         kdamonds = _damon.current_kdamonds()
         if args.json:
-            print(json.dumps([k.to_kvpair() for k in kdamonds],
+            print(json.dumps([k.to_kvpairs() for k in kdamonds],
                 indent=4, sort_keys=True))
         else:
             print('kdamonds')

@@ -55,10 +55,10 @@ class TestDamos(unittest.TestCase):
         self.assertEqual(damos_list[0], expected)
 
 class TestDamon(unittest.TestCase):
-    def test_kvpair_transition(self):
+    def test_kvpairs_transition(self):
         target = _damon.DamonTarget('foo', 1234, [_damon.DamonRegion(10, 20)])
-        target_kvpair = target.to_kvpair()
-        target_again = _damon.kvpair_to_DamonTarget(target_kvpair)
+        target_kvpairs = target.to_kvpairs()
+        target_again = _damon.kvpairs_to_DamonTarget(target_kvpairs)
         self.assertEqual(target, target_again)
 
         damos = _damon.Damos('foo',
@@ -68,22 +68,22 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosQuota(100, 1024, 1000, 80, 76, 24),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
                     200), None, None)
-        damos_kvpair = damos.to_kvpair()
-        damos_again = _damon.kvpair_to_Damos(damos_kvpair)
+        damos_kvpairs = damos.to_kvpairs()
+        damos_again = _damon.kvpairs_to_Damos(damos_kvpairs)
         self.assertEqual(damos, damos_again)
 
         ctx = _damon.DamonCtx('test_ctx',
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000),
                 'paddr', [target], [damos])
-        ctx_kvpair = ctx.to_kvpair()
-        ctx_again = _damon.kvpair_to_DamonCtx(ctx_kvpair)
+        ctx_kvpairs = ctx.to_kvpairs()
+        ctx_again = _damon.kvpairs_to_DamonCtx(ctx_kvpairs)
         self.assertEqual(ctx, ctx_again)
 
 
         kdamond = _damon.Kdamond('bar', 'off', 123, [ctx])
-        kvpair = kdamond.to_kvpair()
-        kdamond_again = _damon.kvpair_to_Kdamond(kvpair)
+        kvpairs = kdamond.to_kvpairs()
+        kdamond_again = _damon.kvpairs_to_Kdamond(kvpairs)
         self.assertEqual(kdamond, kdamond_again)
 
     def test_damos_eq(self):

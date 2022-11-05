@@ -35,13 +35,13 @@ class DamonIntervals:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         return {attr: getattr(self, attr) for attr in
                 ['sample', 'aggr', 'ops_update']}
 
-def kvpair_to_DamonIntervals(kvpair):
+def kvpairs_to_DamonIntervals(kvpairs):
     return DamonIntervals(
-            kvpair['sample'], kvpair['aggr'], kvpair['ops_update'])
+            kvpairs['sample'], kvpairs['aggr'], kvpairs['ops_update'])
 
 class DamonNrRegionsRange:
     min_nr_regions = None
@@ -57,13 +57,13 @@ class DamonNrRegionsRange:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         return {attr: getattr(self, attr) for attr in
                 ['min_nr_regions', 'max_nr_regions']}
 
-def kvpair_to_DamonNrRegionsRange(kvpair):
+def kvpairs_to_DamonNrRegionsRange(kvpairs):
     return DamonNrRegionsRange(
-            kvpair['min_nr_regions'], kvpair['max_nr_regions'])
+            kvpairs['min_nr_regions'], kvpairs['max_nr_regions'])
 
 class DamonRegion:
     # [star, end)
@@ -81,11 +81,11 @@ class DamonRegion:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         return {attr: getattr(self, attr) for attr in ['start', 'end']}
 
-def kvpair_to_DamonRegion(kvpair):
-    return DamonRegion(kvpair['start'], kvpair['end'])
+def kvpairs_to_DamonRegion(kvpairs):
+    return DamonRegion(kvpairs['start'], kvpairs['end'])
 
 class DamonTarget:
     name = None
@@ -106,14 +106,14 @@ class DamonTarget:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         kvp = {attr: getattr(self, attr) for attr in ['name', 'pid']}
-        kvp['regions'] = [r.to_kvpair() for r in self.regions]
+        kvp['regions'] = [r.to_kvpairs() for r in self.regions]
         return kvp
 
-def kvpair_to_DamonTarget(kvpair):
-    regions = [kvpair_to_DamonRegion(kvp) for kvp in kvpair['regions']]
-    return DamonTarget(kvpair['name'], kvpair['pid'], regions)
+def kvpairs_to_DamonTarget(kvpairs):
+    regions = [kvpairs_to_DamonRegion(kvp) for kvp in kvpairs['regions']]
+    return DamonTarget(kvpairs['name'], kvpairs['pid'], regions)
 
 class DamosAccessPattern:
     min_sz_bytes = None
@@ -157,13 +157,13 @@ class DamosAccessPattern:
                 self.min_age == other.min_age and self.max_age == other.max_age
                 and self.age_unit == other.age_unit)
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         return {attr: getattr(self, attr) for attr in [
             'min_sz_bytes', 'max_sz_bytes', 'min_nr_accesses',
             'max_nr_accesses', 'nr_accesses_unit', 'min_age', 'max_age',
             'age_unit']}
 
-def kvpair_to_DamosAccessPattern(kv):
+def kvpairs_to_DamosAccessPattern(kv):
     return DamosAccessPattern(kv['min_sz_bytes'], kv['max_sz_bytes'],
             kv['min_nr_accesses'], kv['max_nr_accesses'],
             kv['nr_accesses_unit'], kv['min_age'], kv['max_age'],
@@ -206,12 +206,12 @@ class DamosQuota:
                 other.weight_nr_accesses_permil and self.weight_age_permil ==
                 other.weight_age_permil)
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         return {attr: getattr(self, attr) for attr in [
             'time_ms', 'sz_bytes', 'reset_interval_ms', 'weight_sz_permil',
             'weight_nr_accesses_permil', 'weight_age_permil']}
 
-def kvpair_to_DamosQuota(kv):
+def kvpairs_to_DamosQuota(kv):
     return DamosQuota(kv['time_ms'], kv['sz_bytes'], kv['reset_interval_ms'],
             kv['weight_sz_permil'], kv['weight_nr_accesses_permil'],
             kv['weight_age_permil'])
@@ -245,12 +245,12 @@ class DamosWatermarks:
                 other.high_permil and self.mid_permil == other.mid_permil and
                 self.low_permil == other.low_permil)
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         return {attr: getattr(self, attr) for attr in [
             'metric', 'interval_us', 'high_permil', 'mid_permil',
             'low_permil']}
 
-def kvpair_to_DamosWatermarks(kv):
+def kvpairs_to_DamosWatermarks(kv):
     return DamosWatermarks(*[kv[x] for x in
         ['metric', 'interval_us', 'high_permil', 'mid_permil', 'low_permil']])
 
@@ -335,18 +335,18 @@ class Damos:
                 other.action and self.quotas == other.quotas and
                 self.watermarks == other.watermarks)
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         kv = {attr: getattr(self, attr) for attr in ['name', 'action']}
-        kv['access_pattern'] = self.access_pattern.to_kvpair()
-        kv['quotas'] = self.quotas.to_kvpair()
-        kv['watermarks'] = self.watermarks.to_kvpair()
+        kv['access_pattern'] = self.access_pattern.to_kvpairs()
+        kv['quotas'] = self.quotas.to_kvpairs()
+        kv['watermarks'] = self.watermarks.to_kvpairs()
         return kv
 
-def kvpair_to_Damos(kv):
+def kvpairs_to_Damos(kv):
     return Damos(kv['name'],
-            kvpair_to_DamosAccessPattern(kv['access_pattern']), kv['action'],
-            kvpair_to_DamosQuota(kv['quotas']),
-            kvpair_to_DamosWatermarks(kv['watermarks']), None, None)
+            kvpairs_to_DamosAccessPattern(kv['access_pattern']), kv['action'],
+            kvpairs_to_DamosQuota(kv['quotas']),
+            kvpairs_to_DamosWatermarks(kv['watermarks']), None, None)
 
 class DamonRecord:
     rfile_buf = None
@@ -363,11 +363,11 @@ class DamonRecord:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         return {attr: getattr(self, attr) for attr in ['rfile_buf',
             'rfile_path']}
 
-def kvpair_to_DamonRecord(kv):
+def kvpairs_to_DamonRecord(kv):
     return DamonRecord(kv['rfile_buf'], kv['rfile_path'])
 
 class DamonCtx:
@@ -403,24 +403,24 @@ class DamonCtx:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         kv = {}
         kv['name'] = self.name
-        kv['intervals'] = self.intervals.to_kvpair()
-        kv['nr_regions'] = self.nr_regions.to_kvpair()
+        kv['intervals'] = self.intervals.to_kvpairs()
+        kv['nr_regions'] = self.nr_regions.to_kvpairs()
         kv['ops'] = self.ops
-        kv['targets'] = [t.to_kvpair() for t in self.targets]
-        kv['schemes'] = [s.to_kvpair() for s in self.schemes]
-        kv['record_request'] = (self.record_request.to_kvpair() if
+        kv['targets'] = [t.to_kvpairs() for t in self.targets]
+        kv['schemes'] = [s.to_kvpairs() for s in self.schemes]
+        kv['record_request'] = (self.record_request.to_kvpairs() if
                 self.record_request != None else None)
         return kv
 
-def kvpair_to_DamonCtx(kv):
-    return DamonCtx(kv['name'], kvpair_to_DamonIntervals(kv['intervals']),
-            kvpair_to_DamonNrRegionsRange(kv['nr_regions']),
+def kvpairs_to_DamonCtx(kv):
+    return DamonCtx(kv['name'], kvpairs_to_DamonIntervals(kv['intervals']),
+            kvpairs_to_DamonNrRegionsRange(kv['nr_regions']),
             kv['ops'],
-            [kvpair_to_DamonTarget(t) for t in kv['targets']],
-            [kvpair_to_Damos(s) for s in kv['schemes']])
+            [kvpairs_to_DamonTarget(t) for t in kv['targets']],
+            [kvpairs_to_Damos(s) for s in kv['schemes']])
 
 class Kdamond:
     name = None
@@ -444,17 +444,17 @@ class Kdamond:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpair(self):
+    def to_kvpairs(self):
         kv = {}
         kv['name'] = self.name
         kv['state'] = self.state
         kv['pid'] = self.pid
-        kv['contexts'] = [c.to_kvpair() for c in self.contexts]
+        kv['contexts'] = [c.to_kvpairs() for c in self.contexts]
         return kv
 
-def kvpair_to_Kdamond(kv):
+def kvpairs_to_Kdamond(kv):
     return Kdamond(kv['name'], kv['state'], kv['pid'],
-        [kvpair_to_DamonCtx(c) for c in kv['contexts']])
+        [kvpairs_to_DamonCtx(c) for c in kv['contexts']])
 
 # System check
 
