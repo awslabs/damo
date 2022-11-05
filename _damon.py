@@ -22,9 +22,9 @@ class DamonIntervals:
     ops_update = None
 
     def __init__(self, sample, aggr, ops_update):
-        self.sample = sample
-        self.aggr = aggr
-        self.ops_update = ops_update
+        self.sample = _damo_fmt_str.text_to_us(sample)
+        self.aggr = _damo_fmt_str.text_to_us(aggr)
+        self.ops_update = _damo_fmt_str.text_to_us(ops_update)
 
     def __str__(self):
         return 'sample %s, aggr %s, update %s' % (
@@ -128,13 +128,25 @@ class DamosAccessPattern:
     def __init__(self, min_sz_bytes, max_sz_bytes,
             min_nr_accesses, max_nr_accesses, nr_accesses_unit,
             min_age, max_age, age_unit):
-        self.min_sz_bytes = min_sz_bytes
-        self.max_sz_bytes = max_sz_bytes
-        self.min_nr_accesses = min_nr_accesses
-        self.max_nr_accesses = max_nr_accesses
+        self.min_sz_bytes = _damo_fmt_str.text_to_bytes(min_sz_bytes)
+        self.max_sz_bytes = _damo_fmt_str.text_to_bytes(max_sz_bytes)
+
+        if nr_accesses_unit == 'percent':
+            self.min_nr_accesses = _damo_fmt_str.text_to_percent(
+                    min_nr_accesses)
+            self.max_nr_accesses = _damo_fmt_str.text_to_percent(
+                    max_nr_accesses)
+        else:
+            self.min_nr_accesses = min_nr_accesses
+            self.max_nr_accesses = max_nr_accesses
         self.nr_accesses_unit = nr_accesses_unit
-        self.min_age = min_age
-        self.max_age = max_age
+
+        if age_unit == 'usec':
+            self.min_age = _damo_fmt_str.text_to_us(min_age)
+            self.max_age = _damo_fmt_str.text_to_us(max_age)
+        else:
+            self.min_age = min_age
+            self.max_age = max_age
         self.age_unit = age_unit
 
     def __str__(self):
@@ -179,9 +191,9 @@ class DamosQuota:
 
     def __init__(self, time_ms, sz_bytes, reset_interval_ms, weight_sz_permil,
             weight_nr_accesses_permil, weight_age_permil):
-        self.time_ms = time_ms
-        self.sz_bytes = sz_bytes
-        self.reset_interval_ms = reset_interval_ms
+        self.time_ms = _damo_fmt_str.text_to_ms(time_ms)
+        self.sz_bytes = _damo_fmt_str.text_to_bytes(sz_bytes)
+        self.reset_interval_ms = _damo_fmt_str.text_to_ms(reset_interval_ms)
         self.weight_sz_permil = weight_sz_permil
         self.weight_nr_accesses_permil = weight_nr_accesses_permil
         self.weight_age_permil = weight_age_permil
@@ -226,7 +238,7 @@ class DamosWatermarks:
     def __init__(self, metric, interval_us, high, mid, low):
         # 'none' or 'free_mem_rate'
         self.metric = metric
-        self.interval_us = interval_us
+        self.interval_us = _damo_fmt_str.text_to_us(interval_us)
         self.high_permil = high
         self.mid_permil = mid
         self.low_permil = low
@@ -353,7 +365,7 @@ class DamonRecord:
     rfile_path = None
 
     def __init__(self, rfile_buf, rfile_path):
-        self.rfile_buf = rfile_buf
+        self.rfile_buf = _damo_fmt_str.text_to_bytes(rfile_buf)
         self.rfile_path = rfile_path
 
     def __str__(self):
