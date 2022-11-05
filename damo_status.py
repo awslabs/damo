@@ -10,6 +10,8 @@ def set_argparser(parser):
     parser.add_argument('target', choices=['schemes_stats',
         'schemes_tried_regions', 'kdamonds', 'all', 'damon_interface'],
             nargs='?', default='kdamonds', help='What status to show')
+    parser.add_argument('--json', action='store_true',
+            help='print kdamond in json format')
     _damon.set_common_argparser(parser)
 
 def pr_schemes_stats(damon_fs_content):
@@ -79,9 +81,14 @@ def main(args=None):
         _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_stats'})
     content = _damon.read_damon_fs()
     if args.target == 'kdamonds':
-        print('kdamonds')
-        print(_damo_fmt_str.indent_lines(
-            '\n\n'.join(['%s' % k for k in _damon.current_kdamonds()]), 4))
+        kdamonds = _damon.current_kdamonds()
+        if args.json:
+            print(json.dumps([k.to_kvpair() for k in kdamonds],
+                indent=4, sort_keys=True))
+        else:
+            print('kdamonds')
+            print(_damo_fmt_str.indent_lines(
+                '\n\n'.join(['%s' % k for k in kdamonds]), 4))
     if args.target == 'all':
         print(json.dumps(content, indent=4, sort_keys=True))
     elif args.target == 'schemes_stats':
