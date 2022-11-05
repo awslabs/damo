@@ -15,6 +15,7 @@ class TestDamos(unittest.TestCase):
         txt = '''
                 [
                     {
+                        # some comment
                         "name": "0",
                         "action": "stat",
                         "access_pattern": {

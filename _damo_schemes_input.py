@@ -34,8 +34,9 @@ schemes written in the human readable format:
     # avoid the region using huge pages (call madvise() with MADV_NOHUGEPAGE).
     2M      max     0       25      100ms   max nohugepage
 
-JSON is also supported, like below:
+Comments-supporting JSON is also supported, like below:
     [
+        # Just for monitoring
 	{
 	    "name": "0",
 	    "action": "stat",
@@ -214,12 +215,15 @@ def damo_scheme_to_damos(line, name):
         _damon.DamosWatermarks(wmarks_txt, wmarks_interval, wmarks_high,
             wmarks_mid, wmarks_low), None), None
 
-def damo_schemes_split_remove_comments(schemes):
+def damo_schemes_remove_comments(txt):
+    return '\n'.join(
+            [l for l in txt.strip().split('\n')
+                if not l.strip().startswith('#')])
+
+def damo_schemes_split(schemes):
     raw_lines = schemes.split('\n')
     clean_lines = []
     for line in raw_lines:
-        if line.startswith('#'):
-            continue
         line = line.strip()
         if line == '':
             continue
@@ -231,6 +235,8 @@ def damo_schemes_to_damos(damo_schemes):
         with open(damo_schemes, 'r') as f:
             damo_schemes = f.read()
 
+    damo_schemes = damo_schemes_remove_comments(damo_schemes)
+
     try:
         kvpairs = json.loads(damo_schemes)
         return [_damon.kvpairs_to_Damos(kv) for kv in kvpairs]
@@ -239,8 +245,7 @@ def damo_schemes_to_damos(damo_schemes):
         pass
 
     damos_list = []
-    for idx, line in enumerate(
-            damo_schemes_split_remove_comments(damo_schemes)):
+    for idx, line in enumerate(damo_schemes_split(damo_schemes)):
         damos, err = damo_scheme_to_damos(line, '%d' % idx)
         if err != None:
             print('given scheme is neither file nor proper scheme string (%s)'
