@@ -15,6 +15,17 @@ class TestDamon(unittest.TestCase):
         target_again = _damon.kvpair_to_DamonTarget(target_kvpair)
         self.assertEqual(target, target_again)
 
+        damos = _damon.Damos('foo',
+                _damon.DamosAccessPattern(0, 10, 5, 8, 'percent', 54, 88,
+                    'usec'),
+                'pageout',
+                _damon.DamosQuota(100, 1024, 1000, 80, 76, 24),
+                _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
+                    200), None, None)
+        damos_kvpair = damos.to_kvpair()
+        damos_again = _damon.kvpair_to_Damos(damos_kvpair)
+        self.assertEqual(damos, damos_again)
+
     def test_damos_eq(self):
         damos = _damon.Damos('0',
                 access_pattern=_damon.DamosAccessPattern(4096,

@@ -157,6 +157,18 @@ class DamosAccessPattern:
                 self.min_age == other.min_age and self.max_age == other.max_age
                 and self.age_unit == other.age_unit)
 
+    def to_kvpair(self):
+        return {attr: getattr(self, attr) for attr in [
+            'min_sz_bytes', 'max_sz_bytes', 'min_nr_accesses',
+            'max_nr_accesses', 'nr_accesses_unit', 'min_age', 'max_age',
+            'age_unit']}
+
+def kvpair_to_DamosAccessPattern(kv):
+    return DamosAccessPattern(kv['min_sz_bytes'], kv['max_sz_bytes'],
+            kv['min_nr_accesses'], kv['max_nr_accesses'],
+            kv['nr_accesses_unit'], kv['min_age'], kv['max_age'],
+            kv['age_unit'])
+
 class DamosQuota:
     time_ms = None
     sz_bytes = None
@@ -194,6 +206,16 @@ class DamosQuota:
                 other.weight_nr_accesses_permil and self.weight_age_permil ==
                 other.weight_age_permil)
 
+    def to_kvpair(self):
+        return {attr: getattr(self, attr) for attr in [
+            'time_ms', 'sz_bytes', 'reset_interval_ms', 'weight_sz_permil',
+            'weight_nr_accesses_permil', 'weight_age_permil']}
+
+def kvpair_to_DamosQuota(kv):
+    return DamosQuota(kv['time_ms'], kv['sz_bytes'], kv['reset_interval_ms'],
+            kv['weight_sz_permil'], kv['weight_nr_accesses_permil'],
+            kv['weight_age_permil'])
+
 class DamosWatermarks:
     metric = None
     interval_us = None
@@ -202,6 +224,7 @@ class DamosWatermarks:
     low_permil = None
 
     def __init__(self, metric, interval_us, high, mid, low):
+        # 'none' or 'free_mem_rate'
         self.metric = metric
         self.interval_us = interval_us
         self.high_permil = high
@@ -221,6 +244,15 @@ class DamosWatermarks:
                 self.interval_us == other.interval_us and self.high_permil ==
                 other.high_permil and self.mid_permil == other.mid_permil and
                 self.low_permil == other.low_permil)
+
+    def to_kvpair(self):
+        return {attr: getattr(self, attr) for attr in [
+            'metric', 'interval_us', 'high_permil', 'mid_permil',
+            'low_permil']}
+
+def kvpair_to_DamosWatermarks(kv):
+    return DamosWatermarks(*[kv[x] for x in
+        ['metric', 'interval_us', 'high_permil', 'mid_permil', 'low_permil']])
 
 class DamosStats:
     nr_tried = None
@@ -302,6 +334,19 @@ class Damos:
                 self.access_pattern == other.access_pattern and self.action ==
                 other.action and self.quotas == other.quotas and
                 self.watermarks == other.watermarks)
+
+    def to_kvpair(self):
+        kv = {attr: getattr(self, attr) for attr in ['name', 'action']}
+        kv['access_pattern'] = self.access_pattern.to_kvpair()
+        kv['quotas'] = self.quotas.to_kvpair()
+        kv['watermarks'] = self.watermarks.to_kvpair()
+        return kv
+
+def kvpair_to_Damos(kv):
+    return Damos(kv['name'],
+            kvpair_to_DamosAccessPattern(kv['access_pattern']), kv['action'],
+            kvpair_to_DamosQuota(kv['quotas']),
+            kvpair_to_DamosWatermarks(kv['watermarks']), None, None)
 
 class DamonRecord:
     rfile_buf = None
