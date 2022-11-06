@@ -22,12 +22,7 @@ def main(args=None):
     _damon.ensure_root_permission()
     _damon.ensure_initialized(args, True)
 
-    any_kdamond_running = False
-    for kd_name in _damon.current_kdamond_names():
-        if _damon.is_kdamond_running(kd_name):
-            any_kdamond_running = True
-            break
-    if not any_kdamond_running:
+    if _damon.every_kdamond_turned_off():
         print('DAMON is not turned on')
         exit(1)
 

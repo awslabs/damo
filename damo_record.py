@@ -51,12 +51,7 @@ def cleanup_exit(exit_code):
         rfile_current_format = 'record'
 
     if not data_for_cleanup.target_is_ongoing:
-        any_kdamond_running = False
-        for kd_name in _damon.current_kdamond_names():
-            if _damon.is_kdamond_running(kd_name):
-                any_kdamond_running = True
-                break
-        if any_kdamond_running:
+        if _damon.any_kdamond_running():
             if data_for_cleanup.kdamonds == None:
                 # turn on failed
                 pass
@@ -168,8 +163,7 @@ def main(args=None):
 
     if not _damon.is_ongoing_target(args) and args.self_started_target == True:
         os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
-    while _damon.is_kdamond_running(kdamonds[0].name):
-        time.sleep(1)
+    _damon.wait_current_kdamonds_turned('off')
 
     cleanup_exit(0)
 
