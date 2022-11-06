@@ -591,11 +591,13 @@ def turn_damon(on_off, kdamonds):
     if err:
         return err
     if on_off == 'on':
-        while not is_damon_running():
-            time.sleep(1)
+        for kdname in current_kdamond_names():
+            while not is_kdamond_running(kdname):
+                time.sleep(1)
     else:   # on_off == 'off'
-        while is_damon_running():
-            time.sleep(1)
+        for kdname in current_kdamond_names():
+            while is_kdamond_running(kdname):
+                time.sleep(1)
 
 # Kdamonds construction from command line arguments
 
