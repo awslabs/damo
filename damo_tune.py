@@ -25,7 +25,12 @@ def main(args=None):
         print('tune does not support debugfs interface')
         exit(1)
 
-    if not _damon.is_damon_running():
+    any_kdamond_running = False
+    for kd_name in _damon.current_kdamond_names():
+        if _damon.is_kdamond_running(kd_name):
+            any_kdamond_running = True
+            break
+    if not any_kdamond_running:
         print('DAMON is not turned on')
         exit(1)
 

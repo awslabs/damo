@@ -77,7 +77,12 @@ def main(args=None):
     _damon.ensure_root_permission()
     _damon.ensure_initialized(args, True)
 
-    if _damon.is_damon_running():
+    any_kdamond_running = False
+    for kdamond_name in _damon.current_kdamond_names():
+        if _damon.is_kdamond_running(kdamond_name):
+            any_kdamond_running = True
+            break
+    if any_kdamond_running:
         _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_stats'})
     content = _damon.read_damon_fs()
     if args.target == 'kdamonds':
