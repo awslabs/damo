@@ -174,6 +174,9 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(damos, damos)
 
 class TestDamonDbgfs(unittest.TestCase):
+    def test_current_kdamond_names(self):
+        self.assertEqual(_damon_dbgfs.current_kdamond_names(), ['0'])
+
     def test_debugfs_output_to_damos(self):
         _damon_dbgfs.feature_supports = {'init_regions': True, 'schemes': True,
                 'schemes_stat_qt_exceed': True, 'init_regions_target_idx':
