@@ -15,9 +15,12 @@ import _damon
 import _damo_paddr_layout
 
 def cleanup_exit(exit_code):
-    if _damon.is_damon_running():
-        if _damon.turn_damon('off', kdamonds):
-            print('failed to turn damon off!')
+    kdamonds_to_turn_off = []
+    for kdamond in kdamonds:
+        if _damon.is_kdamond_running(kdamond.name):
+            kdamonds_to_turn_off.append(kdamond)
+    if _damon.turn_damon('off', kdamonds_to_turn_off):
+        print('failed to turn damon off!')
     _damon.apply_kdamonds(orig_kdamonds)
     exit(exit_code)
 
@@ -56,7 +59,7 @@ def main(args=None):
     if args.self_started_target == True:
         os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
     # damon will turn it off by itself if the target tasks are terminated.
-    while _damon.is_damon_running():
+    while _damon.is_kdamond_running(kdamonds[0].name):
         time.sleep(1)
 
     cleanup_exit(0)
