@@ -567,6 +567,16 @@ def current_kdamonds():
 def current_kdamond_names():
     return _damon_fs.current_kdamond_names()
 
+def wait_current_kdamonds_turned(on_off):
+    if not on_off in ['on', 'off']:
+        print('wait_current_kdamonds_turned() called with \'%s\'' % on_off)
+        exit(1)
+    for kd_name in current_kdamond_names():
+        running = is_kdamond_running(kd_name)
+        while (on_off == 'on' and not running) or (
+                on_off == 'off' and running):
+            time.sleep(1)
+
 # DAMON control
 
 def apply_kdamonds(kdamonds):
@@ -590,14 +600,8 @@ def turn_damon(on_off, kdamonds):
     err = _damon_fs.turn_damon(on_off, kdamonds)
     if err:
         return err
-    if on_off == 'on':
-        for kdname in current_kdamond_names():
-            while not is_kdamond_running(kdname):
-                time.sleep(1)
-    else:   # on_off == 'off'
-        for kdname in current_kdamond_names():
-            while is_kdamond_running(kdname):
-                time.sleep(1)
+    # Early version of DAMON kernel turns it on/off asynchronously
+    wait_current_kdamonds_turned(on_off)
 
 # Kdamonds construction from command line arguments
 
