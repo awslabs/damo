@@ -139,7 +139,7 @@ def update_supported_features():
     if err != None:
         return err
 
-    if is_damon_running():
+    if _damon.any_kdamond_running():
         return 'debugfs feature update cannot be done while DAMON running'
 
     if debugfs_record != None:
