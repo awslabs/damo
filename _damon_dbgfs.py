@@ -281,6 +281,10 @@ def current_kdamonds():
     return files_content_to_kdamonds(
             _damo_fs.read_files_recursive(debugfs_damon))
 
+def current_kdamond_names():
+    # TODO: Support created kdamonds
+    return ['0']
+
 def get_scheme_version():
     scheme_version = 0
     if feature_supported('schemes_speed_limit'):

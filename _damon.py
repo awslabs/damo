@@ -564,6 +564,9 @@ def is_kdamond_running(kdamond_name):
 def current_kdamonds():
     return _damon_fs.current_kdamonds()
 
+def current_kdamond_names():
+    return _damon_fs.current_kdamond_names()
+
 # DAMON control
 
 def apply_kdamonds(kdamonds):
