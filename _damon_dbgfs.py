@@ -25,10 +25,6 @@ debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 def turn_damon(on_off, kdamonds):
     return _damo_fs.write_files({debugfs_monitor_on: on_off})
 
-def is_damon_running():
-    result = _damo_fs.read_files_recursive(debugfs_damon)
-    return result['monitor_on'].strip() == 'on'
-
 def is_kdamond_running(kdamond_name):
     content, err = _damo_fs.read_file(debugfs_monitor_on)
     if err != None:

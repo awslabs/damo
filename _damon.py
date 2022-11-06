@@ -555,9 +555,6 @@ def write_damon_fs(contents):
 
 # DAMON status reading
 
-def is_damon_running():
-    return _damon_fs.is_damon_running()
-
 def is_kdamond_running(kdamond_name):
     return _damon_fs.is_kdamond_running(kdamond_name)
 

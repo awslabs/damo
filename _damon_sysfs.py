@@ -91,9 +91,6 @@ def __is_damon_running(kdamond_idx):
 def is_kdamond_running(kdamond_name):
     return __is_damon_running(kdamond_name)
 
-def is_damon_running():
-    return __is_damon_running(0)
-
 'Return error'
 def update_schemes_stats(kdamond_idx):
     return _damo_fs.write_files({state_file_of(kdamond_idx):
