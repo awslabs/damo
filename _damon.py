@@ -559,7 +559,7 @@ def is_damon_running():
     return _damon_fs.is_damon_running()
 
 def is_kdamond_running(kdamond_name):
-    return _damon_fs.is_kdamond_running()
+    return _damon_fs.is_kdamond_running(kdamond_name)
 
 def current_kdamonds():
     return _damon_fs.current_kdamonds()
