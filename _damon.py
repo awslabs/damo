@@ -588,6 +588,7 @@ def wait_current_kdamonds_turned(on_off):
         while (on_off == 'on' and not running) or (
                 on_off == 'off' and running):
             time.sleep(1)
+            running = is_kdamond_running(kd_name)
 
 # DAMON control
 
