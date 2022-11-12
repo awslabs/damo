@@ -78,7 +78,11 @@ def main(args=None):
     _damon.ensure_initialized(args, True)
 
     if _damon.any_kdamond_running():
-        _damon.write_damon_fs({'kdamonds/0/state': 'update_schemes_stats'})
+        for name in _damon.current_kdamond_names():
+            err = _damon.update_schemes_stats()
+            if err != None:
+                print('update schemes stat fil:', err)
+                exit(1)
     content = _damon.read_damon_fs()
     if args.target == 'kdamonds':
         kdamonds = _damon.current_kdamonds()
