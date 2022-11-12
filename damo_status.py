@@ -79,7 +79,7 @@ def main(args=None):
 
     if _damon.any_kdamond_running():
         for name in _damon.current_kdamond_names():
-            err = _damon.update_schemes_stats()
+            err = _damon.update_schemes_stats(name)
             if err != None:
                 print('update schemes stat fil:', err)
                 exit(1)
