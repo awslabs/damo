@@ -26,7 +26,7 @@ def main(args=None):
         print('DAMON is not turned on')
         exit(1)
 
-    _damon.turn_damon('off', ['all'])
+    _damon.turn_damon('off', _damon.current_kdamonds())
 
 if __name__ == '__main__':
     main()
