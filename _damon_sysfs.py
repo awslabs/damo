@@ -21,49 +21,53 @@ admin_dir = os.path.join(root_dir, 'admin')
 kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
 nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 
-def kdamond_dir_of(kdamond_idx):
-    return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx)
+def kdamond_dir_of(kdamond_name):
+    return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_name)
 
-def state_file_of(kdamond_idx):
-    return os.path.join(kdamond_dir_of(kdamond_idx), 'state')
+def state_file_of(kdamond_name):
+    return os.path.join(kdamond_dir_of(kdamond_name), 'state')
 
-def nr_contexts_file_of(kdamond_idx):
-    return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', 'nr_contexts')
+def nr_contexts_file_of(kdamond_name):
+    return os.path.join(
+            kdamond_dir_of(kdamond_name), 'contexts', 'nr_contexts')
 
-def ctx_dir_of(kdamond_idx, context_idx):
-    return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts', '%s' %
-            context_idx)
+def ctx_dir_of(kdamond_name, context_name):
+    return os.path.join(
+            kdamond_dir_of(kdamond_name), 'contexts', '%s' % context_name)
 
-def schemes_dir_of(kdamond_idx, context_idx):
-    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
+def schemes_dir_of(kdamond_name, context_name):
+    return os.path.join(ctx_dir_of(kdamond_name, context_name), 'schemes')
 
-def nr_schemes_file_of(kdamond_idx, context_idx):
-    return os.path.join(schemes_dir_of(kdamond_idx, context_idx), 'nr_schemes')
+def nr_schemes_file_of(kdamond_name, context_name):
+    return os.path.join(
+            schemes_dir_of(kdamond_name, context_name), 'nr_schemes')
 
-def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
-    return os.path.join(schemes_dir_of(kdamond_idx, context_idx),
-            '%s' % scheme_idx)
+def scheme_dir_of(kdamond_name, context_name, scheme_name):
+    return os.path.join(
+            schemes_dir_of(kdamond_name, context_name), '%s' % scheme_name)
 
-def targets_dir_of(kdamond_idx, context_idx):
-    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'targets')
+def targets_dir_of(kdamond_name, context_name):
+    return os.path.join(ctx_dir_of(kdamond_name, context_name), 'targets')
 
-def nr_targets_file_of(kdamond_idx, context_idx):
-    return os.path.join(targets_dir_of(kdamond_idx, context_idx), 'nr_targets')
+def nr_targets_file_of(kdamond_name, context_name):
+    return os.path.join(
+            targets_dir_of(kdamond_name, context_name), 'nr_targets')
 
-def target_dir_of(kdamond_idx, context_idx, target_idx):
-    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'targets', '%s' %
-            target_idx)
+def target_dir_of(kdamond_name, context_name, target_name):
+    return os.path.join(ctx_dir_of(kdamond_name, context_name), 'targets',
+            '%s' % target_name)
 
-def regions_dir_of(kdamond_idx, context_idx, target_idx):
-    return os.path.join(target_dir_of(kdamond_idx, context_idx, target_idx),
-            'regions')
+def regions_dir_of(kdamond_name, context_name, target_name):
+    return os.path.join(
+            target_dir_of(kdamond_name, context_name, target_name), 'regions')
 
-def nr_regions_file_of(kdamond_idx, context_idx, target_idx):
-    return os.path.join(regions_dir_of(kdamond_idx, context_idx, target_idx),
+def nr_regions_file_of(kdamond_name, context_name, target_name):
+    return os.path.join(
+            regions_dir_of(kdamond_name, context_name, target_name),
             'nr_regions')
 
-def __turn_damon(kdamond_idx, on_off):
-    err = _damo_fs.write_file(state_file_of(kdamond_idx), on_off)
+def __turn_damon(kdamond_name, on_off):
+    err = _damo_fs.write_file(state_file_of(kdamond_name), on_off)
     if err != None:
         print(err)
         return 1
@@ -88,13 +92,13 @@ def is_kdamond_running(kdamond_name):
     return content.strip() == 'on'
 
 'Return error'
-def update_schemes_stats(kdamond_idx):
-    return _damo_fs.write_files({state_file_of(kdamond_idx):
+def update_schemes_stats(kdamond_name):
+    return _damo_fs.write_files({state_file_of(kdamond_name):
         'update_schemes_stats'})
 
 'Return error'
-def update_schemes_tried_regions(kdamond_idx):
-    return _damo_fs.write_files({state_file_of(kdamond_idx):
+def update_schemes_tried_regions(kdamond_name):
+    return _damo_fs.write_files({state_file_of(kdamond_name):
         'update_schemes_tried_regions'})
 
 def wops_for_scheme_watermarks(wmarks):
@@ -154,8 +158,8 @@ def wops_for_schemes(ctx):
     schemes = ctx.schemes
 
     schemes_wops = {}
-    for idx, scheme in enumerate(schemes):
-        schemes_wops['%d' % idx] = {
+    for scheme in schemes:
+        schemes_wops[scheme.name] = {
             'access_pattern': wops_for_scheme_access_pattern(
                 scheme.access_pattern, ctx),
             'action': scheme.action,
@@ -172,11 +176,11 @@ def wops_for_regions(regions):
 
 def wops_for_targets(ctx):
     return {
-            '%d' % target_idx: {
+            target.name: {
                 'pid_target': '%s' %
                 target.pid if _damon.target_has_pid(ctx.ops) else '',
                 'regions': wops_for_regions(target.regions)
-                } for target_idx, target in enumerate(ctx.targets)}
+                } for target in ctx.targets}
 
 def wops_for_monitoring_attrs(ctx):
     return {
@@ -200,15 +204,13 @@ def wops_for_ctx(ctx):
     ]
 
 def wops_for_ctxs(ctxs):
-    return {'%d' % ctx_idx: wops_for_ctx(ctx) for
-            ctx_idx, ctx in enumerate(ctxs)}
+    return {ctx.name: wops_for_ctx(ctx) for ctx in ctxs}
 
 def wops_for_kdamond(kdamond):
     return {'contexts': wops_for_ctxs(kdamond.contexts)}
 
 def wops_for_kdamonds(kdamonds):
-    return {'%d' % kd_idx: wops_for_kdamond(kdamond) for
-            kd_idx, kdamond in enumerate(kdamonds)}
+    return {kdamond.name: wops_for_kdamond(kdamond) for kdamond in kdamonds}
 
 def ensure_dirs_populated_for(kdamonds):
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
@@ -216,36 +218,41 @@ def ensure_dirs_populated_for(kdamonds):
         return err
     if int(nr_kdamonds) != len(kdamonds):
         _damo_fs.write_file_ensure(nr_kdamonds_file, '%d' % len(kdamonds))
-    for kd_idx, kdamond in enumerate(kdamonds):
-        nr_contexts, err = _damo_fs.read_file(nr_contexts_file_of(kd_idx))
+    for kdamond in kdamonds:
+        nr_contexts, err = _damo_fs.read_file(
+                nr_contexts_file_of(kdamond.name))
         if err != None:
             return err
         if int(nr_contexts) != len(kdamond.contexts):
-            _damo_fs.write_file_ensure(nr_contexts_file_of(kd_idx),
+            _damo_fs.write_file_ensure(nr_contexts_file_of(kdamond.name),
                     '%d' % len(kdamond.contexts))
-        for ctx_idx, ctx in enumerate(kdamond.contexts):
+        for ctx in kdamond.contexts:
             nr_targets, err = _damo_fs.read_file(
-                    nr_targets_file_of(kd_idx, ctx_idx))
+                    nr_targets_file_of(kdamond.name, ctx.name))
             if err != None:
                 return err
             if int(nr_targets) != len(ctx.targets):
-                _damo_fs.write_file_ensure(nr_targets_file_of(kd_idx, ctx_idx),
+                _damo_fs.write_file_ensure(
+                        nr_targets_file_of(kdamond.name, ctx.name),
                         '%d' % len(ctx.targets))
-            for target_idx, target in enumerate(ctx.targets):
+            for target in ctx.targets:
                 nr_regions, err = _damo_fs.read_file(
-                        nr_regions_file_of(kd_idx, ctx_idx, target_idx))
+                        nr_regions_file_of(
+                            kdamond.name, ctx.name, target.name))
                 if err != None:
                     return err
                 if int(nr_regions) != len(target.regions):
                     _damo_fs.write_file_ensure(
-                            nr_regions_file_of(kd_idx, ctx_idx, target_idx),
+                            nr_regions_file_of(
+                                kdamond.name, ctx.name, target.name),
                             '%d' % len(target.regions))
         nr_schemes, err = _damo_fs.read_file(
-                nr_schemes_file_of(kd_idx, ctx_idx))
+                nr_schemes_file_of(kdamond.name, ctx.name))
         if err != None:
             return err
         if int(nr_schemes) != len(ctx.schemes):
-            _damo_fs.write_file_ensure(nr_schemes_file_of(kd_idx, ctx_idx),
+            _damo_fs.write_file_ensure(
+                    nr_schemes_file_of(kdamond.name, ctx.name),
                     '%d' % len(ctx.schemes))
 
 def apply_kdamonds(kdamonds):
@@ -404,16 +411,16 @@ def current_kdamond_names():
     return [x for x in _damo_fs.read_files_recursive(kdamonds_dir).keys()
             if x != 'nr_kdamonds']
 
-def __commit_inputs(kdamond_idx):
-    err = _damo_fs.write_file(state_file_of(kdamond_idx), 'commit')
+def __commit_inputs(kdamond_name):
+    err = _damo_fs.write_file(state_file_of(kdamond_name), 'commit')
     if err != None:
         print(err)
         return 1
     return 0
 
 def commit_inputs(kdamonds):
-    for kdamond_idx in range(len(kdamonds)):
-        err = __commit_inputs(kdamond_idx)
+    for kdamond in kdamonds:
+        err = __commit_inputs(kdamond.name)
         if err != 0:
             return err
     return 0
