@@ -1,2 +1,6 @@
 __pycache__/*
 *.pyc
+damon.data
+damon.data.old
+damon.data.perf.data.old
+damon.snap.data
