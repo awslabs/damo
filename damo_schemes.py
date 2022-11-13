@@ -15,11 +15,11 @@ import _damon
 import _damo_paddr_layout
 
 def cleanup_exit(exit_code):
-    kdamonds_to_turn_off = []
-    for kdamond in kdamonds:
-        if _damon.is_kdamond_running(kdamond.name):
-            kdamonds_to_turn_off.append(kdamond)
-    if _damon.turn_damon('off', [k.name for k in kdamonds_to_turn_off]):
+    kdamonds_names_to_turn_off = []
+    for kdamond_name in kdamonds_names:
+        if _damon.is_kdamond_running(kdamond_name):
+            kdamonds_names_to_turn_off.append(kdamond_name)
+    if _damon.turn_damon('off', kdamonds_names_to_turn_off):
         print('failed to turn damon off!')
     _damon.apply_kdamonds(orig_kdamonds)
     exit(exit_code)
@@ -33,7 +33,7 @@ def set_argparser(parser):
 
 def main(args=None):
     global orig_kdamonds
-    global kdamonds
+    global kdamonds_names
 
     if not args:
         parser = argparse.ArgumentParser()
@@ -44,7 +44,7 @@ def main(args=None):
     _damon.ensure_initialized(args, False)
 
     orig_kdamonds = _damon.current_kdamonds()
-    kdamonds = None
+    kdamonds_names = None
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
@@ -54,6 +54,8 @@ def main(args=None):
     if err:
         print('could not turn DAMON on')
         cleanup_exit(-3)
+
+    kdamonds_names = [k.name for k in kdamonds]
 
     print('Press Ctrl+C to stop')
     if args.self_started_target == True:
