@@ -16,7 +16,7 @@ import _damon_result
 import _damo_paddr_layout
 
 class DataForCleanup:
-    kdamonds = None
+    kdamonds_names = None
     target_is_ongoing = False
     orig_kdamonds = None
     rfile_path = None
@@ -52,11 +52,10 @@ def cleanup_exit(exit_code):
 
     if not data_for_cleanup.target_is_ongoing:
         if _damon.any_kdamond_running():
-            if data_for_cleanup.kdamonds == None:
+            if data_for_cleanup.kdamonds_names == None:
                 # turn on failed
                 pass
-            elif _damon.turn_damon('off',
-                    [k.name for k in data_for_cleanup.kdamonds]):
+            elif _damon.turn_damon('off', kdamonds_names):
                 print('failed to turn damon off!')
         _damon.apply_kdamonds(data_for_cleanup.orig_kdamonds)
 
@@ -152,7 +151,7 @@ def main(args=None):
         if err:
             print('could not turn DAMON on')
             cleanup_exit(-2)
-        data_for_cleanup.kdamonds = kdamonds
+        data_for_cleanup.kdamonds_names = [k.name for k in kdamonds]
 
 
     if not damon_record_supported:
