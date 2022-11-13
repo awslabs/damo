@@ -124,7 +124,7 @@ class TestDamos(unittest.TestCase):
                         _damon.DamosAccessPattern(0, 0, 0, 0,
                             'sample_intervals', 0, 0, 'aggr_intervals'),
                         'stat',
-                        _damon.DamosQuota(0, 0, 0, 0, 0, 0),
+                        _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
                         _damon.DamosWatermarks('none', 0, 0, 0, 0), None, None)
             self.assertEqual(damos_list[0], expected)
 
@@ -139,7 +139,7 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosAccessPattern(0, 10, 5, 8, 'percent', 54, 88,
                     'usec'),
                 'pageout',
-                _damon.DamosQuota(100, 1024, 1000, 80, 76, 24),
+                _damon.DamosQuotas(100, 1024, 1000, 80, 76, 24),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
                     200), None, None)
         damos_kvpairs = damos.to_kvpairs()
@@ -166,7 +166,7 @@ class TestDamon(unittest.TestCase):
                     18446744073709551615, 0.0, 0.0, 'percent', 1000000,
                     4294900000, 'usec'),
                 action='stat',
-                quotas=_damon.DamosQuota(time_ms=0, sz_bytes=584792941,
+                quotas=_damon.DamosQuotas(time_ms=0, sz_bytes=584792941,
                     reset_interval_ms=1000, weight_sz_permil=0,
                     weight_nr_accesses_permil=0, weight_age_permil=0),
                 watermarks=_damon.DamosWatermarks(0,0,0,0,0),
@@ -193,7 +193,7 @@ class TestDamonDbgfs(unittest.TestCase):
                     18446744073709551615, 0.0, 0.0, 'percent', 1000000.0,
                     4294900000.0, 'usec'),
                 action='stat',
-                quotas=_damon.DamosQuota(time_ms=0, sz_bytes=584792941,
+                quotas=_damon.DamosQuotas(time_ms=0, sz_bytes=584792941,
                     reset_interval_ms=1000, weight_sz_permil=0,
                     weight_nr_accesses_permil=0, weight_age_permil=0),
                 watermarks=_damon.DamosWatermarks('none',0,0,0,0),

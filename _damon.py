@@ -181,7 +181,7 @@ def kvpairs_to_DamosAccessPattern(kv):
             kv['nr_accesses_unit'], kv['min_age'], kv['max_age'],
             kv['age_unit'])
 
-class DamosQuota:
+class DamosQuotas:
     time_ms = None
     sz_bytes = None
     reset_interval_ms = None
@@ -223,8 +223,8 @@ class DamosQuota:
             'time_ms', 'sz_bytes', 'reset_interval_ms', 'weight_sz_permil',
             'weight_nr_accesses_permil', 'weight_age_permil']}
 
-def kvpairs_to_DamosQuota(kv):
-    return DamosQuota(kv['time_ms'], kv['sz_bytes'], kv['reset_interval_ms'],
+def kvpairs_to_DamosQuotas(kv):
+    return DamosQuotas(kv['time_ms'], kv['sz_bytes'], kv['reset_interval_ms'],
             kv['weight_sz_permil'], kv['weight_nr_accesses_permil'],
             kv['weight_age_permil'])
 
@@ -357,7 +357,7 @@ class Damos:
 def kvpairs_to_Damos(kv):
     return Damos(kv['name'],
             kvpairs_to_DamosAccessPattern(kv['access_pattern']), kv['action'],
-            kvpairs_to_DamosQuota(kv['quotas']),
+            kvpairs_to_DamosQuotas(kv['quotas']),
             kvpairs_to_DamosWatermarks(kv['watermarks']), None, None)
 
 class DamonRecord:

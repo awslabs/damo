@@ -285,7 +285,7 @@ def files_content_to_access_pattern(files_content):
             'aggr_intervals') # age_unit
 
 def files_content_to_quotas(files_content):
-    return _damon.DamosQuota(
+    return _damon.DamosQuotas(
             int(files_content['ms']),
             int(files_content['bytes']),
             int(files_content['reset_interval_ms']),
