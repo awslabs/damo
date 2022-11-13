@@ -19,7 +19,7 @@ def cleanup_exit(exit_code):
     for kdamond in kdamonds:
         if _damon.is_kdamond_running(kdamond.name):
             kdamonds_to_turn_off.append(kdamond)
-    if _damon.turn_damon('off', kdamonds_to_turn_off):
+    if _damon.turn_damon('off', [k.name for k in kdamonds_to_turn_off]):
         print('failed to turn damon off!')
     _damon.apply_kdamonds(orig_kdamonds)
     exit(exit_code)

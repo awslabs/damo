@@ -73,13 +73,13 @@ def __turn_damon(kdamond_name, on_off):
         return 1
     return 0
 
-def turn_damon(on_off, kdamonds):
+def turn_damon(on_off, kdamonds_names):
     if on_off == 'on':
         # In case of vaddr, too early monitoring shows unstable mapping changes.
         # Give the process a time to have stable memory mapping.
         time.sleep(0.5)
-    for kdamond in kdamonds:
-        err = __turn_damon(kdamond.name, on_off)
+    for kdamond_name in kdamonds_names:
+        err = __turn_damon(kdamond_name, on_off)
         if err != 0:
             return err
     return 0

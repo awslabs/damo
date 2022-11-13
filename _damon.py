@@ -606,8 +606,8 @@ def update_schemes_tried_regions(kdamond_idx):
         return 'DAMON debugfs doesn\'t support schemes tried regions'
     return _damon_fs.update_schemes_tried_regions(kdamond_idx)
 
-def turn_damon(on_off, kdamonds):
-    err = _damon_fs.turn_damon(on_off, kdamonds)
+def turn_damon(on_off, kdamonds_names):
+    err = _damon_fs.turn_damon(on_off, kdamonds_names)
     if err:
         return err
     # Early version of DAMON kernel turns it on/off asynchronously
@@ -701,7 +701,8 @@ def apply_explicit_args_damon(args):
 
 def turn_explicit_args_damon_on(args):
     kdamonds = apply_explicit_args_damon(args)
-    return turn_damon('on', kdamonds), kdamonds[0].contexts[0]
+    return turn_damon('on',
+            [k.name for k in kdamonds]), kdamonds[0].contexts[0]
 
 def turn_implicit_args_damon_on(args, record_request):
     set_implicit_target_args_explicit(args)
@@ -710,7 +711,7 @@ def turn_implicit_args_damon_on(args, record_request):
         ctx.record_request = record_request
     kdamonds = [Kdamond('0', state=None, pid=None, contexts=[ctx])]
     apply_kdamonds(kdamonds)
-    return turn_damon('on', kdamonds), kdamonds
+    return turn_damon('on', [k.name for k in kdamonds]), kdamonds
 
 # Commandline options setup helpers
 
