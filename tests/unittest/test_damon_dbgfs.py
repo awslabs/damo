@@ -2,7 +2,13 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import json
+import os
+import sys
 import unittest
+
+bindir = os.path.dirname(os.path.realpath(__file__))
+damo_dir = os.path.join(bindir, '..', '..')
+sys.path.append(damo_dir)
 
 import _damon
 import _damon_dbgfs

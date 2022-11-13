@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
-import json
+import os
+import sys
 import unittest
 
-import _damon
-import _damon_dbgfs
-import _damon_sysfs
+bindir = os.path.dirname(os.path.realpath(__file__))
+damo_dir = os.path.join(bindir, '..', '..')
+sys.path.append(damo_dir)
 
+import _damon
 import _damo_schemes_input
 
-class TestDamos(unittest.TestCase):
+class TestDamoSchemesInput(unittest.TestCase):
     def test_damo_schemes_to_damos(self):
         inputs = [
                 # no comment

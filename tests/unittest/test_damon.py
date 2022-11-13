@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
+import os
+import sys
 import unittest
+
+bindir = os.path.dirname(os.path.realpath(__file__))
+damo_dir = os.path.join(bindir, '..', '..')
+sys.path.append(damo_dir)
 
 import _damon
 

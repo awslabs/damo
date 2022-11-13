@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: GPL-2.0
 
 bindir=$(dirname "$0")
-damo_dir="$bindir/../../"
 
-for test_file in "$damo_dir"/test_*.py
+for test_file in "$bindir"/test_*.py
 do
 	for py in "python" "python3"
 	do
