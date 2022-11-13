@@ -2,9 +2,12 @@
 # SPDX-License-Identifier: GPL-2.0
 
 """
-Change human readable data access monitoring-based operation schemes to the low
-level input for the '<debugfs>/damon/schemes' file.  Below is an example of the
-schemes written in the human readable format:
+Change human readable data access monitoring-based operation schemes input for
+'damo' to a '_damon.Damos' object.  Currently, simple human-readable text and
+comments-supporting json string format are supported.  Below are the example of
+the input.
+
+Below are examples of simple human-readable text.
 
     # format is:
     # <min/max size> <min/max frequency (0-100)> <min/max age> <action>
@@ -34,7 +37,8 @@ schemes written in the human readable format:
     # avoid the region using huge pages (call madvise() with MADV_NOHUGEPAGE).
     2M      max     0       25      100ms   max nohugepage
 
-Comments-supporting JSON is also supported, like below:
+Below is an exaple of the comments-supporting json string format.
+
     [
         # Just for monitoring
 	{
