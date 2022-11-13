@@ -4,6 +4,7 @@
 import argparse
 
 import _damo_schemes_input
+import _damon_dbgfs
 
 def main():
     parser = argparse.ArgumentParser()
@@ -21,8 +22,12 @@ def main():
     aggr_interval = args.aggr
     scheme_ver = args.scheme_version
 
-    print(_damo_schemes_input.damo_schemes_to_debugfs_input(args.input,
-        sample_interval, aggr_interval, scheme_ver))
+    lines = []
+    for damos in _damo_schemes_input.damo_schemes_to_damos(args.input):
+        lines.append(
+                _damon_dbgfs.damos_to_debugfs_input(damos, sample_interval,
+                    aggr_interval, scheme_ver))
+    print ('\n'.join(lines))
 
 if __name__ == '__main__':
     main()

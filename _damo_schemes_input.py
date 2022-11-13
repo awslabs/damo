@@ -216,12 +216,3 @@ def damo_schemes_to_damos(damo_schemes):
             exit(1)
         damos_list.append(damos)
     return damos_list
-
-def damo_schemes_to_debugfs_input(schemes, sample_interval, aggr_interval,
-        scheme_version):
-    lines = []
-    for damos in damo_schemes_to_damos(schemes):
-        lines.append(
-                _damon_dbgfs.damos_to_debugfs_input(damos, sample_interval,
-                    aggr_interval, scheme_version))
-    return '\n'.join(lines)
