@@ -16,9 +16,10 @@ import _damo_paddr_layout
 
 def cleanup_exit(exit_code):
     kdamonds_names_to_turn_off = []
-    for kdamond_name in kdamonds_names:
-        if _damon.is_kdamond_running(kdamond_name):
-            kdamonds_names_to_turn_off.append(kdamond_name)
+    if kdamonds_names != None:
+        for kdamond_name in kdamonds_names:
+            if _damon.is_kdamond_running(kdamond_name):
+                kdamonds_names_to_turn_off.append(kdamond_name)
     if _damon.turn_damon('off', kdamonds_names_to_turn_off):
         print('failed to turn damon off!')
     _damon.apply_kdamonds(orig_kdamonds)
