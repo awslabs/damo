@@ -24,7 +24,7 @@ fi
 for damon_interface in $damon_interfaces
 do
 	testname2="$testname $damon_interface"
-	sudo "$damo" start paddr --damon_interface "$damon_interface" \
+	sudo "$damo" start --ops paddr --damon_interface "$damon_interface" \
 		-c monitoring.damos
 	if ! pidof kdamond.0 > /dev/null
 	then
@@ -52,7 +52,7 @@ do
 	done
 	echo "PASS $testname2 snap $i"
 
-	if ! sudo "$damo" tune --aggr 200000 paddr \
+	if ! sudo "$damo" tune --aggr 200000 --ops paddr \
 		--damon_interface "$damon_interface" &> /dev/null
 	then
 		echo "FAIL $testname2 tune"

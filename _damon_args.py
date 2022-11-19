@@ -141,8 +141,8 @@ def set_implicit_target_monitoring_argparser(parser):
 
 def set_explicit_target_monitoring_argparser(parser):
     set_common_monitoring_argparser(parser)
-    parser.add_argument('ops', choices=['vaddr', 'paddr', 'fvaddr'],
-            default='vaddr',
+    parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
+            default='paddr',
             help='monitoring operations set')
     parser.add_argument('--target_pid', type=int, help='target pid')
     set_common_argparser(parser)
