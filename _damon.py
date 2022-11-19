@@ -13,6 +13,8 @@ import _damo_fs
 import _damon_dbgfs
 import _damon_sysfs
 
+# Core data structures
+
 class DamonIntervals:
     sample = None
     aggr = None
