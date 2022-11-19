@@ -454,6 +454,25 @@ features_sysfs_support_from_begining = [
         'schemes_stat_qt_exceed',
         ]
 
+def _avail_ops():
+    '''Assumes called by update_supported_features() assuming one scheme.
+    Returns available ops input and error'''
+    avail_ops = []
+    avail_operations_filepath = os.path.join(ctx_dir_of(0, 0),
+            'avail_operations')
+    if not os.path.isfile(avail_operations_filepath):
+        operations_filepath = os.path.join(ctx_dir_of(0, 0), 'operations')
+        for ops in ['vaddr', 'paddr', 'fvaddr']:
+            err = _damo_fs.write_file(operations_filepath, ops)
+            if err != None:
+                avail_ops.append(ops)
+        return avail_ops, None
+
+    content, err = _damo_fs.read_file(avail_operations_filepath)
+    if err != None:
+        return None, err
+    return content.strip().split(), None
+
 def update_supported_features():
     global feature_supports
 
@@ -481,29 +500,10 @@ def update_supported_features():
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'tried_regions')):
         feature_supports['schemes_tried_regions'] = True
 
-    avail_operations_filepath = os.path.join(ctx_dir_of(0, 0),
-            'avail_operations')
-    if not os.path.isfile(avail_operations_filepath):
-        operations_filepath = os.path.join(ctx_dir_of(0, 0), 'operations')
-        for feature in ['vaddr', 'paddr', 'fvaddr', 'vaddr']:
-            err = _damo_fs.write_file(operations_filepath, feature)
-            if err != None:
-                feature_supports[feature] = False
-            else:
-                feature_supports[feature] = True
-        if orig_kdamonds != None:
-            apply_kdamonds(orig_kdamonds)
-        return None
-
-    content, err = _damo_fs.read_file(avail_operations_filepath)
-    if err != None:
-        if orig_kdamonds != None:
-            apply_kdamonds(orig_kdamonds)
-        return err
-    avail_ops = content.strip().split()
-    for feature in ['vaddr', 'paddr', 'fvaddr']:
-        feature_supports[feature] = feature in avail_ops
-
+    avail_ops, err = _avail_ops()
+    if err == None:
+        for ops in ['vaddr', 'paddr', 'fvaddr']:
+            feature_supports[ops] = ops in avail_ops
     if orig_kdamonds != None:
         apply_kdamonds(orig_kdamonds)
-    return None
+    return err
