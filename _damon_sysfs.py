@@ -497,10 +497,9 @@ def update_supported_features():
 
     content, err = _damo_fs.read_file(avail_operations_filepath)
     if err != None:
-        print(err)
         if orig_kdamonds != None:
             apply_kdamonds(orig_kdamonds)
-        return None
+        return err
     avail_ops = content.strip().split()
     for feature in ['vaddr', 'paddr', 'fvaddr']:
         feature_supports[feature] = feature in avail_ops
