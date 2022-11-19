@@ -19,7 +19,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    _damon.ensure_initialized(args, True)
+    _damon.ensure_initialized(args)
 
     if args.operation == 'read':
         content = _damon.read_damon_fs()

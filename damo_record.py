@@ -132,7 +132,7 @@ def main(args=None):
 
     # Check system requirements
     _damon.ensure_root_permission()
-    _damon.ensure_initialized(args, _damon_args.is_ongoing_target(args))
+    _damon.ensure_initialized(args)
 
     # Check/handle the arguments and options
     damon_record_supported = chk_handle_record_feature_support(args)

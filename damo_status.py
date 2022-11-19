@@ -76,7 +76,7 @@ def main(args=None):
 
     # Require root permission
     _damon.ensure_root_permission()
-    _damon.ensure_initialized(args, True)
+    _damon.ensure_initialized(args)
 
     if _damon.any_kdamond_running():
         for name in _damon.current_kdamond_names():

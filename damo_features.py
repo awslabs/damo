@@ -19,7 +19,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    _damon.ensure_initialized(args, False)
+    _damon.ensure_initialized(args)
 
     feature_dir = {}
     for feature in sorted(_damon.features):

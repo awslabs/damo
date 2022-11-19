@@ -500,7 +500,7 @@ def ensure_root_permission():
 def feature_supported(feature):
     return _damon_fs.feature_supported(feature)
 
-def initialize(args, skip_dirs_population=False):
+def initialize(args):
     global _damon_fs
     if args.damon_interface == 'sysfs':
         _damon_fs = _damon_sysfs
@@ -519,12 +519,12 @@ def initialize(args, skip_dirs_population=False):
     return _damon_fs.update_supported_features()
 
 initialized = False
-def ensure_initialized(args, skip_dirs_population):
+def ensure_initialized(args):
     global initialized
 
     if initialized:
         return
-    err = initialize(args, skip_dirs_population)
+    err = initialize(args)
     if err != None:
         print(err)
         exit(1)

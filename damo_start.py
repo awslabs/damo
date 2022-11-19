@@ -21,7 +21,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    err = _damon.ensure_initialized(args, False)
+    err = _damon.ensure_initialized(args)
     if err != None:
         print(err)
         exit(1)

@@ -43,7 +43,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    _damon.ensure_initialized(args, False)
+    _damon.ensure_initialized(args)
 
     orig_kdamonds = _damon.current_kdamonds()
     kdamonds_names = None

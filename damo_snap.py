@@ -26,7 +26,7 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    _damon.ensure_initialized(args, skip_dirs_population=True)
+    _damon.ensure_initialized(args)
 
     if not _damon.feature_supported('schemes_tried_regions'):
         print('schemes_tried_regions not supported')
