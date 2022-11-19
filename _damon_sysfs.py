@@ -466,7 +466,9 @@ def update_supported_features():
     for feature in features_sysfs_support_from_begining:
         feature_supports[feature] = True
 
+    orig_kdamonds = None
     if not os.path.isdir(scheme_dir_of(0, 0, 0)):
+        orig_kdamonds = current_kdamonds()
         kdamonds_for_feature_check = [_damon.Kdamond(name='0', state=None,
             pid=None, contexts=[_damon.DamonCtx(name='0', intervals=None,
                 nr_regions=None, ops=None, targets=[],
@@ -484,6 +486,8 @@ def update_supported_features():
         operations_filepath = os.path.join(ctx_dir_of(0, 0), 'operations')
         orig_val, err = _damo_fs.read_file(operations_filepath)
         if err:
+            if orig_kdamonds != None:
+                apply_kdamonds(orig_kdamonds)
             return 'update_supported_features fail (%s)' % err
         for feature in ['vaddr', 'paddr', 'fvaddr', 'vaddr']:
             err = _damo_fs.write_file(operations_filepath, feature)
@@ -493,15 +497,23 @@ def update_supported_features():
                 feature_supports[feature] = True
         err = _damo_fs.write_file(operations_filepath, orig_val)
         if err:
+            if orig_kdamonds != None:
+                apply_kdamonds(orig_kdamonds)
             return 'update_supported_features fail (%s)' % err
+        if orig_kdamonds != None:
+            apply_kdamonds(orig_kdamonds)
         return None
 
     content, err = _damo_fs.read_file(avail_operations_filepath)
     if err != None:
         print(err)
+        if orig_kdamonds != None:
+            apply_kdamonds(orig_kdamonds)
         return None
     avail_ops = content.strip().split()
     for feature in ['vaddr', 'paddr', 'fvaddr']:
         feature_supports[feature] = feature in avail_ops
 
+    if orig_kdamonds != None:
+        apply_kdamonds(orig_kdamonds)
     return None
