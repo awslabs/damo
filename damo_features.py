@@ -4,12 +4,13 @@
 import json
 
 import _damon
+import _damon_args
 
 def set_argparser(parser):
     parser.add_argument('type', nargs='?',
             choices=['supported', 'unsupported', 'all', 'json'], default='all',
             help='type of features to listed')
-    _damon.set_common_argparser(parser)
+    _damon_args.set_common_argparser(parser)
 
 def main(args=None):
     if not args:

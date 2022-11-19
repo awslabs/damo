@@ -12,6 +12,7 @@ import subprocess
 import time
 
 import _damon
+import _damon_args
 import _damo_paddr_layout
 
 def cleanup_exit(exit_code):
@@ -30,7 +31,7 @@ def sighandler(signum, frame):
     cleanup_exit(signum)
 
 def set_argparser(parser):
-    _damon.set_implicit_target_schemes_argparser(parser)
+    _damon_args.set_implicit_target_schemes_argparser(parser)
 
 def main(args=None):
     global orig_kdamonds
@@ -50,7 +51,7 @@ def main(args=None):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    err, kdamonds = _damon.turn_implicit_args_damon_on(args,
+    err, kdamonds = _damon_args.turn_implicit_args_damon_on(args,
             record_request=None)
     if err:
         print('could not turn DAMON on')

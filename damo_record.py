@@ -12,6 +12,7 @@ import subprocess
 import time
 
 import _damon
+import _damon_args
 import _damon_result
 import _damo_paddr_layout
 
@@ -74,7 +75,7 @@ def sighandler(signum, frame):
     cleanup_exit(signum)
 
 def set_data_for_cleanup(data_for_cleanup, args, output_permission):
-    data_for_cleanup.target_is_ongoing = _damon.is_ongoing_target(args)
+    data_for_cleanup.target_is_ongoing = _damon_args.is_ongoing_target(args)
     data_for_cleanup.rfile_format = args.output_type
     data_for_cleanup.rfile_path = args.out
     data_for_cleanup.remove_perf_data = not args.leave_perf_data
@@ -109,7 +110,7 @@ def backup_duplicate_output_file(output_file):
         os.rename(output_file, output_file + '.old')
 
 def set_argparser(parser):
-    _damon.set_implicit_target_monitoring_argparser(parser)
+    _damon_args.set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
             help='length of record result buffer')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
@@ -131,7 +132,7 @@ def main(args=None):
 
     # Check system requirements
     _damon.ensure_root_permission()
-    _damon.ensure_initialized(args, _damon.is_ongoing_target(args))
+    _damon.ensure_initialized(args, _damon_args.is_ongoing_target(args))
 
     # Check/handle the arguments and options
     damon_record_supported = chk_handle_record_feature_support(args)
@@ -144,9 +145,9 @@ def main(args=None):
     signal.signal(signal.SIGTERM, sighandler)
 
     # Now the real works
-    if not _damon.is_ongoing_target(args):
+    if not _damon_args.is_ongoing_target(args):
         # Turn DAMON on
-        err, kdamonds = _damon.turn_implicit_args_damon_on(args,
+        err, kdamonds = _damon_args.turn_implicit_args_damon_on(args,
                 record_request=_damon.DamonRecord(args.rbuf, args.out))
         if err:
             print('could not turn DAMON on')
@@ -161,7 +162,7 @@ def main(args=None):
             '-o', data_for_cleanup.rfile_path + '.perf.data'])
     print('Press Ctrl+C to stop')
 
-    if not _damon.is_ongoing_target(args) and args.self_started_target == True:
+    if not _damon_args.is_ongoing_target(args) and args.self_started_target == True:
         os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
     _damon.wait_current_kdamonds_turned('off')
 

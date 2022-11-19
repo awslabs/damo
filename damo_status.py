@@ -5,6 +5,7 @@ import json
 
 import _damo_fmt_str
 import _damon
+import _damon_args
 
 def set_argparser(parser):
     parser.add_argument('target', choices=['schemes_stats',
@@ -12,7 +13,7 @@ def set_argparser(parser):
             nargs='?', default='kdamonds', help='What status to show')
     parser.add_argument('--json', action='store_true',
             help='print kdamond in json format')
-    _damon.set_common_argparser(parser)
+    _damon_args.set_common_argparser(parser)
 
 def pr_schemes_stats(damon_fs_content):
     print('# <kdamond> <context> <scheme> <field> <value>')

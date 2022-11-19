@@ -9,10 +9,11 @@ import argparse
 
 import _damo_fmt_str
 import _damon
+import _damon_args
 import _damon_result
 
 def set_argparser(parser):
-    _damon.set_common_argparser(parser)
+    _damon_args.set_common_argparser(parser)
     parser.add_argument('--store_to', default='damon.snap.data',
             help='file to store the snapshot')
     parser.add_argument('--raw_number', action='store_true',

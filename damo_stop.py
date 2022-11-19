@@ -8,9 +8,10 @@ Stop DAMON.
 import argparse
 
 import _damon
+import _damon_args
 
 def set_argparser(parser):
-    _damon.set_common_argparser(parser)
+    _damon_args.set_common_argparser(parser)
     return
 
 def main(args=None):

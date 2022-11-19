@@ -8,9 +8,10 @@ Update DAMON input parameters.
 import argparse
 
 import _damon
+import _damon_args
 
 def set_argparser(parser):
-    _damon.set_explicit_target_monitoring_argparser(parser)
+    _damon_args.set_explicit_target_monitoring_argparser(parser)
 
 def main(args=None):
     if not args:
@@ -29,7 +30,7 @@ def main(args=None):
         print('DAMON is not turned on')
         exit(1)
 
-    kdamonds = _damon.apply_explicit_args_damon(args)
+    kdamonds = _damon_args.apply_explicit_args_damon(args)
     if _damon.commit_inputs(kdamonds):
         print('could not commit inputs')
 
