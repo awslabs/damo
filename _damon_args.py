@@ -139,14 +139,6 @@ def set_implicit_target_monitoring_argparser(parser):
             help='the target (command, pid, or special keywords) to monitor')
     set_common_argparser(parser)
 
-def set_explicit_target_monitoring_argparser(parser):
-    set_common_monitoring_argparser(parser)
-    parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
-            default='paddr',
-            help='monitoring operations set')
-    parser.add_argument('--target_pid', type=int, help='target pid')
-    set_common_argparser(parser)
-
 def set_implicit_target_schemes_argparser(parser):
     set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
@@ -154,6 +146,11 @@ def set_implicit_target_schemes_argparser(parser):
             help='data access monitoring-based operation schemes')
 
 def set_explicit_target_no_default_schemes_argparser(parser):
-    set_explicit_target_monitoring_argparser(parser)
+    set_common_monitoring_argparser(parser)
+    parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
+            default='paddr',
+            help='monitoring operations set')
+    parser.add_argument('--target_pid', type=int, help='target pid')
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
             type=str, help='data access monitoring-based operation schemes')
+    set_common_argparser(parser)
