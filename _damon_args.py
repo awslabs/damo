@@ -56,6 +56,26 @@ def damon_ctx_from_damon_args(args):
 
     return _damon.DamonCtx('0', intervals, nr_regions, ops, [target], schemes)
 
+def uncomment_kvpairs_str(string):
+    lines = []
+    for line in string.split('\n'):
+        if line.strip().startswith('#'):
+            continue
+        lines.append(line)
+    return '\n'.join(lines).strip()
+
+def kdamonds_from_damon_args(args):
+    if args.kdamonds:
+        if os.path.isfile(args.kdamonds):
+            with open(args.kdamonds, 'r') as f:
+                kdamonds_str = f.read()
+        else:
+            kdamonds_str = args.kdamonds
+        kdamonds_kvpairs = json.loads(uncomment_kvpairs_str(kdamonds_str))
+        return [kvpairs_to_Kdamond(kvpair) for kvpair in kdamonds_kvpairs]
+    return [_damon.Kdamond(name='0', state=None, pid=None,
+        contexts=[damon_ctx_from_damon_args(args)])]
+
 def set_implicit_target_args_explicit(args):
     args.self_started_target = False
     if args.target == 'paddr':
@@ -89,8 +109,7 @@ def is_ongoing_target(args):
     return args.target == 'ongoing'
 
 def apply_explicit_args_damon(args):
-    ctx = damon_ctx_from_damon_args(args)
-    kdamonds = [_damon.Kdamond(name='0', state=None, pid=None, contexts=[ctx])]
+    kdamonds = kdamonds_from_damon_args(args)
     _damon.apply_kdamonds(kdamonds)
     return kdamonds
 
@@ -153,4 +172,6 @@ def set_explicit_target_no_default_schemes_argparser(parser):
     parser.add_argument('--target_pid', type=int, help='target pid')
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
             type=str, help='data access monitoring-based operation schemes')
+    parser.add_argument('--kdamonds', metavar='<string or file>',
+            help='key-value pairs format kdamonds config')
     set_common_argparser(parser)
