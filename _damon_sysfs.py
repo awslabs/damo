@@ -433,12 +433,6 @@ def feature_supported(feature):
         update_supported_features()
     return feature_supports[feature]
 
-def damon_sysfs_missed():
-    'Return none-None if DAMON sysfs interface is not found'
-    if not os.path.isdir(kdamonds_dir):
-        return 'damon sysfs dir (%s) not found' % kdamonds_dir
-    return None
-
 features_sysfs_support_from_begining = [
         'schemes',
         'init_regions',
@@ -480,9 +474,8 @@ def update_supported_features():
         return None
     feature_supports = {x: False for x in _damon.features}
 
-    missed = damon_sysfs_missed()
-    if missed != None:
-        return missed
+    if not supported():
+        return 'damon sysfs dir (%s) not found' % kdamonds_dir
     for feature in features_sysfs_support_from_begining:
         feature_supports[feature] = True
 
