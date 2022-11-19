@@ -485,22 +485,12 @@ def update_supported_features():
             'avail_operations')
     if not os.path.isfile(avail_operations_filepath):
         operations_filepath = os.path.join(ctx_dir_of(0, 0), 'operations')
-        orig_val, err = _damo_fs.read_file(operations_filepath)
-        if err:
-            if orig_kdamonds != None:
-                apply_kdamonds(orig_kdamonds)
-            return 'update_supported_features fail (%s)' % err
         for feature in ['vaddr', 'paddr', 'fvaddr', 'vaddr']:
             err = _damo_fs.write_file(operations_filepath, feature)
             if err != None:
                 feature_supports[feature] = False
             else:
                 feature_supports[feature] = True
-        err = _damo_fs.write_file(operations_filepath, orig_val)
-        if err:
-            if orig_kdamonds != None:
-                apply_kdamonds(orig_kdamonds)
-            return 'update_supported_features fail (%s)' % err
         if orig_kdamonds != None:
             apply_kdamonds(orig_kdamonds)
         return None
