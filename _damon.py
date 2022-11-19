@@ -505,8 +505,7 @@ def initialize(args, skip_dirs_population=False):
     elif args.damon_interface == 'debugfs':
         _damon_fs = _damon_dbgfs
     elif args.damon_interface == 'auto':
-        err = _damon_sysfs.initialize(skip_dirs_population)
-        if err == None:
+        if _damon_sysfs.supported():
             _damon_fs = _damon_sysfs
         else:
             _damon_fs = _damon_dbgfs

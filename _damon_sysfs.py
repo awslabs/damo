@@ -66,6 +66,9 @@ def nr_regions_file_of(kdamond_name, context_name, target_name):
             regions_dir_of(kdamond_name, context_name, target_name),
             'nr_regions')
 
+def supported():
+    return os.path.isdir(kdamonds_dir)
+
 def __turn_damon(kdamond_name, on_off):
     err = _damo_fs.write_file(state_file_of(kdamond_name), on_off)
     if err != None:
