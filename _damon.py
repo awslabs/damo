@@ -569,10 +569,7 @@ def any_kdamond_running():
     return False
 
 def every_kdamond_turned_off():
-    for kd_name in current_kdamond_names():
-        if is_kdamond_running(kd_name):
-            return False
-    return True
+    return not any_kdamond_running()
 
 def wait_current_kdamonds_turned(on_off):
     if not on_off in ['on', 'off']:
