@@ -516,7 +516,7 @@ def initialize(args, skip_dirs_population=False):
     if args.debug_damon:
         pr_debug_log = True
 
-    return _damon_fs.initialize(skip_dirs_population)
+    return _damon_fs.update_supported_features()
 
 initialized = False
 def ensure_initialized(args, skip_dirs_population):

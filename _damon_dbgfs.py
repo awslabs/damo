@@ -36,7 +36,7 @@ feature_supports = None
 
 def feature_supported(feature):
     if feature_supports == None:
-        initialize()
+        update_supported_features()
 
     return feature_supports[feature]
 
@@ -209,12 +209,6 @@ def set_damon_debugfs_paths():
                 debugfs_init_regions = None
             else:
                 return 'damon debugfs file (%s) not found' % f
-    return None
-
-def initialize(skip_dirs_population=False):
-    err = update_supported_features()
-    if err:
-        return err
     return None
 
 def attr_str(attrs):

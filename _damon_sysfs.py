@@ -505,9 +505,3 @@ def update_supported_features():
         feature_supports[feature] = feature in avail_ops
 
     return None
-
-def initialize(skip_dirs_population=False):
-    err = update_supported_features()
-    if err:
-        return err
-    return None
