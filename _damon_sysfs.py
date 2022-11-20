@@ -412,18 +412,12 @@ def current_kdamond_names():
     return [x for x in _damo_fs.read_files_recursive(kdamonds_dir).keys()
             if x != 'nr_kdamonds']
 
-def __commit_inputs(kdamond_name):
-    err = _damo_fs.write_file(state_file_of(kdamond_name), 'commit')
-    if err != None:
-        print(err)
-        return 1
-    return 0
-
 def commit_inputs(kdamonds):
     for kdamond in kdamonds:
-        err = __commit_inputs(kdamond.name)
-        if err != 0:
-            return err
+        err = _damo_fs.write_file(state_file_of(kdamond.name), 'commit')
+        if err != None:
+            print(err)
+            return 1
     return 0
 
 def feature_supported(feature):
