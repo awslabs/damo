@@ -130,6 +130,18 @@ def wops_for_target(target, target_has_pid):
         wops.append({debugfs_init_regions: string})
     return wops
 
+def wops_for_schemes(schemes, intervals):
+    scheme_version = get_scheme_version()
+
+    scheme_file_input_lines = []
+    for scheme in schemes:
+        scheme_file_input_lines.append(damos_to_debugfs_input(scheme,
+            intervals.sample, intervals.aggr, scheme_version))
+    scheme_file_input = '\n'.join(scheme_file_input_lines)
+    if scheme_file_input == '':
+        scheme_file_input = '\n'
+    return [{debugfs_schemes: scheme_file_input}]
+
 def wops_for_kdamonds(kdamonds):
     if len(kdamonds) > 1:
         print('Currently only <=one kdamond is supported')
@@ -158,17 +170,8 @@ def wops_for_kdamonds(kdamonds):
     if not debugfs_schemes:
         return write_contents
 
-    scheme_version = get_scheme_version()
+    write_contents += wops_for_schemes(ctx.schemes, ctx.intervals)
 
-    scheme_file_input_lines = []
-    for scheme in ctx.schemes:
-        scheme_file_input_lines.append(damos_to_debugfs_input(scheme,
-            ctx.intervals.sample, ctx.intervals.aggr, scheme_version))
-    scheme_file_input = '\n'.join(scheme_file_input_lines)
-    if scheme_file_input == '':
-        scheme_file_input = '\n'
-
-    write_contents.append({debugfs_schemes: scheme_file_input})
     return write_contents
 
 def apply_kdamonds(kdamonds):
