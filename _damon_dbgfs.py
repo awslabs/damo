@@ -211,11 +211,6 @@ def set_damon_debugfs_paths():
                 return 'damon debugfs file (%s) not found' % f
     return None
 
-def attr_str(attrs):
-    return '%s %s %s %s %s ' % (attrs.sample_interval, attrs.aggr_interval,
-            attrs.regions_update_interval, attrs.min_nr_regions,
-            attrs.max_nr_regions)
-
 def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
     nr_regions = damon_ctx.nr_regions
