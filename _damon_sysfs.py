@@ -69,22 +69,16 @@ def nr_regions_file_of(kdamond_name, context_name, target_name):
 def supported():
     return os.path.isdir(kdamonds_dir)
 
-def __turn_damon(kdamond_name, on_off):
-    err = _damo_fs.write_file(state_file_of(kdamond_name), on_off)
-    if err != None:
-        print(err)
-        return 1
-    return 0
-
 def turn_damon(on_off, kdamonds_names):
     if on_off == 'on':
         # In case of vaddr, too early monitoring shows unstable mapping changes.
         # Give the process a time to have stable memory mapping.
         time.sleep(0.5)
     for kdamond_name in kdamonds_names:
-        err = __turn_damon(kdamond_name, on_off)
-        if err != 0:
-            return err
+        err = _damo_fs.write_file(state_file_of(kdamond_name), on_off)
+        if err != None:
+            print(err)
+            return 1
     return 0
 
 def is_kdamond_running(kdamond_name):
