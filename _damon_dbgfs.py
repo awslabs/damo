@@ -41,6 +41,45 @@ def update_schemes_stats(kdamond_idx):
 
 # for apply_kdamonds
 
+def attr_str_ctx(damon_ctx):
+    intervals = damon_ctx.intervals
+    nr_regions = damon_ctx.nr_regions
+    return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
+            intervals.ops_update, nr_regions.min_nr_regions,
+            nr_regions.max_nr_regions)
+
+def wops_for_target(target, target_has_pid):
+    wops = []
+    if target_has_pid:
+        wops.append({debugfs_target_ids: '%s' % target.pid})
+        tid = target.pid
+    else:
+        if not feature_supported('paddr'):
+            print('paddr is not supported')
+            exit(1)
+        wops.append({debugfs_target_ids: 'paddr\n'})
+        tid = 42
+    if feature_supported('init_regions_target_idx'):
+        tid = 0
+
+    if feature_supported('init_regions'):
+        string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in
+            target.regions])
+        wops.append({debugfs_init_regions: string})
+    return wops
+
+def get_scheme_version():
+    scheme_version = 0
+    if feature_supported('schemes_speed_limit'):
+        scheme_version = 1
+    if feature_supported('schemes_prioritization'):
+        scheme_version = 2
+    if feature_supported('schemes_wmarks'):
+        scheme_version = 3
+    if feature_supported('schemes_quotas'):
+        scheme_version = 4
+    return scheme_version
+
 def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         scheme_version):
     pattern = damos.access_pattern
@@ -91,52 +130,11 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
         print('Unsupported scheme version: %d' % scheme_version)
         exit(1)
 
-def get_scheme_version():
-    scheme_version = 0
-    if feature_supported('schemes_speed_limit'):
-        scheme_version = 1
-    if feature_supported('schemes_prioritization'):
-        scheme_version = 2
-    if feature_supported('schemes_wmarks'):
-        scheme_version = 3
-    if feature_supported('schemes_quotas'):
-        scheme_version = 4
-    return scheme_version
-
-def attr_str_ctx(damon_ctx):
-    intervals = damon_ctx.intervals
-    nr_regions = damon_ctx.nr_regions
-    return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
-            intervals.ops_update, nr_regions.min_nr_regions,
-            nr_regions.max_nr_regions)
-
-def wops_for_target(target, target_has_pid):
-    wops = []
-    if target_has_pid:
-        wops.append({debugfs_target_ids: '%s' % target.pid})
-        tid = target.pid
-    else:
-        if not feature_supported('paddr'):
-            print('paddr is not supported')
-            exit(1)
-        wops.append({debugfs_target_ids: 'paddr\n'})
-        tid = 42
-    if feature_supported('init_regions_target_idx'):
-        tid = 0
-
-    if feature_supported('init_regions'):
-        string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in
-            target.regions])
-        wops.append({debugfs_init_regions: string})
-    return wops
-
 def wops_for_schemes(schemes, intervals):
-    scheme_version = get_scheme_version()
-
     scheme_file_input_lines = []
     for scheme in schemes:
         scheme_file_input_lines.append(damos_to_debugfs_input(scheme,
-            intervals.sample, intervals.aggr, scheme_version))
+            intervals.sample, intervals.aggr, get_scheme_version()))
     scheme_file_input = '\n'.join(scheme_file_input_lines)
     if scheme_file_input == '':
         scheme_file_input = '\n'
