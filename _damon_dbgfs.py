@@ -114,10 +114,11 @@ def wops_for_kdamonds(kdamonds):
     if len(kdamonds) > 1:
         print('Currently only <=one kdamond is supported')
         exit(1)
-    if len(kdamonds[0].contexts) > 1:
+    if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
         print('currently only <= one damon_ctx is supported')
         exit(1)
-    if len(kdamonds[0].contexts[0].targets) > 1:
+    if (len(kdamonds) == 1 and len(kdamonds[0].contexts) == 1 and
+            len(kdamonds[0].contexts[0].targets) > 1):
         print('currently only <= one target is supported')
         exit(1)
     ctx = kdamonds[0].contexts[0]
