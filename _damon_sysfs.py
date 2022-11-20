@@ -420,6 +420,8 @@ def commit_inputs(kdamonds):
             return 1
     return 0
 
+# features
+
 def feature_supported(feature):
     if feature_supports == None:
         update_supported_features()
