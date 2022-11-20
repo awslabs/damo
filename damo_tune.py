@@ -11,7 +11,7 @@ import _damon
 import _damon_args
 
 def set_argparser(parser):
-    _damon_args.set_explicit_target_no_default_schemes_argparser(parser)
+    _damon_args.set_explicit_target_argparser(parser)
 
 def main(args=None):
     if not args:

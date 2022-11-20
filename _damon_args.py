@@ -164,7 +164,7 @@ def set_implicit_target_schemes_argparser(parser):
             type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
 
-def set_explicit_target_no_default_schemes_argparser(parser):
+def set_explicit_target_argparser(parser):
     set_common_monitoring_argparser(parser)
     parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
             default='paddr',
