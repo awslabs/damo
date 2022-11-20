@@ -98,6 +98,8 @@ def update_schemes_tried_regions(kdamond_name):
     return _damo_fs.write_files({state_file_of(kdamond_name):
         'update_schemes_tried_regions'})
 
+# for apply_kdamonds
+
 def wops_for_scheme_watermarks(wmarks):
     if wmarks == None:
         return {}
@@ -270,6 +272,8 @@ def apply_kdamonds(kdamonds):
         print('kdamond applying failed: %s' % err)
         traceback.print_exc()
         return 1
+
+# for current_kdamonds()
 
 def files_content_to_access_pattern(files_content):
     return _damon.DamosAccessPattern(
