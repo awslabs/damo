@@ -110,6 +110,26 @@ def attr_str_ctx(damon_ctx):
             intervals.ops_update, nr_regions.min_nr_regions,
             nr_regions.max_nr_regions)
 
+def wops_for_target(target, target_has_pid):
+    wops = []
+    if target_has_pid:
+        wops.append({debugfs_target_ids: '%s' % target.pid})
+        tid = target.pid
+    else:
+        if not feature_supported('paddr'):
+            print('paddr is not supported')
+            exit(1)
+        wops.append({debugfs_target_ids: 'paddr\n'})
+        tid = 42
+    if feature_supported('init_regions_target_idx'):
+        tid = 0
+
+    if feature_supported('init_regions'):
+        string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in
+            target.regions])
+        wops.append({debugfs_init_regions: string})
+    return wops
+
 def wops_for_kdamonds(kdamonds):
     if len(kdamonds) > 1:
         print('Currently only <=one kdamond is supported')
@@ -127,23 +147,8 @@ def wops_for_kdamonds(kdamonds):
     write_contents.append({debugfs_attrs: attr_str_ctx(ctx)})
 
     if len(ctx.targets) > 0:
-        target = ctx.targets[0]
-        if _damon.target_has_pid(ctx.ops):
-            write_contents.append({debugfs_target_ids: '%s' % target.pid})
-            tid = target.pid
-        else:
-            if not feature_supported('paddr'):
-                print('paddr is not supported')
-                exit(1)
-            write_contents.append({debugfs_target_ids: 'paddr\n'})
-            tid = 42
-        if feature_supported('init_regions_target_idx'):
-            tid = 0
-
-        if feature_supported('init_regions'):
-            string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in
-                target.regions])
-            write_contents.append({debugfs_init_regions: string})
+        write_contents += wops_for_target(ctx.targets[0],
+                _damon.target_has_pid(ctx.ops))
 
     if feature_supported('record') and ctx.record_request != None:
         record_file_input = '%s %s' % (ctx.record_request.rfile_buf,
