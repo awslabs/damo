@@ -111,7 +111,7 @@ damos_wmark_metric_to_int = {'none': 0, 'free_mem_rate': 1}
 def text_to_damos_wmark_metric(txt):
     return damos_wmark_metric_to_int[txt.lower()]
 
-def damo_scheme_to_damos(line, name):
+def damo_single_line_scheme_to_damos(line, name):
     '''Returns Damos object and err'''
     fields = line.split()
     expected_lengths = [7, 9, 12, 17, 18]
@@ -215,7 +215,7 @@ def damo_schemes_to_damos(damo_schemes):
 
     damos_list = []
     for idx, line in enumerate(damo_schemes_split(damo_schemes)):
-        damos, err = damo_scheme_to_damos(line, '%d' % idx)
+        damos, err = damo_single_line_scheme_to_damos(line, '%d' % idx)
         if err != None:
             print('given scheme is neither file nor proper scheme string (%s)'
                     % err)
