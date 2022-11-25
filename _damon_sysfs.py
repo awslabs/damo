@@ -488,6 +488,9 @@ def update_supported_features():
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'tried_regions')):
         feature_supports['schemes_tried_regions'] = True
 
+    if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'filters')):
+        feature_supports['schemes_filters'] = True
+
     avail_ops, err = _avail_ops()
     if err == None:
         for ops in ['vaddr', 'paddr', 'fvaddr']:
