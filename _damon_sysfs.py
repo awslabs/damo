@@ -526,7 +526,7 @@ def update_supported_features():
             pid=None, contexts=[_damon.DamonCtx(name='0', intervals=None,
                 nr_regions=None, ops=None, targets=[],
                 schemes=[_damon.Damos(name='0', access_pattern=None,
-                    action='stat', quotas=None, watermarks=None, filters=None,
+                    action='stat', quotas=None, watermarks=None, filters=[],
                     stats=None)])])]
         ensure_dirs_populated_for(kdamonds_for_feature_check)
 
