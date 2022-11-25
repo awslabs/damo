@@ -127,7 +127,7 @@ class TestDamoSchemesInput(unittest.TestCase):
                             'sample_intervals', 0, 0, 'aggr_intervals'),
                         'stat',
                         _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
-                        _damon.DamosWatermarks('none', 0, 0, 0, 0), None, None)
+                        _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None, None)
             self.assertEqual(damos_list[0], expected)
 
 if __name__ == '__main__':

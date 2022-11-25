@@ -24,7 +24,8 @@ class TestDamon(unittest.TestCase):
                 'pageout',
                 _damon.DamosQuotas(100, 1024, 1000, 80, 76, 24),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
-                    200), None, None)
+                    200),
+                [], None, None)
         damos_kvpairs = damos.to_kvpairs()
         damos_again = _damon.kvpairs_to_Damos(damos_kvpairs)
         self.assertEqual(damos, damos_again)
@@ -53,7 +54,7 @@ class TestDamon(unittest.TestCase):
                     reset_interval_ms=1000, weight_sz_permil=0,
                     weight_nr_accesses_permil=0, weight_age_permil=0),
                 watermarks=_damon.DamosWatermarks(0,0,0,0,0),
-                stats=None)
+                filters=[], stats=None)
         self.assertEqual(damos, damos)
 
 if __name__ == '__main__':

@@ -265,6 +265,35 @@ def kvpairs_to_DamosWatermarks(kv):
     return DamosWatermarks(*[kv[x] for x in
         ['metric', 'interval_us', 'high_permil', 'mid_permil', 'low_permil']])
 
+class DamosFilter:
+    name = None
+    filter_type = None  # anon or memcg
+    memcg_path = None
+    matching = None
+
+    def __init__(self, name, filter_type, memcg_path, matching):
+        self.name = name
+        self.filter_type = filter_type
+        self.memcg_path = memcg_path
+        self.matching = matching
+
+    def __str__(self):
+        if self.type == 'memcg':
+            memcg_path_str = 'memcg_path %s, ' % self.memcg_path
+        return 'type %s, %smatching %s' % (
+                self.type, memcg_path_str, self.matching)
+
+    def __eq__(self, other):
+        return '%s' % self == '%s' % other
+
+    def to_kvpairs(self):
+        return {attr: getattr(self, attr) for attr in [
+            'name', 'filter_type', 'memcg_path', 'matching']}
+
+def kvpairs_to_DamosFilter(kv):
+    return DamosFilter(*[kv[x] for x in
+        ['name', 'filter_type', 'memcg_path', 'matching']])
+
 class DamosStats:
     nr_tried = None
     sz_tried = None
@@ -311,16 +340,18 @@ class Damos:
     action = None
     quotas = None
     watermarks = None
+    filters = None
     stats = None
     tried_regions = None
 
     def __init__(self, name, access_pattern, action, quotas, watermarks,
-            stats, tried_regions=None):
+            filters, stats, tried_regions=None):
         self.name = name
         self.access_pattern = access_pattern
         self.action = action
         self.quotas = quotas
         self.watermarks = watermarks
+        self.filters = filters
         self.stats = stats
         self.tried_regions = tried_regions
 
@@ -332,6 +363,9 @@ class Damos:
         lines.append(_damo_fmt_str.indent_lines('%s' % self.quotas, 4))
         lines.append('watermarks')
         lines.append(_damo_fmt_str.indent_lines('%s' % self.watermarks, 4))
+        lines.append('filters')
+        for damos_filter in self.filters:
+            lines.append(_damo_fmt_str.indent_lines('%s' % damos_filter, 8))
         lines.append('statistics')
         lines.append(_damo_fmt_str.indent_lines('%s' % self.stats, 4))
         if self.tried_regions != None:
@@ -351,13 +385,23 @@ class Damos:
         kv['access_pattern'] = self.access_pattern.to_kvpairs()
         kv['quotas'] = self.quotas.to_kvpairs()
         kv['watermarks'] = self.watermarks.to_kvpairs()
+        filters = []
+        for damos_filter in self.filters:
+            filters.append(damos_filter.to_kvpairs())
+        kv['filters'] = filters
         return kv
 
 def kvpairs_to_Damos(kv):
+    filters = []
+    if 'filters' in kv:
+        for damos_filter_kv in kv['filters']:
+            filters.append(kvpairs_to_DamosFilter(damos_filter_kv))
     return Damos(kv['name'],
             kvpairs_to_DamosAccessPattern(kv['access_pattern']), kv['action'],
             kvpairs_to_DamosQuotas(kv['quotas']),
-            kvpairs_to_DamosWatermarks(kv['watermarks']), None, None)
+            kvpairs_to_DamosWatermarks(kv['watermarks']),
+            filters,
+            None, None)
 
 class DamonRecord:
     rfile_buf = None

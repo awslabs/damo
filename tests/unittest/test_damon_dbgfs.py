@@ -37,7 +37,7 @@ class TestDamonDbgfs(unittest.TestCase):
                     reset_interval_ms=1000, weight_sz_permil=0,
                     weight_nr_accesses_permil=0, weight_age_permil=0),
                 watermarks=_damon.DamosWatermarks('none',0,0,0,0),
-                stats=None)
+                filters=[], stats=None)
 
         self.assertEqual(damos, expected)
 

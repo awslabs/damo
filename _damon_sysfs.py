@@ -328,6 +328,7 @@ def files_content_to_scheme(scheme_name, files_content):
             files_content['action'].strip(),
             files_content_to_quotas(files_content['quotas']),
             files_content_to_watermarks(files_content['watermarks']),
+            [],     # filters are not supported at the moment
             files_content_to_damos_stats(files_content['stats']),
             files_content_to_damos_tried_regions(
                 files_content['tried_regions'])
@@ -480,8 +481,8 @@ def update_supported_features():
             pid=None, contexts=[_damon.DamonCtx(name='0', intervals=None,
                 nr_regions=None, ops=None, targets=[],
                 schemes=[_damon.Damos(name='0', access_pattern=None,
-                    action='stat', quotas=None, watermarks=None, stats=None)
-                    ])])]
+                    action='stat', quotas=None, watermarks=None, filters=None,
+                    stats=None)])])]
         ensure_dirs_populated_for(kdamonds_for_feature_check)
 
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'tried_regions')):
