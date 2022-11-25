@@ -165,6 +165,8 @@ class TestDamonSysfs(unittest.TestCase):
                                 "low": "0",
                                 "metric": "none",
                                 "mid": "0"
+                            },
+                            "filters": {
                             }
                         }
                     }
