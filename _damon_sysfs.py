@@ -46,6 +46,15 @@ def scheme_dir_of(kdamond_name, context_name, scheme_name):
     return os.path.join(
             schemes_dir_of(kdamond_name, context_name), '%s' % scheme_name)
 
+def filters_dir_of(kdamond_name, context_name, scheme_name):
+    return os.path.join(
+            scheme_dir_of(kdamond_name, context_name, scheme_name), 'filters')
+
+def nr_filters_file_of(kdamond_name, context_name, scheme_name):
+    return os.path.join(
+            filters_dir_of(kdamond_name, context_name, scheme_name),
+            'nr_filters')
+
 def targets_dir_of(kdamond_name, context_name):
     return os.path.join(ctx_dir_of(kdamond_name, context_name), 'targets')
 
@@ -99,6 +108,20 @@ def update_schemes_tried_regions(kdamond_name):
         'update_schemes_tried_regions'})
 
 # for apply_kdamonds
+
+def wops_for_scheme_filter(damos_filter):
+    return {
+        'type': '%s' % damos_filter.filter_type,
+        'memcg_path': ('%s' % damos_filter.memcg_path
+            if damos_filter.memcg_path != None else ''),
+        'matching': 'Y' if damos_filter.matching else 'N',
+        }
+
+def wops_for_scheme_filters(filters):
+    wops = {}
+    for damos_filter in filters:
+        wops[damos_filter.name] = wops_for_scheme_filter(damos_filter)
+    return wops
 
 def wops_for_scheme_watermarks(wmarks):
     if wmarks == None:
@@ -164,6 +187,7 @@ def wops_for_schemes(ctx):
             'action': scheme.action,
             'quotas': wops_for_scheme_quotas(scheme.quotas),
             'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
+            'filters': wops_for_scheme_filters(scheme.filters),
         }
     return schemes_wops
 
@@ -253,6 +277,16 @@ def ensure_dirs_populated_for(kdamonds):
             _damo_fs.write_file_ensure(
                     nr_schemes_file_of(kdamond.name, ctx.name),
                     '%d' % len(ctx.schemes))
+        for scheme in ctx.schemes:
+            nr_filters, err = _damo_fs.read_file(
+                    nr_filters_file_of(kdamond.name, ctx.name, scheme.name))
+            if err != None:
+                return err
+            if int(nr_filters) != len(scheme.filters):
+                _damo_fs.write_file_ensure(
+                        nr_filters_file_of(kdamond.name, ctx.name,
+                            scheme.name),
+                        '%d' % len(scheme.filters))
 
 def apply_kdamonds(kdamonds):
     if len(kdamonds) > 1:
@@ -303,6 +337,16 @@ def files_content_to_watermarks(files_content):
             int(files_content['mid']),
             int(files_content['low']))
 
+def files_content_to_damos_filters(files_content):
+    filters = []
+    for filter_name in files_content:
+        if filter_name == 'nr_filters':
+            continue
+        filter_kv = files_content[filter_name]
+        filters.append(_damon.Damos(filter_name, filter_kv['type'].strip(),
+            filter_kv['memcg_path'].strip(), filter_kv['matching'].strip()))
+    return filters
+
 def files_content_to_damos_stats(files_content):
     return _damon.DamosStats(
             int(files_content['nr_tried']),
@@ -328,7 +372,8 @@ def files_content_to_scheme(scheme_name, files_content):
             files_content['action'].strip(),
             files_content_to_quotas(files_content['quotas']),
             files_content_to_watermarks(files_content['watermarks']),
-            [],     # filters are not supported at the moment
+            files_content_to_damos_filters(files_content['filters'])
+                if 'filters' in files_content else [],
             files_content_to_damos_stats(files_content['stats']),
             files_content_to_damos_tried_regions(
                 files_content['tried_regions'])
