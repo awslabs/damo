@@ -411,9 +411,13 @@ def kvpairs_to_Damos(kv):
         for damos_filter_kv in kv['filters']:
             filters.append(kvpairs_to_DamosFilter(damos_filter_kv))
     return Damos(kv['name'],
-            kvpairs_to_DamosAccessPattern(kv['access_pattern']), kv['action'],
-            kvpairs_to_DamosQuotas(kv['quotas']),
-            kvpairs_to_DamosWatermarks(kv['watermarks']),
+            kvpairs_to_DamosAccessPattern(kv['access_pattern'])
+                if 'access_pattern' in kv else default_DamosAccessPattern,
+            kv['action'] if 'action' in kv else 'stat',
+            kvpairs_to_DamosQuotas(kv['quotas'])
+                if 'quotas' in kv else default_DamosQuotas,
+            kvpairs_to_DamosWatermarks(kv['watermarks'])
+                if 'watermarks' in kv else default_DamosWatermarks,
             filters,
             None, None)
 
