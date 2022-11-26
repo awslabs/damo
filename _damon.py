@@ -305,8 +305,9 @@ class DamosFilter:
             'name', 'filter_type', 'memcg_path', 'matching']}
 
 def kvpairs_to_DamosFilter(kv):
-    return DamosFilter(*[kv[x] for x in
-        ['name', 'filter_type', 'memcg_path', 'matching']])
+    return DamosFilter(kv['name'], kv['filter_type'],
+            kv['memcg_path'] if kv['filter_type'] == 'memcg' else '',
+            kv['matching'])
 
 class DamosStats:
     nr_tried = None
