@@ -511,8 +511,10 @@ class Kdamond:
         return kv
 
 def kvpairs_to_Kdamond(kv):
-    return Kdamond(kv['name'], kv['state'], kv['pid'],
-        [kvpairs_to_DamonCtx(c) for c in kv['contexts']])
+    return Kdamond(kv['name'],
+            kv['state'] if 'state' in kv else 'off',
+            kv['pid'] if 'pid' in kv else None,
+            [kvpairs_to_DamonCtx(c) for c in kv['contexts']])
 
 # System check
 
