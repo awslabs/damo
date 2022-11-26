@@ -485,11 +485,15 @@ class DamonCtx:
         return kv
 
 def kvpairs_to_DamonCtx(kv):
-    return DamonCtx(kv['name'], kvpairs_to_DamonIntervals(kv['intervals']),
-            kvpairs_to_DamonNrRegionsRange(kv['nr_regions']),
+    return DamonCtx(kv['name'],
+            kvpairs_to_DamonIntervals(kv['intervals'])
+                if 'intervals' in kv else default_DamonIntervals,
+            kvpairs_to_DamonNrRegionsRange(kv['nr_regions'])
+                if 'nr_regions' in kv else default_DamonNrRegionsRange,
             kv['ops'],
             [kvpairs_to_DamonTarget(t) for t in kv['targets']],
-            [kvpairs_to_Damos(s) for s in kv['schemes']])
+            [kvpairs_to_Damos(s) for s in kv['schemes']]
+                if 'schemes' in kv else [])
 
 def target_has_pid(ops):
     return ops in ['vaddr', 'fvaddr']
