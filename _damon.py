@@ -184,6 +184,10 @@ def kvpairs_to_DamosAccessPattern(kv):
             kv['nr_accesses_unit'], kv['min_age'], kv['max_age'],
             kv['age_unit'])
 
+# every region.  could be used for monitoring
+default_DamosAccessPattern =  DamosAccessPattern(
+        'min', 'max', 'min', 'max', 'percent', 'min', 'max', 'usec')
+
 class DamosQuotas:
     time_ms = None
     sz_bytes = None
@@ -231,6 +235,9 @@ def kvpairs_to_DamosQuotas(kv):
             kv['weight_sz_permil'], kv['weight_nr_accesses_permil'],
             kv['weight_age_permil'])
 
+# no limit
+default_DamosQuotas = DamosQuotas(0, 0, 0, 0, 0, 0)
+
 class DamosWatermarks:
     metric = None
     interval_us = None
@@ -268,6 +275,9 @@ class DamosWatermarks:
 def kvpairs_to_DamosWatermarks(kv):
     return DamosWatermarks(*[kv[x] for x in
         ['metric', 'interval_us', 'high_permil', 'mid_permil', 'low_permil']])
+
+# no limit
+default_DamosWatermarks = DamosWatermarks('none', 0, 0, 0, 0)
 
 class DamosFilter:
     name = None
