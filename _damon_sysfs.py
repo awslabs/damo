@@ -345,8 +345,9 @@ def files_content_to_damos_filters(files_content):
         if filter_name == 'nr_filters':
             continue
         filter_kv = files_content[filter_name]
-        filters.append(_damon.Damos(filter_name, filter_kv['type'].strip(),
-            filter_kv['memcg_path'].strip(), filter_kv['matching'].strip()))
+        filters.append(_damon.DamosFilter(filter_name,
+            filter_kv['type'].strip(), filter_kv['memcg_path'].strip(),
+            filter_kv['matching'].strip()))
     return filters
 
 def files_content_to_damos_stats(files_content):
