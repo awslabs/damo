@@ -187,8 +187,10 @@ def wops_for_schemes(ctx):
             'action': scheme.action,
             'quotas': wops_for_scheme_quotas(scheme.quotas),
             'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
-            'filters': wops_for_scheme_filters(scheme.filters),
         }
+        if feature_supported('schemes_filters'):
+            schemes_wops[scheme.name]['filters'] = wops_for_scheme_filters(
+                    scheme.filters)
     return schemes_wops
 
 def wops_for_regions(regions):
