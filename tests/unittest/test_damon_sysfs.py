@@ -26,6 +26,7 @@ class TestDamonSysfs(unittest.TestCase):
                 'schemes_speed_limit': True,
                 'schemes_tried_regions': True,
                 'schemes_wmarks': True,
+                'schemes_filters': True,
                 'vaddr': True}
 
         sysfs_read_txt = r'''
