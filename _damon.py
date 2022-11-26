@@ -292,10 +292,11 @@ class DamosFilter:
         self.matching = matching
 
     def __str__(self):
-        if self.type == 'memcg':
+        memcg_path_str = ''
+        if self.filter_type == 'memcg':
             memcg_path_str = 'memcg_path %s, ' % self.memcg_path
-        return 'type %s, %smatching %s' % (
-                self.type, memcg_path_str, self.matching)
+        return 'filter_type %s, %smatching %s' % (
+                self.filter_type, memcg_path_str, self.matching)
 
     def __eq__(self, other):
         return '%s' % self == '%s' % other
