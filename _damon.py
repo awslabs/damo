@@ -484,8 +484,8 @@ class DamonCtx:
         kv['ops'] = self.ops
         kv['targets'] = [t.to_kvpairs() for t in self.targets]
         kv['schemes'] = [s.to_kvpairs() for s in self.schemes]
-        kv['record_request'] = (self.record_request.to_kvpairs() if
-                self.record_request != None else None)
+        if self.record_request:
+            kv['record_request'] = self.record_request.to_kvpairs()
         return kv
 
 def kvpairs_to_DamonCtx(kv):
