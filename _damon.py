@@ -489,7 +489,7 @@ class DamonCtx:
         return kv
 
 def kvpairs_to_DamonCtx(kv):
-    return DamonCtx(kv['name'],
+    ctx = DamonCtx(kv['name'],
             kvpairs_to_DamonIntervals(kv['intervals'])
                 if 'intervals' in kv else default_DamonIntervals,
             kvpairs_to_DamonNrRegionsRange(kv['nr_regions'])
@@ -498,6 +498,9 @@ def kvpairs_to_DamonCtx(kv):
             [kvpairs_to_DamonTarget(t) for t in kv['targets']],
             [kvpairs_to_Damos(s) for s in kv['schemes']]
                 if 'schemes' in kv else [])
+    if 'record_request' in kv:
+        ctx.record_request = kvpairs_to_DamonRecord(kv['record_request'])
+    return ctx
 
 def target_has_pid(ops):
     return ops in ['vaddr', 'fvaddr']
