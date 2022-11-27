@@ -164,6 +164,26 @@ def set_implicit_target_schemes_argparser(parser):
             type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
 
+# default scheme for monitoring
+default_schemes = '''
+[
+    {
+	"name": "0",
+	"access_pattern": {
+	    "min_sz_bytes": "min",
+	    "max_sz_bytes": "max",
+	    "nr_accesses_unit": "percent",
+	    "min_nr_accesses": "min",
+	    "max_nr_accesses": "max",
+	    "age_unit": "usec",
+	    "min_age": "min",
+	    "max_age": "max"
+	},
+	"action": "stat"
+    }
+]
+'''
+
 def set_explicit_target_argparser(parser):
     set_common_monitoring_argparser(parser)
     parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
@@ -171,7 +191,8 @@ def set_explicit_target_argparser(parser):
             help='monitoring operations set')
     parser.add_argument('--target_pid', type=int, help='target pid')
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
-            type=str, help='data access monitoring-based operation schemes')
+	    default=default_schemes, type=str,
+	    help='data access monitoring-based operation schemes')
     parser.add_argument('--kdamonds', metavar='<string or file>',
             help='key-value pairs format kdamonds config')
     set_common_argparser(parser)
