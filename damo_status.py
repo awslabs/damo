@@ -84,6 +84,11 @@ def main(args=None):
             if err != None:
                 print('update schemes stat fil:', err)
                 exit(1)
+            if _damon.feature_supported('schemes_tried_regions'):
+                err = _damon.update_schemes_tried_regions(name)
+                if err != None:
+                    print('update schemes tried regions fail: %s', err)
+                    exit(1)
     content = _damon.read_damon_fs()
     if args.target == 'kdamonds':
         kdamonds = _damon.current_kdamonds()
@@ -99,13 +104,6 @@ def main(args=None):
     elif args.target == 'schemes_stats':
         pr_schemes_stats(content)
     elif args.target == 'schemes_tried_regions':
-        if not _damon.feature_supported('schemes_tried_regions'):
-            print('schemes_tried_regions not supported')
-            exit(1)
-        err = _damon.update_schemes_tried_regions('0')
-        if err != None:
-            print('update schemes tried regions fail:', err)
-            exit(1)
         pr_schemes_tried_regions(_damon.read_damon_fs())
     elif args.target == 'damon_interface':
         print(_damon.damon_interface())
