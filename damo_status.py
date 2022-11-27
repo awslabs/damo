@@ -9,7 +9,7 @@ import _damon_args
 
 def set_argparser(parser):
     parser.add_argument('target', choices=['schemes_stats',
-        'schemes_tried_regions', 'kdamonds', 'all', 'damon_interface'],
+        'schemes_tried_regions', 'kdamonds', 'damon_interface'],
             nargs='?', default='kdamonds', help='What status to show')
     parser.add_argument('--json', action='store_true',
             help='print kdamond in json format')
@@ -99,9 +99,7 @@ def main(args=None):
             print('kdamonds')
             print(_damo_fmt_str.indent_lines(
                 '\n\n'.join(['%s' % k for k in kdamonds]), 4))
-    if args.target == 'all':
-        print(json.dumps(content, indent=4, sort_keys=True))
-    elif args.target == 'schemes_stats':
+    if args.target == 'schemes_stats':
         pr_schemes_stats(content)
     elif args.target == 'schemes_tried_regions':
         pr_schemes_tried_regions(_damon.read_damon_fs())
