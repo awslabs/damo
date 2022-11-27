@@ -79,7 +79,7 @@ def text_to_us(txt):
     if txt == 'min':
         return 0
     if txt == 'max':
-        return uint_max
+        return ulong_max
 
     if not txt[-2:] in unit_to_usecs and not txt[-1] in unit_to_usecs:
         return float(txt)
