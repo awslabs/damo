@@ -117,8 +117,9 @@ ensure_free_mem_ratio() {
 		[ "$mem_free_rate" -lt "$lowerbound" ]
 	then
 		echo "SKIP schemes-wmarks ($mem_free_rate free mem rate)"
-		exit
+		return 1
 	fi
+	return 0
 }
 
 __measure_scheme_applied() {
@@ -224,6 +225,10 @@ test_wmarks() {
 
 	# Test high watermark-based deactivation
 	ensure_free_mem_ratio 990 100
+	if [ "$?" -ne 0 ]
+	then
+		return
+	fi
 	applied=42
 	measure_scheme_applied "$scheme_prefix 50 40 30" "paddr" 3 \
 		"$damon_interface"
@@ -235,6 +240,10 @@ test_wmarks() {
 
 	# Test mid-low watermarks-based activation
 	ensure_free_mem_ratio 990 100
+	if [ "$?" -ne 0 ]
+	then
+		return
+	fi
 	applied=0
 	measure_scheme_applied "$scheme_prefix 999 995 100" "paddr" 3 \
 		"$damon_interface"
@@ -246,6 +255,10 @@ test_wmarks() {
 
 	# Test low watermark-based deactivation
 	ensure_free_mem_ratio 990 100
+	if [ "$?" -ne 0 ]
+	then
+		return
+	fi
 	applied=42
 	measure_scheme_applied "$scheme_prefix 999 998 995" "paddr" 3 \
 		"$damon_interface"
