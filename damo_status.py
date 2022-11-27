@@ -15,29 +15,21 @@ def set_argparser(parser):
             help='print kdamond in json format')
     _damon_args.set_common_argparser(parser)
 
-def pr_schemes_stats(damon_fs_content):
+def pr_schemes_stats(kdamonds):
     print('# <kdamond> <context> <scheme> <field> <value>')
-    kdamonds = damon_fs_content['kdamonds']
-    nr_kdamonds = int(kdamonds['nr_kdamonds'])
-    if nr_kdamonds == 0:
-        print('no kdamond exist')
-    for i in range(nr_kdamonds):
-        contexts = kdamonds['%d' % i]['contexts']
-        nr_contexts = int(contexts['nr_contexts'])
-        if nr_contexts == 0:
-            print('kdamond %d has no context' % i)
-            continue
-        for c in range(nr_contexts):
-            schemes = contexts['%d' % c]['schemes']
-            nr_schemes = int(schemes['nr_schemes'])
-            if nr_schemes == 0:
-                print('kdamond %d context %d has no scheme' % (i, c))
-                continue
-            for s in range(nr_schemes):
-                stats = schemes['%d' % s]['stats']
-                for f in ['nr_tried', 'sz_tried',
-                        'nr_applied', 'sz_applied', 'qt_exceeds']:
-                    print('%d %d %d %s: %d' % (i, c, s, f, int(stats[f])))
+    for kdamond in kdamonds:
+        for ctx in kdamond.contexts:
+            for scheme in ctx.schemes:
+                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                    'nr_tried', scheme.stats.nr_tried))
+                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                    'sz_tried', scheme.stats.sz_tried))
+                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                    'nr_applied', scheme.stats.nr_applied))
+                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                    'sz_applied', scheme.stats.sz_applied))
+                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                    'qt_exceeds', scheme.stats.qt_exceeds))
 
 def pr_schemes_tried_regions(damon_fs_content):
     kdamonds = damon_fs_content['kdamonds']
@@ -90,8 +82,8 @@ def main(args=None):
                     print('update schemes tried regions fail: %s', err)
                     exit(1)
     content = _damon.read_damon_fs()
+    kdamonds = _damon.current_kdamonds()
     if args.target == 'kdamonds':
-        kdamonds = _damon.current_kdamonds()
         if args.json:
             print(json.dumps([k.to_kvpairs() for k in kdamonds],
                 indent=4, sort_keys=True))
@@ -99,8 +91,8 @@ def main(args=None):
             print('kdamonds')
             print(_damo_fmt_str.indent_lines(
                 '\n\n'.join(['%s' % k for k in kdamonds]), 4))
-    if args.target == 'schemes_stats':
-        pr_schemes_stats(content)
+    elif args.target == 'schemes_stats':
+        pr_schemes_stats(kdamonds)
     elif args.target == 'schemes_tried_regions':
         pr_schemes_tried_regions(_damon.read_damon_fs())
     elif args.target == 'damon_interface':
