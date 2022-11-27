@@ -1,0 +1,16 @@
+[
+	{
+		"name": "0",
+		"access_pattern": {
+			"min_sz_bytes": "min",
+			"max_sz_bytes": "max",
+			"nr_accesses_unit": "percent",
+			"min_nr_accesses": "min",
+			"max_nr_accesses": "min",
+			"age_unit": "usec",
+			"min_age": "1s",
+			"max_age": "max"
+		},
+		"action": "pageout"
+	}
+]

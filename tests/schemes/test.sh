@@ -258,6 +258,47 @@ test_wmarks() {
 	echo "PASS $testname"
 }
 
+test_filters() {
+	testname="schemes-filters $damon_interface"
+	workload="alloc_1gb_spin"
+	workload_src="${workload}.c"
+	if ! gcc -o "$workload" "$workload_src"
+	then
+		echo "FAIL $testname ($workload compile failed)"
+		exit 1
+	fi
+
+	prcl_damos_json="prcl_damos.json"
+	sudo "$damo" start -c "$prcl_damos_json"
+	"./$workload" &
+	workload_pid=$!
+	sleep 5
+	rss=$(ps -o rss=, --pid "$workload_pid")
+	if [ "$rss" -gt 500000 ]
+	then
+		echo "FAIL $testname (prcl doesn't work: $rss)"
+		exit 1
+	fi
+	kill -9 "$workload_pid"
+	sudo "$damo" stop
+
+	prcl_no_anon_damos_json="prcl_no_anon_damos.json"
+	sudo "$damo" start -c "$prcl_no_anon_damos_json"
+	"./$workload" &
+	workload_pid=$!
+	sleep 5
+	rss=$(ps -o rss=, --pid "$workload_pid")
+	if [ "$rss" -lt 800000 ]
+	then
+		echo "FAIL $testname (prcl_no_anon doesn't work: $rss)"
+		exit 1
+	fi
+	kill -9 "$workload_pid"
+	sudo "$damo" stop
+
+	echo "PASS $testname"
+}
+
 damon_interfaces=""
 if [ -d "/sys/kernel/debug/damon" ]
 then
@@ -287,6 +328,11 @@ do
 
 	test_stat "$damon_interface"
 	test_wmarks "$damon_interface"
+
+	if [ "$damon_interface" = "sysfs" ]
+	then
+		test_filters
+	fi
 done
 
 echo "PASS $(basename $(pwd))"
