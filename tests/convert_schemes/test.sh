@@ -16,7 +16,7 @@ test_convert_file() {
 				--scheme_version "$version" "$input")
 			if [ ! "$expected" = "$converted" ]
 			then
-				echo "FAIL convert-schemes (for $input)"
+				echo "FAIL convert-schemes (for $input, $version)"
 				exit 1
 			fi
 		done
