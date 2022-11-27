@@ -102,8 +102,10 @@ def main(args=None):
         if not _damon.feature_supported('schemes_tried_regions'):
             print('schemes_tried_regions not supported')
             exit(1)
-        _damon.write_damon_fs({'kdamonds/0/state':
-            'update_schemes_tried_regions'})
+        err = _damon.update_schemes_tried_regions('0')
+        if err != None:
+            print('update schemes tried regions fail:', err)
+            exit(1)
         pr_schemes_tried_regions(_damon.read_damon_fs())
     elif args.target == 'damon_interface':
         print(_damon.damon_interface())
