@@ -296,6 +296,45 @@ test_filters() {
 	kill -9 "$workload_pid"
 	sudo "$damo" stop
 
+	cgroup="/sys/fs/cgroup/unified/"
+	memcg_support="false"
+	for controller in $(sudo cat "$cgroup/cgroup.controllers")
+	do
+		if [ "$controller" = "memory" ]
+		then
+			memcg_support="true"
+			break
+		fi
+	done
+	if [ "$memcg_support" = "false" ]
+	then
+		echo "SKIP $testname (memcg not supported)"
+		return
+	fi
+	echo "+memory" | sudo tee "$cgroup/cgroup.subtree_control"
+	sudo mkdir "$cgroup/damos_filtered"
+	echo $$ | sudo tee "$cgroup/damos_filtered/cgroup.procs"
+
+	prcl_no_cgroup_damos_json="prcl_no_cgroup_damos.json"
+	sudo "$damo" start -c "$prcl_no_cgroup_damos_json"
+	"./$workload" &
+	workload_pid=$!
+	sleep 5
+	rss=$(ps -o rss=, --pid "$workload_pid")
+	if [ "$rss" -lt 800000 ]
+	then
+		echo "FAIL $testname (prcl_no_cgroup doesn't work: $rss)"
+		exit 1
+	fi
+	kill -9 "$workload_pid"
+	sudo "$damo" stop
+	for pid in $(cat "$cgroup/damos_filtered/cgroup.procs")
+	do
+		echo "move pid $pid"
+		echo "$pid" | sudo tee "$cgroup/cgroup.procs"
+	done
+	rmdir "$cgroup/damos_filtered"
+
 	echo "PASS $testname"
 }
 
