@@ -19,6 +19,8 @@ def format_sz(sz_bytes, machine_friendly):
         return '%d' % sz_bytes
 
     sz_bytes = float(sz_bytes)
+    if sz_bytes > 1<<50:
+        return '%.3f PiB' % (sz_bytes / (1<<50))
     if sz_bytes > 1<<40:
         return '%.3f TiB' % (sz_bytes / (1<<40))
     if sz_bytes > 1<<30:
