@@ -8,6 +8,7 @@ os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import damo_adjust
 import damo_features
+import damo_fmt_json
 import damo_fs
 import damo_lru_sort
 import damo_monitor
@@ -92,6 +93,10 @@ def main():
             help='update input parameters of ongoing DAMON')
     damo_tune.set_argparser(parser_tune)
 
+    parser_fmt_json = subparser.add_parser('fmt_json',
+            help='convert damo-start cmdline option to DAMON json input')
+    damo_fmt_json.set_argparser(parser_fmt_json)
+
     subparser.add_parser('version', help='print the version number')
 
     args = parser.parse_args()
@@ -124,6 +129,8 @@ def main():
         damo_stop.main(args)
     elif args.command == 'tune':
         damo_tune.main(args)
+    elif args.command == 'fmt_json':
+        damo_fmt_json.main(args)
     elif args.command == 'version':
         bindir = os.path.dirname(os.path.abspath(__file__))
         with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:
