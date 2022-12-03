@@ -9,7 +9,7 @@ import _damon
 import _damon_args
 
 def set_argparser(parser):
-    parser.add_argument('target', choices=['schemes_stats',
+    parser.add_argument('target', choices=['nr_kdamonds', 'schemes_stats',
         'schemes_tried_regions', 'kdamonds', 'damon_interface'],
             nargs='?', default='kdamonds', help='What status to show')
     parser.add_argument('--json', action='store_true',
@@ -68,7 +68,11 @@ def update_pr_damo_stat(target, json_format, raw_nr):
                     exit(1)
     content = _damon.read_damon_fs()
     kdamonds = _damon.current_kdamonds()
-    if target == 'kdamonds':
+    if target == 'nr_kdamonds':
+        print('%s kdamonds on, %s kdamonds off' % (
+                len([k for k in kdamonds if k.state == 'on']),
+                len([k for k in kdamonds if k.state == 'off'])))
+    elif target == 'kdamonds':
         if json_format:
             print(json.dumps([k.to_kvpairs() for k in kdamonds],
                 indent=4, sort_keys=True))
