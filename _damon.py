@@ -78,8 +78,7 @@ class DamonRegion:
         self.end = end
 
     def __str__(self):
-        return '[%d, %d) (%s)' % (self.start, self.end,
-                _damo_fmt_str.format_sz(self.end - self.start, False))
+        return _damo_fmt_str.format_addr_range(self.start, self.end, False)
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
@@ -346,10 +345,8 @@ class DamosTriedRegion:
         self.age = age
 
     def __str__(self):
-        return '[%s, %s) (%s): nr_accesses: %s, age: %s' % (
-                _damo_fmt_str.format_nr(self.start, False),
-                _damo_fmt_str.format_nr(self.end, False),
-                _damo_fmt_str.format_sz(self.end - self.start, False),
+        return '%s: nr_accesses: %s, age: %s' % (
+                _damo_fmt_str.format_addr_range(self.start, self.end, False),
                 _damo_fmt_str.format_nr(self.nr_accesses, False),
                 _damo_fmt_str.format_nr(self.age, False))
 
