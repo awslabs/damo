@@ -8,6 +8,7 @@ os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import damo_adjust
 import damo_features
+import damo_fs
 import damo_lru_sort
 import damo_monitor
 import damo_reclaim
@@ -19,7 +20,6 @@ import damo_stat
 import damo_stop
 import damo_tune
 import damo_validate
-import damo_fs
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
     def _format_action(self, action):
