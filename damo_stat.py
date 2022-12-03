@@ -18,10 +18,12 @@ def set_argparser(parser):
             help='delay between repeated status prints')
     parser.add_argument('--count', metavar='<count>', default=1, type=int,
             help='number of repeated status prints')
+    parser.add_argument('--raw', action='store_true',
+            help='print number in mchine friendly raw form')
 
     _damon_args.set_common_argparser(parser)
 
-def pr_schemes_stats(kdamonds):
+def pr_schemes_stats(kdamonds, raw_nr):
     print('# <kdamond> <context> <scheme> <field> <value>')
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
@@ -29,11 +31,13 @@ def pr_schemes_stats(kdamonds):
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'nr_tried', scheme.stats.nr_tried))
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
-                    'sz_tried', scheme.stats.sz_tried))
+                    'sz_tried', _damo_fmt_str.format_sz(
+                        scheme.stats.sz_tried, raw_nr)))
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'nr_applied', scheme.stats.nr_applied))
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
-                    'sz_applied', scheme.stats.sz_applied))
+                    'sz_applied', _damo_fmt_str.format_sz(
+                        scheme.stats.sz_applied, raw_nr)))
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'qt_exceeds', scheme.stats.qt_exceeds))
 
@@ -44,7 +48,7 @@ def pr_schemes_tried_regions(kdamonds):
                 print('%s/%s/%s' % (kdamond.name, ctx.name, scheme.name))
                 print('\n'.join('%s' % r for r in scheme.tried_regions))
 
-def update_pr_damo_stat(target, json_format):
+def update_pr_damo_stat(target, json_format, raw_nr):
     if _damon.any_kdamond_running():
         for name in _damon.current_kdamond_names():
             err = _damon.update_schemes_stats(name)
@@ -67,7 +71,7 @@ def update_pr_damo_stat(target, json_format):
             print(_damo_fmt_str.indent_lines(
                 '\n\n'.join(['%s' % k for k in kdamonds]), 4))
     elif target == 'schemes_stats':
-        pr_schemes_stats(kdamonds)
+        pr_schemes_stats(kdamonds, raw_nr)
     elif target == 'schemes_tried_regions':
         pr_schemes_tried_regions(kdamonds)
     elif target == 'damon_interface':
@@ -84,7 +88,7 @@ def main(args=None):
     _damon.ensure_initialized(args)
 
     for i in range(args.count):
-        update_pr_damo_stat(args.target, args.json)
+        update_pr_damo_stat(args.target, args.json, args.raw)
         if i != args.count - 1:
             time.sleep(args.delay)
 
