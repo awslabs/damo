@@ -346,9 +346,12 @@ class DamosTriedRegion:
         self.age = age
 
     def __str__(self):
-        return '[%d, %d) (%s): nr_accesses: %d, age: %d' % (self.start,
-                self.end, _damo_fmt_str.format_sz(self.end - self.start, False),
-                self.nr_accesses, self.age)
+        return '[%s, %s) (%s): nr_accesses: %s, age: %s' % (
+                _damo_fmt_str.format_nr(self.start, False),
+                _damo_fmt_str.format_nr(self.end, False),
+                _damo_fmt_str.format_sz(self.end - self.start, False),
+                _damo_fmt_str.format_nr(self.nr_accesses, False),
+                _damo_fmt_str.format_nr(self.age, False))
 
 class Damos:
     name = None
