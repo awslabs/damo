@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import json
+import time
 
 import _damo_fmt_str
 import _damon
@@ -13,6 +14,11 @@ def set_argparser(parser):
             nargs='?', default='kdamonds', help='What status to show')
     parser.add_argument('--json', action='store_true',
             help='print kdamond in json format')
+    parser.add_argument('--delay', metavar='<secs>', default=3, type=float,
+            help='delay between repeated status prints')
+    parser.add_argument('--count', metavar='<count>', default=1, type=int,
+            help='number of repeated status prints')
+
     _damon_args.set_common_argparser(parser)
 
 def pr_schemes_stats(kdamonds):
@@ -38,16 +44,7 @@ def pr_schemes_tried_regions(kdamonds):
                 print('%s/%s/%s' % (kdamond.name, ctx.name, scheme.name))
                 print('\n'.join('%s' % r for r in scheme.tried_regions))
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
-    # Require root permission
-    _damon.ensure_root_permission()
-    _damon.ensure_initialized(args)
-
+def update_pr_damo_stat(target, json_format):
     if _damon.any_kdamond_running():
         for name in _damon.current_kdamond_names():
             err = _damon.update_schemes_stats(name)
@@ -61,20 +58,35 @@ def main(args=None):
                     exit(1)
     content = _damon.read_damon_fs()
     kdamonds = _damon.current_kdamonds()
-    if args.target == 'kdamonds':
-        if args.json:
+    if target == 'kdamonds':
+        if json_format:
             print(json.dumps([k.to_kvpairs() for k in kdamonds],
                 indent=4, sort_keys=True))
         else:
             print('kdamonds')
             print(_damo_fmt_str.indent_lines(
                 '\n\n'.join(['%s' % k for k in kdamonds]), 4))
-    elif args.target == 'schemes_stats':
+    elif target == 'schemes_stats':
         pr_schemes_stats(kdamonds)
-    elif args.target == 'schemes_tried_regions':
+    elif target == 'schemes_tried_regions':
         pr_schemes_tried_regions(kdamonds)
-    elif args.target == 'damon_interface':
+    elif target == 'damon_interface':
         print(_damon.damon_interface())
+
+def main(args=None):
+    if not args:
+        parser = argparse.ArgumentParser()
+        set_argparser(parser)
+        args = parser.parse_args()
+
+    # Require root permission
+    _damon.ensure_root_permission()
+    _damon.ensure_initialized(args)
+
+    for i in range(args.count):
+        update_pr_damo_stat(args.target, args.json)
+        if i != args.count - 1:
+            time.sleep(args.delay)
 
 if __name__ == '__main__':
     main()
