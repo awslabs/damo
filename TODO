@@ -4,3 +4,7 @@
 - Support rss recording
 - Support filtering regions with min age
 - Make stateful (maybe we need .damo file)
+- Support 'init': Do the system/features check and store the result in a file
+  (.damo?)
+- Support 'cleanup': echo 0 > nr_kdamonds
+- Document new workflow: init-start-stat-tune-stop
