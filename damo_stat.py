@@ -29,17 +29,20 @@ def pr_schemes_stats(kdamonds, raw_nr):
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
-                    'nr_tried', scheme.stats.nr_tried))
+                    'nr_tried', _damo_fmt_str.format_nr(
+                        scheme.stats.nr_tried, raw_nr)))
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'sz_tried', _damo_fmt_str.format_sz(
                         scheme.stats.sz_tried, raw_nr)))
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
-                    'nr_applied', scheme.stats.nr_applied))
+                    'nr_applied', _damo_fmt_str.format_nr(
+                        scheme.stats.nr_applied, raw_nr)))
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'sz_applied', _damo_fmt_str.format_sz(
                         scheme.stats.sz_applied, raw_nr)))
                 print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
-                    'qt_exceeds', scheme.stats.qt_exceeds))
+                    'qt_exceeds', _damo_fmt_str.format_nr(
+                        scheme.stats.qt_exceeds, raw_nr)))
 
 def pr_schemes_tried_regions(kdamonds):
     for kdamond in kdamonds:
