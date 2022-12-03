@@ -49,7 +49,7 @@ def update_pr_damo_stat(target, json_format):
         for name in _damon.current_kdamond_names():
             err = _damon.update_schemes_stats(name)
             if err != None:
-                print('update schemes stat fil:', err)
+                print('update schemes stat fail:', err)
                 exit(1)
             if _damon.feature_supported('schemes_tried_regions'):
                 err = _damon.update_schemes_tried_regions(name)
