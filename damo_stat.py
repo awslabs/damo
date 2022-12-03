@@ -11,7 +11,7 @@ import _damon_args
 def set_argparser(parser):
     parser.add_argument('target', choices=['nr_kdamonds', 'schemes_stats',
         'schemes_tried_regions', 'kdamonds', 'damon_interface'],
-            nargs='?', default='kdamonds', help='What status to show')
+            nargs='?', default='nr_kdamonds', help='What status to show')
     parser.add_argument('--json', action='store_true',
             help='print kdamond in json format')
     parser.add_argument('--delay', metavar='<secs>', default=3, type=float,
