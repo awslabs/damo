@@ -3,6 +3,17 @@
 
 import platform
 
+def format_nr(nr, machine_friendly):
+    raw_string = '%d' % nr
+    if machine_friendly:
+        return raw_string
+    fields = []
+    for i in range(0, len(raw_string), 3):
+        start_idx = max(0, len(raw_string) - i - 3)
+        end_idx = len(raw_string) - i
+        fields = [raw_string[start_idx:end_idx]] + fields
+    return ','.join(fields)
+
 def format_sz(sz_bytes, machine_friendly):
     if machine_friendly:
         return '%d' % sz_bytes
