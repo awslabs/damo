@@ -57,5 +57,10 @@ class TestDamon(unittest.TestCase):
                 filters=[], stats=None)
         self.assertEqual(damos, damos)
 
+    def test_kvpairs_to_damon_intervals(self):
+        self.assertEqual(_damon.kvpairs_to_DamonIntervals(
+            {'sample': 5000, 'aggr': 100000, 'ops_update': 1000000}),
+            _damon.DamonIntervals(5000, 100000, 1000000))
+
 if __name__ == '__main__':
     unittest.main()
