@@ -16,7 +16,7 @@ import damo_report
 import damo_schemes
 import damo_snap
 import damo_start
-import damo_status
+import damo_stat
 import damo_stop
 import damo_tune
 import damo_validate
@@ -77,9 +77,9 @@ def main():
             help='manipulate DAMON in a filesystem-like manner')
     damo_fs.set_argparser(parser_damo_fs)
 
-    parser_damo_status = subparser.add_parser('status',
-            help='print status of DAMON')
-    damo_status.set_argparser(parser_damo_status)
+    parser_damo_stat = subparser.add_parser('stat',
+            help='print status of DAMON and the system')
+    damo_stat.set_argparser(parser_damo_stat)
 
     parser_start = subparser.add_parser('start',
             help='start DAMON with given parameters')
@@ -121,8 +121,8 @@ def main():
         damo_validate.main(args)
     elif args.command == 'fs':
         damo_fs.main(args)
-    elif args.command == 'status':
-        damo_status.main(args)
+    elif args.command == 'stat':
+        damo_stat.main(args)
     elif args.command == 'start':
         damo_start.main(args)
     elif args.command == 'stop':
