@@ -522,8 +522,11 @@ class Kdamond:
         self.pid = pid
         self.contexts = contexts
 
+    def summary_str(self):
+        return '%s (state: %s, pid: %s)' % (self.name, self.state, self.pid)
+
     def __str__(self):
-        lines = ['%s (state: %s, pid: %s)' % (self.name, self.state, self.pid)]
+        lines = [self.summary_str()]
         for ctx in self.contexts:
             lines.append('contexts')
             lines.append(_damo_fmt_str.indent_lines('%s' % ctx, 4))
