@@ -26,15 +26,15 @@ def pr_schemes_stats(kdamonds):
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
-                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'nr_tried', scheme.stats.nr_tried))
-                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'sz_tried', scheme.stats.sz_tried))
-                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'nr_applied', scheme.stats.nr_applied))
-                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'sz_applied', scheme.stats.sz_applied))
-                print('%s %s %s %s: %s' % (kdamond.name, ctx.name, scheme.name,
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
                     'qt_exceeds', scheme.stats.qt_exceeds))
 
 def pr_schemes_tried_regions(kdamonds):
