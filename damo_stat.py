@@ -45,10 +45,13 @@ def pr_schemes_stats(kdamonds, raw_nr):
                         scheme.stats.qt_exceeds, raw_nr)))
 
 def pr_schemes_tried_regions(kdamonds):
+    print('# <kdamond> <context> <scheme>')
+    print('# <regions>')
+    print('# ...')
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
-                print('%s/%s/%s' % (kdamond.name, ctx.name, scheme.name))
+                print('%s %s %s' % (kdamond.name, ctx.name, scheme.name))
                 print('\n'.join('%s' % r for r in scheme.tried_regions))
 
 def update_pr_damo_stat(target, json_format, raw_nr):
