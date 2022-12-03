@@ -44,13 +44,13 @@ do
 
 	for i in {1..10}
 	do
-		if ! sudo "$damo" snap &> /dev/null
+		if ! sudo "$damo" stat &> /dev/null
 		then
-			echo "FAIL $testname2 snap $i failed"
+			echo "FAIL $testname2 stat $i failed"
 			exit 1
 		fi
 	done
-	echo "PASS $testname2 snap $i"
+	echo "PASS $testname2 stat $i"
 
 	if ! sudo "$damo" tune --aggr 200000 --ops paddr \
 		--damon_interface "$damon_interface" &> /dev/null

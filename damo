@@ -14,7 +14,6 @@ import damo_reclaim
 import damo_record
 import damo_report
 import damo_schemes
-import damo_snap
 import damo_start
 import damo_stat
 import damo_stop
@@ -93,10 +92,6 @@ def main():
             help='update input parameters of ongoing DAMON')
     damo_tune.set_argparser(parser_tune)
 
-    parser_snap = subparser.add_parser('snap',
-            help='snap a shot of monitoring results')
-    damo_snap.set_argparser(parser_snap)
-
     subparser.add_parser('version', help='print the version number')
 
     args = parser.parse_args()
@@ -129,8 +124,6 @@ def main():
         damo_stop.main(args)
     elif args.command == 'tune':
         damo_tune.main(args)
-    elif args.command == 'snap':
-        damo_snap.main(args)
     elif args.command == 'version':
         bindir = os.path.dirname(os.path.abspath(__file__))
         with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:
