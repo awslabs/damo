@@ -35,8 +35,12 @@ class DamonIntervals:
         return self.__str__() == other.__str__()
 
     def to_kvpairs(self):
-        return {attr: getattr(self, attr) for attr in
-                ['sample', 'aggr', 'ops_update']}
+        return {
+                'sample': _damo_fmt_str.format_time_us(self.sample, False),
+                'aggr': _damo_fmt_str.format_time_us(self.aggr, False),
+                'ops_update': _damo_fmt_str.format_time_us(self.ops_update,
+                    False),
+                }
 
 def kvpairs_to_DamonIntervals(kvpairs):
     return DamonIntervals(
