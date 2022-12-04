@@ -37,20 +37,25 @@ def format_addr_range(start, end, machine_friendly):
             format_nr(end, machine_friendly),
             format_sz(end - start, machine_friendly))
 
+us_ns = 1000
+ms_ns = 1000 * us_ns
+sec_ns = 1000 * ms_ns
+minute_ns = 60 * sec_ns
+
 def format_time_ns(time_ns, machine_friendly):
     if machine_friendly:
         return '%d' % time_ns
 
     time_ns = float(time_ns)
-    if time_ns >= 60000000000:
-        return '%d m %.3f s' % (time_ns / 60000000000,
-                (time_ns % 60000000000) / 1000000000)
-    if time_ns >= 1000000000:
-        return '%.3f s' % (time_ns / 1000000000)
-    if time_ns >= 1000000:
-        return '%.3f ms' % (time_ns / 1000000)
-    if time_ns >= 1000:
-        return '%.3f us' % (time_ns / 1000)
+    if time_ns >= minute_ns:
+        return '%d m %.3f s' % (time_ns / minute_ns,
+                (time_ns % minute_ns) / sec_ns)
+    if time_ns >= sec_ns:
+        return '%.3f s' % (time_ns / sec_ns)
+    if time_ns >= ms_ns:
+        return '%.3f ms' % (time_ns / ms_ns)
+    if time_ns >= us_ns:
+        return '%.3f us' % (time_ns / us_ns)
     return '%d ns' % time_ns
 
 def format_time_us(time_us, machine_friendly):
