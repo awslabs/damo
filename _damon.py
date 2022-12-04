@@ -84,8 +84,8 @@ class DamonRegion:
     end = None
 
     def __init__(self, start, end):
-        self.start = start
-        self.end = end
+        self.start = _damo_fmt_str.text_to_nr(start)
+        self.end = _damo_fmt_str.text_to_nr(end)
 
     def __str__(self):
         return _damo_fmt_str.format_addr_range(self.start, self.end, False)
@@ -94,7 +94,8 @@ class DamonRegion:
         return self.__str__() == other.__str__()
 
     def to_kvpairs(self):
-        return {attr: getattr(self, attr) for attr in ['start', 'end']}
+        return {'start': _damo_fmt_str.format_nr(self.start, False),
+                'end': _damo_fmt_str.format_nr(self.end, False)}
 
 def kvpairs_to_DamonRegion(kvpairs):
     return DamonRegion(kvpairs['start'], kvpairs['end'])
