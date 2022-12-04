@@ -69,5 +69,10 @@ class TestDamon(unittest.TestCase):
         self.assertEqual('%s' % _damon.DamonIntervals(5000, 100000, 1000000),
                 'sample 5 ms, aggr 100 ms, update 1 s')
 
+    def test_damon_intervals_to_kvpairs(self):
+        self.assertEqual(
+                _damon.DamonIntervals(5000, 100000, 1000000).to_kvpairs(),
+                {'sample': '5 ms', 'aggr': '100 ms', 'ops_update': '1 s'})
+
 if __name__ == '__main__':
     unittest.main()
