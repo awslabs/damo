@@ -53,6 +53,12 @@ def format_time_ns(time_ns, machine_friendly):
         return '%.3f us' % (time_ns / 1000)
     return '%d ns' % time_ns
 
+def format_time_us(time_us, machine_friendly):
+    return format_time_ns(time_us * 1000, machine_friendly)
+
+def format_time_ms(time_ms, machine_friendly):
+    return format_time_ns(time_ms * 1000000, machine_friendly)
+
 def indent_lines(string, indent_width):
     return '\n'.join([' ' * indent_width + l for l in string.split('\n')])
 
