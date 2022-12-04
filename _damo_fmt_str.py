@@ -42,14 +42,14 @@ def format_time_ns(time_ns, machine_friendly):
         return '%d' % time_ns
 
     time_ns = float(time_ns)
-    if time_ns > 60000000000:
+    if time_ns >= 60000000000:
         return '%d m %.3f s' % (time_ns / 60000000000,
                 (time_ns % 60000000000) / 1000000000)
-    if time_ns > 1000000000:
+    if time_ns >= 1000000000:
         return '%.3f s' % (time_ns / 1000000000)
-    if time_ns > 1000000:
+    if time_ns >= 1000000:
         return '%.3f ms' % (time_ns / 1000000)
-    if time_ns > 1000:
+    if time_ns >= 1000:
         return '%.3f us' % (time_ns / 1000)
     return '%d ns' % time_ns
 
