@@ -48,13 +48,24 @@ def format_time_ns(time_ns, machine_friendly):
 
     time_ns = float(time_ns)
     if time_ns >= minute_ns:
+        if time_ns % minute_ns == 0:
+            return '%d m' % (time_ns / minute_ns)
+        if time_ns % sec_ns == 0:
+            return '%d m %d s' % (time_ns / minute_ns,
+                    (time_ns % minute_ns) / sec_ns)
         return '%d m %.3f s' % (time_ns / minute_ns,
                 (time_ns % minute_ns) / sec_ns)
     if time_ns >= sec_ns:
+        if time_ns % sec_ns == 0:
+            return '%d s' % (time_ns / sec_ns)
         return '%.3f s' % (time_ns / sec_ns)
     if time_ns >= ms_ns:
+        if time_ns % ms_ns == 0:
+            return '%d ms' % (time_ns / ms_ns)
         return '%.3f ms' % (time_ns / ms_ns)
     if time_ns >= us_ns:
+        if time_ns % us_ns == 0:
+            return '%d us' % (time_ns / us_ns)
         return '%.3f us' % (time_ns / us_ns)
     return '%d ns' % time_ns
 

@@ -22,5 +22,8 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.text_to_nr('1,234'), 1234)
         self.assertEqual(_damo_fmt_str.text_to_nr('1,234,567'), 1234567)
 
+    def test_format_time(self):
+        self.assertEqual(_damo_fmt_str.format_time_ns(123, False), '123 ns')
+
 if __name__ == '__main__':
     unittest.main()
