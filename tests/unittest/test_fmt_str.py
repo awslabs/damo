@@ -17,5 +17,10 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.format_nr(1234, False), '1,234')
         self.assertEqual(_damo_fmt_str.format_nr(1234567, False), '1,234,567')
 
+    def test_text_to_nr(self):
+        self.assertEqual(_damo_fmt_str.text_to_nr('12'), 12)
+        self.assertEqual(_damo_fmt_str.text_to_nr('1,234'), 1234)
+        self.assertEqual(_damo_fmt_str.text_to_nr('1,234,567'), 1234567)
+
 if __name__ == '__main__':
     unittest.main()
