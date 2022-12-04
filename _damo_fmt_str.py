@@ -128,3 +128,10 @@ def text_to_percent(txt):
     if txt[-1] == '%':
         txt = txt[:-1]
     return float(txt)
+
+def text_to_nr(txt):
+    if type(txt) in number_types:
+        return txt
+
+    new_txt = ''.join([c for c in txt if c != ','])
+    return int(new_txt)
