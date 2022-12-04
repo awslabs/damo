@@ -49,18 +49,24 @@ class DamonNrRegionsRange:
     max_nr_regions = None
 
     def __init__(self, min_, max_):
-        self.min_nr_regions = min_
-        self.max_nr_regions = max_
+        self.min_nr_regions = _damo_fmt_str.text_to_nr(min_)
+        self.max_nr_regions = _damo_fmt_str.text_to_nr(max_)
 
     def __str__(self):
-        return '[%d, %d]' % (self.min_nr_regions, self.max_nr_regions)
+        return '[%s, %s]' % (
+                _damo_fmt_str.format_nr(self.min_nr_regions, False),
+                _damo_fmt_str.format_nr(self.max_nr_regions, False))
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
     def to_kvpairs(self):
-        return {attr: getattr(self, attr) for attr in
-                ['min_nr_regions', 'max_nr_regions']}
+        return {
+                'min_nr_regions':
+                _damo_fmt_str.format_nr(self.min_nr_regions, False),
+                'max_nr_regions':
+                _damo_fmt_str.format_nr(self.max_nr_regions, False),
+                }
 
 def kvpairs_to_DamonNrRegionsRange(kvpairs):
     return DamonNrRegionsRange(
