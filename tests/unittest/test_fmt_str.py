@@ -24,6 +24,27 @@ class TestDamoFmtStr(unittest.TestCase):
 
     def test_format_time(self):
         self.assertEqual(_damo_fmt_str.format_time_ns(123, False), '123 ns')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            123456, False), '123.456 us')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            123000, False), '123 us')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            123456789, False), '123.457 ms')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            123000000, False), '123 ms')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            123456789123, False), '2 m 3.457 s')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            123000000000, False), '2 m 3 s')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            60 * 1000 * 1000 * 1000, False), '1 m')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            60 * 1000 * 1000 * 1000 + 59 * 1000 * 1000 * 1000, False),
+            '1 m 59 s')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            60 * 1000 * 1000 * 1000 + 59 * 1000 * 1000 * 1000 +
+            123 * 1000 * 1000, False),
+            '1 m 59.123 s')
 
 if __name__ == '__main__':
     unittest.main()
