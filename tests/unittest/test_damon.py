@@ -96,5 +96,31 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(_damon.DamonNrRegionsRange(10, 1000).to_kvpairs(),
                 {'min_nr_regions': '10', 'max_nr_regions': '1,000'})
 
+    def test_damon_region(self):
+        self.assertEqual(_damon.DamonRegion(123, '456'),
+                _damon.DamonRegion(123, 456))
+        self.assertEqual(_damon.DamonRegion('123', '456'),
+                _damon.DamonRegion(123, 456))
+        self.assertEqual(_damon.DamonRegion('1,234', '4,567'),
+                _damon.DamonRegion(1234, 4567))
+
+        self.assertEqual(
+                _damon.kvpairs_to_DamonRegion({'start': '123', 'end': '456'}),
+                _damon.DamonRegion(123, 456))
+        self.assertEqual(
+                _damon.kvpairs_to_DamonRegion(
+                    {'start': '1234', 'end': '4567'}),
+                _damon.DamonRegion(1234, 4567))
+        self.assertEqual(
+                _damon.kvpairs_to_DamonRegion(
+                    {'start': '1,234', 'end': '4,567'}),
+                _damon.DamonRegion(1234, 4567))
+
+        self.assertEqual('%s' % _damon.DamonRegion(123, 456),
+                '[123, 456) (333 B)')
+
+        self.assertEqual(_damon.DamonRegion(1234, 5678).to_kvpairs(),
+                {'start': '1,234', 'end': '5,678'})
+
 if __name__ == '__main__':
     unittest.main()
