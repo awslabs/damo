@@ -72,5 +72,29 @@ class TestDamon(unittest.TestCase):
                 _damon.DamonIntervals(5000, 100000, 1000000).to_kvpairs(),
                 {'sample': '5 ms', 'aggr': '100 ms', 'ops_update': '1 s'})
 
+    def test_damon_nr_regions_range(self):
+        self.assertEqual(_damon.DamonNrRegionsRange(10, '1000'),
+                _damon.DamonNrRegionsRange(10, 1000))
+        self.assertEqual(_damon.DamonNrRegionsRange('10', '1000'),
+                _damon.DamonNrRegionsRange(10, 1000))
+        self.assertEqual(_damon.DamonNrRegionsRange('10', '1,000'),
+                _damon.DamonNrRegionsRange(10, 1000))
+
+        self.assertEqual(_damon.kvpairs_to_DamonNrRegionsRange(
+            {'min_nr_regions': 10, 'max_nr_regions': 1000}),
+            _damon.DamonNrRegionsRange(10, 1000))
+        self.assertEqual(_damon.kvpairs_to_DamonNrRegionsRange(
+            {'min_nr_regions': '10', 'max_nr_regions': '1000'}),
+            _damon.DamonNrRegionsRange(10, 1000))
+        self.assertEqual(_damon.kvpairs_to_DamonNrRegionsRange(
+            {'min_nr_regions': '10', 'max_nr_regions': '1,000'}),
+            _damon.DamonNrRegionsRange(10, 1000))
+
+        self.assertEqual('%s' % _damon.DamonNrRegionsRange(10, 1000),
+                '[10, 1,000]')
+
+        self.assertEqual(_damon.DamonNrRegionsRange(10, 1000).to_kvpairs(),
+                {'min_nr_regions': '10', 'max_nr_regions': '1,000'})
+
 if __name__ == '__main__':
     unittest.main()
