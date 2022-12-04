@@ -57,7 +57,7 @@ class TestDamon(unittest.TestCase):
                 filters=[], stats=None)
         self.assertEqual(damos, damos)
 
-    def test_kvpairs_to_damon_intervals(self):
+    def test_damon_intervals(self):
         self.assertEqual(_damon.kvpairs_to_DamonIntervals(
             {'sample': 5000, 'aggr': 100000, 'ops_update': 1000000}),
             _damon.DamonIntervals(5000, 100000, 1000000))
@@ -65,11 +65,9 @@ class TestDamon(unittest.TestCase):
             {'sample': '5ms', 'aggr': '0.1s', 'ops_update': '1s'}),
             _damon.DamonIntervals(5000, 100000, 1000000))
 
-    def test_damon_intervals_str(self):
         self.assertEqual('%s' % _damon.DamonIntervals(5000, 100000, 1000000),
                 'sample 5 ms, aggr 100 ms, update 1 s')
 
-    def test_damon_intervals_to_kvpairs(self):
         self.assertEqual(
                 _damon.DamonIntervals(5000, 100000, 1000000).to_kvpairs(),
                 {'sample': '5 ms', 'aggr': '100 ms', 'ops_update': '1 s'})
