@@ -125,12 +125,12 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
     print('# x-axis: space (%d-%d: %s)' % (addr_range[0], addr_range[1],
         _damo_fmt_str.format_sz(addr_range[1] - addr_range[0], False)))
     print('# y-axis: time (%d-%d: %s)' % (time_range[0], time_range[1],
-        _damo_fmt_str.format_time(time_range[1] - time_range[0], False)))
+        _damo_fmt_str.format_time_ns(time_range[1] - time_range[0], False)))
     print('# resolution: %dx%d (%s and %s for each character)' % (
         len(pixels[1]), len(pixels),
         _damo_fmt_str.format_sz(
             float(addr_range[1] - addr_range[0]) / len(pixels[1]), False),
-        _damo_fmt_str.format_time(
+        _damo_fmt_str.format_time_ns(
             float(time_range[1] - time_range[0]) / len(pixels), False)))
 
 def pr_heats(args, damon_result):
@@ -207,7 +207,7 @@ class GuideInfo:
     def __str__(self):
         lines = ['target_id:%d' % self.tid]
         lines.append('time: %d-%d (%s)' % (self.start_time, self.end_time,
-                    _damo_fmt_str.format_time(self.end_time - self.start_time,
+                    _damo_fmt_str.format_time_ns(self.end_time - self.start_time,
                         False)))
         for idx, region in enumerate(self.regions()):
             lines.append('region\t%2d: %020d-%020d (%s)' %

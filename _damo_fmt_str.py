@@ -37,7 +37,7 @@ def format_addr_range(start, end, machine_friendly):
             format_nr(end, machine_friendly),
             format_sz(end - start, machine_friendly))
 
-def format_time(time_ns, machine_friendly):
+def format_time_ns(time_ns, machine_friendly):
     if machine_friendly:
         return '%d' % time_ns
 

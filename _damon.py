@@ -27,9 +27,9 @@ class DamonIntervals:
 
     def __str__(self):
         return 'sample %s, aggr %s, update %s' % (
-                _damo_fmt_str.format_time(self.sample * 1000, False),
-                _damo_fmt_str.format_time(self.aggr * 1000, False),
-                _damo_fmt_str.format_time(self.ops_update * 1000, False))
+                _damo_fmt_str.format_time_ns(self.sample * 1000, False),
+                _damo_fmt_str.format_time_ns(self.aggr * 1000, False),
+                _damo_fmt_str.format_time_ns(self.ops_update * 1000, False))
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
@@ -214,8 +214,8 @@ class DamosQuotas:
         return '\n'.join([
             '%s / %s per %s' % (
                 _damo_fmt_str.format_sz(self.time_ms * 1000000, False),
-                _damo_fmt_str.format_time(self.sz_bytes, False),
-                _damo_fmt_str.format_time(self.reset_interval_ms * 1000000,
+                _damo_fmt_str.format_time_ns(self.sz_bytes, False),
+                _damo_fmt_str.format_time_ns(self.reset_interval_ms * 1000000,
                     False)),
             'priority: sz %d permil, nr_accesses %d permil, age %d permil' % (
                 self.weight_sz_permil, self.weight_nr_accesses_permil,
@@ -263,7 +263,7 @@ class DamosWatermarks:
             '%s/%s/%s permil' % (self.high_permil, self.mid_permil,
                 self.low_permil),
             'metric %s, interval %s' % (self.metric,
-                _damo_fmt_str.format_time(self.interval_us * 1000, False))
+                _damo_fmt_str.format_time_ns(self.interval_us * 1000, False))
             ])
 
     def __eq__(self, other):
