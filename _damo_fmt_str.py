@@ -122,6 +122,13 @@ def text_to_us(txt):
     if txt == 'max':
         return ulong_max
 
+    fields = txt.split()
+    if len(fields) > 1:
+        result_us = 0
+        for i in range(0, len(fields), 2):
+            result_us += text_to_us(''.join(fields[i: i + 2]))
+        return result_us
+
     if not txt[-2:] in unit_to_usecs and not txt[-1] in unit_to_usecs:
         return float(txt)
 
