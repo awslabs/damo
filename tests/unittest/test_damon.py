@@ -65,5 +65,9 @@ class TestDamon(unittest.TestCase):
             {'sample': '5ms', 'aggr': '0.1s', 'ops_update': '1s'}),
             _damon.DamonIntervals(5000, 100000, 1000000))
 
+    def test_damon_intervals_str(self):
+        self.assertEqual('%s' % _damon.DamonIntervals(5000, 100000, 1000000),
+                'sample 5.000 ms, aggr 100.000 ms, update 1.000 s')
+
 if __name__ == '__main__':
     unittest.main()
