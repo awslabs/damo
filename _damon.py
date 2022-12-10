@@ -183,13 +183,22 @@ class DamosAccessPattern:
                 and self.age_unit == other.age_unit)
 
     def to_kvpairs(self):
-        return {attr: getattr(self, attr) for attr in [
-            'min_sz_bytes', 'max_sz_bytes', 'min_nr_accesses',
-            'max_nr_accesses', 'nr_accesses_unit', 'min_age', 'max_age',
-            'age_unit']}
+        return {
+                'min_sz_bytes':
+                _damo_fmt_str.format_sz(self.min_sz_bytes, False),
+                'max_sz_bytes':
+                _damo_fmt_str.format_sz(self.max_sz_bytes, False),
+                'min_nr_accesses': self.min_nr_accesses,
+                'max_nr_accesses': self.max_nr_accesses,
+                'nr_accesses_unit': self.nr_accesses_unit,
+                'min_age': self.min_age,
+                'max_age': self.max_age,
+                'age_unit': self.age_unit,
+                }
 
 def kvpairs_to_DamosAccessPattern(kv):
-    return DamosAccessPattern(kv['min_sz_bytes'], kv['max_sz_bytes'],
+    return DamosAccessPattern(_damo_fmt_str.text_to_bytes(kv['min_sz_bytes']),
+            _damo_fmt_str.text_to_bytes(kv['max_sz_bytes']),
             kv['min_nr_accesses'], kv['max_nr_accesses'],
             kv['nr_accesses_unit'], kv['min_age'], kv['max_age'],
             kv['age_unit'])
