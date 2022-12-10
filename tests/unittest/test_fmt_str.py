@@ -25,15 +25,15 @@ class TestDamoFmtStr(unittest.TestCase):
     def test_format_time(self):
         self.assertEqual(_damo_fmt_str.format_time_ns(123, False), '123 ns')
         self.assertEqual(_damo_fmt_str.format_time_ns(
-            123456, False), '123.456 us')
+            123456, False), '123 us 456 ns')
         self.assertEqual(_damo_fmt_str.format_time_ns(
             123000, False), '123 us')
         self.assertEqual(_damo_fmt_str.format_time_ns(
-            123456789, False), '123.457 ms')
+            123456789, False), '123 ms 456 us 789 ns')
         self.assertEqual(_damo_fmt_str.format_time_ns(
             123000000, False), '123 ms')
         self.assertEqual(_damo_fmt_str.format_time_ns(
-            123456789123, False), '2 m 3.457 s')
+            123456789123, False), '2 m 3 s 456 ms 789 us 123 ns')
         self.assertEqual(_damo_fmt_str.format_time_ns(
             123000000000, False), '2 m 3 s')
         self.assertEqual(_damo_fmt_str.format_time_ns(
@@ -44,12 +44,12 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.format_time_ns(
             60 * 1000 * 1000 * 1000 + 59 * 1000 * 1000 * 1000 +
             123 * 1000 * 1000, False),
-            '1 m 59.123 s')
+            '1 m 59 s 123 ms')
         self.assertEqual(_damo_fmt_str.format_time_ns(
             2 * 60 * 60 * 1000 * 1000 * 1000 +
             60 * 1000 * 1000 * 1000 + 59 * 1000 * 1000 * 1000 +
             123 * 1000 * 1000, False),
-            '2 h 1 m 59.123 s')
+            '2 h 1 m 59 s 123 ms')
         self.assertEqual(_damo_fmt_str.format_time_ns(
             2 * 60 * 60 * 1000 * 1000 * 1000, False),
             '2 h')
