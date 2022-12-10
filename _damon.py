@@ -163,14 +163,29 @@ class DamosAccessPattern:
         self.age_unit = age_unit
 
     def __str__(self):
-        return '\n'.join([
+        lines = [
             'sz: [%s, %s]' % (_damo_fmt_str.format_sz(self.min_sz_bytes, False),
                 _damo_fmt_str.format_sz(self.max_sz_bytes, False)),
-            'nr_accesses: [%d, %d] (%s)' % (
-                self.min_nr_accesses, self.max_nr_accesses,
-                self.nr_accesses_unit),
-            'age: [%d, %d] (%s)' % (self.min_age, self.max_age,
-                self.age_unit)])
+            ]
+        if self.nr_accesses_unit == 'percent':
+            unit = '%'
+        else:
+            unit = self.nr_accesses_unit
+        lines.append('nr_accesses: [%s %s, %s %s]' % (
+                _damo_fmt_str.format_nr(self.min_nr_accesses, False), unit,
+                _damo_fmt_str.format_nr(self.max_nr_accesses, False), unit))
+        if self.age_unit == 'usec':
+            min_age = _damo_fmt_str.format_time_us(self.min_age, False)
+            max_age = _damo_fmt_str.format_time_us(self.max_age, False)
+        else:
+            min_age = '%s %s' % (
+                    _damo_fmt_str.format_nr(self.min_age, False),
+                    self.age_unit)
+            max_age = '%s %s' % (
+                    _damo_fmt_str.format_nr(self.max_age, False),
+                    self.age_unit)
+        lines.append('age: [%s, %s]' % (min_age, max_age))
+        return '\n'.join(lines)
 
     def __eq__(self, other):
         return (type(self) == type(other) and
