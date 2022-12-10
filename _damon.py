@@ -198,25 +198,55 @@ class DamosAccessPattern:
                 and self.age_unit == other.age_unit)
 
     def to_kvpairs(self):
+        if self.nr_accesses_unit == 'percent':
+            unit = '%'
+        min_nr_accesses = '%s %s' % (
+                _damo_fmt_str.format_nr(self.min_nr_accesses, False), unit)
+        max_nr_accesses = '%s %s' % (
+                _damo_fmt_str.format_nr(self.max_nr_accesses, False), unit)
+        if self.age_unit == 'usec':
+            min_age = _damo_fmt_str.format_time_us(self.min_age, False)
+            max_age = _damo_fmt_str.format_time_us(self.max_age, False)
+        else:
+            min_age = '%s %s' % (
+                    _damo_fmt_str.format_nr(self.min_age, False), self.age_unit)
+            max_age = '%s %s' % (
+                    _damo_fmt_str.format_nr(self.max_age, False), self.age_unit)
+
         return {
                 'min_sz_bytes':
                 _damo_fmt_str.format_sz(self.min_sz_bytes, False),
                 'max_sz_bytes':
                 _damo_fmt_str.format_sz(self.max_sz_bytes, False),
-                'min_nr_accesses': self.min_nr_accesses,
-                'max_nr_accesses': self.max_nr_accesses,
-                'nr_accesses_unit': self.nr_accesses_unit,
-                'min_age': self.min_age,
-                'max_age': self.max_age,
-                'age_unit': self.age_unit,
+                'min_nr_accesses': min_nr_accesses,
+                'max_nr_accesses': max_nr_accesses,
+                'min_age': min_age,
+                'max_age': max_age,
                 }
 
 def kvpairs_to_DamosAccessPattern(kv):
+    try:
+        min_nr_accesses = _damo_fmt_str.text_to_percent(kv['min_nr_accesses'])
+        max_nr_accesses = _damo_fmt_str.text_to_percent(kv['max_nr_accesses'])
+        nr_accesses_unit = 'percent'
+    except:
+        min_nr_accesses, nr_accesses_unit = _damo_fmt_str.text_to_nr_unit(
+                kv['min_nr_accesses'])
+        max_nr_accesses, nr_accesses_unit = _damo_fmt_str.text_to_nr_unit(
+                kv['max_nr_accesses'])
+
+    try:
+        min_age = _damo_fmt_str.text_to_us(kv['min_age'])
+        max_age = _damo_fmt_str.text_to_us(kv['max_age'])
+        age_unit = 'usec'
+    except:
+        min_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv['min_age'])
+        max_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv['max_age'])
+
     return DamosAccessPattern(_damo_fmt_str.text_to_bytes(kv['min_sz_bytes']),
             _damo_fmt_str.text_to_bytes(kv['max_sz_bytes']),
-            kv['min_nr_accesses'], kv['max_nr_accesses'],
-            kv['nr_accesses_unit'], kv['min_age'], kv['max_age'],
-            kv['age_unit'])
+            min_nr_accesses, max_nr_accesses, nr_accesses_unit,
+            min_age, max_age, age_unit)
 
 # every region.  could be used for monitoring
 default_DamosAccessPattern =  DamosAccessPattern(
