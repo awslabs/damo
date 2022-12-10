@@ -71,11 +71,47 @@ def format_time_ns_min_unit(time_ns, min_unit, machine_friendly):
         if less_unit_ns == 0:
             return unit_str
         else:
-            return '%s %s' % (unit_str, format_time_ns(less_unit_ns, False))
+            return '%s %s' % (unit_str, format_time_ns_min_unit(less_unit_ns,
+                min_unit, False))
     return '0 ns'
 
-def format_time_ns(time_ns, machine_friendly):
+def format_time_ns_exact(time_ns, machine_friendly):
     return format_time_ns_min_unit(time_ns, ns_ns, machine_friendly)
+
+def format_time_ns(time_ns, machine_friendly):
+    if machine_friendly:
+        return '%d' % time_ns
+
+    time_ns = float(time_ns)
+    if time_ns >= hour_ns:
+        hour = int(time_ns / hour_ns)
+        hour_str = '%d h' % hour
+
+        less_hour_ns = time_ns - (hour * hour_ns)
+        if less_hour_ns == 0:
+            return hour_str
+        return '%s %s' % (hour_str, format_time_ns(less_hour_ns, False))
+    if time_ns >= minute_ns:
+        if time_ns % minute_ns == 0:
+            return '%d m' % (time_ns / minute_ns)
+        if time_ns % sec_ns == 0:
+            return '%d m %d s' % (time_ns / minute_ns,
+                    (time_ns % minute_ns) / sec_ns)
+        return '%d m %.3f s' % (time_ns / minute_ns,
+                (time_ns % minute_ns) / sec_ns)
+    if time_ns >= sec_ns:
+        if time_ns % sec_ns == 0:
+            return '%d s' % (time_ns / sec_ns)
+        return '%.3f s' % (time_ns / sec_ns)
+    if time_ns >= ms_ns:
+        if time_ns % ms_ns == 0:
+            return '%d ms' % (time_ns / ms_ns)
+        return '%.3f ms' % (time_ns / ms_ns)
+    if time_ns >= us_ns:
+        if time_ns % us_ns == 0:
+            return '%d us' % (time_ns / us_ns)
+        return '%.3f us' % (time_ns / us_ns)
+    return '%d ns' % time_ns
 
 def format_time_us(time_us, machine_friendly):
     return format_time_ns(time_us * 1000, machine_friendly)
