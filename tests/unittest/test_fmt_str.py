@@ -63,6 +63,10 @@ class TestDamoFmtStr(unittest.TestCase):
             3 * 24 * 60 * 60 * 1000 * 1000 * 1000 +
             2 * 60 * 60 * 1000 * 1000 * 1000, False),
             '3 d 2 h')
+        self.assertEqual(_damo_fmt_str.format_time_ns(
+            1234 * 24 * 60 * 60 * 1000 * 1000 * 1000 +
+            2 * 60 * 60 * 1000 * 1000 * 1000, False),
+            '1,234 d 2 h')
 
     def test_text_to_time(self):
         self.assertEqual(_damo_fmt_str.text_to_us('1 us'), 1)
