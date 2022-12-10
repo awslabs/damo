@@ -37,6 +37,7 @@ def format_addr_range(start, end, machine_friendly):
             format_nr(end, machine_friendly),
             format_sz(end - start, machine_friendly))
 
+ns_ns = 1
 us_ns = 1000
 ms_ns = 1000 * us_ns
 sec_ns = 1000 * ms_ns
@@ -47,13 +48,21 @@ day_ns = 24 * hour_ns
 nsecs_to_unit = {1: 'ns', us_ns: 'us', ms_ns: 'ms', sec_ns: 's',
         minute_ns: 'm', hour_ns: 'h', day_ns: 'd'}
 
-def format_time_ns(time_ns, machine_friendly):
+def format_time_ns_min_unit(time_ns, min_unit, machine_friendly):
     if machine_friendly:
         return '%d' % time_ns
 
     for unit_nsecs in sorted(nsecs_to_unit.keys(), reverse=True):
         if time_ns < unit_nsecs:
             continue
+        if unit_nsecs == min_unit:
+            if time_ns % unit_nsecs:
+                return '%.3f %s' % (time_ns / unit_nsecs,
+                        nsecs_to_unit[unit_nsecs])
+            else:
+                return '%d %s' % (time_ns / unit_nsecs,
+                        nsecs_to_unit[unit_nsecs])
+
         unit_nr = int(time_ns / unit_nsecs)
         unit_str = '%s %s' % (
                 format_nr(unit_nr, False), nsecs_to_unit[unit_nsecs])
@@ -64,6 +73,9 @@ def format_time_ns(time_ns, machine_friendly):
         else:
             return '%s %s' % (unit_str, format_time_ns(less_unit_ns, False))
     return '0 ns'
+
+def format_time_ns(time_ns, machine_friendly):
+    return format_time_ns_min_unit(time_ns, ns_ns, machine_friendly)
 
 def format_time_us(time_us, machine_friendly):
     return format_time_ns(time_us * 1000, machine_friendly)
