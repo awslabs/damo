@@ -55,7 +55,8 @@ def format_time_ns(time_ns, machine_friendly):
         if time_ns < unit_nsecs:
             continue
         unit_nr = int(time_ns / unit_nsecs)
-        unit_str = '%d %s' % (unit_nr, nsecs_to_unit[unit_nsecs])
+        unit_str = '%s %s' % (
+                format_nr(unit_nr, False), nsecs_to_unit[unit_nsecs])
 
         less_unit_ns = time_ns - unit_nr * unit_nsecs
         if less_unit_ns == 0:
