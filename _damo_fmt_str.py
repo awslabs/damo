@@ -41,12 +41,21 @@ us_ns = 1000
 ms_ns = 1000 * us_ns
 sec_ns = 1000 * ms_ns
 minute_ns = 60 * sec_ns
+hour_ns = 60 * minute_ns
 
 def format_time_ns(time_ns, machine_friendly):
     if machine_friendly:
         return '%d' % time_ns
 
     time_ns = float(time_ns)
+    if time_ns >= hour_ns:
+        hour = int(time_ns / hour_ns)
+        hour_str = '%d h' % hour
+
+        less_hour_ns = time_ns - (hour * hour_ns)
+        if less_hour_ns == 0:
+            return hour_str
+        return '%s %s' % (hour_str, format_time_ns(less_hour_ns, False))
     if time_ns >= minute_ns:
         if time_ns % minute_ns == 0:
             return '%d m' % (time_ns / minute_ns)
