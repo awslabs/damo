@@ -58,7 +58,7 @@ class TestDamoFmtStr(unittest.TestCase):
             2 * 60 * 60 * 1000 * 1000 * 1000 +
             60 * 1000 * 1000 * 1000 + 59 * 1000 * 1000 * 1000 +
             123 * 1000 * 1000, False),
-            '2 h 1 m 59.123 s')
+            '3 d 2 h 1 m 59 s 123 ms')
         self.assertEqual(_damo_fmt_str.format_time_ns(
             3 * 24 * 60 * 60 * 1000 * 1000 * 1000 +
             2 * 60 * 60 * 1000 * 1000 * 1000, False),
@@ -73,7 +73,7 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.text_to_us('2 h 1 m 2 s'),
                 7262 * 1000 * 1000)
         self.assertEqual(_damo_fmt_str.text_to_us('3 d 2 h 1 m 2 s'),
-                3 * 24 * 60 * 1000 * 1000 +
+                3 * 24 * 60 * 60 * 1000 * 1000 +
                 7262 * 1000 * 1000)
 
     def test_text_to_percent(self):
