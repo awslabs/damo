@@ -53,5 +53,14 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.text_to_us('1 ms'), 1000)
         self.assertEqual(_damo_fmt_str.text_to_us('1 m 2 s'), 62 * 1000 * 1000)
 
+    def test_text_to_percent(self):
+        self.assertEqual(_damo_fmt_str.text_to_percent('10%'), 10.0)
+        self.assertEqual(_damo_fmt_str.text_to_percent('12.34%'), 12.34)
+        self.assertEqual(_damo_fmt_str.text_to_percent('12.34 %'), 12.34)
+        self.assertEqual(
+                _damo_fmt_str.text_to_percent('1,234.567 %'), 1234.567)
+        self.assertEqual(
+                _damo_fmt_str.text_to_percent('1,234.567,89 %'), 1234.56789)
+
 if __name__ == '__main__':
     unittest.main()
