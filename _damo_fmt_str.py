@@ -42,9 +42,10 @@ ms_ns = 1000 * us_ns
 sec_ns = 1000 * ms_ns
 minute_ns = 60 * sec_ns
 hour_ns = 60 * minute_ns
+day_ns = 24 * hour_ns
 
 nsecs_to_unit = {1: 'ns', us_ns: 'us', ms_ns: 'ms', sec_ns: 's',
-        minute_ns: 'm', hour_ns: 'h'}
+        minute_ns: 'm', hour_ns: 'h', day_ns: 'd'}
 
 def format_time_ns(time_ns, machine_friendly):
     if machine_friendly:
