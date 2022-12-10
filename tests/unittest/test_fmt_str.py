@@ -46,7 +46,7 @@ class TestDamoFmtStr(unittest.TestCase):
                 msec_ns,
                 3 * day_ns + 2 * hour_ns,
                 1234 * day_ns + 2 * hour_ns]
-        expects = [
+        expects_exacts = [
                 '123 ns',
                 '123 us 456 ns',
                 '123 us',
@@ -62,8 +62,26 @@ class TestDamoFmtStr(unittest.TestCase):
                 '3 d 2 h 1 m 59 s 123 ms',
                 '3 d 2 h',
                 '1,234 d 2 h',]
+        expects = [
+                '123 ns',
+                '123.456 us',
+                '123 us',
+                '123.457 ms',
+                '123 ms',
+                '2 m 3.457 s',
+                '2 m 3 s',
+                '1 m',
+                '1 m 59 s',
+                '1 m 59.123 s',
+                '2 h 1 m 59.123 s',
+                '2 h',
+                '74 h 1 m 59.123 s',
+                '74 h',
+                '29618 h',]
 
         for idx, ns in enumerate(inputs):
+            self.assertEqual(_damo_fmt_str.format_time_ns_exact(ns, False),
+                    expects_exacts[idx])
             self.assertEqual(_damo_fmt_str.format_time_ns(ns, False),
                     expects[idx])
 
