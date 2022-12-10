@@ -23,50 +23,49 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.text_to_nr('1,234,567'), 1234567)
 
     def test_format_time(self):
-        self.assertEqual(_damo_fmt_str.format_time_ns(123, False), '123 ns')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            123456, False), '123 us 456 ns')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            123000, False), '123 us')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            123456789, False), '123 ms 456 us 789 ns')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            123000000, False), '123 ms')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            123456789123, False), '2 m 3 s 456 ms 789 us 123 ns')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            123000000000, False), '2 m 3 s')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            60 * 1000 * 1000 * 1000, False), '1 m')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            60 * 1000 * 1000 * 1000 + 59 * 1000 * 1000 * 1000, False),
-            '1 m 59 s')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            60 * 1000 * 1000 * 1000 + 59 * 1000 * 1000 * 1000 +
-            123 * 1000 * 1000, False),
-            '1 m 59 s 123 ms')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            2 * 60 * 60 * 1000 * 1000 * 1000 +
-            60 * 1000 * 1000 * 1000 + 59 * 1000 * 1000 * 1000 +
-            123 * 1000 * 1000, False),
-            '2 h 1 m 59 s 123 ms')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            2 * 60 * 60 * 1000 * 1000 * 1000, False),
-            '2 h')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            3 * 24 * 60 * 60 * 1000 * 1000 * 1000 +
-            2 * 60 * 60 * 1000 * 1000 * 1000 +
-            60 * 1000 * 1000 * 1000 + 59 * 1000 * 1000 * 1000 +
-            123 * 1000 * 1000, False),
-            '3 d 2 h 1 m 59 s 123 ms')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            3 * 24 * 60 * 60 * 1000 * 1000 * 1000 +
-            2 * 60 * 60 * 1000 * 1000 * 1000, False),
-            '3 d 2 h')
-        self.assertEqual(_damo_fmt_str.format_time_ns(
-            1234 * 24 * 60 * 60 * 1000 * 1000 * 1000 +
-            2 * 60 * 60 * 1000 * 1000 * 1000, False),
-            '1,234 d 2 h')
+        usec_ns = 1000
+        msec_ns = 1000 * usec_ns
+        sec_ns = 1000 * msec_ns
+        minute_ns = 60 * sec_ns
+        hour_ns = 60 * minute_ns
+        day_ns = 24 * hour_ns
+        inputs = [
+                123,
+                123456,
+                123000,
+                123456789,
+                123000000,
+                123456789123,
+                123000000000,
+                1 * minute_ns,
+                1 * minute_ns + 59 * sec_ns,
+                1 * minute_ns + 59 * sec_ns + 123 * msec_ns,
+                2 * hour_ns + 1 * minute_ns + 59 * sec_ns + 123 * msec_ns,
+                2 * hour_ns,
+                3 * day_ns + 2 * hour_ns + 1 * minute_ns + 59 * sec_ns + 123 *
+                msec_ns,
+                3 * day_ns + 2 * hour_ns,
+                1234 * day_ns + 2 * hour_ns]
+        expects = [
+                '123 ns',
+                '123 us 456 ns',
+                '123 us',
+                '123 ms 456 us 789 ns',
+                '123 ms',
+                '2 m 3 s 456 ms 789 us 123 ns',
+                '2 m 3 s',
+                '1 m',
+                '1 m 59 s',
+                '1 m 59 s 123 ms',
+                '2 h 1 m 59 s 123 ms',
+                '2 h',
+                '3 d 2 h 1 m 59 s 123 ms',
+                '3 d 2 h',
+                '1,234 d 2 h',]
+
+        for idx, ns in enumerate(inputs):
+            self.assertEqual(_damo_fmt_str.format_time_ns(ns, False),
+                    expects[idx])
 
     def test_text_to_time(self):
         self.assertEqual(_damo_fmt_str.text_to_us('1 us'), 1)
