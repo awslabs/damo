@@ -156,6 +156,9 @@ def text_to_percent(txt):
         return 100.0
     if txt[-1] == '%':
         txt = txt[:-1]
+    parts = txt.split('.')
+    if len(parts) == 2:
+        txt = '%d.%d' % (text_to_nr(parts[0]), text_to_nr(parts[1]))
     return float(txt)
 
 def text_to_nr(txt):
