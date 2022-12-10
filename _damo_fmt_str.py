@@ -164,3 +164,9 @@ def text_to_nr(txt):
 
     new_txt = ''.join([c for c in txt if c != ','])
     return float(new_txt)
+
+def text_to_nr_unit(txt):
+    fields = txt.split()
+    if len(fields) != 2:
+        raise Exception('text_to_nr_unit requires two fields')
+    return text_to_nr(fields[0]), fields[1]
