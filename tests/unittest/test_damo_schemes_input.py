@@ -24,12 +24,10 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "access_pattern": {
                             "min_sz_bytes": 0,
                             "max_sz_bytes": 0,
-                            "min_nr_accesses": 0,
-                            "max_nr_accesses": 0,
-                            "nr_accesses_unit": "sample_intervals",
-                            "min_age": 0,
-                            "max_age": 0,
-                            "age_unit": "aggr_intervals"
+                            "min_nr_accesses": "0 sample_intervals",
+                            "max_nr_accesses": "0 sample_intervals",
+                            "min_age": "0 aggr_intervals",
+                            "max_age": "0 aggr_intervals"
                         },
                         "quotas": {
                             "time_ms": 0,
@@ -59,12 +57,10 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "access_pattern": {
                             "min_sz_bytes": 0,
                             "max_sz_bytes": 0,
-                            "min_nr_accesses": 0,
-                            "max_nr_accesses": 0,
-                            "nr_accesses_unit": "sample_intervals",
-                            "min_age": 0,
-                            "max_age": 0,
-                            "age_unit": "aggr_intervals"
+                            "min_nr_accesses": "0 sample_intervals",
+                            "max_nr_accesses": "0 sample_intervals",
+                            "min_age": "0 aggr_intervals",
+                            "max_age": "0 aggr_intervals"
                         },
                         "quotas": {
                             "time_ms": 0,
@@ -94,12 +90,10 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "access_pattern": {
                             "min_sz_bytes": "min",
                             "max_sz_bytes": "min",
-                            "min_nr_accesses": 0,
-                            "max_nr_accesses": 0,
-                            "nr_accesses_unit": "sample_intervals",
-                            "min_age": 0,
-                            "max_age": 0,
-                            "age_unit": "aggr_intervals"
+                            "min_nr_accesses": "0 sample_intervals",
+                            "max_nr_accesses": "0 sample_intervals",
+                            "min_age": "0 aggr_intervals",
+                            "max_age": "0 aggr_intervals"
                         },
                         "quotas": {
                             "time_ms": "0s",
@@ -141,12 +135,10 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "access_pattern": {
                             "min_sz_bytes": 0,
                             "max_sz_bytes": 0,
-                            "min_nr_accesses": 0,
-                            "max_nr_accesses": 0,
-                            "nr_accesses_unit": "sample_intervals",
-                            "min_age": 0,
-                            "max_age": 0,
-                            "age_unit": "aggr_intervals"
+                            "min_nr_accesses": "0 sample_intervals",
+                            "max_nr_accesses": "0 sample_intervals",
+                            "min_age": "0 aggr_intervals",
+                            "max_age": "0 aggr_intervals"
                         },
                         "quotas": {
                             "time_ms": 0,
@@ -190,12 +182,10 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "access_pattern": {
                             "min_sz_bytes": 0,
                             "max_sz_bytes": 0,
-                            "min_nr_accesses": 0,
-                            "max_nr_accesses": 0,
-                            "nr_accesses_unit": "sample_intervals",
-                            "min_age": 0,
-                            "max_age": 0,
-                            "age_unit": "aggr_intervals"
+                            "min_nr_accesses": "0 sample_intervals",
+                            "max_nr_accesses": "0 sample_intervals",
+                            "min_age": "0 aggr_intervals",
+                            "max_age": "0 aggr_intervals"
                         },
                         "quotas": {
                             "time_ms": 0,
@@ -239,12 +229,10 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "access_pattern": {
                             "min_sz_bytes": "min",
                             "max_sz_bytes": "min",
-                            "min_nr_accesses": 0,
-                            "max_nr_accesses": 0,
-                            "nr_accesses_unit": "sample_intervals",
-                            "min_age": 0,
-                            "max_age": 0,
-                            "age_unit": "aggr_intervals"
+                            "min_nr_accesses": "0 sample_intervals",
+                            "max_nr_accesses": "0 sample_intervals",
+                            "min_age": "0 aggr_intervals",
+                            "max_age": "0 aggr_intervals"
                         },
                         "quotas": {
                             "time_ms": "0s",
