@@ -138,8 +138,9 @@ ulong_max = 2**64 - 1
 if platform.architecture()[0] != '64bit':
     ulong_max = 2**32 - 1
 
-unit_to_bytes = {'B': 1, 'K': 1024, 'M': 1024 * 1024, 'G': 1024 * 1024 * 1024,
-        'T': 1024 * 1024 * 1024 * 1024}
+unit_to_bytes = {'B': 1, 'K': 1024, 'KiB': 1024, 'M': 1024 * 1024,
+        'MiB': 1024 * 1024, 'G': 1024 * 1024 * 1024, 'GiB': 1024 * 1024 * 1024,
+        'T': 1024 * 1024 * 1024 * 1024, 'TiB': 1024 * 1024 * 1024 * 1024}
 
 def text_to_bytes(txt):
     if type(txt) in number_types:
@@ -150,11 +151,22 @@ def text_to_bytes(txt):
     if txt == 'max':
         return ulong_max
 
-    if not txt[-1] in unit_to_bytes:
-        return int(txt)
+    unit = None
+    if len(txt) > 3:
+        unit = txt[len(txt) - 3:]
+        if unit in unit_to_bytes:
+            number = float(txt[:-3])
+        else:
+            unit = None
 
-    unit = txt[-1]
-    number = float(txt[:-1])
+    if unit == None:
+        if txt[-1] in unit_to_bytes:
+            unit = txt[-1]
+            number = float(txt[:-1])
+        else:
+            unit = 'B'
+            number  = float(txt)
+
     return int(number * unit_to_bytes[unit])
 
 unit_to_nsecs = {'ns': ns_ns, 'us': us_ns, 'ms': ms_ns, 's': sec_ns,
