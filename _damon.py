@@ -175,8 +175,8 @@ class DamosAccessPattern:
                 _damo_fmt_str.format_nr(self.min_nr_accesses, False), unit,
                 _damo_fmt_str.format_nr(self.max_nr_accesses, False), unit))
         if self.age_unit == 'usec':
-            min_age = _damo_fmt_str.format_time_us(self.min_age, False)
-            max_age = _damo_fmt_str.format_time_us(self.max_age, False)
+            min_age = _damo_fmt_str.format_time_us_exact(self.min_age, False)
+            max_age = _damo_fmt_str.format_time_us_exact(self.max_age, False)
         else:
             min_age = '%s %s' % (
                     _damo_fmt_str.format_nr(self.min_age, False),
@@ -205,8 +205,8 @@ class DamosAccessPattern:
         max_nr_accesses = '%s %s' % (
                 _damo_fmt_str.format_nr(self.max_nr_accesses, False), unit)
         if self.age_unit == 'usec':
-            min_age = _damo_fmt_str.format_time_us(self.min_age, False)
-            max_age = _damo_fmt_str.format_time_us(self.max_age, False)
+            min_age = _damo_fmt_str.format_time_us_exact(self.min_age, False)
+            max_age = _damo_fmt_str.format_time_us_exact(self.max_age, False)
         else:
             min_age = '%s %s' % (
                     _damo_fmt_str.format_nr(self.min_age, False), self.age_unit)
