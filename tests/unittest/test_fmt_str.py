@@ -109,5 +109,17 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(
                 _damo_fmt_str.text_to_percent('1,234.567,89 %'), 1234.56789)
 
+    def test_text_to_bytes(self):
+        self.assertEqual(_damo_fmt_str.text_to_bytes('123'), 123)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('123 B'), 123)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 K'), 2048)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 KiB'), 2048)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 M'), 2 * 1 << 20)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 MiB'), 2 * 1 << 20)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 G'), 2 * 1 << 30)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 GiB'), 2 * 1 << 30)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 T'), 2 * 1 << 40)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 TiB'), 2 * 1 << 40)
+
 if __name__ == '__main__':
     unittest.main()
