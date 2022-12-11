@@ -86,6 +86,7 @@ class TestDamoFmtStr(unittest.TestCase):
                     expects[idx])
 
     def test_text_to_time(self):
+        self.assertEqual(_damo_fmt_str.text_to_ns('1 ns'), 1)
         self.assertEqual(_damo_fmt_str.text_to_us('1 us'), 1)
         self.assertEqual(_damo_fmt_str.text_to_us('1234 us'), 1234)
         self.assertEqual(_damo_fmt_str.text_to_us('1234us'), 1234)
