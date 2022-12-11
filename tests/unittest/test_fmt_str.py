@@ -120,6 +120,8 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.text_to_bytes('2 GiB'), 2 * 1 << 30)
         self.assertEqual(_damo_fmt_str.text_to_bytes('2 T'), 2 * 1 << 40)
         self.assertEqual(_damo_fmt_str.text_to_bytes('2 TiB'), 2 * 1 << 40)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 P'), 2 * 1 << 50)
+        self.assertEqual(_damo_fmt_str.text_to_bytes('2 PiB'), 2 * 1 << 50)
 
 if __name__ == '__main__':
     unittest.main()
