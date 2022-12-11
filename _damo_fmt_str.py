@@ -205,7 +205,11 @@ def text_to_us(txt):
     try:
         return float(txt)
     except:
-        return text_to_ns(txt) / us_ns
+        pass
+
+    if txt == 'max':
+        return ulong_max
+    return text_to_ns(txt) / us_ns
 
 def text_to_ms(txt):
     if type(txt) in number_types:
@@ -213,7 +217,11 @@ def text_to_ms(txt):
     try:
         return float(txt)
     except:
-        return int(text_to_us(txt) / 1000)
+        pass
+
+    if txt == 'max':
+        return ulong_max
+    return int(text_to_us(txt) / 1000)
 
 def text_to_percent(txt):
     if type(txt) in number_types:
