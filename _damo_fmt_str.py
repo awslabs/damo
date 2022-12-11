@@ -138,10 +138,9 @@ ulong_max = 2**64 - 1
 if platform.architecture()[0] != '64bit':
     ulong_max = 2**32 - 1
 
-unit_to_bytes = {'B': 1, 'K': 1024, 'KiB': 1024, 'M': 1024 * 1024,
-        'MiB': 1024 * 1024, 'G': 1024 * 1024 * 1024, 'GiB': 1024 * 1024 * 1024,
-        'T': 1024 * 1024 * 1024 * 1024, 'TiB': 1024 * 1024 * 1024 * 1024,
-        'P': 1 << 50, 'PiB': 1 << 50}
+unit_to_bytes = {'B': 1, 'K': 1 << 10, 'KiB': 1 << 10,
+        'M': 1 << 20, 'MiB': 1 << 20, 'G': 1 << 30, 'GiB': 1 << 30,
+        'T': 1 << 40, 'TiB': 1 << 40, 'P': 1 << 50, 'PiB': 1 << 50}
 
 def text_to_bytes(txt):
     if type(txt) in number_types:
