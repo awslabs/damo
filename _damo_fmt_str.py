@@ -157,13 +157,10 @@ def text_to_bytes(txt):
     number = float(txt[:-1])
     return int(number * unit_to_bytes[unit])
 
-unit_to_usecs = {'us': 1, 'ms': 1000, 's': 1000 * 1000, 'm': 60 * 1000 * 1000,
-        'h': 60 * 60 * 1000 * 1000, 'd': 24 * 60 * 60 * 1000 * 1000}
+unit_to_nsecs = {'ns': ns_ns, 'us': us_ns, 'ms': ms_ns, 's': sec_ns,
+        'm': minute_ns, 'h': hour_ns, 'd': day_ns}
 
-def text_to_us(txt):
-    if type(txt) in number_types:
-        return txt
-
+def text_to_ns(txt):
     if txt == 'min':
         return 0
     if txt == 'max':
@@ -173,19 +170,25 @@ def text_to_us(txt):
     if len(fields) > 1:
         result_us = 0
         for i in range(0, len(fields), 2):
-            result_us += text_to_us(''.join(fields[i: i + 2]))
+            result_us += text_to_ns(''.join(fields[i: i + 2]))
         return result_us
 
-    if not txt[-2:] in unit_to_usecs and not txt[-1] in unit_to_usecs:
+    if not txt[-2:] in unit_to_nsecs and not txt[-1] in unit_to_nsecs:
         return float(txt)
 
     unit = txt[-2:]
-    if unit in ['us', 'ms']:
+    if unit in ['ns', 'us', 'ms']:
         number = float(txt[:-2])
     else:
         unit = txt[-1]
         number = float(txt[:-1])
-    return number * unit_to_usecs[unit]
+    return number * unit_to_nsecs[unit]
+
+def text_to_us(txt):
+    if type(txt) in number_types:
+        return txt
+
+    return text_to_ns(txt) / us_ns
 
 def text_to_ms(txt):
     if type(txt) in number_types:
