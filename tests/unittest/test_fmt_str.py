@@ -89,6 +89,7 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.text_to_ns('1 ns'), 1)
         self.assertEqual(_damo_fmt_str.text_to_us('1 us'), 1)
         self.assertEqual(_damo_fmt_str.text_to_us('1234 us'), 1234)
+        self.assertEqual(_damo_fmt_str.text_to_us('1,234 us'), 1234)
         self.assertEqual(_damo_fmt_str.text_to_us('1234us'), 1234)
         self.assertEqual(_damo_fmt_str.text_to_us('1 ms'), 1000)
         self.assertEqual(_damo_fmt_str.text_to_us('1 m 2 s'), 62 * 1000 * 1000)
