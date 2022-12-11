@@ -87,6 +87,7 @@ class TestDamoFmtStr(unittest.TestCase):
                     expects[idx])
 
     def test_text_to_time(self):
+        self.assertEqual(_damo_fmt_str.text_to_ns('1'), 1)
         self.assertEqual(_damo_fmt_str.text_to_ns('1 ns'), 1)
         self.assertEqual(_damo_fmt_str.text_to_us('1 us'), 1)
         self.assertEqual(_damo_fmt_str.text_to_us('1234 us'), 1234)
@@ -99,6 +100,8 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.text_to_us('3 d 2 h 1 m 2 s'),
                 3 * 24 * 60 * 60 * 1000 * 1000 +
                 7262 * 1000 * 1000)
+        self.assertEqual(_damo_fmt_str.text_to_us('134'), 134)
+        self.assertEqual(_damo_fmt_str.text_to_ms('134'), 134)
 
     def test_text_to_percent(self):
         self.assertEqual(_damo_fmt_str.text_to_percent('10%'), 10.0)
