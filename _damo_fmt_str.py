@@ -19,6 +19,8 @@ def format_sz(sz_bytes, machine_friendly):
         return '%d' % sz_bytes
 
     sz_bytes = float(sz_bytes)
+    if sz_bytes > 1<<60:
+        return '%.3f EiB' % (sz_bytes / (1<<60))
     if sz_bytes > 1<<50:
         return '%.3f PiB' % (sz_bytes / (1<<50))
     if sz_bytes > 1<<40:
@@ -140,7 +142,8 @@ if platform.architecture()[0] != '64bit':
 
 unit_to_bytes = {'B': 1, 'K': 1 << 10, 'KiB': 1 << 10,
         'M': 1 << 20, 'MiB': 1 << 20, 'G': 1 << 30, 'GiB': 1 << 30,
-        'T': 1 << 40, 'TiB': 1 << 40, 'P': 1 << 50, 'PiB': 1 << 50}
+        'T': 1 << 40, 'TiB': 1 << 40, 'P': 1 << 50, 'PiB': 1 << 50,
+        'E': 1 << 60, 'EiB': 1 << 60}
 
 def text_to_bytes(txt):
     if type(txt) in number_types:
