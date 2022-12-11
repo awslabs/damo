@@ -78,6 +78,9 @@ def format_time_ns_min_unit(time_ns, min_unit, machine_friendly):
 def format_time_ns_exact(time_ns, machine_friendly):
     return format_time_ns_min_unit(time_ns, ns_ns, machine_friendly)
 
+def format_time_us_exact(time_us, machine_friendly):
+    return format_time_ns_exact(time_us * us_ns, machine_friendly)
+
 def format_time_ns(time_ns, machine_friendly):
     if machine_friendly:
         return '%d' % time_ns
