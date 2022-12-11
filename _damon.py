@@ -488,6 +488,8 @@ def kvpairs_to_Damos(kv):
             filters,
             None, None)
 
+default_Damos = kvpairs_to_Damos({'name': '0'})
+
 class DamonRecord:
     rfile_buf = None
     rfile_path = None
