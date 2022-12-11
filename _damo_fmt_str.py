@@ -202,14 +202,18 @@ def text_to_ns(txt):
 def text_to_us(txt):
     if type(txt) in number_types:
         return txt
-
-    return text_to_ns(txt) / us_ns
+    try:
+        return float(txt)
+    except:
+        return text_to_ns(txt) / us_ns
 
 def text_to_ms(txt):
     if type(txt) in number_types:
         return txt
-
-    return int(text_to_us(txt) / 1000)
+    try:
+        return float(txt)
+    except:
+        return int(text_to_us(txt) / 1000)
 
 def text_to_percent(txt):
     if type(txt) in number_types:
