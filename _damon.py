@@ -222,7 +222,6 @@ class DamosAccessPattern:
                 }
 
 def kvpairs_to_DamosAccessPattern(kv):
-    print(kv)
     sz_bytes = kv['sz_bytes']
     nr_accesses = kv['nr_accesses']
     age = kv['age']
