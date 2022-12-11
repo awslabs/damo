@@ -170,14 +170,9 @@ default_schemes = '''
     {
 	"name": "0",
 	"access_pattern": {
-	    "min_sz_bytes": "min",
-	    "max_sz_bytes": "max",
-	    "nr_accesses_unit": "percent",
-	    "min_nr_accesses": "min",
-	    "max_nr_accesses": "max",
-	    "age_unit": "usec",
-	    "min_age": "min",
-	    "max_age": "max"
+	    "sz_bytes": ["min", "max"],
+	    "nr_accesses": ["min", "max"],
+            "age": ["min", "max"]
 	},
 	"action": "stat"
     }
