@@ -155,17 +155,17 @@ def text_to_bytes(txt):
     if len(txt) > 3:
         unit = txt[len(txt) - 3:]
         if unit in unit_to_bytes:
-            number = float(txt[:-3])
+            number = float(text_to_nr(txt[:-3]))
         else:
             unit = None
 
     if unit == None:
         if txt[-1] in unit_to_bytes:
             unit = txt[-1]
-            number = float(txt[:-1])
+            number = float(text_to_nr(txt[:-1]))
         else:
             unit = 'B'
-            number  = float(txt)
+            number  = float(text_to_nr(txt))
 
     return int(number * unit_to_bytes[unit])
 
