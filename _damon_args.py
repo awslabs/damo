@@ -5,6 +5,7 @@
 Command line arguments handling
 """
 
+import json
 import subprocess
 
 import _damo_schemes_input
