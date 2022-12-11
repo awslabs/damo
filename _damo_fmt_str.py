@@ -167,7 +167,7 @@ def text_to_bytes(txt):
             unit = 'B'
             number  = float(text_to_nr(txt))
 
-    return int(number * unit_to_bytes[unit])
+    return min(ulong_max, int(number * unit_to_bytes[unit]))
 
 unit_to_nsecs = {'ns': ns_ns, 'us': us_ns, 'ms': ms_ns, 's': sec_ns,
         'm': minute_ns, 'h': hour_ns, 'd': day_ns}
