@@ -178,10 +178,10 @@ def text_to_ns(txt):
 
     unit = txt[-2:]
     if unit in ['ns', 'us', 'ms']:
-        number = float(txt[:-2])
+        number = float(text_to_nr(txt[:-2]))
     else:
         unit = txt[-1]
-        number = float(txt[:-1])
+        number = float(text_to_nr(txt[:-1]))
     return number * unit_to_nsecs[unit]
 
 def text_to_us(txt):
