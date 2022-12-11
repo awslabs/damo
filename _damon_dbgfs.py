@@ -201,13 +201,6 @@ def debugfs_output_to_damos(output, intervals_us):
             'nohugepage', 5: 'stat', 6: 'lru_prio', 7: 'lru_deprio'}
     fields[6] = action_map[fields[6]]
 
-    # convert quotas reset interval to microsec
-    if len(fields) <= 17:
-        if len(fields) >= 9:
-            fields[8] = fields[8] * 1000
-    elif len(fields) == 18:
-        fields[9] = fields[9] * 1000
-
     wmarks_metric_map = {0: 'none', 1: 'free_mem_rate'}
     if len(fields) == 17:
         fields[12] = wmarks_metric_map[fields[12]]
