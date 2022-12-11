@@ -103,6 +103,13 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.text_to_us('134'), 134)
         self.assertEqual(_damo_fmt_str.text_to_ms('134'), 134)
 
+        self.assertEqual(_damo_fmt_str.text_to_ns('max'),
+                _damo_fmt_str.ulong_max)
+        self.assertEqual(_damo_fmt_str.text_to_us('max'),
+                _damo_fmt_str.ulong_max)
+        self.assertEqual(_damo_fmt_str.text_to_ms('max'),
+                _damo_fmt_str.ulong_max)
+
     def test_text_to_percent(self):
         self.assertEqual(_damo_fmt_str.text_to_percent('10%'), 10.0)
         self.assertEqual(_damo_fmt_str.text_to_percent('12.34%'), 12.34)
