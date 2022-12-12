@@ -381,7 +381,9 @@ do
 	test_stat "$damon_interface"
 	test_wmarks "$damon_interface"
 
-	if [ "$damon_interface" = "sysfs" ]
+	if sudo "$damo" features supported \
+	       --damon_interface "$damon_interface" | \
+		grep -w "schemes_filters" > /dev/null
 	then
 		test_filters
 	fi
