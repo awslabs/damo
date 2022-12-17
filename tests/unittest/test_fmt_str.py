@@ -11,6 +11,10 @@ sys.path.append(damo_dir)
 
 import _damo_fmt_str
 
+def test_input_expects(testcase, function, input_expects):
+    for input_ in input_expects:
+        testcase.assertEqual(function(input_), input_expects[input_])
+
 class TestDamoFmtStr(unittest.TestCase):
     def test_format_nr(self):
         self.assertEqual(_damo_fmt_str.format_nr(123, False), '123')
