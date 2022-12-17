@@ -5,20 +5,13 @@ import os
 import sys
 import unittest
 
+import _test_damo_common
+
 bindir = os.path.dirname(os.path.realpath(__file__))
 damo_dir = os.path.join(bindir, '..', '..')
 sys.path.append(damo_dir)
 
 import _damo_fmt_str
-
-def test_input_expects(testcase, function, input_expects):
-    for input_ in input_expects:
-        testcase.assertEqual(function(input_), input_expects[input_])
-
-def test_input_expects_funcs(testcase, functions, input_expects):
-    for input_ in input_expects:
-        for idx, expect in enumerate(input_expects[input_]):
-            test_input_expects(testcase, functions[idx], {input_: expect})
 
 class TestDamoFmtStr(unittest.TestCase):
     def test_format_nr(self):
@@ -27,7 +20,7 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.format_nr(1234567, False), '1,234,567')
 
     def test_text_to_nr(self):
-        test_input_expects(self,
+        _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_nr,
                 {
                     '12': 12,
@@ -42,7 +35,7 @@ class TestDamoFmtStr(unittest.TestCase):
         minute_ns = 60 * sec_ns
         hour_ns = 60 * minute_ns
         day_ns = 24 * hour_ns
-        test_input_expects_funcs(self,
+        _test_damo_common.test_input_expects_funcs(self,
                 [lambda x: _damo_fmt_str.format_time_ns_exact(x, False),
                     lambda x: _damo_fmt_str.format_time_ns(x, False)],
                 {
@@ -68,13 +61,13 @@ class TestDamoFmtStr(unittest.TestCase):
                     1234 * day_ns + 2 * hour_ns: ['1,234 d 2 h', '29618 h']})
 
     def test_text_to_time(self):
-        test_input_expects(self,
+        _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_ns,
                 {
                     '1': 1,
                     '1 ns': 1,
                     'max': _damo_fmt_str.ulong_max})
-        test_input_expects(self,
+        _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_us,
                 {
                     '1 us': 1,
@@ -88,14 +81,15 @@ class TestDamoFmtStr(unittest.TestCase):
                     3 * 24 * 60 * 60 * 1000 * 1000 + 7262 * 1000 * 1000,
                     '134': 134,
                     'max': _damo_fmt_str.ulong_max})
-        test_input_expects(self,
+        _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_ms,
                 {
                     '134': 134,
                     'max': _damo_fmt_str.ulong_max})
 
     def test_text_to_percent(self):
-        test_input_expects(self, _damo_fmt_str.text_to_percent,
+        _test_damo_common.test_input_expects(self,
+                _damo_fmt_str.text_to_percent,
                 {'10%': 10.0,
                     '12.34%': 12.34,
                     '12.34 %': 12.34,
@@ -103,7 +97,7 @@ class TestDamoFmtStr(unittest.TestCase):
                     '1,234.567,89 %': 1234.56789})
 
     def test_text_to_bytes(self):
-        test_input_expects(self, _damo_fmt_str.text_to_bytes,
+        _test_damo_common.test_input_expects(self, _damo_fmt_str.text_to_bytes,
                 {
                     '123': 123,
                     '123 B': 123,
