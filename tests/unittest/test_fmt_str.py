@@ -22,10 +22,13 @@ class TestDamoFmtStr(unittest.TestCase):
         self.assertEqual(_damo_fmt_str.format_nr(1234567, False), '1,234,567')
 
     def test_text_to_nr(self):
-        self.assertEqual(_damo_fmt_str.text_to_nr('12'), 12)
-        self.assertEqual(_damo_fmt_str.text_to_nr('1,234'), 1234)
-        self.assertEqual(_damo_fmt_str.text_to_nr('1,234.567'), 1234.567)
-        self.assertEqual(_damo_fmt_str.text_to_nr('1,234,567'), 1234567)
+        test_input_expects(self,
+                _damo_fmt_str.text_to_nr,
+                {
+                    '12': 12,
+                    '1,234': 1234,
+                    '1,234.567': 1234.567,
+                    '1,234,567': 1234567})
 
     def test_format_time(self):
         usec_ns = 1000
@@ -91,28 +94,31 @@ class TestDamoFmtStr(unittest.TestCase):
                     expects[idx])
 
     def test_text_to_time(self):
-        self.assertEqual(_damo_fmt_str.text_to_ns('1'), 1)
-        self.assertEqual(_damo_fmt_str.text_to_ns('1 ns'), 1)
-        self.assertEqual(_damo_fmt_str.text_to_us('1 us'), 1)
-        self.assertEqual(_damo_fmt_str.text_to_us('1234 us'), 1234)
-        self.assertEqual(_damo_fmt_str.text_to_us('1,234 us'), 1234)
-        self.assertEqual(_damo_fmt_str.text_to_us('1234us'), 1234)
-        self.assertEqual(_damo_fmt_str.text_to_us('1 ms'), 1000)
-        self.assertEqual(_damo_fmt_str.text_to_us('1 m 2 s'), 62 * 1000 * 1000)
-        self.assertEqual(_damo_fmt_str.text_to_us('2 h 1 m 2 s'),
-                7262 * 1000 * 1000)
-        self.assertEqual(_damo_fmt_str.text_to_us('3 d 2 h 1 m 2 s'),
-                3 * 24 * 60 * 60 * 1000 * 1000 +
-                7262 * 1000 * 1000)
-        self.assertEqual(_damo_fmt_str.text_to_us('134'), 134)
-        self.assertEqual(_damo_fmt_str.text_to_ms('134'), 134)
-
-        self.assertEqual(_damo_fmt_str.text_to_ns('max'),
-                _damo_fmt_str.ulong_max)
-        self.assertEqual(_damo_fmt_str.text_to_us('max'),
-                _damo_fmt_str.ulong_max)
-        self.assertEqual(_damo_fmt_str.text_to_ms('max'),
-                _damo_fmt_str.ulong_max)
+        test_input_expects(self,
+                _damo_fmt_str.text_to_ns,
+                {
+                    '1': 1,
+                    '1 ns': 1,
+                    'max': _damo_fmt_str.ulong_max})
+        test_input_expects(self,
+                _damo_fmt_str.text_to_us,
+                {
+                    '1 us': 1,
+                    '1234 us': 1234,
+                    '1,234 us': 1234,
+                    '1234us': 1234,
+                    '1 ms': 1000,
+                    '1 m 2 s': 62 * 1000 * 1000,
+                    '2 h 1 m 2 s': 7262 * 1000 * 1000,
+                    '3 d 2 h 1 m 2 s':
+                    3 * 24 * 60 * 60 * 1000 * 1000 + 7262 * 1000 * 1000,
+                    '134': 134,
+                    'max': _damo_fmt_str.ulong_max})
+        test_input_expects(self,
+                _damo_fmt_str.text_to_ms,
+                {
+                    '134': 134,
+                    'max': _damo_fmt_str.ulong_max})
 
     def test_text_to_percent(self):
         self.assertEqual(_damo_fmt_str.text_to_percent('10%'), 10.0)
