@@ -76,14 +76,6 @@ class TestDamoSchemesInput(unittest.TestCase):
                         }
                     }
                 ]
-        base_damos_str = json.dumps(base_damos_kv, indent=4)
-        base_damos_str_with_comments = '\n\n# some comments\n'.join(
-                base_damos_str.split('\n'))
-        human_readable_damos_str = json.dumps(human_readable_damos_kv, indent=4)
-        human_readable_damos_str_with_comments = '\n\n# some comments\n'.join(
-                human_readable_damos_str.split('\n'))
-
-        base_damos_kv_with_filters = copy.deepcopy(base_damos_kv)
         base_filters_kv = [
                 {
                     "name": "0",
@@ -98,7 +90,18 @@ class TestDamoSchemesInput(unittest.TestCase):
                     "matching": "false"
                     }
                 ]
+
+        base_damos_kv_with_filters = copy.deepcopy(base_damos_kv)
         base_damos_kv_with_filters[0]['filters'] = base_filters_kv
+
+        base_damos_str = json.dumps(base_damos_kv, indent=4)
+        base_damos_str_with_comments = '\n\n# some comments\n'.join(
+                base_damos_str.split('\n'))
+        human_readable_damos_str = json.dumps(human_readable_damos_kv,
+                indent=4)
+        human_readable_damos_str_with_comments = '\n\n# some comments\n'.join(
+                human_readable_damos_str.split('\n'))
+
         human_readable_damos_kv_with_filters = copy.deepcopy(
                 human_readable_damos_kv)
         human_readable_damos_kv_with_filters[0]['filters'] = base_filters_kv
@@ -130,23 +133,21 @@ class TestDamoSchemesInput(unittest.TestCase):
                     _damon.DamosFilter('1', 'memcg',
                         '/all/latency-critical', False)], None, None)]
 
-        inputs_expects = {
-                base_damos_str: expected_damos_wo_filters,
-                base_damos_str_with_comments: expected_damos_wo_filters,
-                human_readable_damos_str: expected_damos_wo_filters,
-                human_readable_damos_str_with_comments:
-                expected_damos_wo_filters,
-                base_damos_with_filters_str: expected_damos_w_filters,
-                base_damos_with_filters_str_with_comments:
-                expected_damos_w_filters,
-                human_readable_damos_with_filters_str:
-                expected_damos_w_filters,
-                human_readable_damos_with_filters_str_with_comments:
-                expected_damos_w_filters}
-
         _test_damo_common.test_input_expects(self,
                 _damo_schemes_input.damo_schemes_to_damos,
-                inputs_expects)
+                {
+                    base_damos_str: expected_damos_wo_filters,
+                    base_damos_str_with_comments: expected_damos_wo_filters,
+                    human_readable_damos_str: expected_damos_wo_filters,
+                    human_readable_damos_str_with_comments:
+                    expected_damos_wo_filters,
+                    base_damos_with_filters_str: expected_damos_w_filters,
+                    base_damos_with_filters_str_with_comments:
+                    expected_damos_w_filters,
+                    human_readable_damos_with_filters_str:
+                    expected_damos_w_filters,
+                    human_readable_damos_with_filters_str_with_comments:
+                    expected_damos_w_filters})
 
 if __name__ == '__main__':
     unittest.main()
