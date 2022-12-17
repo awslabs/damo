@@ -78,12 +78,12 @@ class TestDamoSchemesInput(unittest.TestCase):
         base_damos_str_with_comments = '\n\n# some comments\n'.join(
                 base_damos_str.split('\n'))
         human_readable_damos_str = json.dumps(human_readable_damos_kv, indent=4)
-        human_readable_damos_kv_with_comments = '\n\n# some comments\n'.join(
+        human_readable_damos_str_with_comments = '\n\n# some comments\n'.join(
                 human_readable_damos_str.split('\n'))
 
         inputs = [base_damos_str, base_damos_str_with_comments,
                 human_readable_damos_str,
-                human_readable_damos_kv_with_comments]
+                human_readable_damos_str_with_comments]
         for txt in inputs:
             damos_list = _damo_schemes_input.damo_schemes_to_damos(txt)
             expected = _damon.Damos('0',
