@@ -19,6 +19,8 @@ def format_sz(sz_bytes, machine_friendly):
         return '%d' % sz_bytes
 
     sz_bytes = float(sz_bytes)
+    if sz_bytes == float(ulong_max):
+        return 'max'
     if sz_bytes > 1<<60:
         return '%.3f EiB' % (sz_bytes / (1<<60))
     if sz_bytes > 1<<50:
