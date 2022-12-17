@@ -95,36 +95,34 @@ class TestDamoFmtStr(unittest.TestCase):
                     'max': _damo_fmt_str.ulong_max})
 
     def test_text_to_percent(self):
-        self.assertEqual(_damo_fmt_str.text_to_percent('10%'), 10.0)
-        self.assertEqual(_damo_fmt_str.text_to_percent('12.34%'), 12.34)
-        self.assertEqual(_damo_fmt_str.text_to_percent('12.34 %'), 12.34)
-        self.assertEqual(
-                _damo_fmt_str.text_to_percent('1,234.567 %'), 1234.567)
-        self.assertEqual(
-                _damo_fmt_str.text_to_percent('1,234.567,89 %'), 1234.56789)
+        test_input_expects(self, _damo_fmt_str.text_to_percent,
+                {'10%': 10.0,
+                    '12.34%': 12.34,
+                    '12.34 %': 12.34,
+                    '1,234.567 %': 1234.567,
+                    '1,234.567,89 %': 1234.56789})
 
     def test_text_to_bytes(self):
-        self.assertEqual(_damo_fmt_str.text_to_bytes('123'), 123)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('123 B'), 123)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 K'), 2048)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 KiB'), 2048)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 M'), 2 * 1 << 20)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 MiB'), 2 * 1 << 20)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 G'), 2 * 1 << 30)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('1,234.457 G'),
-                int(1234.457 * (1 << 30)))
-        self.assertEqual(_damo_fmt_str.text_to_bytes('1,234.457 GiB'),
-                int(1234.457 * (1 << 30)))
-        self.assertEqual(_damo_fmt_str.text_to_bytes('1,234.457'), 1234)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 GiB'), 2 * 1 << 30)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 T'), 2 * 1 << 40)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 TiB'), 2 * 1 << 40)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 P'), 2 * 1 << 50)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2 PiB'), 2 * 1 << 50)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2.0 PiB'), 2 * 1 << 50)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('16384.000 PiB'),
-                (1 << 64) - 1)
-        self.assertEqual(_damo_fmt_str.text_to_bytes('2.0 EiB'), 2 * 1 << 60)
+        test_input_expects(self, _damo_fmt_str.text_to_bytes,
+                {
+                    '123': 123,
+                    '123 B': 123,
+                    '2 K': 2048,
+                    '2 KiB': 2048,
+                    '2 M': 2 * 1 << 20,
+                    '2 MiB': 2 * 1 << 20,
+                    '2 G': 2 * 1 << 30,
+                    '1,234.457 G': int(1234.457 * (1 << 30)),
+                    '1,234.457 GiB': int(1234.457 * (1 << 30)),
+                    '1,234.457': 1234,
+                    '2 GiB': 2 * 1 << 30,
+                    '2 T': 2 * 1 << 40,
+                    '2 TiB': 2 * 1 << 40,
+                    '2 P': 2 * 1 << 50,
+                    '2 PiB': 2 * 1 << 50,
+                    '2.0 PiB': 2 * 1 << 50,
+                    '16384.000 PiB': (1 << 64) - 1,
+                    '2.0 EiB': 2 * 1 << 60})
 
 if __name__ == '__main__':
     unittest.main()
