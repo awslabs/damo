@@ -7,6 +7,8 @@ import os
 import sys
 import unittest
 
+import _test_damo_common
+
 bindir = os.path.dirname(os.path.realpath(__file__))
 damo_dir = os.path.join(bindir, '..', '..')
 sys.path.append(damo_dir)
@@ -81,19 +83,6 @@ class TestDamoSchemesInput(unittest.TestCase):
         human_readable_damos_str_with_comments = '\n\n# some comments\n'.join(
                 human_readable_damos_str.split('\n'))
 
-        inputs = [base_damos_str, base_damos_str_with_comments,
-                human_readable_damos_str,
-                human_readable_damos_str_with_comments]
-        for txt in inputs:
-            damos_list = _damo_schemes_input.damo_schemes_to_damos(txt)
-            expected = _damon.Damos('0',
-                        _damon.DamosAccessPattern(0, 0, 0, 0,
-                            'sample_intervals', 0, 0, 'aggr_intervals'),
-                        'stat',
-                        _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
-                        _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None, None)
-            self.assertEqual(damos_list[0], expected)
-
         base_damos_kv_with_filters = copy.deepcopy(base_damos_kv)
         base_filters_kv = [
                 {
@@ -125,23 +114,39 @@ class TestDamoSchemesInput(unittest.TestCase):
                 '\n\n# some comments\n'.join(
                     human_readable_damos_with_filters_str.split('\n')))
 
-        inputs = [base_damos_with_filters_str,
-            base_damos_with_filters_str_with_comments,
-            human_readable_damos_with_filters_str,
-            human_readable_damos_with_filters_str_with_comments]
+        expected_damos_wo_filters = [_damon.Damos('0',
+                _damon.DamosAccessPattern(0, 0, 0, 0,
+                    'sample_intervals', 0, 0, 'aggr_intervals'),
+                'stat',
+                _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
+                _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None, None)]
+        expected_damos_w_filters = [_damon.Damos('0',
+                _damon.DamosAccessPattern(0, 0, 0, 0,
+                    'sample_intervals', 0, 0, 'aggr_intervals'),
+                'stat',
+                _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
+                _damon.DamosWatermarks('none', 0, 0, 0, 0),
+                [_damon.DamosFilter('0', 'anon', '', True),
+                    _damon.DamosFilter('1', 'memcg',
+                        '/all/latency-critical', False)], None, None)]
 
-        for txt in inputs:
-            damos_list = _damo_schemes_input.damo_schemes_to_damos(txt)
-            expected = _damon.Damos('0',
-                        _damon.DamosAccessPattern(0, 0, 0, 0,
-                            'sample_intervals', 0, 0, 'aggr_intervals'),
-                        'stat',
-                        _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
-                        _damon.DamosWatermarks('none', 0, 0, 0, 0),
-                        [_damon.DamosFilter('0', 'anon', '', True),
-                            _damon.DamosFilter('1', 'memcg',
-                                '/all/latency-critical', False)], None, None)
-            self.assertEqual(damos_list[0], expected)
+        inputs_expects = {
+                base_damos_str: expected_damos_wo_filters,
+                base_damos_str_with_comments: expected_damos_wo_filters,
+                human_readable_damos_str: expected_damos_wo_filters,
+                human_readable_damos_str_with_comments:
+                expected_damos_wo_filters,
+                base_damos_with_filters_str: expected_damos_w_filters,
+                base_damos_with_filters_str_with_comments:
+                expected_damos_w_filters,
+                human_readable_damos_with_filters_str:
+                expected_damos_w_filters,
+                human_readable_damos_with_filters_str_with_comments:
+                expected_damos_w_filters}
+
+        _test_damo_common.test_input_expects(self,
+                _damo_schemes_input.damo_schemes_to_damos,
+                inputs_expects)
 
 if __name__ == '__main__':
     unittest.main()
