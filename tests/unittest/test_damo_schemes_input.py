@@ -14,67 +14,66 @@ sys.path.append(damo_dir)
 import _damon
 import _damo_schemes_input
 
-base_damos_kv = [
-        {
-            "name": "0",
-            "action": "stat",
-            "access_pattern": {
-                "min_sz_bytes": 0,
-                "max_sz_bytes": 0,
-                "min_nr_accesses": "0 sample_intervals",
-                "max_nr_accesses": "0 sample_intervals",
-                "min_age": "0 aggr_intervals",
-                "max_age": "0 aggr_intervals"
-                },
-            "quotas": {
-                "time_ms": 0,
-                "sz_bytes": 0,
-                "reset_interval_ms": 0,
-                "weight_sz_permil": 0,
-                "weight_nr_accesses_permil": 0,
-                "weight_age_permil": 0
-                },
-            "watermarks": {
-                "metric": "none",
-                "interval_us": 0,
-                "high_permil": 0,
-                "mid_permil": 0,
-                "low_permil": 0
-                }
-            }
-        ]
-human_readable_damos_kv = [
-        {
-            "name": "0",
-            "action": "stat",
-            "access_pattern": {
-                "min_sz_bytes": "min",
-                "max_sz_bytes": "min",
-                "min_nr_accesses": "0 sample_intervals",
-                "max_nr_accesses": "0 sample_intervals",
-                "min_age": "0 aggr_intervals",
-                "max_age": "0 aggr_intervals"
-                },
-            "quotas": {
-                "time_ms": "0s",
-                "sz_bytes": "0B",
-                "reset_interval_ms": "0us",
-                "weight_sz_permil": 0,
-                "weight_nr_accesses_permil": 0,
-                "weight_age_permil": 0
-                },
-            "watermarks": {
-                "metric": "none",
-                "interval_us": "0us",
-                "high_permil": 0,
-                "mid_permil": 0,
-                "low_permil": 0
-                }
-            }
-        ]
-
 class TestDamoSchemesInput(unittest.TestCase):
-    def test_damo_schemes_to_damos_without_filters(self):
+    def test_damo_schemes_to_damos(self):
+        base_damos_kv = [
+                {
+                    "name": "0",
+                    "action": "stat",
+                    "access_pattern": {
+                        "min_sz_bytes": 0,
+                        "max_sz_bytes": 0,
+                        "min_nr_accesses": "0 sample_intervals",
+                        "max_nr_accesses": "0 sample_intervals",
+                        "min_age": "0 aggr_intervals",
+                        "max_age": "0 aggr_intervals"
+                        },
+                    "quotas": {
+                        "time_ms": 0,
+                        "sz_bytes": 0,
+                        "reset_interval_ms": 0,
+                        "weight_sz_permil": 0,
+                        "weight_nr_accesses_permil": 0,
+                        "weight_age_permil": 0
+                        },
+                    "watermarks": {
+                        "metric": "none",
+                        "interval_us": 0,
+                        "high_permil": 0,
+                        "mid_permil": 0,
+                        "low_permil": 0
+                        }
+                    }
+                ]
+        human_readable_damos_kv = [
+                {
+                    "name": "0",
+                    "action": "stat",
+                    "access_pattern": {
+                        "min_sz_bytes": "min",
+                        "max_sz_bytes": "min",
+                        "min_nr_accesses": "0 sample_intervals",
+                        "max_nr_accesses": "0 sample_intervals",
+                        "min_age": "0 aggr_intervals",
+                        "max_age": "0 aggr_intervals"
+                        },
+                    "quotas": {
+                        "time_ms": "0s",
+                        "sz_bytes": "0B",
+                        "reset_interval_ms": "0us",
+                        "weight_sz_permil": 0,
+                        "weight_nr_accesses_permil": 0,
+                        "weight_age_permil": 0
+                        },
+                    "watermarks": {
+                        "metric": "none",
+                        "interval_us": "0us",
+                        "high_permil": 0,
+                        "mid_permil": 0,
+                        "low_permil": 0
+                        }
+                    }
+                ]
         base_damos_str = json.dumps(base_damos_kv, indent=4)
         base_damos_str_with_comments = '\n\n# some comments\n'.join(
                 base_damos_str.split('\n'))
@@ -95,7 +94,6 @@ class TestDamoSchemesInput(unittest.TestCase):
                         _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None, None)
             self.assertEqual(damos_list[0], expected)
 
-    def test_damo_schemes_to_damos(self):
         base_damos_kv_with_filters = copy.deepcopy(base_damos_kv)
         base_filters_kv = [
                 {
