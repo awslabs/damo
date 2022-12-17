@@ -56,6 +56,9 @@ def format_time_ns_min_unit(time_ns, min_unit, machine_friendly):
     if machine_friendly:
         return '%d' % time_ns
 
+    if time_ns >= ulong_max:
+        return 'max'
+
     for unit_nsecs in sorted(nsecs_to_unit.keys(), reverse=True):
         if time_ns < unit_nsecs:
             continue
