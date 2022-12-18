@@ -38,8 +38,12 @@ def change_rfile_format(rfile_path, src_format, dst_format, dst_permission):
 
 def cleanup_exit(exit_code):
     if data_for_cleanup.perf_pipe:
-        data_for_cleanup.perf_pipe.send_signal(signal.SIGINT)
-        data_for_cleanup.perf_pipe.wait()
+        try:
+            data_for_cleanup.perf_pipe.send_signal(signal.SIGINT)
+            data_for_cleanup.perf_pipe.wait()
+        except:
+            # perf might already finished
+            pass
 
         rfile_current_format = 'perf_script'
         perf_data = data_for_cleanup.rfile_path + '.perf.data'
