@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
+import json
 import os
 import sys
 import unittest
+
+import _test_damo_common
 
 bindir = os.path.dirname(os.path.realpath(__file__))
 damo_dir = os.path.join(bindir, '..', '..')
@@ -58,37 +61,43 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(damos, damos)
 
     def test_damon_intervals(self):
-        self.assertEqual(_damon.kvpairs_to_DamonIntervals(
-            {'sample': 5000, 'aggr': 100000, 'ops_update': 1000000}),
-            _damon.DamonIntervals(5000, 100000, 1000000))
-        self.assertEqual(_damon.kvpairs_to_DamonIntervals(
-            {'sample': '5ms', 'aggr': '0.1s', 'ops_update': '1s'}),
-            _damon.DamonIntervals(5000, 100000, 1000000))
+        _test_damo_common.test_input_expects(self,
+                lambda x: _damon.kvpairs_to_DamonIntervals(json.loads(x)),
+                {
+                    json.dumps({'sample': 5000, 'aggr': 100000,
+                        'ops_update': 1000000}):
+                    _damon.DamonIntervals(5000, 100000, 1000000),
+                    json.dumps({'sample': '5ms', 'aggr': '0.1s',
+                        'ops_update': '1s'}):
+                    _damon.DamonIntervals(5000, 100000, 1000000)})
 
         self.assertEqual('%s' % _damon.DamonIntervals(5000, 100000, 1000000),
-                'sample 5 ms, aggr 100 ms, update 1 s')
+        'sample 5 ms, aggr 100 ms, update 1 s')
 
         self.assertEqual(
                 _damon.DamonIntervals(5000, 100000, 1000000).to_kvpairs(),
                 {'sample': '5 ms', 'aggr': '100 ms', 'ops_update': '1 s'})
 
     def test_damon_nr_regions_range(self):
-        self.assertEqual(_damon.DamonNrRegionsRange(10, '1000'),
-                _damon.DamonNrRegionsRange(10, 1000))
-        self.assertEqual(_damon.DamonNrRegionsRange('10', '1000'),
-                _damon.DamonNrRegionsRange(10, 1000))
-        self.assertEqual(_damon.DamonNrRegionsRange('10', '1,000'),
-                _damon.DamonNrRegionsRange(10, 1000))
+        expect = _damon.DamonNrRegionsRange(10, 1000)
+        _test_damo_common.test_input_expects(self,
+                lambda x: _damon.DamonNrRegionsRange(*x),
+                {
+                    tuple([10, '1000']): expect,
+                    tuple(['10', '1000']): expect,
+                    tuple(['10', '1,000']): expect})
 
-        self.assertEqual(_damon.kvpairs_to_DamonNrRegionsRange(
-            {'min_nr_regions': 10, 'max_nr_regions': 1000}),
-            _damon.DamonNrRegionsRange(10, 1000))
-        self.assertEqual(_damon.kvpairs_to_DamonNrRegionsRange(
-            {'min_nr_regions': '10', 'max_nr_regions': '1000'}),
-            _damon.DamonNrRegionsRange(10, 1000))
-        self.assertEqual(_damon.kvpairs_to_DamonNrRegionsRange(
-            {'min_nr_regions': '10', 'max_nr_regions': '1,000'}),
-            _damon.DamonNrRegionsRange(10, 1000))
+        _test_damo_common.test_input_expects(self,
+                lambda x: _damon.kvpairs_to_DamonNrRegionsRange(json.loads(x)),
+                {
+                    json.dumps({'min_nr_regions': 10, 'max_nr_regions': 1000}):
+                    expect,
+                    json.dumps(
+                        {'min_nr_regions': '10', 'max_nr_regions': '1000'}):
+                    expect,
+                    json.dumps(
+                        {'min_nr_regions': '10', 'max_nr_regions': '1,000'}):
+                    expect})
 
         self.assertEqual('%s' % _damon.DamonNrRegionsRange(10, 1000),
                 '[10, 1,000]')
@@ -97,24 +106,22 @@ class TestDamon(unittest.TestCase):
                 {'min_nr_regions': '10', 'max_nr_regions': '1,000'})
 
     def test_damon_region(self):
-        self.assertEqual(_damon.DamonRegion(123, '456'),
-                _damon.DamonRegion(123, 456))
-        self.assertEqual(_damon.DamonRegion('123', '456'),
-                _damon.DamonRegion(123, 456))
-        self.assertEqual(_damon.DamonRegion('1,234', '4,567'),
-                _damon.DamonRegion(1234, 4567))
+        _test_damo_common.test_input_expects(self,
+                lambda x: _damon.DamonRegion(*x),
+                {
+                    tuple([123, '456']): _damon.DamonRegion(123, 456),
+                    tuple(['123', '456']): _damon.DamonRegion(123, 456),
+                    tuple(['1,234', '4,567']): _damon.DamonRegion(1234, 4567)})
 
-        self.assertEqual(
-                _damon.kvpairs_to_DamonRegion({'start': '123', 'end': '456'}),
-                _damon.DamonRegion(123, 456))
-        self.assertEqual(
-                _damon.kvpairs_to_DamonRegion(
-                    {'start': '1234', 'end': '4567'}),
-                _damon.DamonRegion(1234, 4567))
-        self.assertEqual(
-                _damon.kvpairs_to_DamonRegion(
-                    {'start': '1,234', 'end': '4,567'}),
-                _damon.DamonRegion(1234, 4567))
+        _test_damo_common.test_input_expects(self,
+                lambda x: _damon.kvpairs_to_DamonRegion(json.loads(x)),
+                {
+                    json.dumps({'start': '123', 'end': '456'}):
+                    _damon.DamonRegion(123, 456),
+                    json.dumps({'start': '1234', 'end': '4567'}):
+                    _damon.DamonRegion(1234, 4567),
+                    json.dumps({'start': '1,234', 'end': '4,567'}):
+                    _damon.DamonRegion(1234, 4567)})
 
         self.assertEqual('%s' % _damon.DamonRegion(123, 456),
                 '[123, 456) (333 B)')
