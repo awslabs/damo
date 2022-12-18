@@ -15,18 +15,20 @@ sys.path.append(damo_dir)
 import _damon
 import _damon_dbgfs
 
+def set_damon_dbgfs_features():
+    _damon_dbgfs.feature_supports = {'init_regions': True, 'schemes': True,
+            'schemes_stat_qt_exceed': True, 'init_regions_target_idx': True,
+            'schemes_prioritization': True, 'schemes_tried_regions': False,
+            'record': False, 'schemes_quotas': True, 'fvaddr': False,
+            'paddr': True, 'schemes_wmarks': True, 'schemes_speed_limit': True,
+            'schemes_stat_succ': True, 'vaddr': True}
+
 class TestDamonDbgfs(unittest.TestCase):
     def test_current_kdamond_names(self):
         self.assertEqual(_damon_dbgfs.current_kdamond_names(), ['0'])
 
     def test_debugfs_output_to_damos(self):
-        _damon_dbgfs.feature_supports = {'init_regions': True, 'schemes': True,
-                'schemes_stat_qt_exceed': True, 'init_regions_target_idx':
-                True, 'schemes_prioritization': True, 'schemes_tried_regions':
-                False, 'record': False, 'schemes_quotas': True, 'fvaddr':
-                False, 'paddr': True, 'schemes_wmarks': True,
-                'schemes_speed_limit': True, 'schemes_stat_succ': True,
-                'vaddr': True}
+        set_damon_dbgfs_features()
 
         _test_damo_common.test_input_expects(self,
                 lambda x: _damon_dbgfs.debugfs_output_to_damos(
@@ -46,13 +48,7 @@ class TestDamonDbgfs(unittest.TestCase):
                         filters=[], stats=None)})
 
     def test_files_content_to_kdamonds(self):
-        _damon_dbgfs.feature_supports = {'init_regions': True, 'schemes': True,
-                'schemes_stat_qt_exceed': True, 'init_regions_target_idx':
-                True, 'schemes_prioritization': True, 'schemes_tried_regions':
-                False, 'record': False, 'schemes_quotas': True, 'fvaddr':
-                False, 'paddr': True, 'schemes_wmarks': True,
-                'schemes_speed_limit': True, 'schemes_stat_succ': True,
-                'vaddr': True}
+        set_damon_dbgfs_features()
 
         _test_damo_common.test_input_expects(self,
                 lambda x: _damon_dbgfs.wops_for_kdamonds(
