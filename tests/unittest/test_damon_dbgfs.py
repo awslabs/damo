@@ -70,13 +70,12 @@ r'''
     "target_ids": "4242\n"
 }
 ''':
-json.loads(r'''
 [{"/sys/kernel/debug/damon/attrs": "5000 100000 1000000 10 1000 "},
 {"/sys/kernel/debug/damon/target_ids": "4242"},
 {"/sys/kernel/debug/damon/init_regions": "0 1 100 0 100 200"},
 {"/sys/kernel/debug/damon/schemes":
 "4096\t18446744073709551615\t0\t0\t10\t42949\t5\t0\t584792941\t1000\t0\t0\t0\t0\t0\t0\t0\t0"}]
-'''),
+,
 r'''
 {
     "attrs": "5000 100000 1000000 10 1000\n",
@@ -89,13 +88,12 @@ r'''
     "target_ids": "42\n"
 }
 ''':
-json.loads(r'''
 [{"/sys/kernel/debug/damon/attrs": "5000 100000 1000000 10 1000 "},
 {"/sys/kernel/debug/damon/target_ids": "paddr\n"},
 {"/sys/kernel/debug/damon/init_regions": ""},
 {"/sys/kernel/debug/damon/schemes":
 "4096\t18446744073709551615\t0\t0\t10\t42949\t5\t0\t5368709120\t1000\t0\t3\t7\t1\t1000000\t999\t998\t995"}]
-''')})
+})
 
 if __name__ == '__main__':
     unittest.main()
