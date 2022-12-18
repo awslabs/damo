@@ -52,7 +52,11 @@ class TestDamonDbgfs(unittest.TestCase):
                 'schemes_speed_limit': True, 'schemes_stat_succ': True,
                 'vaddr': True}
 
-        dbgfs_read_txts = [r'''
+        _test_damo_common.test_input_expects(self,
+                lambda x: _damon_dbgfs.wops_for_kdamonds(
+                    _damon_dbgfs.files_content_to_kdamonds(json.loads(x))),
+                {
+r'''
 {
     "attrs": "5000 100000 1000000 10 1000\n",
     "init_regions": "0 1 100\n0 100 200\n",
@@ -63,7 +67,15 @@ class TestDamonDbgfs(unittest.TestCase):
     "schemes": "4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
     "target_ids": "4242\n"
 }
-''', r'''
+''':
+json.loads(r'''
+[{"/sys/kernel/debug/damon/attrs": "5000 100000 1000000 10 1000 "},
+{"/sys/kernel/debug/damon/target_ids": "4242"},
+{"/sys/kernel/debug/damon/init_regions": "0 1 100 0 100 200"},
+{"/sys/kernel/debug/damon/schemes":
+"4096\t18446744073709551615\t0\t0\t10\t42949\t5\t0\t584792941\t1000\t0\t0\t0\t0\t0\t0\t0\t0"}]
+'''),
+r'''
 {
     "attrs": "5000 100000 1000000 10 1000\n",
     "init_regions": "",
@@ -74,29 +86,14 @@ class TestDamonDbgfs(unittest.TestCase):
     "schemes": "4096 18446744073709551615 0 0 10 42949 5 0 5368709120 1000 0 3 7 1 1000000 999 998 995 0 0 0 0 0\n",
     "target_ids": "42\n"
 }
-''']
-
-        expected_wops_list = [r'''
-[{"/sys/kernel/debug/damon/attrs": "5000 100000 1000000 10 1000 "},
-{"/sys/kernel/debug/damon/target_ids": "4242"},
-{"/sys/kernel/debug/damon/init_regions": "0 1 100 0 100 200"},
-{"/sys/kernel/debug/damon/schemes":
-"4096\t18446744073709551615\t0\t0\t10\t42949\t5\t0\t584792941\t1000\t0\t0\t0\t0\t0\t0\t0\t0"}]
-''', r'''
+''':
+json.loads(r'''
 [{"/sys/kernel/debug/damon/attrs": "5000 100000 1000000 10 1000 "},
 {"/sys/kernel/debug/damon/target_ids": "paddr\n"},
 {"/sys/kernel/debug/damon/init_regions": ""},
 {"/sys/kernel/debug/damon/schemes":
 "4096\t18446744073709551615\t0\t0\t10\t42949\t5\t0\t5368709120\t1000\t0\t3\t7\t1\t1000000\t999\t998\t995"}]
-''']
-
-        for idx in range(len(dbgfs_read_txts)):
-            dbgfs_read_txt = dbgfs_read_txts[idx]
-            expected_wops = expected_wops_list[idx]
-            dbgfs_dict = json.loads(dbgfs_read_txt)
-            kdamonds = _damon_dbgfs.files_content_to_kdamonds(dbgfs_dict)
-            wops = _damon_dbgfs.wops_for_kdamonds(kdamonds)
-            self.assertEqual(json.loads(expected_wops), wops)
+''')})
 
 if __name__ == '__main__':
     unittest.main()
