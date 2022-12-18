@@ -90,7 +90,7 @@ test_record_validate()
 	fi
 
 	rc=$?
-	if [ $? -ne 0 ] && [ $? -ne 124 ]
+	if [ $rc -ne 0 ] && [ $rc -ne 124 ]
 	then
 		echo "FAIL $testname"
 		echo "(damo-record command failed with value $rc)"
