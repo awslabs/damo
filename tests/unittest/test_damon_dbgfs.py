@@ -6,6 +6,8 @@ import os
 import sys
 import unittest
 
+import _test_damo_common
+
 bindir = os.path.dirname(os.path.realpath(__file__))
 damo_dir = os.path.join(bindir, '..', '..')
 sys.path.append(damo_dir)
@@ -26,20 +28,20 @@ class TestDamonDbgfs(unittest.TestCase):
                 'schemes_speed_limit': True, 'schemes_stat_succ': True,
                 'vaddr': True}
 
-        damos = _damon_dbgfs.debugfs_output_to_damos("4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
-                _damon.DamonIntervals(5000, 100000, 1000000))
-        expected = _damon.Damos('0',
-                access_pattern=_damon.DamosAccessPattern(4096,
-                    18446744073709551615, 0.0, 0.0, 'percent', 1000000.0,
-                    4294900000.0, 'usec'),
-                action='stat',
-                quotas=_damon.DamosQuotas(time_ms=0, sz_bytes=584792941,
-                    reset_interval_ms=1000, weight_sz_permil=0,
-                    weight_nr_accesses_permil=0, weight_age_permil=0),
-                watermarks=_damon.DamosWatermarks('none',0,0,0,0),
-                filters=[], stats=None)
-
-        self.assertEqual(damos, expected)
+        _test_damo_common.test_input_expects(self,
+                lambda x: _damon_dbgfs.debugfs_output_to_damos(
+                    x, _damon.DamonIntervals(5000, 100000, 1000000)),
+                {"4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n":
+                    _damon.Damos('0',
+                        access_pattern=_damon.DamosAccessPattern(4096,
+                            18446744073709551615, 0.0, 0.0, 'percent', 1000000.0,
+                            4294900000.0, 'usec'),
+                        action='stat',
+                        quotas=_damon.DamosQuotas(time_ms=0, sz_bytes=584792941,
+                            reset_interval_ms=1000, weight_sz_permil=0,
+                            weight_nr_accesses_permil=0, weight_age_permil=0),
+                        watermarks=_damon.DamosWatermarks('none',0,0,0,0),
+                        filters=[], stats=None)})
 
     def test_files_content_to_kdamonds(self):
         _damon_dbgfs.feature_supports = {'init_regions': True, 'schemes': True,
