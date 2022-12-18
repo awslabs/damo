@@ -59,15 +59,20 @@ class TestDamonDbgfs(unittest.TestCase):
                             "attrs": "5000 100000 1000000 10 1000\n",
                             "init_regions": "0 1 100\n0 100 200\n",
                             "kdamond_pid": "none\n",
-                            "mk_contexts": "read failed (reading /sys/kernel/debug/damon/mk_contexts failed ([Errno 22] Invalid argument))",
+                            "mk_contexts":
+                            "read failed (reading /sys/kernel/debug/damon/mk_contexts failed ([Errno 22] Invalid argument))",
                             "monitor_on": "off\n",
-                            "rm_contexts": "read failed (reading /sys/kernel/debug/damon/rm_contexts failed ([Errno 22] Invalid argument))",
-                            "schemes": "4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
+                            "rm_contexts":
+                            "read failed (reading /sys/kernel/debug/damon/rm_contexts failed ([Errno 22] Invalid argument))",
+                            "schemes":
+                            "4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
                             "target_ids": "4242\n"
                             }):
-                        [{"/sys/kernel/debug/damon/attrs": "5000 100000 1000000 10 1000 "},
+                        [{"/sys/kernel/debug/damon/attrs":
+                            "5000 100000 1000000 10 1000 "},
                             {"/sys/kernel/debug/damon/target_ids": "4242"},
-                            {"/sys/kernel/debug/damon/init_regions": "0 1 100 0 100 200"},
+                            {"/sys/kernel/debug/damon/init_regions":
+                                "0 1 100 0 100 200"},
                             {"/sys/kernel/debug/damon/schemes":
                                 "4096\t18446744073709551615\t0\t0\t10\t42949\t5\t0\t584792941\t1000\t0\t0\t0\t0\t0\t0\t0\t0"}],
                             json.dumps(
@@ -75,15 +80,21 @@ class TestDamonDbgfs(unittest.TestCase):
                                     "attrs": "5000 100000 1000000 10 1000\n",
                                     "init_regions": "",
                                     "kdamond_pid": "none\n",
-                                    "mk_contexts": "read failed (reading /sys/kernel/debug/damon/mk_contexts failed ([Errno 22] Invalid argument))",
+                                    "mk_contexts":
+                                    "read failed (reading /sys/kernel/debug/damon/mk_contexts failed ([Errno 22] Invalid argument))",
                                     "monitor_on": "off\n",
-                                    "rm_contexts": "read failed (reading /sys/kernel/debug/damon/rm_contexts failed ([Errno 22] Invalid argument))",
-                                    "schemes": "4096 18446744073709551615 0 0 10 42949 5 0 5368709120 1000 0 3 7 1 1000000 999 998 995 0 0 0 0 0\n",
+                                    "rm_contexts":
+                                    "read failed (reading /sys/kernel/debug/damon/rm_contexts failed ([Errno 22] Invalid argument))",
+                                    "schemes":
+                                    "4096 18446744073709551615 0 0 10 42949 5 0 5368709120 1000 0 3 7 1 1000000 999 998 995 0 0 0 0 0\n",
                                     "target_ids": "42\n"
                                     }):
-                                [{"/sys/kernel/debug/damon/attrs": "5000 100000 1000000 10 1000 "},
-                                    {"/sys/kernel/debug/damon/target_ids": "paddr\n"},
-                                    {"/sys/kernel/debug/damon/init_regions": ""},
+                                [{"/sys/kernel/debug/damon/attrs":
+                                    "5000 100000 1000000 10 1000 "},
+                                    {"/sys/kernel/debug/damon/target_ids":
+                                        "paddr\n"},
+                                    {"/sys/kernel/debug/damon/init_regions":
+                                        ""},
                                     {"/sys/kernel/debug/damon/schemes":
                                         "4096\t18446744073709551615\t0\t0\t10\t42949\t5\t0\t5368709120\t1000\t0\t3\t7\t1\t1000000\t999\t998\t995"}]
                                     })
