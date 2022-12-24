@@ -15,23 +15,35 @@ type_module = {
         'schemes_tried_regions': damo_stat_schemes_tried_regions
         }
 
+class DamoStatType:
+    name = None
+    msg = None
+    module = None
+
+    def __init__(self, name, msg, module):
+        self.name = name
+        self.msg = msg
+        self.module = module
+
+damo_stat_types = [
+        DamoStatType(name='kdamonds_summary',
+            module=damo_stat_kdamonds_summary,
+            msg='summary of kdamonds'),
+        DamoStatType(name='schemes_stats', module=damo_stat_schemes_stats,
+            msg='schemes apply stats'),
+        DamoStatType(name='schemes_tried_regions',
+            module=damo_stat_schemes_tried_regions,
+            msg='schemes tried regions in detail'),
+        ]
+
 def set_argparser(parser):
     subparsers = parser.add_subparsers(title='stat type', dest='stat_type',
             metavar='<stat type>', help='the type of the stat to show')
     subparsers.required = True
 
-    parser_kdamonds_summary = subparsers.add_parser('kdamonds_summary',
-            help='summary of kdamonds')
-    damo_stat_kdamonds_summary.set_argparser(parser_kdamonds_summary)
-
-    parser_schemes_stats = subparsers.add_parser('schemes_stats',
-            help='schemes apply stats')
-    damo_stat_schemes_stats.set_argparser(parser_schemes_stats)
-
-    parser_schemes_tried_regions = subparsers.add_parser(
-            'schemes_tried_regions',
-            help='schemes tried regions in detail')
-    damo_stat_schemes_tried_regions.set_argparser(parser_schemes_tried_regions)
+    for stat_type in damo_stat_types:
+        subparser = subparsers.add_parser(stat_type.name, help=stat_type.msg)
+        stat_type.module.set_argparser(subparser)
 
     _damon_args.set_common_argparser(parser)
 
@@ -41,7 +53,8 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    type_module[args.stat_type].main(args)
+    module = [s.module for s in damo_stat_types if s.name == args.stat_type][0]
+    module.main(args)
 
 if __name__ == '__main__':
     main()
