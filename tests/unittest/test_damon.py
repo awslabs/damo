@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
+import collections
 import json
 import os
 import sys
@@ -17,8 +18,11 @@ import _damon
 class TestDamon(unittest.TestCase):
     def test_kvpairs_transition(self):
         target = _damon.DamonTarget('foo', 1234, [_damon.DamonRegion(10, 20)])
+        target_kvpairs = target.to_kvpairs()
+        self.assertEqual(type(target_kvpairs), collections.OrderedDict)
+        self.assertEqual(target_kvpairs.keys(), ['name', 'pid', 'regions'])
         self.assertEqual(target,
-                _damon.kvpairs_to_DamonTarget(target.to_kvpairs()))
+                _damon.kvpairs_to_DamonTarget(target_kvpairs))
 
         damos = _damon.Damos('foo',
                 _damon.DamosAccessPattern(0, 10, 5, 8, 'percent', 54, 88,
@@ -28,17 +32,31 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
                     200),
                 [], None, None)
-        self.assertEqual(damos, _damon.kvpairs_to_Damos(damos.to_kvpairs()))
+        damos_kvpairs = damos.to_kvpairs()
+        self.assertEqual(type(damos_kvpairs), collections.OrderedDict)
+        self.assertEqual(damos_kvpairs.keys(),
+                ['name', 'action', 'access_pattern', 'quotas', 'watermarks',
+                    'filters'])
+        self.assertEqual(damos, _damon.kvpairs_to_Damos(damos_kvpairs))
 
         ctx = _damon.DamonCtx('test_ctx',
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000),
                 'paddr', [target], [damos])
-        self.assertEqual(ctx, _damon.kvpairs_to_DamonCtx(ctx.to_kvpairs()))
+        ctx_kvpairs = ctx.to_kvpairs()
+        self.assertEqual(type(ctx_kvpairs), collections.OrderedDict)
+        self.assertEqual(ctx_kvpairs.keys(),
+                ['name', 'intervals', 'nr_regions', 'ops', 'targets',
+                    'schemes'])
+        self.assertEqual(ctx, _damon.kvpairs_to_DamonCtx(ctx_kvpairs))
 
         kdamond = _damon.Kdamond('bar', 'off', 123, [ctx])
+        kdamond_kvpairs = kdamond.to_kvpairs()
+        self.assertEqual(type(kdamond_kvpairs), collections.OrderedDict)
+        self.assertEqual(kdamond_kvpairs.keys(),
+                ['name', 'state', 'pid', 'contexts'])
         self.assertEqual(kdamond,
-            _damon.kvpairs_to_Kdamond(kdamond.to_kvpairs()))
+            _damon.kvpairs_to_Kdamond(kdamond_kvpairs))
 
     def test_damos_eq(self):
         damos = _damon.Damos('0',
