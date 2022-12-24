@@ -20,7 +20,8 @@ class TestDamon(unittest.TestCase):
         target = _damon.DamonTarget('foo', 1234, [_damon.DamonRegion(10, 20)])
         target_kvpairs = target.to_kvpairs()
         self.assertEqual(type(target_kvpairs), collections.OrderedDict)
-        self.assertEqual(target_kvpairs.keys(), ['name', 'pid', 'regions'])
+        self.assertEqual(list(target_kvpairs.keys()),
+                ['name', 'pid', 'regions'])
         self.assertEqual(target,
                 _damon.kvpairs_to_DamonTarget(target_kvpairs))
 
@@ -34,7 +35,7 @@ class TestDamon(unittest.TestCase):
                 [], None, None)
         damos_kvpairs = damos.to_kvpairs()
         self.assertEqual(type(damos_kvpairs), collections.OrderedDict)
-        self.assertEqual(damos_kvpairs.keys(),
+        self.assertEqual(list(damos_kvpairs.keys()),
                 ['name', 'action', 'access_pattern', 'quotas', 'watermarks',
                     'filters'])
         self.assertEqual(damos, _damon.kvpairs_to_Damos(damos_kvpairs))
@@ -45,7 +46,7 @@ class TestDamon(unittest.TestCase):
                 'paddr', [target], [damos])
         ctx_kvpairs = ctx.to_kvpairs()
         self.assertEqual(type(ctx_kvpairs), collections.OrderedDict)
-        self.assertEqual(ctx_kvpairs.keys(),
+        self.assertEqual(list(ctx_kvpairs.keys()),
                 ['name', 'intervals', 'nr_regions', 'ops', 'targets',
                     'schemes'])
         self.assertEqual(ctx, _damon.kvpairs_to_DamonCtx(ctx_kvpairs))
@@ -53,7 +54,7 @@ class TestDamon(unittest.TestCase):
         kdamond = _damon.Kdamond('bar', 'off', 123, [ctx])
         kdamond_kvpairs = kdamond.to_kvpairs()
         self.assertEqual(type(kdamond_kvpairs), collections.OrderedDict)
-        self.assertEqual(kdamond_kvpairs.keys(),
+        self.assertEqual(list(kdamond_kvpairs.keys()),
                 ['name', 'state', 'pid', 'contexts'])
         self.assertEqual(kdamond,
             _damon.kvpairs_to_Kdamond(kdamond_kvpairs))
