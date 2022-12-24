@@ -9,6 +9,12 @@ import damo_stat_schemes_tried_regions
 
 import _damon_args
 
+type_module = {
+        'kdamonds_summary': damo_stat_kdamonds_summary,
+        'schemes_stats': damo_stat_schemes_stats,
+        'schemes_tried_regions': damo_stat_schemes_tried_regions
+        }
+
 def set_argparser(parser):
     subparsers = parser.add_subparsers(title='stat type', dest='stat_type',
             metavar='<stat type>', help='the type of the stat to show')
@@ -35,12 +41,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    if args.stat_type == 'kdamonds_summary':
-        damo_stat_kdamonds_summary.main(args)
-    elif args.stat_type == 'schemes_stats':
-        damo_stat_schemes_stats.main(args)
-    elif args.stat_type == 'schemes_tried_regions':
-        damo_stat_schemes_tried_regions.main(args)
+    type_module[args.stat_type].main(args)
 
 if __name__ == '__main__':
     main()
