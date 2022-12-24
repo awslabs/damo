@@ -36,12 +36,12 @@ class DamonIntervals:
         return self.__str__() == other.__str__()
 
     def to_kvpairs(self):
-        return collections.OrderedDict({
-                'sample': _damo_fmt_str.format_time_us(self.sample, False),
-                'aggr': _damo_fmt_str.format_time_us(self.aggr, False),
-                'ops_update': _damo_fmt_str.format_time_us(self.ops_update,
-                    False),
-                })
+        return collections.OrderedDict([
+            ('sample', _damo_fmt_str.format_time_us(self.sample, False)),
+            ('aggr', _damo_fmt_str.format_time_us(self.aggr, False)),
+            ('ops_update', _damo_fmt_str.format_time_us(self.ops_update,
+                False)),
+            ])
 
 def kvpairs_to_DamonIntervals(kvpairs):
     return DamonIntervals(
@@ -66,12 +66,12 @@ class DamonNrRegionsRange:
         return self.__str__() == other.__str__()
 
     def to_kvpairs(self):
-        return collections.OrderedDict({
-                'min_nr_regions':
-                _damo_fmt_str.format_nr(self.min_nr_regions, False),
-                'max_nr_regions':
-                _damo_fmt_str.format_nr(self.max_nr_regions, False),
-                })
+        return collections.OrderedDict([
+            ('min_nr_regions',
+                _damo_fmt_str.format_nr(self.min_nr_regions, False)),
+            ('max_nr_regions',
+                _damo_fmt_str.format_nr(self.max_nr_regions, False)),
+            ])
 
 def kvpairs_to_DamonNrRegionsRange(kvpairs):
     return DamonNrRegionsRange(
@@ -95,9 +95,9 @@ class DamonRegion:
         return self.__str__() == other.__str__()
 
     def to_kvpairs(self):
-        return collections.OrderedDict({
-            'start': _damo_fmt_str.format_nr(self.start, False),
-            'end': _damo_fmt_str.format_nr(self.end, False)})
+        return collections.OrderedDict([
+            ('start', _damo_fmt_str.format_nr(self.start, False)),
+            ('end', _damo_fmt_str.format_nr(self.end, False))])
 
 def kvpairs_to_DamonRegion(kvpairs):
     return DamonRegion(kvpairs['start'], kvpairs['end'])
@@ -123,7 +123,7 @@ class DamonTarget:
 
     def to_kvpairs(self):
         kvp = collections.OrderedDict(
-                {attr: getattr(self, attr) for attr in ['name', 'pid']})
+                [(attr, getattr(self, attr)) for attr in ['name', 'pid']])
         kvp['regions'] = [r.to_kvpairs() for r in self.regions]
         return kvp
 
@@ -216,16 +216,16 @@ class DamosAccessPattern:
             max_age = '%s %s' % (
                     _damo_fmt_str.format_nr(self.max_age, False), self.age_unit)
 
-        return collections.OrderedDict({
-                'min_sz_bytes':
-                    _damo_fmt_str.format_sz(self.min_sz_bytes, False),
-                'max_sz_bytes':
-                    _damo_fmt_str.format_sz(self.max_sz_bytes, False),
-                'min_nr_accesses': min_nr_accesses,
-                'max_nr_accesses': max_nr_accesses,
-                'min_age': min_age,
-                'max_age': max_age
-                })
+        return collections.OrderedDict([
+            ('min_sz_bytes',
+                _damo_fmt_str.format_sz(self.min_sz_bytes, False)),
+            ('max_sz_bytes',
+                _damo_fmt_str.format_sz(self.max_sz_bytes, False)),
+            ('min_nr_accesses', min_nr_accesses),
+            ('max_nr_accesses', max_nr_accesses),
+            ('min_age', min_age),
+            ('max_age', max_age)
+            ])
 
 def kvpairs_to_DamosAccessPattern(kv):
     try:
@@ -291,9 +291,10 @@ class DamosQuotas:
                 other.weight_age_permil)
 
     def to_kvpairs(self):
-        return collections.OrderedDict({attr: getattr(self, attr) for attr in [
-            'time_ms', 'sz_bytes', 'reset_interval_ms', 'weight_sz_permil',
-            'weight_nr_accesses_permil', 'weight_age_permil']})
+        return collections.OrderedDict([
+            (attr, getattr(self, attr)) for attr in
+            ['time_ms', 'sz_bytes', 'reset_interval_ms', 'weight_sz_permil',
+                'weight_nr_accesses_permil', 'weight_age_permil']])
 
 def kvpairs_to_DamosQuotas(kv):
     return DamosQuotas(kv['time_ms'], kv['sz_bytes'], kv['reset_interval_ms'],
@@ -334,9 +335,9 @@ class DamosWatermarks:
 
     def to_kvpairs(self):
         return collections.OrderedDict(
-                {attr: getattr(self, attr) for attr in [
+                [(attr, getattr(self, attr)) for attr in [
                     'metric', 'interval_us', 'high_permil', 'mid_permil',
-                    'low_permil']})
+                    'low_permil']])
 
 def kvpairs_to_DamosWatermarks(kv):
     return DamosWatermarks(*[kv[x] for x in
@@ -369,8 +370,8 @@ class DamosFilter:
 
     def to_kvpairs(self):
         return collections.OrderedDict(
-                {attr: getattr(self, attr) for attr in [
-                    'name', 'filter_type', 'memcg_path', 'matching']})
+                [(attr, getattr(self, attr)) for attr in [
+                    'name', 'filter_type', 'memcg_path', 'matching']])
 
 def kvpairs_to_DamosFilter(kv):
     return DamosFilter(kv['name'], kv['filter_type'],
@@ -466,7 +467,7 @@ class Damos:
 
     def to_kvpairs(self):
         kv = collections.OrderedDict(
-                {attr: getattr(self, attr) for attr in ['name', 'action']})
+                [(attr, getattr(self, attr)) for attr in ['name', 'action']])
         kv['access_pattern'] = self.access_pattern.to_kvpairs()
         kv['quotas'] = self.quotas.to_kvpairs()
         kv['watermarks'] = self.watermarks.to_kvpairs()
@@ -511,8 +512,8 @@ class DamonRecord:
 
     def to_kvpairs(self):
         return collections.OrderedDict(
-                {attr: getattr(self, attr) for attr in
-                    ['rfile_buf', 'rfile_path']})
+                [(attr, getattr(self, attr)) for attr in
+                    ['rfile_buf', 'rfile_path']])
 
 def kvpairs_to_DamonRecord(kv):
     return DamonRecord(kv['rfile_buf'], kv['rfile_path'])
