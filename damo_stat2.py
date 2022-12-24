@@ -5,6 +5,7 @@ import argparse
 
 import damo_stat_kdamonds_summary
 import damo_stat_schemes_stats
+import damo_stat_schemes_tried_regions
 
 import _damon_args
 
@@ -21,6 +22,11 @@ def set_argparser(parser):
             help='schemes apply stats')
     damo_stat_schemes_stats.set_argparser(parser_schemes_stats)
 
+    parser_schemes_tried_regions = subparsers.add_parser(
+            'schemes_tried_regions',
+            help='schemes tried regions in detail')
+    damo_stat_schemes_tried_regions.set_argparser(parser_schemes_tried_regions)
+
     _damon_args.set_common_argparser(parser)
 
 def main(args=None):
@@ -33,6 +39,8 @@ def main(args=None):
         damo_stat_kdamonds_summary.main(args)
     elif args.stat_type == 'schemes_stats':
         damo_stat_schemes_stats.main(args)
+    elif args.stat_type == 'schemes_tried_regions':
+        damo_stat_schemes_tried_regions.main(args)
 
 if __name__ == '__main__':
     main()
