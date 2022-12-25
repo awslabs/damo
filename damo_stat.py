@@ -32,6 +32,12 @@ subcmds = [
             msg='default DAMON interface'),
         ]
 
+def set_common_argparser(parser):
+    parser.add_argument('--delay', metavar='<secs>', default=3, type=float,
+            help='delay between repeated status prints')
+    parser.add_argument('--count', metavar='<count>', default=1, type=int,
+            help='number of repeated status prints')
+
 def set_argparser(parser):
     subparsers = parser.add_subparsers(title='stat type', dest='stat_type',
             metavar='<stat type>', help='the type of the stat to show')

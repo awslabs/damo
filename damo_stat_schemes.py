@@ -3,6 +3,8 @@
 
 import argparse
 
+import damo_stat
+
 import _damo_fmt_str
 import _damo_subcmds
 import _damon
@@ -64,10 +66,7 @@ def update_pr_schemes_stats(raw_nr):
                         scheme.stats.qt_exceeds, raw_nr)))
 
 def set_argparser(parser):
-    parser.add_argument('--delay', metavar='<secs>', default=3, type=float,
-            help='delay between repeated status prints')
-    parser.add_argument('--count', metavar='<count>', default=1, type=int,
-            help='number of repeated status prints')
+    damo_stat.set_common_argparser(parser)
     parser.add_argument('--raw', action='store_true',
             help='print number in mchine friendly raw form')
 
