@@ -60,6 +60,11 @@ class TestDamoFmtStr(unittest.TestCase):
                     3 * day_ns + 2 * hour_ns: ['3 d 2 h', '74 h'],
                     1234 * day_ns + 2 * hour_ns: ['1,234 d 2 h', '29618 h']})
 
+        for input_ in [123, 1234, 12345, 123456]:
+            for func in [_damo_fmt_str.format_time_us,
+                    _damo_fmt_str.format_time_ms]:
+                self.assertEqual(func(input_, True), '%s' % input_)
+
     def test_text_to_time(self):
         _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_ns,
