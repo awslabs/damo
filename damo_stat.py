@@ -17,9 +17,6 @@ def pr_damon_interface(args):
     print(_damon.damon_interface())
 
 subcmds = [
-        _damo_subcmds.DamoSubCmd(name='kdamonds_summary',
-            module=damo_stat_kdamonds,
-            msg='summary of kdamonds'),
         _damo_subcmds.DamoSubCmd(name='kdamonds', module=damo_stat_kdamonds,
             msg='detailed status of kdamonds'),
         _damo_subcmds.DamoSubCmd(name='schemes_stats',

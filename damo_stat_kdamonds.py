@@ -39,13 +39,15 @@ def update_pr_kdamonds(json_format):
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
+    parser.add_argument('--detail', action='store_true',
+            help='print detailed stat of kdamonds')
     parser.add_argument('--json', action='store_true',
             help='print kdamond in json format')
 
 def __main(args):
-    if args.stat_type == 'kdamonds_summary':
+    if not args.detail:
         update_pr_kdamonds_summary(args.json)
-    elif args.stat_type == 'kdamonds':
+    else:
         update_pr_kdamonds(args.json)
 
 def main(args=None):
