@@ -6,6 +6,10 @@ import argparse
 import _damo_fmt_str
 import _damon
 
+def update_pr_kdamonds_summary():
+    kdamonds = _damon.current_kdamonds()
+    print('\n'.join([k.summary_str() for k in kdamonds]))
+
 def update_pr_kdamonds(json_format, raw_nr):
     if _damon.any_kdamond_running():
         for name in _damon.current_kdamond_names():
@@ -48,7 +52,10 @@ def main(args=None):
     _damon.ensure_initialized(args)
 
     for i in range(args.count):
-        update_pr_kdamonds(args.json, args.raw)
+        if args.stat_type == 'kdamonds_summary':
+            update_pr_kdamonds_summary()
+        elif args.stat_type == 'kdamonds':
+            update_pr_kdamonds(args.json, args.raw)
         if i != args.count - 1:
             time.sleep(args.delay)
 

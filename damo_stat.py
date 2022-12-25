@@ -4,7 +4,6 @@
 import argparse
 
 import damo_stat_kdamonds
-import damo_stat_kdamonds_summary
 import damo_stat_schemes
 
 import _damo_subcmds
@@ -18,7 +17,7 @@ def pr_damon_interface(args):
 
 subcmds = [
         _damo_subcmds.DamoSubCmd(name='kdamonds_summary',
-            module=damo_stat_kdamonds_summary,
+            module=damo_stat_kdamonds,
             msg='summary of kdamonds'),
         _damo_subcmds.DamoSubCmd(name='schemes_stats',
             module=damo_stat_schemes,
