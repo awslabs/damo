@@ -25,8 +25,7 @@ def update_pr_kdamonds(json_format, raw_nr):
                     exit(1)
     kdamonds = _damon.current_kdamonds()
     if json_format:
-        print(json.dumps([k.to_kvpairs() for k in kdamonds],
-            indent=4, sort_keys=True))
+        print(json.dumps([k.to_kvpairs() for k in kdamonds], indent=4))
     else:
         print('kdamonds')
         print(_damo_fmt_str.indent_lines(
