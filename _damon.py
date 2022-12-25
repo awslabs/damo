@@ -94,16 +94,19 @@ class DamonRegion:
         self.start = _damo_fmt_str.text_to_nr(start)
         self.end = _damo_fmt_str.text_to_nr(end)
 
+    def to_str(self, raw):
+        return _damo_fmt_str.format_addr_range(self.start, self.end, raw)
+
     def __str__(self):
-        return _damo_fmt_str.format_addr_range(self.start, self.end, False)
+        return self.to_str(False)
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
-            ('start', _damo_fmt_str.format_nr(self.start, False)),
-            ('end', _damo_fmt_str.format_nr(self.end, False))])
+            ('start', _damo_fmt_str.format_nr(self.start, raw)),
+            ('end', _damo_fmt_str.format_nr(self.end, raw))])
 
 def kvpairs_to_DamonRegion(kvpairs):
     return DamonRegion(kvpairs['start'], kvpairs['end'])
