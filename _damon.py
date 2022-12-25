@@ -121,19 +121,22 @@ class DamonTarget:
         self.pid = pid
         self.regions = regions
 
-    def __str__(self):
+    def to_str(self, raw):
         lines = ['%s (pid: %s)' % (self.name, self.pid)]
         for region in self.regions:
-            lines.append('region %s' % region)
+            lines.append('region %s' % region.to_str(raw))
         return '\n'.join(lines)
+
+    def __str__(self):
+        return self.to_str(False)
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         kvp = collections.OrderedDict(
                 [(attr, getattr(self, attr)) for attr in ['name', 'pid']])
-        kvp['regions'] = [r.to_kvpairs() for r in self.regions]
+        kvp['regions'] = [r.to_kvpairs(raw) for r in self.regions]
         return kvp
 
 def kvpairs_to_DamonTarget(kvpairs):
