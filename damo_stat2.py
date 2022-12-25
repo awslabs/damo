@@ -9,6 +9,7 @@ import damo_stat_schemes_stats
 import damo_stat_schemes_tried_regions
 
 import _damo_subcmds
+import _damon
 import _damon_args
 
 subcmds = [
@@ -22,7 +23,7 @@ subcmds = [
             module=damo_stat_schemes_tried_regions,
             msg='schemes tried regions in detail'),
         _damo_subcmds.DamoSubCmd(name='kdamonds', module=damo_stat_kdamonds,
-            msg='detailed status of kdamonds')
+            msg='detailed status of kdamonds'),
         ]
 
 def set_argparser(parser):
@@ -33,6 +34,8 @@ def set_argparser(parser):
     for subcmd in subcmds:
         subcmd.add_parser(subparsers)
 
+    subparsers.add_parser('damon_interface', help='default DAMON interface')
+
     _damon_args.set_common_argparser(parser)
 
 def main(args=None):
@@ -40,6 +43,12 @@ def main(args=None):
         parser = argparse.ArgumentParser()
         set_argparser(parser)
         args = parser.parse_args()
+
+    if args.stat_type == 'damon_interface':
+        _damon.ensure_root_permission()
+        _damon.ensure_initialized(args)
+        print(_damon.damon_interface())
+        return
 
     for subcmd in subcmds:
         if subcmd.name == args.stat_type:
