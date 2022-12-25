@@ -5,7 +5,7 @@ import argparse
 
 import _damon
 
-def update_pr_damo_stat():
+def update_pr_kdamonds_summary():
     kdamonds = _damon.current_kdamonds()
     print('\n'.join([k.summary_str() for k in kdamonds]))
 
@@ -26,7 +26,7 @@ def main(args=None):
     _damon.ensure_initialized(args)
 
     for i in range(args.count):
-        update_pr_damo_stat()
+        update_pr_kdamonds_summary()
         if i != args.count - 1:
             time.sleep(args.delay)
 
