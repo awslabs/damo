@@ -24,6 +24,11 @@ import damo_validate
 
 import _damo_subcmds
 
+def pr_damo_version(args_not_use):
+    bindir = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:
+        print(f.read().strip())
+
 subcmds = [
         _damo_subcmds.DamoSubCmd(name='record', module=damo_record,
             msg='record data accesses'),
@@ -55,6 +60,10 @@ subcmds = [
             msg='update input parameters of ongoing DAMON'),
         _damo_subcmds.DamoSubCmd(name='fmt_json', module=damo_fmt_json,
             msg='convert damo-start cmdline option to DAMON json input'),
+        _damo_subcmds.DamoSubCmd(name='version',
+            module=_damo_subcmds.DamoSubCmdModule(lambda x: x,
+                pr_damo_version),
+            msg='print the version number'),
         ]
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
@@ -80,14 +89,9 @@ def main():
 
     args = parser.parse_args()
 
-    if args.command == 'version':
-        bindir = os.path.dirname(os.path.abspath(__file__))
-        with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:
-            print(f.read().strip())
-    else:
-        for subcmd in subcmds:
-            if subcmd.name == args.command:
-                subcmd.execute(args)
+    for subcmd in subcmds:
+        if subcmd.name == args.command:
+            subcmd.execute(args)
 
 if __name__ == '__main__':
     main()
