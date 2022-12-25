@@ -415,14 +415,17 @@ class DamosStats:
         self.sz_applied = sz_applied
         self.qt_exceeds = qt_exceeds
 
-    def __str__(self):
+    def to_str(self, raw):
         return '\n'.join([
             'tried %d times (%s)' % (self.nr_tried,
-            _damo_fmt_str.format_sz(self.sz_tried, False)),
+            _damo_fmt_str.format_sz(self.sz_tried, raw)),
             'applied %d times (%s)' % (self.nr_applied,
-            _damo_fmt_str.format_sz(self.sz_applied, False)),
+            _damo_fmt_str.format_sz(self.sz_applied, raw)),
             'quota exceeded %d times' % self.qt_exceeds,
             ])
+
+    def __str__(self):
+        return self.to_str(False)
 
 class DamosTriedRegion:
     start = None
