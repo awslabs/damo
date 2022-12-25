@@ -483,8 +483,9 @@ class Damos:
         for damos_filter in self.filters:
             lines.append(_damo_fmt_str.indent_lines(
                 damos_filter.to_str(raw), 8))
-        lines.append('statistics')
-        lines.append(_damo_fmt_str.indent_lines(self.stats.to_str(raw), 4))
+        if self.stats != None:
+            lines.append('statistics')
+            lines.append(_damo_fmt_str.indent_lines(self.stats.to_str(raw), 4))
         if self.tried_regions != None:
             lines.append('tried regions')
             for region in self.tried_regions:
