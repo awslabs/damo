@@ -44,7 +44,7 @@ do
 
 	for i in {1..10}
 	do
-		if ! sudo "$damo" stat &> /dev/null
+		if ! sudo "$damo" stat schemes_tried_regions &> /dev/null
 		then
 			echo "FAIL $testname2 stat $i failed"
 			exit 1
