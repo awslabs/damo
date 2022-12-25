@@ -30,8 +30,7 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='kdamonds', module=damo_stat_kdamonds,
             msg='detailed status of kdamonds'),
         _damo_subcmds.DamoSubCmd(name='damon_interface',
-            module=_damo_subcmds.DamoSubCmdModule(lambda x: x,
-                pr_damon_interface),
+            module=_damo_subcmds.DamoSubCmdModule(None, pr_damon_interface),
             msg='default DAMON interface'),
         ]
 
