@@ -3,6 +3,7 @@
 
 import argparse
 
+import damo_stat_kdamonds
 import damo_stat_kdamonds_summary
 import damo_stat_schemes_stats
 import damo_stat_schemes_tried_regions
@@ -20,6 +21,8 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='schemes_tried_regions',
             module=damo_stat_schemes_tried_regions,
             msg='schemes tried regions in detail'),
+        _damo_subcmds.DamoSubCmd(name='kdamonds', module=damo_stat_kdamonds,
+            msg='detailed status of kdamonds')
         ]
 
 def set_argparser(parser):
