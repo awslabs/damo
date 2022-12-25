@@ -201,7 +201,8 @@ class DamosAccessPattern:
                 and self.age_unit == other.age_unit)
 
     def to_kvpairs(self):
-        if self.nr_accesses_unit == 'percent':
+        unit = self.nr_accesses_unit
+        if unit == 'percent':
             unit = '%'
         min_nr_accesses = '%s %s' % (
                 _damo_fmt_str.format_nr(self.min_nr_accesses, False), unit)
