@@ -378,17 +378,20 @@ class DamosFilter:
         self.memcg_path = memcg_path
         self.matching = matching
 
-    def __str__(self):
+    def to_str(self, raw):
         memcg_path_str = ''
         if self.filter_type == 'memcg':
             memcg_path_str = 'memcg_path %s, ' % self.memcg_path
         return 'filter_type %s, %smatching %s' % (
                 self.filter_type, memcg_path_str, self.matching)
 
+    def __str__(self):
+        return self.to_str(False)
+
     def __eq__(self, other):
         return '%s' % self == '%s' % other
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         return collections.OrderedDict(
                 [(attr, getattr(self, attr)) for attr in [
                     'name', 'filter_type', 'memcg_path', 'matching']])
