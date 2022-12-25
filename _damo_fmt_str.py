@@ -124,9 +124,15 @@ def format_time_ns(time_ns, machine_friendly):
     return '%d ns' % time_ns
 
 def format_time_us(time_us, machine_friendly):
+    if machine_friendly:
+        return '%d' % time_us
+
     return format_time_ns(time_us * 1000, machine_friendly)
 
 def format_time_ms(time_ms, machine_friendly):
+    if machine_friendly:
+        return '%d' % time_ms
+
     return format_time_ns(time_ms * 1000000, machine_friendly)
 
 def indent_lines(string, indent_width):
