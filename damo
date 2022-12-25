@@ -61,8 +61,7 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='fmt_json', module=damo_fmt_json,
             msg='convert damo-start cmdline option to DAMON json input'),
         _damo_subcmds.DamoSubCmd(name='version',
-            module=_damo_subcmds.DamoSubCmdModule(lambda x: x,
-                pr_damo_version),
+            module=_damo_subcmds.DamoSubCmdModule(None, pr_damo_version),
             msg='print the version number'),
         ]
 
