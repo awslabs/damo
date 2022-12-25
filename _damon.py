@@ -469,24 +469,30 @@ class Damos:
         self.stats = stats
         self.tried_regions = tried_regions
 
-    def __str__(self):
+    def to_str(self, raw):
         lines = ['%s (action: %s)' % (self.name, self.action)]
         lines.append('target access pattern')
-        lines.append(_damo_fmt_str.indent_lines('%s' % self.access_pattern, 4))
+        lines.append(_damo_fmt_str.indent_lines(
+            self.access_pattern.to_str(raw), 4))
         lines.append('quotas')
-        lines.append(_damo_fmt_str.indent_lines('%s' % self.quotas, 4))
+        lines.append(_damo_fmt_str.indent_lines(self.quotas.to_str(raw), 4))
         lines.append('watermarks')
-        lines.append(_damo_fmt_str.indent_lines('%s' % self.watermarks, 4))
+        lines.append(_damo_fmt_str.indent_lines(
+            self.watermarks.to_str(raw), 4))
         lines.append('filters')
         for damos_filter in self.filters:
-            lines.append(_damo_fmt_str.indent_lines('%s' % damos_filter, 8))
+            lines.append(_damo_fmt_str.indent_lines(
+                damos_filter.to_str(raw), 8))
         lines.append('statistics')
-        lines.append(_damo_fmt_str.indent_lines('%s' % self.stats, 4))
+        lines.append(_damo_fmt_str.indent_lines(self.stats.to_str(raw), 4))
         if self.tried_regions != None:
             lines.append('tried regions')
             for region in self.tried_regions:
-                lines.append(_damo_fmt_str.indent_lines('%s' % region, 4))
+                lines.append(_damo_fmt_str.indent_lines(region.to_str(raw), 4))
         return '\n'.join(lines)
+
+    def __str__(self):
+        return self.to_str(False)
 
     def __eq__(self, other):
         return (type(self) == type(other) and self.name == other.name and
@@ -494,15 +500,15 @@ class Damos:
                 other.action and self.quotas == other.quotas and
                 self.watermarks == other.watermarks)
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         kv = collections.OrderedDict(
                 [(attr, getattr(self, attr)) for attr in ['name', 'action']])
-        kv['access_pattern'] = self.access_pattern.to_kvpairs()
-        kv['quotas'] = self.quotas.to_kvpairs()
-        kv['watermarks'] = self.watermarks.to_kvpairs()
+        kv['access_pattern'] = self.access_pattern.to_kvpairs(raw)
+        kv['quotas'] = self.quotas.to_kvpairs(raw)
+        kv['watermarks'] = self.watermarks.to_kvpairs(raw)
         filters = []
         for damos_filter in self.filters:
-            filters.append(damos_filter.to_kvpairs())
+            filters.append(damos_filter.to_kvpairs(raw))
         kv['filters'] = filters
         return kv
 
