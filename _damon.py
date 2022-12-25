@@ -60,20 +60,23 @@ class DamonNrRegionsRange:
         self.min_nr_regions = _damo_fmt_str.text_to_nr(min_)
         self.max_nr_regions = _damo_fmt_str.text_to_nr(max_)
 
-    def __str__(self):
+    def to_str(self, raw):
         return '[%s, %s]' % (
-                _damo_fmt_str.format_nr(self.min_nr_regions, False),
-                _damo_fmt_str.format_nr(self.max_nr_regions, False))
+                _damo_fmt_str.format_nr(self.min_nr_regions, raw),
+                _damo_fmt_str.format_nr(self.max_nr_regions, raw))
+
+    def __str__(self):
+        return self.to_str(False)
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
             ('min_nr_regions',
-                _damo_fmt_str.format_nr(self.min_nr_regions, False)),
+                _damo_fmt_str.format_nr(self.min_nr_regions, raw)),
             ('max_nr_regions',
-                _damo_fmt_str.format_nr(self.max_nr_regions, False)),
+                _damo_fmt_str.format_nr(self.max_nr_regions, raw)),
             ])
 
 def kvpairs_to_DamonNrRegionsRange(kvpairs):
