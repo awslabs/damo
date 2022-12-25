@@ -5,8 +5,7 @@ import argparse
 
 import damo_stat_kdamonds
 import damo_stat_kdamonds_summary
-import damo_stat_schemes_stats
-import damo_stat_schemes_tried_regions
+import damo_stat_schemes
 
 import _damo_subcmds
 import _damon
@@ -22,10 +21,10 @@ subcmds = [
             module=damo_stat_kdamonds_summary,
             msg='summary of kdamonds'),
         _damo_subcmds.DamoSubCmd(name='schemes_stats',
-            module=damo_stat_schemes_stats,
+            module=damo_stat_schemes,
             msg='schemes apply stats'),
         _damo_subcmds.DamoSubCmd(name='schemes_tried_regions',
-            module=damo_stat_schemes_tried_regions,
+            module=damo_stat_schemes,
             msg='schemes tried regions in detail'),
         _damo_subcmds.DamoSubCmd(name='kdamonds', module=damo_stat_kdamonds,
             msg='detailed status of kdamonds'),
