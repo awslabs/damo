@@ -336,13 +336,16 @@ class DamosWatermarks:
         self.mid_permil = mid
         self.low_permil = low
 
-    def __str__(self):
+    def to_str(self, raw):
         return '\n'.join([
             '%s/%s/%s permil' % (self.high_permil, self.mid_permil,
                 self.low_permil),
             'metric %s, interval %s' % (self.metric,
-                _damo_fmt_str.format_time_us(self.interval_us, False))
+                _damo_fmt_str.format_time_us(self.interval_us, raw))
             ])
+
+    def __str__(self):
+        return self.to_str(False)
 
     def __eq__(self, other):
         return (type(self) == type(other) and self.metric == other.metric and
@@ -350,7 +353,7 @@ class DamosWatermarks:
                 other.high_permil and self.mid_permil == other.mid_permil and
                 self.low_permil == other.low_permil)
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         return collections.OrderedDict(
                 [(attr, getattr(self, attr)) for attr in [
                     'metric', 'interval_us', 'high_permil', 'mid_permil',
