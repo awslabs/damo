@@ -4,12 +4,14 @@
 import argparse
 
 class DamoSubCmdModule:
-    set_argparser = None
-    main = None
+    set_argparser = lambda self, args: args
+    main = lambda self, args: args
 
     def __init__(self, set_argparser, main):
-        self.set_argparser = set_argparser
-        self.main = main
+        if set_argparser != None:
+            self.set_argparser = set_argparser
+        if main != None:
+            self.main = main
 
 class DamoSubCmd:
     name = None
