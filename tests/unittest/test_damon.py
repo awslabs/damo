@@ -120,9 +120,15 @@ class TestDamon(unittest.TestCase):
 
         self.assertEqual('%s' % _damon.DamonNrRegionsRange(10, 1000),
                 '[10, 1,000]')
+        self.assertEqual(
+                '%s' % _damon.DamonNrRegionsRange(10, 1000).to_str(True),
+                '[10, 1000]')
 
         self.assertEqual(_damon.DamonNrRegionsRange(10, 1000).to_kvpairs(),
                 {'min_nr_regions': '10', 'max_nr_regions': '1,000'})
+        self.assertEqual(_damon.DamonNrRegionsRange(10, 1000).to_kvpairs(
+                        raw=True),
+                {'min_nr_regions': '10', 'max_nr_regions': '1000'})
 
     def test_damon_region(self):
         _test_damo_common.test_input_expects(self,
