@@ -150,9 +150,13 @@ class TestDamon(unittest.TestCase):
 
         self.assertEqual('%s' % _damon.DamonRegion(123, 456),
                 '[123, 456) (333 B)')
+        self.assertEqual('%s' % _damon.DamonRegion(123, 456).to_str(raw=True),
+                '[123, 456) (333)')
 
         self.assertEqual(_damon.DamonRegion(1234, 5678).to_kvpairs(),
                 {'start': '1,234', 'end': '5,678'})
+        self.assertEqual(_damon.DamonRegion(1234, 5678).to_kvpairs(raw=True),
+                {'start': '1234', 'end': '5678'})
 
 if __name__ == '__main__':
     unittest.main()
