@@ -42,7 +42,7 @@ def __main(args):
     if args.stat_type == 'kdamonds_summary':
         update_pr_kdamonds_summary()
     elif args.stat_type == 'kdamonds':
-        update_pr_kdamonds(args.json, args.raw)
+        update_pr_kdamonds(args.json)
 
 def main(args=None):
     if not args:
