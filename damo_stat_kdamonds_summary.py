@@ -14,8 +14,6 @@ def set_argparser(parser):
             help='delay between repeated status prints')
     parser.add_argument('--count', metavar='<count>', default=1, type=int,
             help='number of repeated status prints')
-    parser.add_argument('--raw', action='store_true',
-            help='print number in mchine friendly raw form')
 
 def main(args=None):
     if not args:
