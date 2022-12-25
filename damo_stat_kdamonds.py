@@ -9,9 +9,13 @@ import damo_stat
 import _damo_fmt_str
 import _damon
 
-def update_pr_kdamonds_summary():
+def update_pr_kdamonds_summary(json_format):
     kdamonds = _damon.current_kdamonds()
-    print('\n'.join([k.summary_str() for k in kdamonds]))
+    summary = [k.summary_str() for k in kdamonds]
+    if json_format:
+        print(json.dumps(summary, indent=4))
+        return
+    print('\n'.join(summary))
 
 def update_pr_kdamonds(json_format):
     if _damon.any_kdamond_running():
@@ -40,7 +44,7 @@ def set_argparser(parser):
 
 def __main(args):
     if args.stat_type == 'kdamonds_summary':
-        update_pr_kdamonds_summary()
+        update_pr_kdamonds_summary(args.json)
     elif args.stat_type == 'kdamonds':
         update_pr_kdamonds(args.json)
 
