@@ -26,21 +26,24 @@ class DamonIntervals:
         self.aggr = _damo_fmt_str.text_to_us(aggr)
         self.ops_update = _damo_fmt_str.text_to_us(ops_update)
 
-    def __str__(self):
+    def to_str(self, raw):
         return 'sample %s, aggr %s, update %s' % (
-                _damo_fmt_str.format_time_us(self.sample, False),
-                _damo_fmt_str.format_time_us(self.aggr, False),
-                _damo_fmt_str.format_time_us(self.ops_update, False))
+                _damo_fmt_str.format_time_us(self.sample, raw),
+                _damo_fmt_str.format_time_us(self.aggr, raw),
+                _damo_fmt_str.format_time_us(self.ops_update, raw))
+
+    def __str__(self):
+        return self.to_str(False)
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
-            ('sample', _damo_fmt_str.format_time_us(self.sample, False)),
-            ('aggr', _damo_fmt_str.format_time_us(self.aggr, False)),
+            ('sample', _damo_fmt_str.format_time_us(self.sample, raw)),
+            ('aggr', _damo_fmt_str.format_time_us(self.aggr, raw)),
             ('ops_update', _damo_fmt_str.format_time_us(self.ops_update,
-                False)),
+                raw)),
             ])
 
 def kvpairs_to_DamonIntervals(kvpairs):
