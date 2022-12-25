@@ -70,6 +70,12 @@ def set_argparser(parser):
     parser.add_argument('--raw', action='store_true',
             help='print number in mchine friendly raw form')
 
+def __main(args):
+    if args.stat_type == 'schemes_stats':
+        update_pr_schemes_stats(args.raw)
+    elif args.stat_type == 'schemes_tried_regions':
+        update_pr_schemes_tried_regions()
+
 def main(args=None):
     if not args:
         parser = argparse.ArgumentParser()
@@ -80,11 +86,9 @@ def main(args=None):
     _damon.ensure_root_permission()
     _damon.ensure_initialized(args)
 
+    damo_stat.run_count_delay(__main, args)
+
     for i in range(args.count):
-        if args.stat_type == 'schemes_stats':
-            update_pr_schemes_stats(args.raw)
-        elif args.stat_type == 'schemes_tried_regions':
-            update_pr_schemes_tried_regions()
         if i != args.count - 1:
             time.sleep(args.delay)
 

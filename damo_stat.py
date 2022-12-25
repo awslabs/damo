@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
+import time
 
 import damo_stat_kdamonds
 import damo_stat_schemes
@@ -47,6 +48,12 @@ def set_argparser(parser):
         subcmd.add_parser(subparsers)
 
     _damon_args.set_common_argparser(parser)
+
+def run_count_delay(func, args):
+    for i in range(args.count):
+        func(args)
+        if i != args.count - 1:
+            time.sleep(args.delay)
 
 def main(args=None):
     if not args:

@@ -40,6 +40,12 @@ def set_argparser(parser):
     parser.add_argument('--json', action='store_true',
             help='print kdamond in json format')
 
+def __main(args):
+    if args.stat_type == 'kdamonds_summary':
+        update_pr_kdamonds_summary()
+    elif args.stat_type == 'kdamonds':
+        update_pr_kdamonds(args.json, args.raw)
+
 def main(args=None):
     if not args:
         parser = argparse.ArgumentParser()
@@ -50,13 +56,7 @@ def main(args=None):
     _damon.ensure_root_permission()
     _damon.ensure_initialized(args)
 
-    for i in range(args.count):
-        if args.stat_type == 'kdamonds_summary':
-            update_pr_kdamonds_summary()
-        elif args.stat_type == 'kdamonds':
-            update_pr_kdamonds(args.json, args.raw)
-        if i != args.count - 1:
-            time.sleep(args.delay)
+    damo_stat.run_count_delay(__main, args)
 
 if __name__ == '__main__':
     main()
