@@ -85,10 +85,17 @@ class TestDamon(unittest.TestCase):
 
         self.assertEqual('%s' % _damon.DamonIntervals(5000, 100000, 1000000),
         'sample 5 ms, aggr 100 ms, update 1 s')
+        self.assertEqual('%s' %
+                _damon.DamonIntervals(5000, 100000, 1000000).to_str(True),
+                'sample 5000, aggr 100000, update 1000000')
 
         self.assertEqual(
                 _damon.DamonIntervals(5000, 100000, 1000000).to_kvpairs(),
                 {'sample': '5 ms', 'aggr': '100 ms', 'ops_update': '1 s'})
+        self.assertEqual(
+                _damon.DamonIntervals(
+                    5000, 100000, 1000000).to_kvpairs(raw=True),
+                {'sample': '5000', 'aggr': '100000', 'ops_update': '1000000'})
 
     def test_damon_nr_regions_range(self):
         expect = _damon.DamonNrRegionsRange(10, 1000)
