@@ -285,16 +285,19 @@ class DamosQuotas:
         self.weight_nr_accesses_permil = weight_nr_accesses_permil
         self.weight_age_permil = weight_age_permil
 
-    def __str__(self):
+    def to_str(self, raw):
         return '\n'.join([
             '%s / %s per %s' % (
-                _damo_fmt_str.format_sz(self.time_ms * 1000000, False),
-                _damo_fmt_str.format_time_ns(self.sz_bytes, False),
-                _damo_fmt_str.format_time_ms(self.reset_interval_ms, False)),
+                _damo_fmt_str.format_sz(self.time_ms * 1000000, raw),
+                _damo_fmt_str.format_time_ns(self.sz_bytes, raw),
+                _damo_fmt_str.format_time_ms(self.reset_interval_ms, raw)),
             'priority: sz %d permil, nr_accesses %d permil, age %d permil' % (
                 self.weight_sz_permil, self.weight_nr_accesses_permil,
                 self.weight_age_permil),
             ])
+
+    def __str__(self):
+        return self.to_str(False)
 
     def __eq__(self, other):
         return (type(self) == type(other) and self.time_ms == other.time_ms and
@@ -304,7 +307,7 @@ class DamosQuotas:
                 other.weight_nr_accesses_permil and self.weight_age_permil ==
                 other.weight_age_permil)
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
             (attr, getattr(self, attr)) for attr in
             ['time_ms', 'sz_bytes', 'reset_interval_ms', 'weight_sz_permil',
