@@ -9,7 +9,7 @@ import damo_stat
 import _damo_fmt_str
 import _damon
 
-def update_pr_kdamonds_summary(json_format):
+def update_pr_kdamonds_summary(json_format, raw_nr):
     kdamonds = _damon.current_kdamonds()
     summary = [k.summary_str() for k in kdamonds]
     if json_format:
@@ -17,7 +17,7 @@ def update_pr_kdamonds_summary(json_format):
         return
     print('\n'.join(summary))
 
-def update_pr_kdamonds(json_format):
+def update_pr_kdamonds(json_format, raw_nr):
     if _damon.any_kdamond_running():
         for name in _damon.current_kdamond_names():
             err = _damon.update_schemes_stats(name)
@@ -31,11 +31,11 @@ def update_pr_kdamonds(json_format):
                     exit(1)
     kdamonds = _damon.current_kdamonds()
     if json_format:
-        print(json.dumps([k.to_kvpairs() for k in kdamonds], indent=4))
+        print(json.dumps([k.to_kvpairs(raw_nr) for k in kdamonds], indent=4))
     else:
         print('kdamonds')
         print(_damo_fmt_str.indent_lines(
-            '\n\n'.join(['%s' % k for k in kdamonds]), 4))
+            '\n\n'.join([k.to_str(raw_nr) for k in kdamonds]), 4))
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
@@ -43,12 +43,14 @@ def set_argparser(parser):
             help='print detailed stat of kdamonds')
     parser.add_argument('--json', action='store_true',
             help='print kdamond in json format')
+    parser.add_argument('--raw', action='store_true',
+            help='print numbers in machine friendly raw form')
 
 def __main(args):
     if not args.detail:
-        update_pr_kdamonds_summary(args.json)
+        update_pr_kdamonds_summary(args.json, args.raw)
     else:
-        update_pr_kdamonds(args.json)
+        update_pr_kdamonds(args.json, args.raw)
 
 def main(args=None):
     if not args:
