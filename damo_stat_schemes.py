@@ -9,7 +9,7 @@ import _damo_fmt_str
 import _damo_subcmds
 import _damon
 
-def pr_schemes_tried_regions(kdamonds):
+def pr_schemes_tried_regions(kdamonds, raw_nr):
     print('# <kdamond> <context> <scheme>')
     print('# <regions>')
     print('# ...')
@@ -17,9 +17,10 @@ def pr_schemes_tried_regions(kdamonds):
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
                 print('%s %s %s' % (kdamond.name, ctx.name, scheme.name))
-                print('\n'.join('%s' % r for r in scheme.tried_regions))
+                print('\n'.join(
+                    r.to_str(raw_nr) for r in scheme.tried_regions))
 
-def update_pr_schemes_tried_regions():
+def update_pr_schemes_tried_regions(raw_nr):
     if _damon.any_kdamond_running():
         for name in _damon.current_kdamond_names():
             err = _damon.update_schemes_stats(name)
@@ -33,7 +34,7 @@ def update_pr_schemes_tried_regions():
                     exit(1)
     content = _damon.read_damon_fs()
     kdamonds = _damon.current_kdamonds()
-    pr_schemes_tried_regions(kdamonds)
+    pr_schemes_tried_regions(kdamonds, raw_nr)
 
 def update_pr_schemes_stats(raw_nr):
     if _damon.any_kdamond_running():
@@ -74,7 +75,7 @@ def __main(args):
     if args.stat_type == 'schemes_stats':
         update_pr_schemes_stats(args.raw)
     elif args.stat_type == 'schemes_tried_regions':
-        update_pr_schemes_tried_regions()
+        update_pr_schemes_tried_regions(args.raw)
 
 def main(args=None):
     if not args:
