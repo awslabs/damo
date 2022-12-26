@@ -158,5 +158,13 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(_damon.DamonRegion(1234, 5678).to_kvpairs(raw=True),
                 {'start': '1234', 'end': '5678'})
 
+    def test_damon_record(self):
+        record_req = _damon.DamonRecord(4096, '/root/damon.data')
+        self.assertEqual('%s' % record_req,
+                'path: /root/damon.data, buffer sz: 4.000 KiB')
+
+        self.assertEqual(record_req.to_kvpairs(raw=False),
+                {'rfile_buf': 4096, 'rfile_path': '/root/damon.data'})
+
 if __name__ == '__main__':
     unittest.main()
