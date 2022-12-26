@@ -541,7 +541,7 @@ class DamonRecord:
 
     def __str__(self):
         return 'path: %s, buffer sz: %s' % (self.rfile_path,
-                _damo_fmt_str.format_sz(self.rfile_buf))
+                _damo_fmt_str.format_sz(self.rfile_buf, False))
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
