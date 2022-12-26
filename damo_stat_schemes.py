@@ -32,7 +32,6 @@ def update_pr_schemes_tried_regions(raw_nr):
                 if err != None:
                     print('update schemes tried regions fail: %s', err)
                     exit(1)
-    content = _damon.read_damon_fs()
     kdamonds = _damon.current_kdamonds()
     pr_schemes_tried_regions(kdamonds, raw_nr)
 
@@ -43,7 +42,6 @@ def update_pr_schemes_stats(raw_nr):
             if err != None:
                 print('update schemes stat fail:', err)
                 exit(1)
-    content = _damon.read_damon_fs()
     kdamonds = _damon.current_kdamonds()
     
     print('# <kdamond> <context> <scheme> <field> <value>')
