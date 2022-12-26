@@ -637,22 +637,25 @@ class Kdamond:
     def summary_str(self):
         return '%s (state: %s, pid: %s)' % (self.name, self.state, self.pid)
 
-    def __str__(self):
+    def to_str(self, raw):
         lines = [self.summary_str()]
         for ctx in self.contexts:
             lines.append('contexts')
-            lines.append(_damo_fmt_str.indent_lines('%s' % ctx, 4))
+            lines.append(_damo_fmt_str.indent_lines(ctx.to_str(raw), 4))
         return '\n'.join(lines)
+
+    def __str__(self):
+        return self.to_str(False)
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         kv = collections.OrderedDict()
         kv['name'] = self.name
         kv['state'] = self.state
         kv['pid'] = self.pid
-        kv['contexts'] = [c.to_kvpairs() for c in self.contexts]
+        kv['contexts'] = [c.to_kvpairs(raw) for c in self.contexts]
         return kv
 
 def kvpairs_to_Kdamond(kv):
