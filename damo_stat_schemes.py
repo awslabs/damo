@@ -22,26 +22,25 @@ def pr_schemes_tried_regions(kdamonds, raw_nr):
 
 def update_pr_schemes_tried_regions(raw_nr):
     if _damon.any_kdamond_running():
-        for name in _damon.current_kdamond_names():
-            err = _damon.update_schemes_stats(name)
+        names = _damon.current_kdamond_names()
+        err = _damon.update_schemes_stats(names)
+        if err != None:
+            print('update schemes stat fail:', err)
+            exit(1)
+        if _damon.feature_supported('schemes_tried_regions'):
+            err = _damon.update_schemes_tried_regions(names)
             if err != None:
-                print('update schemes stat fail:', err)
+                print('update schemes tried regions fail: %s', err)
                 exit(1)
-            if _damon.feature_supported('schemes_tried_regions'):
-                err = _damon.update_schemes_tried_regions(name)
-                if err != None:
-                    print('update schemes tried regions fail: %s', err)
-                    exit(1)
     kdamonds = _damon.current_kdamonds()
     pr_schemes_tried_regions(kdamonds, raw_nr)
 
 def update_pr_schemes_stats(raw_nr):
     if _damon.any_kdamond_running():
-        for name in _damon.current_kdamond_names():
-            err = _damon.update_schemes_stats(name)
-            if err != None:
-                print('update schemes stat fail:', err)
-                exit(1)
+        err = _damon.update_schemes_stats(_damon.current_kdamond_names())
+        if err != None:
+            print('update schemes stat fail:', err)
+            exit(1)
     kdamonds = _damon.current_kdamonds()
     
     print('# <kdamond> <context> <scheme> <field> <value>')

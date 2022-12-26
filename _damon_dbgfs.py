@@ -33,7 +33,7 @@ def is_kdamond_running(kdamond_name):
     return content.strip() == 'on'
 
 'Return error'
-def update_schemes_stats(kdamond_idx):
+def update_schemes_stats(kdamond_names):
     # DAMON debugfs updates stats always
     return None
 

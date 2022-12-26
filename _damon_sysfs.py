@@ -98,14 +98,22 @@ def is_kdamond_running(kdamond_name):
     return content.strip() == 'on'
 
 'Return error'
-def update_schemes_stats(kdamond_name):
-    return _damo_fs.write_files({state_file_of(kdamond_name):
-        'update_schemes_stats'})
+def update_schemes_stats(kdamond_names):
+    for kdamond_name in kdamond_names:
+        err = _damo_fs.write_files({state_file_of(kdamond_name):
+            'update_schemes_stats'})
+        if err != None:
+            return err
+    return None
 
 'Return error'
-def update_schemes_tried_regions(kdamond_name):
-    return _damo_fs.write_files({state_file_of(kdamond_name):
-        'update_schemes_tried_regions'})
+def update_schemes_tried_regions(kdamond_names):
+    for kdamond_name in kdamond_names:
+        err = _damo_fs.write_files({state_file_of(kdamond_name):
+            'update_schemes_tried_regions'})
+        if err != None:
+            return err
+    return None
 
 # for apply_kdamonds
 
