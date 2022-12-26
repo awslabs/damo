@@ -575,31 +575,34 @@ class DamonCtx:
         self.targets = targets
         self.schemes = schemes
 
-    def __str__(self):
+    def to_str(self, raw):
         lines = ['%s (ops: %s)' % (self.name, self.ops)]
-        lines.append('intervals: %s' % self.intervals)
-        lines.append('nr_regions: %s' % self.nr_regions)
+        lines.append('intervals: %s' % self.intervals.to_str(raw))
+        lines.append('nr_regions: %s' % self.nr_regions.to_str(raw))
         lines.append('targets')
         for target in self.targets:
-            lines.append(_damo_fmt_str.indent_lines('%s' % target, 4))
+            lines.append(_damo_fmt_str.indent_lines(target.to_str(raw), 4))
         lines.append('schemes')
         for scheme in self.schemes:
-            lines.append(_damo_fmt_str.indent_lines('%s' % scheme, 4))
+            lines.append(_damo_fmt_str.indent_lines(scheme.to_str(raw), 4))
         return '\n'.join(lines)
+
+    def __str__(self):
+        return self.to_str(False)
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         kv = collections.OrderedDict({})
         kv['name'] = self.name
-        kv['intervals'] = self.intervals.to_kvpairs()
-        kv['nr_regions'] = self.nr_regions.to_kvpairs()
+        kv['intervals'] = self.intervals.to_kvpairs(raw)
+        kv['nr_regions'] = self.nr_regions.to_kvpairs(raw)
         kv['ops'] = self.ops
-        kv['targets'] = [t.to_kvpairs() for t in self.targets]
-        kv['schemes'] = [s.to_kvpairs() for s in self.schemes]
+        kv['targets'] = [t.to_kvpairs(raw) for t in self.targets]
+        kv['schemes'] = [s.to_kvpairs(raw) for s in self.schemes]
         if self.record_request:
-            kv['record_request'] = self.record_request.to_kvpairs()
+            kv['record_request'] = self.record_request.to_kvpairs(raw)
         return kv
 
 def kvpairs_to_DamonCtx(kv):
