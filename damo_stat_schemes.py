@@ -23,10 +23,6 @@ def pr_schemes_tried_regions(kdamonds, raw_nr):
 def update_pr_schemes_tried_regions(raw_nr):
     if _damon.any_kdamond_running():
         names = _damon.current_kdamond_names()
-        err = _damon.update_schemes_stats(names)
-        if err != None:
-            print('update schemes stat fail:', err)
-            exit(1)
         if _damon.feature_supported('schemes_tried_regions'):
             err = _damon.update_schemes_tried_regions(names)
             if err != None:
