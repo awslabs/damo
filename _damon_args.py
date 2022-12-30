@@ -138,11 +138,11 @@ def set_common_argparser(parser):
             help='Print debugging log')
 
 def set_common_monitoring_argparser(parser):
-    parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
+    parser.add_argument('-s', '--sample', metavar='<interval>',
             default=5000, help='sampling interval (us)')
-    parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
+    parser.add_argument('-a', '--aggr', metavar='<interval>',
             default=100000, help='aggregate interval (us)')
-    parser.add_argument('-u', '--updr', metavar='<interval>', type=int,
+    parser.add_argument('-u', '--updr', metavar='<interval>',
             default=1000000, help='regions update interval (us)')
     parser.add_argument('-n', '--minr', metavar='<# regions>', type=int,
             default=10, help='minimal number of regions')
