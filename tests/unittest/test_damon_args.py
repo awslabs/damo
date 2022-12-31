@@ -29,7 +29,7 @@ class TestDamonArgs(unittest.TestCase):
 
         self.assertEqual(_damon_args.damon_ctx_from_damon_args(
             argparse.Namespace(**{'sample': '5ms', 'aggr': '100ms',
-                'updr': '1s', 'minr': 10, 'maxr': 1000,
+                'updr': '1s', 'minr': '10', 'maxr': '1,000',
                 'regions': '123-456', 'numa_node': None, 'ops': 'paddr',
                 'target_pid': None, 'schemes': None})),
             _damon.DamonCtx('0',
