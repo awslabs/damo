@@ -123,5 +123,27 @@ class TestDamoFmtStr(unittest.TestCase):
                     '16384.000 PiB': (1 << 64) - 1,
                     '2.0 EiB': 2 * 1 << 60})
 
+    def test_text_to_bool(self):
+        _test_damo_common.test_input_expects(self, _damo_fmt_str.text_to_bool,
+                {
+                    True: True,
+                    False: False,
+                    'Y': True,
+                    'y': True,
+                    'YES': True,
+                    'yes': True,
+                    'Yes': True,
+                    'TRUE': True,
+                    'true': True,
+                    'True': True,
+                    'N': False,
+                    'n': False,
+                    'NO': False,
+                    'No': False,
+                    'FALSE': False,
+                    'false': False,
+                    'False': False,
+                    })
+
 if __name__ == '__main__':
     unittest.main()
