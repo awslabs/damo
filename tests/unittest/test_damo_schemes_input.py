@@ -81,13 +81,13 @@ class TestDamoSchemesInput(unittest.TestCase):
                     "name": "0",
                     "filter_type": "anon",
                     "memcg_path": "",
-                    "matching": "true"
+                    "matching": True,
                     },
                 {
                     "name": "1",
                     "filter_type": "memcg",
                     "memcg_path": "/all/latency-critical",
-                    "matching": "false"
+                    "matching": False,
                     }
                 ]
 
