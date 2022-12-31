@@ -376,7 +376,7 @@ class DamosFilter:
         self.name = name
         self.filter_type = filter_type
         self.memcg_path = memcg_path
-        self.matching = matching
+        self.matching = _damo_fmt_str.text_to_bool(matching)
 
     def to_str(self, raw):
         memcg_path_str = ''
