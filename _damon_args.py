@@ -144,9 +144,9 @@ def set_common_monitoring_argparser(parser):
             default=100000, help='aggregate interval (us)')
     parser.add_argument('-u', '--updr', metavar='<interval>',
             default=1000000, help='regions update interval (us)')
-    parser.add_argument('-n', '--minr', metavar='<# regions>', type=int,
+    parser.add_argument('-n', '--minr', metavar='<# regions>',
             default=10, help='minimal number of regions')
-    parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
+    parser.add_argument('-m', '--maxr', metavar='<# regions>',
             default=1000, help='maximum number of regions')
     parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
             type=str, default='', help='monitoring target address regions')
