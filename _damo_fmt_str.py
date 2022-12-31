@@ -258,3 +258,19 @@ def text_to_nr_unit(txt):
     if len(fields) != 2:
         raise Exception('text_to_nr_unit requires two fields')
     return text_to_nr(fields[0]), fields[1]
+
+def text_to_bool(txt):
+    if type(txt) == bool:
+        return txt
+
+    true_txts = ['y', 'yes', 'true']
+    false_txts = ['n', 'no', 'false']
+
+    txt = txt.lower()
+    if txt in true_txts:
+        return True
+    elif txt in false_txts:
+        return False
+    else:
+        raise Exception('txt should be one of %s but %s' %
+                (' '.join(true_txts + false_txts), txt))
