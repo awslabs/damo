@@ -42,5 +42,20 @@ class TestDamonArgs(unittest.TestCase):
                     [_damon.DamonRegion(1024, 4096)])],
                 []))
 
+        parser = argparse.ArgumentParser()
+        _damon_args.set_explicit_target_argparser(parser)
+
+        args = parser.parse_args(
+                ('--sample 5ms --aggr 100ms --updr 1s ' +
+                    '--minr 10 --maxr 1,000 --regions=1K-4K ' +
+                    '--ops paddr').split())
+        self.assertEqual(_damon_args.damon_ctx_from_damon_args(args),
+            _damon.DamonCtx('0',
+                _damon.DamonIntervals(5000, 100000, 1000000),
+                _damon.DamonNrRegionsRange(10, 1000), 'paddr',
+                [_damon.DamonTarget('0', None,
+                    [_damon.DamonRegion(1024, 4096)])],
+                [_damon.default_Damos]))
+
 if __name__ == '__main__':
     unittest.main()
