@@ -184,5 +184,23 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(record_req.to_kvpairs(raw=False),
                 {'rfile_buf': 4096, 'rfile_path': '/root/damon.data'})
 
+    def test_damos_access_pattern(self):
+        intervals = _damon.DamonIntervals(5000, 100000, 1000000)
+        pattern_human = _damon.DamosAccessPattern(123, 456,
+                15, 35, 'percent', 5000000, 19000000, 'usec')
+        pattern_machine = _damon.DamosAccessPattern(123, 456,
+                3, 7, 'sample_intervals', 50, 190, 'aggr_intervals')
+
+        pattern_human.convert_for_units('sample_intervals',
+            'aggr_intervals', intervals)
+        self.assertEqual(pattern_human, pattern_machine)
+
+        pattern_human = _damon.DamosAccessPattern(123, 456,
+                15, 35, 'percent', 5000000, 19000000, 'usec')
+
+        pattern_machine.convert_for_units('percent', 'usec',
+                intervals)
+        self.assertEqual(pattern_machine, pattern_human)
+
 if __name__ == '__main__':
     unittest.main()
