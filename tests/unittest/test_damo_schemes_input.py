@@ -81,7 +81,7 @@ class TestDamoSchemesInput(unittest.TestCase):
                     "name": "0",
                     "filter_type": "anon",
                     "memcg_path": "",
-                    "matching": True,
+                    "matching": "yes",
                     },
                 {
                     "name": "1",
