@@ -272,6 +272,10 @@ class DamosAccessPattern:
             self.max_age = int(self.max_age / intervals.aggr)
         self.age_unit = age_unit
 
+    def convert_for_units(self, nr_accesses_unit, age_unit, intervals):
+        self.convert_nr_accesses_unit(nr_accesses_unit, intervals)
+        self.convert_age_unit(age_unit, intervals)
+
 def kvpairs_to_DamosAccessPattern(kv):
     try:
         min_nr_accesses = _damo_fmt_str.text_to_percent(kv['min_nr_accesses'])
