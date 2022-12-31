@@ -136,7 +136,9 @@ class TestDamon(unittest.TestCase):
                 {
                     tuple([123, '456']): _damon.DamonRegion(123, 456),
                     tuple(['123', '456']): _damon.DamonRegion(123, 456),
-                    tuple(['1,234', '4,567']): _damon.DamonRegion(1234, 4567)})
+                    tuple(['1,234', '4,567']): _damon.DamonRegion(1234, 4567),
+                    tuple(['1K', '4K']): _damon.DamonRegion(1024, 4096),
+                    })
 
         _test_damo_common.test_input_expects(self,
                 lambda x: _damon.kvpairs_to_DamonRegion(json.loads(x)),
@@ -146,7 +148,10 @@ class TestDamon(unittest.TestCase):
                     json.dumps({'start': '1234', 'end': '4567'}):
                     _damon.DamonRegion(1234, 4567),
                     json.dumps({'start': '1,234', 'end': '4,567'}):
-                    _damon.DamonRegion(1234, 4567)})
+                    _damon.DamonRegion(1234, 4567),
+                    json.dumps({'start': '1K', 'end': '4K'}):
+                    _damon.DamonRegion(1024, 4096),
+                    })
 
         self.assertEqual('%s' % _damon.DamonRegion(123, 456),
                 '[123, 456) (333 B)')
