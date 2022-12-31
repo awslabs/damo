@@ -91,8 +91,8 @@ class DamonRegion:
     end = None
 
     def __init__(self, start, end):
-        self.start = _damo_fmt_str.text_to_nr(start)
-        self.end = _damo_fmt_str.text_to_nr(end)
+        self.start = _damo_fmt_str.text_to_bytes(start)
+        self.end = _damo_fmt_str.text_to_bytes(end)
 
     def to_str(self, raw):
         return _damo_fmt_str.format_addr_range(self.start, self.end, raw)
