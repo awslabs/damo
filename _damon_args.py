@@ -33,7 +33,7 @@ def damon_ctx_from_damon_args(args):
             try:
                 if len(addrs) != 2:
                     raise Exception ('two addresses not given')
-                region = _damon.DamonRegion(int(addrs[0]), int(addrs[1]))
+                region = _damon.DamonRegion(addrs[0], addrs[1])
                 if region.start >= region.end:
                     raise Exception('start >= end')
                 if init_regions and init_regions[-1].end > region.start:
