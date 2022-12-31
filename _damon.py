@@ -499,7 +499,8 @@ class Damos:
         return (type(self) == type(other) and self.name == other.name and
                 self.access_pattern == other.access_pattern and self.action ==
                 other.action and self.quotas == other.quotas and
-                self.watermarks == other.watermarks)
+                self.watermarks == other.watermarks and
+                self.filters == other.filters)
 
     def to_kvpairs(self, raw=False):
         kv = collections.OrderedDict(
