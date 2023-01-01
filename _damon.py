@@ -589,6 +589,9 @@ def kvpairs_to_Damos(kv):
 monitoring_scheme = kvpairs_to_Damos({'name': '0'})
 default_Damos = monitoring_scheme
 
+def is_monitoring_scheme(scheme, intervals):
+    return monitoring_scheme.effectively_equal(scheme, intervals)
+
 class DamonRecord:
     rfile_buf = None
     rfile_path = None
