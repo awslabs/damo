@@ -16,7 +16,7 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme, raw_nr):
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
                 if scheme == monitoring_scheme:
-                    print('\n'.join(r.to_str(raw_nr) for r in
+                    print('\n'.join(r.to_str(raw_nr, ctx.intervals) for r in
                         scheme.tried_regions))
                     return
 
