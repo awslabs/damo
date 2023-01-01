@@ -6,6 +6,7 @@ Contains core functions for DAMON control.
 """
 
 import collections
+import copy
 import os
 import time
 
@@ -275,6 +276,11 @@ class DamosAccessPattern:
     def convert_for_units(self, nr_accesses_unit, age_unit, intervals):
         self.convert_nr_accesses_unit(nr_accesses_unit, intervals)
         self.convert_age_unit(age_unit, intervals)
+
+    def converted_for_units(self, nr_accesses_unit, age_unit, intervals):
+        copied = copy.deepcopy(self)
+        copied.convert_for_units(nr_accesses_unit, age_unit, intervals)
+        return copied
 
 def kvpairs_to_DamosAccessPattern(kv):
     try:
