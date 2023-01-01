@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import collections
+import copy
 import json
 import os
 import sys
@@ -191,16 +192,14 @@ class TestDamon(unittest.TestCase):
         pattern_machine = _damon.DamosAccessPattern(123, 456,
                 3, 7, 'sample_intervals', 50, 190, 'aggr_intervals')
 
-        pattern_human.convert_for_units('sample_intervals',
-            'aggr_intervals', intervals)
-        self.assertEqual(pattern_human, pattern_machine)
-
-        pattern_human = _damon.DamosAccessPattern(123, 456,
-                15, 35, 'percent', 5000000, 19000000, 'usec')
-
-        pattern_machine.convert_for_units('percent', 'usec',
+        copied = copy.deepcopy(pattern_human)
+        copied.convert_for_units('sample_intervals', 'aggr_intervals',
                 intervals)
-        self.assertEqual(pattern_machine, pattern_human)
+        self.assertEqual(copied, pattern_machine)
+
+        copied = copy.deepcopy(pattern_machine)
+        copied.convert_for_units('percent', 'usec', intervals)
+        self.assertEqual(copied, pattern_human)
 
 if __name__ == '__main__':
     unittest.main()
