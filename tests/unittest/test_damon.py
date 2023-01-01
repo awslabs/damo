@@ -89,6 +89,8 @@ class TestDamon(unittest.TestCase):
         damos2.access_pattern = pattern_machine
         self.assertNotEqual(damos, damos2)
         self.assertTrue(damos.effectively_equal(damos2, intervals))
+        damos2.name = 'foo'
+        self.assertTrue(damos.effectively_equal(damos2, intervals))
 
     def test_damon_intervals(self):
         _test_damo_common.test_input_expects(self,
