@@ -9,49 +9,50 @@ import _damo_fmt_str
 import _damo_subcmds
 import _damon
 
-def pr_schemes_tried_regions(kdamonds, raw_nr):
-    print('# <kdamond> <context>')
-    print('# <regions>')
-    print('# ...')
-    for kdamond in kdamonds:
-        for ctx in kdamond.contexts:
-            for scheme in ctx.schemes:
-                if not _damon.default_Damos.effectively_equal(
-                        scheme, ctx.intervals):
-                    continue
-                print('%s %s' % (kdamond.name, ctx.name))
-                print('\n'.join(
-                    r.to_str(raw_nr) for r in scheme.tried_regions))
-
 def update_pr_schemes_tried_regions(raw_nr):
     if _damon.every_kdamond_turned_off():
         print('no kdamond running')
         exit(1)
 
-    now_monitoring = False
+    monitoring_kdamond = None
+    monitoring_scheme = None
     kdamonds = _damon.current_kdamonds()
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
                 if _damon.default_Damos.effectively_equal(
                         scheme, ctx.intervals):
-                    now_monitoring = True
+                    monitoring_kdamond = kdamond.name
+                    monitoring_scheme = scheme
                     break
-            if now_monitoring:
+            if monitoring_kdamond != None:
                 break
-        if now_monitoring:
+        if monitoring_kdamond != None:
             break
-    if not now_monitoring:
+    if monitoring_kdamond == None:
         print('no kdamond is having monitoring scheme')
         exit(1)
 
-    names = _damon.current_kdamond_names()
-    err = _damon.update_schemes_tried_regions(names)
+    err = _damon.update_schemes_tried_regions([monitoring_kdamond])
     if err != None:
         print('update schemes tried regions fail: %s', err)
         exit(1)
-    kdamonds = _damon.current_kdamonds()
-    pr_schemes_tried_regions(kdamonds, raw_nr)
+
+    done = False
+    for kdamond in _damon.current_kdamonds():
+        if kdamond.name != monitoring_kdamond:
+            continue
+        for ctx in kdamond.contexts:
+            for scheme in ctx.schemes:
+                if scheme == monitoring_scheme:
+                    print('\n'.join(r.to_str(raw_nr) for r in
+                        scheme.tried_regions))
+                    done = True
+                    break
+            if done:
+                break
+        if done:
+            break
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
