@@ -192,14 +192,14 @@ class TestDamon(unittest.TestCase):
         pattern_machine = _damon.DamosAccessPattern(123, 456,
                 3, 7, 'sample_intervals', 50, 190, 'aggr_intervals')
 
-        copied = copy.deepcopy(pattern_human)
-        copied.convert_for_units('sample_intervals', 'aggr_intervals',
-                intervals)
-        self.assertEqual(copied, pattern_machine)
-
-        copied = copy.deepcopy(pattern_machine)
-        copied.convert_for_units('percent', 'usec', intervals)
-        self.assertEqual(copied, pattern_human)
+        self.assertEqual(
+                pattern_human.converted_for_units(
+                    'sample_intervals', 'aggr_intervals', intervals),
+                pattern_machine)
+        self.assertEqual(
+                pattern_machine.converted_for_units(
+                    'percent', 'usec', intervals),
+                pattern_human)
 
 if __name__ == '__main__':
     unittest.main()
