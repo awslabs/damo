@@ -43,8 +43,6 @@ def set_argparser(parser):
             help='print detailed stat of kdamonds')
     parser.add_argument('--json', action='store_true',
             help='print kdamond in json format')
-    parser.add_argument('--raw', action='store_true',
-            help='print numbers in machine friendly raw form')
 
 def __main(args):
     if not args.detail:

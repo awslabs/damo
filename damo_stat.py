@@ -38,6 +38,8 @@ def set_common_argparser(parser):
             help='delay between repeated status prints')
     parser.add_argument('--count', metavar='<count>', default=1, type=int,
             help='number of repeated status prints')
+    parser.add_argument('--raw', action='store_true',
+            help='print numbers in machine friendly raw form')
 
 def set_argparser(parser):
     subparsers = parser.add_subparsers(title='stat type', dest='stat_type',
