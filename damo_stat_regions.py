@@ -9,6 +9,17 @@ import _damo_fmt_str
 import _damo_subcmds
 import _damon
 
+def pr_schemes_tried_regions(kdamond_name, monitoring_scheme, raw_nr):
+    for kdamond in _damon.current_kdamonds():
+        if kdamond.name != kdamond_name:
+            continue
+        for ctx in kdamond.contexts:
+            for scheme in ctx.schemes:
+                if scheme == monitoring_scheme:
+                    print('\n'.join(r.to_str(raw_nr) for r in
+                        scheme.tried_regions))
+                    return
+
 def update_pr_schemes_tried_regions(raw_nr):
     if _damon.every_kdamond_turned_off():
         print('no kdamond running')
@@ -38,21 +49,7 @@ def update_pr_schemes_tried_regions(raw_nr):
         print('update schemes tried regions fail: %s', err)
         exit(1)
 
-    done = False
-    for kdamond in _damon.current_kdamonds():
-        if kdamond.name != monitoring_kdamond:
-            continue
-        for ctx in kdamond.contexts:
-            for scheme in ctx.schemes:
-                if scheme == monitoring_scheme:
-                    print('\n'.join(r.to_str(raw_nr) for r in
-                        scheme.tried_regions))
-                    done = True
-                    break
-            if done:
-                break
-        if done:
-            break
+    pr_schemes_tried_regions(monitoring_kdamond, monitoring_scheme, raw_nr)
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
