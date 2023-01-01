@@ -5,6 +5,7 @@ import argparse
 import time
 
 import damo_stat_kdamonds
+import damo_stat_regions
 import damo_stat_schemes
 
 import _damo_subcmds
@@ -19,6 +20,8 @@ def pr_damon_interface(args):
 subcmds = [
         _damo_subcmds.DamoSubCmd(name='kdamonds', module=damo_stat_kdamonds,
             msg='detailed status of kdamonds'),
+        _damo_subcmds.DamoSubCmd(name='regions', module=damo_stat_regions,
+            msg='monitoring regions'),
         _damo_subcmds.DamoSubCmd(name='schemes_stats',
             module=damo_stat_schemes,
             msg='schemes apply stats'),
