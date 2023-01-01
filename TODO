@@ -10,6 +10,5 @@
 - Document new workflow: init-start-stat-tune-stop
 - Support ongoing schemes
 - Cleanup schemes test using damo stat
-- stat sz --min_nr_accesses 0 --max_nr_accesses ...
 - damo stat regions <access pattern>
-- damo stat size <access pattern>
+- damo stat regions --size <access pattern>
