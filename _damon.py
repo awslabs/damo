@@ -563,7 +563,7 @@ class Damos:
         return kv
 
     def effectively_equal(self, other, intervals):
-        return (type(self) == type(other) and self.name == other.name and
+        return (type(self) == type(other) and
                 self.access_pattern.effectively_equal(
                     other.access_pattern, intervals) and
                 self.action == other.action and self.quotas == other.quotas and
