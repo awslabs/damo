@@ -201,5 +201,8 @@ class TestDamon(unittest.TestCase):
                     'percent', 'usec', intervals),
                 pattern_human)
 
+        self.assertTrue(
+                pattern_human.effectively_equal(pattern_machine, intervals))
+
 if __name__ == '__main__':
     unittest.main()
