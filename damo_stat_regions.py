@@ -20,11 +20,7 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme, raw_nr):
                         scheme.tried_regions))
                     return
 
-def update_pr_schemes_tried_regions(raw_nr):
-    if _damon.every_kdamond_turned_off():
-        print('no kdamond running')
-        exit(1)
-
+def monitoring_kdamond_scheme():
     monitoring_kdamond = None
     monitoring_scheme = None
     kdamonds = _damon.current_kdamonds()
@@ -33,13 +29,15 @@ def update_pr_schemes_tried_regions(raw_nr):
             for scheme in ctx.schemes:
                 if _damon.default_Damos.effectively_equal(
                         scheme, ctx.intervals):
-                    monitoring_kdamond = kdamond.name
-                    monitoring_scheme = scheme
-                    break
-            if monitoring_kdamond != None:
-                break
-        if monitoring_kdamond != None:
-            break
+                    return kdamond.name, scheme
+    return None, None
+
+def update_pr_schemes_tried_regions(raw_nr):
+    if _damon.every_kdamond_turned_off():
+        print('no kdamond running')
+        exit(1)
+
+    monitoring_kdamond, monitoring_scheme = monitoring_kdamond_scheme()
     if monitoring_kdamond == None:
         print('no kdamond is having monitoring scheme')
         exit(1)
