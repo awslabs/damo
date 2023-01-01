@@ -586,7 +586,8 @@ def kvpairs_to_Damos(kv):
             filters,
             None, None)
 
-default_Damos = kvpairs_to_Damos({'name': '0'})
+monitoring_scheme = kvpairs_to_Damos({'name': '0'})
+default_Damos = monitoring_scheme
 
 class DamonRecord:
     rfile_buf = None
