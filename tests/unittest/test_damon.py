@@ -76,7 +76,7 @@ class TestDamon(unittest.TestCase):
 
         damos2.filters = [_damon.DamosFilter(name='foo', filter_type='memcg',
                     memcg_path='/foo/bar/', matching=True)]
-        self.assertFalse(damos == damos2)
+        self.assertNotEqual(damos, damos2)
 
         intervals = _damon.DamonIntervals(5000, 100000, 1000000)
         pattern_human = _damon.DamosAccessPattern(123, 456,
@@ -87,7 +87,7 @@ class TestDamon(unittest.TestCase):
         damos.access_pattern = pattern_human
         damos2 = copy.deepcopy(damos)
         damos2.access_pattern = pattern_machine
-        self.assertFalse(damos == damos2)
+        self.assertNotEqual(damos, damos2)
         self.assertTrue(damos.effectively_equal(damos2, intervals))
 
     def test_damon_intervals(self):
