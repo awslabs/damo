@@ -28,6 +28,23 @@ def update_pr_schemes_tried_regions(raw_nr):
         print('no kdamond running')
         exit(1)
 
+    now_monitoring = False
+    kdamonds = _damon.current_kdamonds()
+    for kdamond in kdamonds:
+        for ctx in kdamond.contexts:
+            for scheme in ctx.schemes:
+                if _damon.default_Damos.effectively_equal(
+                        scheme, ctx.intervals):
+                    now_monitoring = True
+                    break
+            if now_monitoring:
+                break
+        if now_monitoring:
+            break
+    if not now_monitoring:
+        print('no kdamond is having monitoring scheme')
+        exit(1)
+
     names = _damon.current_kdamond_names()
     err = _damon.update_schemes_tried_regions(names)
     if err != None:
