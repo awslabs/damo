@@ -282,6 +282,13 @@ class DamosAccessPattern:
         copied.convert_for_units(nr_accesses_unit, age_unit, intervals)
         return copied
 
+    def effectively_equal(self, other, intervals):
+        return (
+                self.converted_for_units(
+                    'sample_intervals', 'aggr_intervals', intervals) ==
+                other.converted_for_units(
+                    'sample_intervals', 'aggr_intervals', intervals))
+
 def kvpairs_to_DamosAccessPattern(kv):
     try:
         min_nr_accesses = _damo_fmt_str.text_to_percent(kv['min_nr_accesses'])
