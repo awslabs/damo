@@ -27,8 +27,7 @@ def monitoring_kdamond_scheme():
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
-                if _damon.monitoring_scheme.effectively_equal(
-                        scheme, ctx.intervals):
+                if _damon.is_monitoring_scheme(scheme, ctx.intervals):
                     return kdamond.name, scheme
     return None, None
 
