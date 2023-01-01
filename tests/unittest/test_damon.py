@@ -92,6 +92,23 @@ class TestDamon(unittest.TestCase):
         damos2.name = 'foo'
         self.assertTrue(damos.effectively_equal(damos2, intervals))
 
+    def test_is_monitoring_scheme(self):
+        self.assertTrue(_damon.is_monitoring_scheme(_damon.monitoring_scheme,
+            _damon.default_DamonIntervals))
+        self.assertTrue(_damon.is_monitoring_scheme(_damon.default_Damos,
+            _damon.default_DamonIntervals))
+
+        copied = copy.deepcopy(_damon.monitoring_scheme)
+        copied.name = 'foo'
+        self.assertTrue(_damon.is_monitoring_scheme(_damon.monitoring_scheme,
+            _damon.default_DamonIntervals),
+            _damon.default_DamonIntervals)
+
+        copied.access_pattern.convert_for_units('sample_intervals', 'usec',
+                _damon.default_DamonIntervals)
+        self.assertTrue(_damon.is_monitoring_scheme(_damon.monitoring_scheme,
+                _damon.default_DamonIntervals))
+
     def test_damon_intervals(self):
         _test_damo_common.test_input_expects(self,
                 lambda x: _damon.kvpairs_to_DamonIntervals(json.loads(x)),
