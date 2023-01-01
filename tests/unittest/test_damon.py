@@ -86,6 +86,18 @@ class TestDamon(unittest.TestCase):
                     memcg_path='/foo/bar/', matching=True)], stats=None)
         self.assertFalse(damos == damos2)
 
+        intervals = _damon.DamonIntervals(5000, 100000, 1000000)
+        pattern_human = _damon.DamosAccessPattern(123, 456,
+                15, 35, 'percent', 5000000, 19000000, 'usec')
+        pattern_machine = _damon.DamosAccessPattern(123, 456,
+                3, 7, 'sample_intervals', 50, 190, 'aggr_intervals')
+
+        damos.access_pattern = pattern_human
+        damos2 = copy.deepcopy(damos)
+        damos2.access_pattern = pattern_machine
+        self.assertFalse(damos == damos2)
+        self.assertTrue(damos.effectively_equal(damos2, intervals))
+
     def test_damon_intervals(self):
         _test_damo_common.test_input_expects(self,
                 lambda x: _damon.kvpairs_to_DamonIntervals(json.loads(x)),
