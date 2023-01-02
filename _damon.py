@@ -490,12 +490,16 @@ class DamosTriedRegion:
     def to_str(self, raw, intervals=None):
         age = self.age
         if raw == False and intervals != None:
+            max_nr_accesses = intervals.aggr / intervals.sample
+            nr_accesses = '%.2f%%' % (
+                    float(self.nr_accesses) * 100 / max_nr_accesses)
             age = _damo_fmt_str.format_time_us(age * intervals.aggr, raw)
         else:
+            nr_accesses = '%s' % _damo_fmt_str.format_nr(self.nr_accesses, raw)
             age = _damo_fmt_str.format_nr(age, raw)
         return '%s: nr_accesses: %s, age: %s' % (
                 _damo_fmt_str.format_addr_range(self.start, self.end, raw),
-                _damo_fmt_str.format_nr(self.nr_accesses, raw), age)
+                nr_accesses, age)
 
     def __str__(self):
         return self.to_str(False)
