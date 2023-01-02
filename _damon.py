@@ -602,6 +602,9 @@ def kvpairs_to_Damos(kv):
 monitoring_scheme = kvpairs_to_Damos({'name': '0'})
 default_Damos = monitoring_scheme
 
+def default_damos_scheme():
+    return copy.deepcopy(default_Damos)
+
 def is_monitoring_scheme(scheme, intervals):
     return monitoring_scheme.effectively_equal(scheme, intervals)
 
