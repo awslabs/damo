@@ -159,7 +159,8 @@ def wops_for_scheme_quotas(quotas):
 def wops_for_scheme_access_pattern(pattern, ctx):
     if pattern == None:
         return {}
-    max_nr_accesses = ctx.intervals.aggr / ctx.intervals.sample
+    pattern = pattern.converted_for_units(
+            'samples', 'aggr_intervals', ctx.intervals)
 
     return {
         'sz': {
@@ -167,20 +168,12 @@ def wops_for_scheme_access_pattern(pattern, ctx):
             'max': '%d' % pattern.max_sz_bytes,
         },
         'nr_accesses': {
-            'min': '%d' % int(
-                pattern.min_nr_accesses * max_nr_accesses / 100
-                if pattern.nr_accesses_unit == 'percent'
-                else pattern.min_nr_accesses),
-            'max': '%d' % int(
-                pattern.max_nr_accesses * max_nr_accesses / 100
-                if pattern.nr_accesses_unit == 'percent'
-                else pattern.max_nr_accesses),
+            'min': '%d' % pattern.min_nr_accesses,
+            'max': '%d' % pattern.max_nr_accesses,
         },
         'age': {
-            'min': '%d' % (pattern.min_age / ctx.intervals.aggr
-                if pattern.age_unit == 'usec' else pattern.min_age),
-            'max': '%d' % (pattern.max_age / ctx.intervals.aggr
-                if pattern.age_unit == 'usec' else pattern.max_age),
+            'min': '%d' % pattern.min_age,
+            'max': '%d' % pattern.max_age,
         },
     }
 
