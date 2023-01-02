@@ -4,6 +4,7 @@
 import argparse
 
 import _damo_schemes_input
+import _damon
 import _damon_dbgfs
 
 def main():
@@ -18,15 +19,13 @@ def main():
             choices=range(0, 5), default=4, help='destination scheme version')
     args = parser.parse_args()
 
-    sample_interval = args.sample
-    aggr_interval = args.aggr
-    scheme_ver = args.scheme_version
+    intervals = _damon.DamonIntervals(args.sample, args.aggr, args.aggr)
 
     lines = []
     for damos in _damo_schemes_input.damo_schemes_to_damos(args.input):
         lines.append(
-                _damon_dbgfs.damos_to_debugfs_input(damos, sample_interval,
-                    aggr_interval, scheme_ver))
+                _damon_dbgfs.damos_to_debugfs_input(damos, intervals,
+                    args.scheme_version))
     print ('\n'.join(lines))
 
 if __name__ == '__main__':

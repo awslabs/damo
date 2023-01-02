@@ -80,13 +80,12 @@ def get_scheme_version():
         scheme_version = 4
     return scheme_version
 
-def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
-        scheme_version):
+def damos_to_debugfs_input(damos, intervals, scheme_version):
     pattern = damos.access_pattern
     quotas = damos.quotas
     watermarks = damos.watermarks
 
-    max_nr_accesses = aggr_interval / sample_interval
+    max_nr_accesses = intervals.aggr / intervals.sample
     v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
             pattern.min_sz_bytes, pattern.max_sz_bytes,
             int(pattern.min_nr_accesses * max_nr_accesses / 100
@@ -95,9 +94,9 @@ def damos_to_debugfs_input(damos, sample_interval, aggr_interval,
             int(pattern.max_nr_accesses * max_nr_accesses / 100
                 if pattern.nr_accesses_unit == 'percent'
                 else pattern.max_nr_accesses),
-            (pattern.min_age / aggr_interval if pattern.age_unit == 'usec'
+            (pattern.min_age / intervals.aggr if pattern.age_unit == 'usec'
                 else pattern.min_age),
-            (pattern.max_age / aggr_interval if pattern.age_unit == 'usec'
+            (pattern.max_age / intervals.aggr if pattern.age_unit == 'usec'
                 else pattern.max_age),
             _damo_schemes_input.damos_action_to_int[damos.action])
     if scheme_version == 0:
@@ -137,7 +136,7 @@ def wops_for_schemes(schemes, intervals):
     scheme_file_input_lines = []
     for scheme in schemes:
         scheme_file_input_lines.append(damos_to_debugfs_input(scheme,
-            intervals.sample, intervals.aggr, get_scheme_version()))
+            intervals, get_scheme_version()))
     scheme_file_input = '\n'.join(scheme_file_input_lines)
     if scheme_file_input == '':
         scheme_file_input = '\n'
