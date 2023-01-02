@@ -80,6 +80,9 @@ def get_scheme_version():
         scheme_version = 4
     return scheme_version
 
+damos_action_to_int = {'willneed': 0, 'cold': 1, 'pageout': 2, 'hugepage': 3,
+        'nohugepage': 4, 'stat': 5, 'lru_prio': 6, 'lru_deprio': 7}
+
 def damos_to_debugfs_input(damos, intervals, scheme_version):
     pattern = damos.access_pattern.converted_for_units(
             _damon.unit_sample_intervals, _damon.unit_aggr_intervals,
@@ -92,7 +95,7 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
             pattern.min_sz_bytes, pattern.max_sz_bytes,
             pattern.min_nr_accesses, pattern.max_nr_accesses,
             pattern.min_age, pattern.max_age,
-            _damo_schemes_input.damos_action_to_int[damos.action])
+            damos_action_to_int[damos.action])
     if scheme_version == 0:
         return v0_scheme
 

@@ -85,9 +85,6 @@ import _damon_dbgfs
 
 import _damo_fmt_str
 
-damos_action_to_int = {'willneed': 0, 'cold': 1, 'pageout': 2, 'hugepage': 3,
-        'nohugepage': 4, 'stat': 5, 'lru_prio': 6, 'lru_deprio': 7}
-
 def text_nr_accesses_percent(txt):
     if txt == 'min':
         return 0.0
