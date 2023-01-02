@@ -81,23 +81,16 @@ def get_scheme_version():
     return scheme_version
 
 def damos_to_debugfs_input(damos, intervals, scheme_version):
-    pattern = damos.access_pattern
+    pattern = damos.access_pattern.converted_for_units(
+            'samples', 'aggr_intervals', intervals)
     quotas = damos.quotas
     watermarks = damos.watermarks
 
     max_nr_accesses = intervals.aggr / intervals.sample
     v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
             pattern.min_sz_bytes, pattern.max_sz_bytes,
-            int(pattern.min_nr_accesses * max_nr_accesses / 100
-                if pattern.nr_accesses_unit == 'percent'
-                else pattern.min_nr_accesses),
-            int(pattern.max_nr_accesses * max_nr_accesses / 100
-                if pattern.nr_accesses_unit == 'percent'
-                else pattern.max_nr_accesses),
-            (pattern.min_age / intervals.aggr if pattern.age_unit == 'usec'
-                else pattern.min_age),
-            (pattern.max_age / intervals.aggr if pattern.age_unit == 'usec'
-                else pattern.max_age),
+            pattern.min_nr_accesses, pattern.max_nr_accesses,
+            pattern.min_age, pattern.max_age,
             _damo_schemes_input.damos_action_to_int[damos.action])
     if scheme_version == 0:
         return v0_scheme
