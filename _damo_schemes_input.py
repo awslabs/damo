@@ -123,10 +123,10 @@ def damo_single_line_scheme_to_damos(line, name):
         max_sz = _damo_fmt_str.text_to_bytes(fields[1])
         min_nr_accesses = text_nr_accesses_percent(fields[2])
         max_nr_accesses = text_nr_accesses_percent(fields[3])
-        nr_accesses_unit = 'percent'
+        nr_accesses_unit = _damon.unit_percent
         min_age = _damo_fmt_str.text_to_us(fields[4])
         max_age = _damo_fmt_str.text_to_us(fields[5])
-        age_unit = 'usec'
+        age_unit = _damon.unit_usec
         action_txt = fields[6].lower()
         quota_ms = 0
         quota_sz = 0
