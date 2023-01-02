@@ -82,7 +82,8 @@ def get_scheme_version():
 
 def damos_to_debugfs_input(damos, intervals, scheme_version):
     pattern = damos.access_pattern.converted_for_units(
-            'samples', 'aggr_intervals', intervals)
+            _damon.unit_sample_intervals, _damon.unit_aggr_intervals,
+            intervals)
     quotas = damos.quotas
     watermarks = damos.watermarks
 
