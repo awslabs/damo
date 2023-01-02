@@ -227,5 +227,15 @@ class TestDamon(unittest.TestCase):
         self.assertTrue(
                 pattern_human.effectively_equal(pattern_machine, intervals))
 
+        for converted in [
+                pattern_human.converted_for_units('sample_intervals',
+                    'aggr_intervals', intervals),
+                pattern_machine.converted_for_units('percent', 'usec',
+                    intervals)]:
+            self.assertEqual(type(converted.min_nr_accesses), int)
+            self.assertEqual(type(converted.max_nr_accesses), int)
+            self.assertEqual(type(converted.min_age), int)
+            self.assertEqual(type(converted.max_age), int)
+
 if __name__ == '__main__':
     unittest.main()
