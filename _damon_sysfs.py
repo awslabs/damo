@@ -160,7 +160,8 @@ def wops_for_scheme_access_pattern(pattern, ctx):
     if pattern == None:
         return {}
     pattern = pattern.converted_for_units(
-            'samples', _damon.unit_aggr_intervals, ctx.intervals)
+            _damon.unit_sample_intervals, _damon.unit_aggr_intervals,
+            ctx.intervals)
 
     return {
         'sz': {
