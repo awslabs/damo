@@ -3,11 +3,14 @@
 
 """
 Change human readable data access monitoring-based operation schemes input for
-'damo' to a '_damon.Damos' object.  Currently, simple human-readable text and
-comments-supporting json string format are supported.  Below are the example of
-the input.
+'damo' to a '_damon.Damos' object.  Currently,
 
-Below are examples of simple human-readable text.
+- simple human-readable single line per scheme text and
+- comments-supporting json string format
+
+are supported.  Below are the example of the input.
+
+Below are examples of simple human-readable single line per scheme text.
 
     # format is:
     # <min/max size> <min/max frequency (0-100)> <min/max age> <action>
