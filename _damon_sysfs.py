@@ -160,7 +160,7 @@ def wops_for_scheme_access_pattern(pattern, ctx):
     if pattern == None:
         return {}
     pattern = pattern.converted_for_units(
-            'samples', 'aggr_intervals', ctx.intervals)
+            'samples', _damon.unit_aggr_intervals, ctx.intervals)
 
     return {
         'sz': {
@@ -318,10 +318,10 @@ def files_content_to_access_pattern(files_content):
             int(files_content['sz']['max']),
             int(files_content['nr_accesses']['min']),
             int(files_content['nr_accesses']['max']),
-            'sample_intervals', # nr_accesses_unit
+            _damon.unit_sample_intervals, # nr_accesses_unit
             int(files_content['age']['min']),
             int(files_content['age']['max']),
-            'aggr_intervals') # age_unit
+            _damon.unit_aggr_intervals) # age_unit
 
 def files_content_to_quotas(files_content):
     return _damon.DamosQuotas(
