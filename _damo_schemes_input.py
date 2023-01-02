@@ -85,21 +85,8 @@ import _damon_dbgfs
 
 import _damo_fmt_str
 
-uint_max = 2**32 - 1
-ulong_max = 2**64 - 1
-if platform.architecture()[0] != '64bit':
-    ulong_max = 2**32 - 1
-
 damos_action_to_int = {'willneed': 0, 'cold': 1, 'pageout': 2, 'hugepage': 3,
         'nohugepage': 4, 'stat': 5, 'lru_prio': 6, 'lru_deprio': 7}
-
-def text_to_nr_accesses(txt, max_nr_accesses):
-    if txt == 'min':
-        return 0
-    if txt == 'max':
-        return max_nr_accesses
-
-    return int(float(txt) * max_nr_accesses / 100)
 
 def text_nr_accesses_percent(txt):
     if txt == 'min':
@@ -133,12 +120,11 @@ def damo_single_line_scheme_to_damos(line, name):
         action_txt = fields[6].lower()
         quota_ms = 0
         quota_sz = 0
-        window_ms = ulong_max
+        window_ms = _damo_fmt_str.ulong_max
         weight_sz = 0
         weight_nr_accesses = 0
         weight_age = 0
         wmarks_txt = 'none'
-        wmarks_metric = text_to_damos_wmark_metric('none')
         wmarks_interval = 0
         wmarks_high = 0
         wmarks_mid = 0
@@ -153,7 +139,6 @@ def damo_single_line_scheme_to_damos(line, name):
                 weight_age = int(fields[11])
             if len(fields) == 17:
                 wmarks_txt = fields[12].lower()
-                wmarks_metric = text_to_damos_wmark_metric(fields[12])
                 wmarks_interval = _damo_fmt_str.text_to_us(fields[13])
                 wmarks_high = int(fields[14])
                 wmarks_mid = int(fields[15])
@@ -166,7 +151,6 @@ def damo_single_line_scheme_to_damos(line, name):
             weight_nr_accesses = int(fields[11])
             weight_age = int(fields[12])
             wmarks_txt = fields[13].lower()
-            wmarks_metric = text_to_damos_wmark_metric(fields[13])
             wmarks_interval = _damo_fmt_str.text_to_us(fields[14])
             wmarks_high = int(fields[15])
             wmarks_mid = int(fields[16])
