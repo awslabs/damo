@@ -92,11 +92,6 @@ def text_nr_accesses_percent(txt):
         return 100.0
     return float(txt)
 
-damos_wmark_metric_to_int = {'none': 0, 'free_mem_rate': 1}
-
-def text_to_damos_wmark_metric(txt):
-    return damos_wmark_metric_to_int[txt.lower()]
-
 def damo_single_line_scheme_to_damos(line, name):
     '''Returns Damos object and err'''
     fields = line.split()
