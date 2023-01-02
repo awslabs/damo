@@ -118,14 +118,16 @@ class TestDamoSchemesInput(unittest.TestCase):
                     human_readable_damos_with_filters_str.split('\n')))
 
         expected_damos_wo_filters = [_damon.Damos('0',
-                _damon.DamosAccessPattern(0, 0, 0, 0,
-                    'sample_intervals', 0, 0, 'aggr_intervals'),
+                _damon.DamosAccessPattern(0, 0,
+                    0, 0, _damon.unit_sample_intervals,
+                    0, 0, _damon.unit_aggr_intervals),
                 'stat',
                 _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None, None)]
         expected_damos_w_filters = [_damon.Damos('0',
-                _damon.DamosAccessPattern(0, 0, 0, 0,
-                    'sample_intervals', 0, 0, 'aggr_intervals'),
+                _damon.DamosAccessPattern(0, 0,
+                    0, 0, _damon.unit_sample_intervals,
+                    0, 0, _damon.unit_aggr_intervals),
                 'stat',
                 _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0),
