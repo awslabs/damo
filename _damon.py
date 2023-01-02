@@ -144,15 +144,20 @@ def kvpairs_to_DamonTarget(kvpairs):
     regions = [kvpairs_to_DamonRegion(kvp) for kvp in kvpairs['regions']]
     return DamonTarget(kvpairs['name'], kvpairs['pid'], regions)
 
+unit_percent = 'percent'
+unit_sample_intervals = 'sample_intervals'
+unit_usec = 'usec'
+unit_aggr_intervals = 'aggr_intervals'
+
 class DamosAccessPattern:
     min_sz_bytes = None
     max_sz_bytes = None
     min_nr_accesses = None
     max_nr_accesses = None
-    nr_accesses_unit = None # 'percent' or 'sample_intervals'
+    nr_accesses_unit = None # unit_{percent,sample_intervals}
     min_age = None
     max_age = None
-    age_unit = None # 'usec' or 'aggr_intervals'
+    age_unit = None #  unit_{usec,aggr_intervals}
 
     def __init__(self, min_sz_bytes, max_sz_bytes,
             min_nr_accesses, max_nr_accesses, nr_accesses_unit,
@@ -160,7 +165,7 @@ class DamosAccessPattern:
         self.min_sz_bytes = _damo_fmt_str.text_to_bytes(min_sz_bytes)
         self.max_sz_bytes = _damo_fmt_str.text_to_bytes(max_sz_bytes)
 
-        if nr_accesses_unit == 'percent':
+        if nr_accesses_unit == unit_percent:
             self.min_nr_accesses = _damo_fmt_str.text_to_percent(
                     min_nr_accesses)
             self.max_nr_accesses = _damo_fmt_str.text_to_percent(
@@ -170,7 +175,7 @@ class DamosAccessPattern:
             self.max_nr_accesses = max_nr_accesses
         self.nr_accesses_unit = nr_accesses_unit
 
-        if age_unit == 'usec':
+        if age_unit == unit_usec:
             self.min_age = _damo_fmt_str.text_to_us(min_age)
             self.max_age = _damo_fmt_str.text_to_us(max_age)
         else:
@@ -183,14 +188,14 @@ class DamosAccessPattern:
             'sz: [%s, %s]' % (_damo_fmt_str.format_sz(self.min_sz_bytes, raw),
                 _damo_fmt_str.format_sz(self.max_sz_bytes, raw)),
             ]
-        if self.nr_accesses_unit == 'percent':
+        if self.nr_accesses_unit == unit_percent:
             unit = '%'
         else:
             unit = self.nr_accesses_unit
         lines.append('nr_accesses: [%s %s, %s %s]' % (
                 _damo_fmt_str.format_nr(self.min_nr_accesses, raw), unit,
                 _damo_fmt_str.format_nr(self.max_nr_accesses, raw), unit))
-        if self.age_unit == 'usec':
+        if self.age_unit == unit_usec:
             min_age = _damo_fmt_str.format_time_us_exact(self.min_age, raw)
             max_age = _damo_fmt_str.format_time_us_exact(self.max_age, raw)
         else:
@@ -216,13 +221,13 @@ class DamosAccessPattern:
 
     def to_kvpairs(self, raw=False):
         unit = self.nr_accesses_unit
-        if unit == 'percent':
+        if unit == unit_percent:
             unit = '%'
         min_nr_accesses = '%s %s' % (
                 _damo_fmt_str.format_nr(self.min_nr_accesses, raw), unit)
         max_nr_accesses = '%s %s' % (
                 _damo_fmt_str.format_nr(self.max_nr_accesses, raw), unit)
-        if self.age_unit == 'usec':
+        if self.age_unit == unit_usec:
             min_age = _damo_fmt_str.format_time_us_exact(self.min_age, raw)
             max_age = _damo_fmt_str.format_time_us_exact(self.max_age, raw)
         else:
@@ -247,7 +252,7 @@ class DamosAccessPattern:
             return
         max_nr_accesses_sample_intervals = intervals.aggr / intervals.sample
         # percent to sample_intervals
-        if nr_accesses_unit == 'sample_intervals':
+        if nr_accesses_unit == unit_sample_intervals:
             self.min_nr_accesses = int(self.min_nr_accesses *
                     max_nr_accesses_sample_intervals / 100)
             self.max_nr_accesses = int(self.max_nr_accesses *
@@ -264,7 +269,7 @@ class DamosAccessPattern:
         if self.age_unit == age_unit:
             return
         # aggr_intervals to usec
-        if age_unit == 'usec':
+        if age_unit == unit_usec:
             self.min_age = self.min_age * intervals.aggr
             self.max_age = self.max_age * intervals.aggr
         # usec to aggr_intervals
@@ -285,15 +290,15 @@ class DamosAccessPattern:
     def effectively_equal(self, other, intervals):
         return (
                 self.converted_for_units(
-                    'sample_intervals', 'aggr_intervals', intervals) ==
+                    unit_sample_intervals, unit_aggr_intervals, intervals) ==
                 other.converted_for_units(
-                    'sample_intervals', 'aggr_intervals', intervals))
+                    unit_sample_intervals, unit_aggr_intervals, intervals))
 
 def kvpairs_to_DamosAccessPattern(kv):
     try:
         min_nr_accesses = _damo_fmt_str.text_to_percent(kv['min_nr_accesses'])
         max_nr_accesses = _damo_fmt_str.text_to_percent(kv['max_nr_accesses'])
-        nr_accesses_unit = 'percent'
+        nr_accesses_unit = unit_percent
     except:
         min_nr_accesses, nr_accesses_unit = _damo_fmt_str.text_to_nr_unit(
                 kv['min_nr_accesses'])
@@ -303,7 +308,7 @@ def kvpairs_to_DamosAccessPattern(kv):
     try:
         min_age = _damo_fmt_str.text_to_us(kv['min_age'])
         max_age = _damo_fmt_str.text_to_us(kv['max_age'])
-        age_unit = 'usec'
+        age_unit = unit_usec
     except:
         min_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv['min_age'])
         max_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv['max_age'])
@@ -314,7 +319,7 @@ def kvpairs_to_DamosAccessPattern(kv):
 
 # every region.  could be used for monitoring
 default_DamosAccessPattern =  DamosAccessPattern(
-        'min', 'max', 'min', 'max', 'percent', 'min', 'max', 'usec')
+        'min', 'max', 'min', 'max', unit_percent, 'min', 'max', unit_usec)
 
 class DamosQuotas:
     time_ms = None
