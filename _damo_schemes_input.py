@@ -94,66 +94,52 @@ def damo_single_line_scheme_to_damos(line, name):
                 line)
 
     try:
-        min_sz = _damo_fmt_str.text_to_bytes(fields[0])
-        max_sz = _damo_fmt_str.text_to_bytes(fields[1])
-        min_nr_accesses = _damo_fmt_str.text_to_percent(fields[2])
-        max_nr_accesses = _damo_fmt_str.text_to_percent(fields[3])
-        nr_accesses_unit = _damon.unit_percent
-        min_age = _damo_fmt_str.text_to_us(fields[4])
-        max_age = _damo_fmt_str.text_to_us(fields[5])
-        age_unit = _damon.unit_usec
-        action_txt = fields[6].lower()
-        quota_ms = 0
-        quota_sz = 0
-        window_ms = _damo_fmt_str.ulong_max
-        weight_sz = 0
-        weight_nr_accesses = 0
-        weight_age = 0
-        wmarks_txt = 'none'
-        wmarks_interval = 0
-        wmarks_high = 0
-        wmarks_mid = 0
-        wmarks_low = 0
+        scheme = _damon.default_damos_scheme()
+        scheme.access_pattern = _damon.DamosAccessPattern(
+                min_sz_bytes = _damo_fmt_str.text_to_bytes(fields[0]),
+                max_sz_bytes = _damo_fmt_str.text_to_bytes(fields[1]),
+                min_nr_accesses = _damo_fmt_str.text_to_percent(fields[2]),
+                max_nr_accesses = _damo_fmt_str.text_to_percent(fields[3]),
+                nr_accesses_unit = _damon.unit_percent,
+                min_age = _damo_fmt_str.text_to_us(fields[4]),
+                max_age = _damo_fmt_str.text_to_us(fields[5]),
+                age_unit = _damon.unit_usec)
+        scheme.action = fields[6].lower()
         if len(fields) <= 17:
             if len(fields) >= 9:
-                quota_sz = _damo_fmt_str.text_to_bytes(fields[7])
-                window_ms = _damo_fmt_str.text_to_ms(fields[8])
+                scheme.quotas.sz_bytes = _damo_fmt_str.text_to_bytes(fields[7])
+                scheme.quotas.reset_interval_ms = _damo_fmt_str.text_to_ms(
+                        fields[8])
             if len(fields) >= 12:
-                weight_sz = int(fields[9])
-                weight_nr_accesses = int(fields[10])
-                weight_age = int(fields[11])
+                scheme.quotas.weight_sz_permil = int(fields[9])
+                scheme.quotas.weight_nr_accesses_permil = int(fields[10])
+                scheme.quotas.weight_age_permil = int(fields[11])
             if len(fields) == 17:
-                wmarks_txt = fields[12].lower()
-                wmarks_interval = _damo_fmt_str.text_to_us(fields[13])
-                wmarks_high = int(fields[14])
-                wmarks_mid = int(fields[15])
-                wmarks_low = int(fields[16])
+                scheme.watermarks.metric = fields[12].lower()
+                scheme.watermarks.interval_us = _damo_fmt_str.text_to_us(
+                        fields[13])
+                scheme.watermarks.high_permil = int(fields[14])
+                scheme.watermarks.mid_permil = int(fields[15])
+                scheme.watermarks.low_permil = int(fields[16])
         elif len(fields) == 18:
-            quota_ms = _damo_fmt_str.text_to_ms(fields[7])
-            quota_sz = _damo_fmt_str.text_to_bytes(fields[8])
-            window_ms = _damo_fmt_str.text_to_ms(fields[9])
-            weight_sz = int(fields[10])
-            weight_nr_accesses = int(fields[11])
-            weight_age = int(fields[12])
-            wmarks_txt = fields[13].lower()
-            wmarks_interval = _damo_fmt_str.text_to_us(fields[14])
-            wmarks_high = int(fields[15])
-            wmarks_mid = int(fields[16])
-            wmarks_low = int(fields[17])
-
+            scheme.quotas.time_ms = _damo_fmt_str.text_to_ms(fields[7])
+            scheme.quotas.sz_bytes = _damo_fmt_str.text_to_bytes(fields[8])
+            scheme.quotas.reset_interval_ms = _damo_fmt_str.text_to_ms(
+                    fields[9])
+            scheme.quotas.weight_sz_permil = int(fields[10])
+            scheme.quotas.weight_nr_accesses_permil = int(fields[11])
+            scheme.quotas.weight_age_permil = int(fields[12])
+            scheme.watermarks.metric = fields[13].lower()
+            scheme.watermarks.interval_us = _damo_fmt_str.text_to_us(
+                    fields[14])
+            scheme.watermarks.high_permil = int(fields[15])
+            scheme.watermarks.mid_permil = int(fields[16])
+            scheme.watermarks.low_permil = int(fields[17])
     except:
         return None, 'wrong input field'
 
-    return _damon.Damos(name, _damon.DamosAccessPattern(min_sz, max_sz,
-        min_nr_accesses, max_nr_accesses, nr_accesses_unit,
-        min_age, max_age, age_unit),
-        action_txt,
-        _damon.DamosQuotas(quota_ms, quota_sz, window_ms, weight_sz,
-            weight_nr_accesses, weight_age),
-        _damon.DamosWatermarks(wmarks_txt, wmarks_interval, wmarks_high,
-            wmarks_mid, wmarks_low),
-        [], # filters are not supported with single line damos
-        None), None
+
+    return scheme, None
 
 def damo_schemes_remove_comments(txt):
     return '\n'.join(
