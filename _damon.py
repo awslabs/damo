@@ -417,7 +417,7 @@ def kvpairs_to_DamosWatermarks(kv):
         ['metric', 'interval_us', 'high_permil', 'mid_permil', 'low_permil']])
 
 # no limit
-default_DamosWatermarks = DamosWatermarks('none', 0, 0, 0, 0)
+default_DamosWatermarks = DamosWatermarks(damos_wmarks_metric_none, 0, 0, 0, 0)
 
 class DamosFilter:
     name = None
@@ -601,7 +601,7 @@ def kvpairs_to_Damos(kv):
     return Damos(kv['name'],
             kvpairs_to_DamosAccessPattern(kv['access_pattern'])
                 if 'access_pattern' in kv else default_DamosAccessPattern,
-            kv['action'] if 'action' in kv else 'stat',
+            kv['action'] if 'action' in kv else damos_action_stat,
             kvpairs_to_DamosQuotas(kv['quotas'])
                 if 'quotas' in kv else default_DamosQuotas,
             kvpairs_to_DamosWatermarks(kv['watermarks'])
