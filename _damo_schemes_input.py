@@ -85,6 +85,61 @@ import _damon_dbgfs
 
 import _damo_fmt_str
 
+def fields_to_v0_scheme(fields):
+    scheme = _damon.default_damos_scheme()
+    scheme.access_pattern = _damon.DamosAccessPattern(
+            min_sz_bytes = _damo_fmt_str.text_to_bytes(fields[0]),
+            max_sz_bytes = _damo_fmt_str.text_to_bytes(fields[1]),
+            min_nr_accesses = _damo_fmt_str.text_to_percent(fields[2]),
+            max_nr_accesses = _damo_fmt_str.text_to_percent(fields[3]),
+            nr_accesses_unit = _damon.unit_percent,
+            min_age = _damo_fmt_str.text_to_us(fields[4]),
+            max_age = _damo_fmt_str.text_to_us(fields[5]),
+            age_unit = _damon.unit_usec)
+    scheme.action = fields[6].lower()
+    return scheme
+
+def fields_to_v1_scheme(fields):
+    scheme = fields_to_v0_scheme(fields)
+    scheme.quotas.sz_bytes = _damo_fmt_str.text_to_bytes(fields[7])
+    scheme.quotas.reset_interval_ms = _damo_fmt_str.text_to_ms(
+            fields[8])
+    return scheme
+
+def fields_to_v2_scheme(fields):
+    scheme = fields_to_v1_scheme(fields)
+    scheme.quotas.weight_sz_permil = int(fields[9])
+    scheme.quotas.weight_nr_accesses_permil = int(fields[10])
+    scheme.quotas.weight_age_permil = int(fields[11])
+    return scheme
+
+def fields_to_v3_scheme(fields):
+    scheme = fields_to_v2_scheme(fields)
+    scheme.watermarks.metric = fields[12].lower()
+    scheme.watermarks.interval_us = _damo_fmt_str.text_to_us(
+            fields[13])
+    scheme.watermarks.high_permil = int(fields[14])
+    scheme.watermarks.mid_permil = int(fields[15])
+    scheme.watermarks.low_permil = int(fields[16])
+    return scheme
+
+def fields_to_v4_scheme(fields):
+    scheme = fields_to_v0_scheme(fields)
+    scheme.quotas.time_ms = _damo_fmt_str.text_to_ms(fields[7])
+    scheme.quotas.sz_bytes = _damo_fmt_str.text_to_bytes(fields[8])
+    scheme.quotas.reset_interval_ms = _damo_fmt_str.text_to_ms(
+            fields[9])
+    scheme.quotas.weight_sz_permil = int(fields[10])
+    scheme.quotas.weight_nr_accesses_permil = int(fields[11])
+    scheme.quotas.weight_age_permil = int(fields[12])
+    scheme.watermarks.metric = fields[13].lower()
+    scheme.watermarks.interval_us = _damo_fmt_str.text_to_us(
+            fields[14])
+    scheme.watermarks.high_permil = int(fields[15])
+    scheme.watermarks.mid_permil = int(fields[16])
+    scheme.watermarks.low_permil = int(fields[17])
+    return scheme
+
 def damo_single_line_scheme_to_damos(line, name):
     '''Returns Damos object and err'''
     fields = line.split()
