@@ -119,11 +119,11 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     watermarks = damos.watermarks
 
     max_nr_accesses = intervals.aggr / intervals.sample
-    v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
+    v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%s' % (
             pattern.min_sz_bytes, pattern.max_sz_bytes,
             pattern.min_nr_accesses, pattern.max_nr_accesses,
             pattern.min_age, pattern.max_age,
-            damos_action_to_int[damos.action])
+            damos_action_to_file_input(damos.action))
     if scheme_version == 0:
         return v0_scheme
 
@@ -138,8 +138,8 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     if scheme_version == 2:
         return v2_scheme
 
-    v3_scheme = '%s\t%d\t%d\t%d\t%d\t%d' % (v2_scheme,
-            text_to_damos_wmark_metric(watermarks.metric),
+    v3_scheme = '%s\t%s\t%d\t%d\t%d\t%d' % (v2_scheme,
+            damos_wmarks_metric_to_file_input(watermarks.metric),
             watermarks.interval_us, watermarks.high_permil,
             watermarks.mid_permil, watermarks.low_permil)
     if scheme_version == 3:
@@ -148,7 +148,7 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     v4_scheme = '%s\t' % v0_scheme + '\t'.join('%d' % x for x in [quotas.time_ms,
         quotas.sz_bytes, quotas.reset_interval_ms, quotas.weight_sz_permil,
         quotas.weight_nr_accesses_permil, quotas.weight_age_permil,
-        text_to_damos_wmark_metric(watermarks.metric),
+        int(damos_wmarks_metric_to_file_input(watermarks.metric)),
         watermarks.interval_us, watermarks.high_permil, watermarks.mid_permil,
         watermarks.low_permil])
     if scheme_version == 4:
