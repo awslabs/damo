@@ -80,8 +80,13 @@ def get_scheme_version():
         scheme_version = 4
     return scheme_version
 
-damos_action_to_int = {'willneed': 0, 'cold': 1, 'pageout': 2, 'hugepage': 3,
-        'nohugepage': 4, 'stat': 5}
+damos_action_to_int = {
+        _damon.damos_action_willneed: 0,
+        _damon.damos_action_cold: 1,
+        _damon.damos_action_pageout: 2,
+        _damon.damos_action_hugepage: 3,
+        _damon.damos_action_nohugepage: 4,
+        _damon.damos_action_stat: 5}
 
 damos_wmark_metric_to_int = {'none': 0, 'free_mem_rate': 1}
 
@@ -198,8 +203,14 @@ def debugfs_output_to_damos(output, intervals_us):
     # convert ages in update_interval to us
     fields[4] = intervals_us.aggr * fields[4]
     fields[5] = intervals_us.aggr * fields[5]
-    action_map = {0: 'willneed', 1: 'cold', 2: 'pageout', 3: 'hugepage', 4:
-            'nohugepage', 5: 'stat', 6: 'lru_prio', 7: 'lru_deprio'}
+    action_map = {0: _damon.damos_action_willneed,
+            1: _damon.damos_action_cold,
+            2: _damon.damos_action_pageout,
+            3: _damon.damos_action_hugepage,
+            4: _damon.damos_action_nohugepage,
+            5: _damon.damos_action_stat,
+            6: _damon.damos_action_lru_prio,
+            7: _damon.damos_action_lru_deprio}
     fields[6] = action_map[fields[6]]
 
     wmarks_metric_map = {0: 'none', 1: 'free_mem_rate'}
