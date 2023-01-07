@@ -153,16 +153,6 @@ def damo_schemes_lines_except_comments(txt):
     return [l for l in txt.strip().split('\n')
             if not l.strip().startswith('#')]
 
-def damo_schemes_split(schemes):
-    raw_lines = schemes.split('\n')
-    clean_lines = []
-    for line in raw_lines:
-        line = line.strip()
-        if line == '':
-            continue
-        clean_lines.append(line)
-    return clean_lines
-
 def damo_schemes_to_damos(damo_schemes):
     if os.path.isfile(damo_schemes):
         with open(damo_schemes, 'r') as f:
