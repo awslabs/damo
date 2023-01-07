@@ -85,13 +85,6 @@ import _damon_dbgfs
 
 import _damo_fmt_str
 
-def text_nr_accesses_percent(txt):
-    if txt == 'min':
-        return 0.0
-    if txt == 'max':
-        return 100.0
-    return float(txt)
-
 def damo_single_line_scheme_to_damos(line, name):
     '''Returns Damos object and err'''
     fields = line.split()
