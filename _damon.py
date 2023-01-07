@@ -11,9 +11,6 @@ import os
 import time
 
 import _damo_fmt_str
-import _damo_fs
-import _damon_dbgfs
-import _damon_sysfs
 
 # Core data structures
 
@@ -753,6 +750,10 @@ def kvpairs_to_Kdamond(kv):
             kv['state'] if 'state' in kv else 'off',
             kv['pid'] if 'pid' in kv else None,
             [kvpairs_to_DamonCtx(c) for c in kv['contexts']])
+
+import _damo_fs
+import _damon_dbgfs
+import _damon_sysfs
 
 # System check
 
