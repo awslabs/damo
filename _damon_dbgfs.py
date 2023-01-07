@@ -88,7 +88,9 @@ damos_action_to_int = {
         _damon.damos_action_nohugepage: 4,
         _damon.damos_action_stat: 5}
 
-damos_wmark_metric_to_int = {'none': 0, 'free_mem_rate': 1}
+damos_wmark_metric_to_int = {
+        _damon.damos_wmarks_metric_none: 0,
+        _damon.damos_wmarks_metric_free_mem_rate: 1}
 
 def text_to_damos_wmark_metric(txt):
     return damos_wmark_metric_to_int[txt.lower()]
@@ -213,7 +215,8 @@ def debugfs_output_to_damos(output, intervals_us):
             7: _damon.damos_action_lru_deprio}
     fields[6] = action_map[fields[6]]
 
-    wmarks_metric_map = {0: 'none', 1: 'free_mem_rate'}
+    wmarks_metric_map = {0: _damon.damos_wmarks_metric_none,
+            1: _damon.damos_wmarks_metric_free_mem_rate}
     if len(fields) == 17:
         fields[12] = wmarks_metric_map[fields[12]]
     elif len(fields) == 18:
