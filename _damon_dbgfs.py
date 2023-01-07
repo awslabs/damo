@@ -92,6 +92,22 @@ damos_wmark_metric_to_int = {
         _damon.damos_wmarks_metric_none: 0,
         _damon.damos_wmarks_metric_free_mem_rate: 1}
 
+def damos_action_to_file_input(action_str):
+    return '%d' % damos_action_to_int[action_str]
+
+def damos_wmarks_metric_to_file_input(metric_str):
+    return '%d' % damos_wmark_metric_to_int[metric_str]
+
+def file_content_to_damos_action(action_file_content):
+    for action_str in damos_action_to_int:
+        if damos_action_to_int[action_str] == action_file_content:
+            return action_str
+
+def file_content_to_damos_wmarks_metric(metric_file_content):
+    for metric_str in damos_wmark_metric_to_int:
+        if damos_wmark_metric_to_int[metric_str] == metric_file_content:
+            return metric_str
+
 def text_to_damos_wmark_metric(txt):
     return damos_wmark_metric_to_int[txt.lower()]
 
