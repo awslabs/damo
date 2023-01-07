@@ -221,18 +221,8 @@ def debugfs_output_to_damos(output, intervals_us):
     # convert ages in update_interval to us
     fields[4] = intervals_us.aggr * fields[4]
     fields[5] = intervals_us.aggr * fields[5]
-    action_map = {0: _damon.damos_action_willneed,
-            1: _damon.damos_action_cold,
-            2: _damon.damos_action_pageout,
-            3: _damon.damos_action_hugepage,
-            4: _damon.damos_action_nohugepage,
-            5: _damon.damos_action_stat,
-            6: _damon.damos_action_lru_prio,
-            7: _damon.damos_action_lru_deprio}
     fields[6] = file_content_to_damos_action(fields[6])
 
-    wmarks_metric_map = {0: _damon.damos_wmarks_metric_none,
-            1: _damon.damos_wmarks_metric_free_mem_rate}
     if len(fields) == 17:
         fields[12] = file_content_to_damos_wmarks_metric(fields[12])
     elif len(fields) == 18:
