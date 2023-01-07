@@ -229,14 +229,14 @@ def debugfs_output_to_damos(output, intervals_us):
             5: _damon.damos_action_stat,
             6: _damon.damos_action_lru_prio,
             7: _damon.damos_action_lru_deprio}
-    fields[6] = action_map[fields[6]]
+    fields[6] = file_content_to_damos_action(fields[6])
 
     wmarks_metric_map = {0: _damon.damos_wmarks_metric_none,
             1: _damon.damos_wmarks_metric_free_mem_rate}
     if len(fields) == 17:
-        fields[12] = wmarks_metric_map[fields[12]]
+        fields[12] = file_content_to_damos_wmarks_metric(fields[12])
     elif len(fields) == 18:
-        fields[13] = wmarks_metric_map[fields[13]]
+        fields[13] = file_content_to_damos_wmarks_metric(fields[13])
 
     line = ' '.join('%s' % x for x in fields) # remove stats
     damos, err = _damo_schemes_input.damo_single_line_scheme_to_damos(
