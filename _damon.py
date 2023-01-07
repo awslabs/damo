@@ -509,6 +509,16 @@ class DamosTriedRegion:
     def __str__(self):
         return self.to_str(False)
 
+# TODO: check support of pageout and lru_(de)prio
+damos_action_wilneed = 'willneed'
+damos_action_cold = 'cold'
+damos_action_pageout = 'pageout'
+damos_action_hugepage = 'hugepage'
+damos_action_nohugepage = 'nohugepage'
+damos_action_lru_prio = 'lru_prio'
+damos_action_lru_deprio = 'lru_deprio'
+damos_action_stat = 'stat'
+
 class Damos:
     name = None
     access_pattern = None
