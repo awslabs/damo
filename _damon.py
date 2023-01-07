@@ -374,6 +374,9 @@ def kvpairs_to_DamosQuotas(kv):
 # no limit
 default_DamosQuotas = DamosQuotas(0, 0, 'max', 0, 0, 0)
 
+damos_wmarks_metric_none = 'none'
+damos_wmarks_metric_free_mem_rate = 'free_mem_rate'
+
 class DamosWatermarks:
     metric = None
     interval_us = None
@@ -510,7 +513,7 @@ class DamosTriedRegion:
         return self.to_str(False)
 
 # TODO: check support of pageout and lru_(de)prio
-damos_action_wilneed = 'willneed'
+damos_action_willneed = 'willneed'
 damos_action_cold = 'cold'
 damos_action_pageout = 'pageout'
 damos_action_hugepage = 'hugepage'
