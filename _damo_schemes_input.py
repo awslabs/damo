@@ -143,11 +143,6 @@ def fields_to_v4_scheme(fields):
 def damo_single_line_scheme_to_damos(line, name):
     '''Returns Damos object and err'''
     fields = line.split()
-    expected_lengths = [7, 9, 12, 17, 18]
-    if not len(fields) in expected_lengths:
-        return None, 'expected %s fields, but \'%s\'' % (expected_lengths,
-                line)
-
     try:
         if len(fields) == 7:
             return fields_to_v0_scheme(fields), None
@@ -159,6 +154,9 @@ def damo_single_line_scheme_to_damos(line, name):
             return fields_to_v3_scheme(fields), None
         elif len(fields) == 18:
             return fields_to_v4_scheme(fields), None
+        else:
+            return None, 'expected %s fields, but \'%s\'' % (
+                    [7, 9, 12, 17, 18], line)
     except:
         return None, 'wrong input field'
     return None, 'unsupported version of single line scheme'
