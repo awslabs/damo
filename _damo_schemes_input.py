@@ -149,10 +149,9 @@ def damo_single_line_scheme_to_damos(line, name):
         return None, 'wrong input field'
     return None, 'unsupported version of single line scheme'
 
-def damo_schemes_remove_comments(txt):
-    return '\n'.join(
-            [l for l in txt.strip().split('\n')
-                if not l.strip().startswith('#')])
+def damo_schemes_lines_except_comments(txt):
+    return [l for l in txt.strip().split('\n')
+            if not l.strip().startswith('#')]
 
 def damo_schemes_split(schemes):
     raw_lines = schemes.split('\n')
@@ -169,17 +168,20 @@ def damo_schemes_to_damos(damo_schemes):
         with open(damo_schemes, 'r') as f:
             damo_schemes = f.read()
 
-    damo_schemes = damo_schemes_remove_comments(damo_schemes)
+    damo_schemes_lines = damo_schemes_lines_except_comments(damo_schemes)
 
     try:
-        kvpairs = json.loads(damo_schemes)
+        kvpairs = json.loads('\n'.join(damo_schemes_lines))
         return [_damon.kvpairs_to_Damos(kv) for kv in kvpairs]
     except:
         # The input is not json file
         pass
 
     damos_list = []
-    for idx, line in enumerate(damo_schemes_split(damo_schemes)):
+    for idx, line in enumerate(damo_schemes_lines):
+        line = line.strip()
+        if line == '':
+            continue
         damos, err = damo_single_line_scheme_to_damos(line, '%d' % idx)
         if err != None:
             print('given scheme is neither file nor proper scheme string (%s)'
