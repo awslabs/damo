@@ -372,7 +372,7 @@ def kvpairs_to_DamosQuotas(kv):
             kv['weight_age_permil'])
 
 # no limit
-default_DamosQuotas = DamosQuotas(0, 0, 0, 0, 0, 0)
+default_DamosQuotas = DamosQuotas(0, 0, 'max', 0, 0, 0)
 
 class DamosWatermarks:
     metric = None
