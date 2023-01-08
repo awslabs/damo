@@ -254,5 +254,9 @@ class TestDamon(unittest.TestCase):
             self.assertEqual(type(converted.min_age), int)
             self.assertEqual(type(converted.max_age), int)
 
+    def test_damos_quotas(self):
+        self.assertEqual(_damon.DamosQuotas(),
+                _damon.DamosQuotas(0, 0, 'max', 0, 0, 0))
+
 if __name__ == '__main__':
     unittest.main()

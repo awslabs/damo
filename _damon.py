@@ -320,8 +320,9 @@ class DamosQuotas:
     weight_nr_accesses_permil = None
     weight_age_permil = None
 
-    def __init__(self, time_ms, sz_bytes, reset_interval_ms, weight_sz_permil,
-            weight_nr_accesses_permil, weight_age_permil):
+    def __init__(self, time_ms=0, sz_bytes=0, reset_interval_ms='max',
+            weight_sz_permil=0, weight_nr_accesses_permil=0,
+            weight_age_permil=0):
         self.time_ms = _damo_fmt_str.text_to_ms(time_ms)
         self.sz_bytes = _damo_fmt_str.text_to_bytes(sz_bytes)
         self.reset_interval_ms = _damo_fmt_str.text_to_ms(reset_interval_ms)
@@ -361,9 +362,6 @@ def kvpairs_to_DamosQuotas(kv):
     return DamosQuotas(kv['time_ms'], kv['sz_bytes'], kv['reset_interval_ms'],
             kv['weight_sz_permil'], kv['weight_nr_accesses_permil'],
             kv['weight_age_permil'])
-
-# no limit
-default_DamosQuotas = DamosQuotas(0, 0, 'max', 0, 0, 0)
 
 damos_wmarks_metric_none = 'none'
 damos_wmarks_metric_free_mem_rate = 'free_mem_rate'
@@ -597,7 +595,7 @@ def kvpairs_to_Damos(kv):
                 if 'access_pattern' in kv else DamosAccessPattern(),
             kv['action'] if 'action' in kv else damos_action_stat,
             kvpairs_to_DamosQuotas(kv['quotas'])
-                if 'quotas' in kv else default_DamosQuotas,
+                if 'quotas' in kv else DamosQuotas(),
             kvpairs_to_DamosWatermarks(kv['watermarks'])
                 if 'watermarks' in kv else default_DamosWatermarks,
             filters,
