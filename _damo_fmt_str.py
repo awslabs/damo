@@ -272,6 +272,10 @@ def text_to_ratio(txt):
 def text_to_percent(txt):
     if type(txt) in number_types:
         return txt
+    try:
+        return float(txt)
+    except:
+        pass
 
     return text_to_ratio(txt) * 100
 
