@@ -218,6 +218,11 @@ class TestDamon(unittest.TestCase):
                 {'rfile_buf': 4096, 'rfile_path': '/root/damon.data'})
 
     def test_damos_access_pattern(self):
+        self.assertEqual(_damon.DamosAccessPattern(),
+                _damon.DamosAccessPattern('min', 'max',
+                    'min', 'max', _damon.unit_percent,
+                    'min', 'max', _damon.unit_usec))
+
         intervals = _damon.DamonIntervals(5000, 100000, 1000000)
         pattern_human = _damon.DamosAccessPattern(123, 456,
                 15, 35, _damon.unit_percent,

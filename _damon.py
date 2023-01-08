@@ -152,9 +152,11 @@ class DamosAccessPattern:
     max_age = None
     age_unit = None #  unit_{usec,aggr_intervals}
 
-    def __init__(self, min_sz_bytes, max_sz_bytes,
-            min_nr_accesses, max_nr_accesses, nr_accesses_unit,
-            min_age, max_age, age_unit):
+    # every region by default, so that it can be used for monitoring
+    def __init__(self, min_sz_bytes='min', max_sz_bytes='max',
+            min_nr_accesses='min', max_nr_accesses='max',
+            nr_accesses_unit=unit_percent,
+            min_age='min', max_age='max', age_unit=unit_usec):
         self.min_sz_bytes = _damo_fmt_str.text_to_bytes(min_sz_bytes)
         self.max_sz_bytes = _damo_fmt_str.text_to_bytes(max_sz_bytes)
 
@@ -309,10 +311,6 @@ def kvpairs_to_DamosAccessPattern(kv):
     return DamosAccessPattern(_damo_fmt_str.text_to_bytes(kv['min_sz_bytes']),
             _damo_fmt_str.text_to_bytes(kv['max_sz_bytes']), min_nr_accesses,
             max_nr_accesses, nr_accesses_unit, min_age, max_age, age_unit)
-
-# every region.  could be used for monitoring
-default_DamosAccessPattern =  DamosAccessPattern(
-        'min', 'max', 'min', 'max', unit_percent, 'min', 'max', unit_usec)
 
 class DamosQuotas:
     time_ms = None
@@ -596,7 +594,7 @@ def kvpairs_to_Damos(kv):
             filters.append(kvpairs_to_DamosFilter(damos_filter_kv))
     return Damos(kv['name'],
             kvpairs_to_DamosAccessPattern(kv['access_pattern'])
-                if 'access_pattern' in kv else default_DamosAccessPattern,
+                if 'access_pattern' in kv else DamosAccessPattern(),
             kv['action'] if 'action' in kv else damos_action_stat,
             kvpairs_to_DamosQuotas(kv['quotas'])
                 if 'quotas' in kv else default_DamosQuotas,
