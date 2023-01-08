@@ -48,8 +48,6 @@ def kvpairs_to_DamonIntervals(kvpairs):
     return DamonIntervals(
             kvpairs['sample'], kvpairs['aggr'], kvpairs['ops_update'])
 
-default_DamonIntervals = DamonIntervals(5000, 100000, 1000000)
-
 class DamonNrRegionsRange:
     min_nr_regions = None
     max_nr_regions = None
@@ -695,7 +693,7 @@ class DamonCtx:
 def kvpairs_to_DamonCtx(kv):
     ctx = DamonCtx(kv['name'],
             kvpairs_to_DamonIntervals(kv['intervals'])
-                if 'intervals' in kv else default_DamonIntervals,
+                if 'intervals' in kv else DamonIntervals(),
             kvpairs_to_DamonNrRegionsRange(kv['nr_regions'])
                 if 'nr_regions' in kv else default_DamonNrRegionsRange,
             kv['ops'],
