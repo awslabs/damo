@@ -252,17 +252,28 @@ def text_to_sec(txt):
         return ulong_max
     return text_to_ms(txt) / 1000
 
-def text_to_percent(txt):
+def text_to_ratio(txt):
     if type(txt) in number_types:
         return txt
 
     if txt == 'min':
         return 0.0
     if txt == 'max':
-        return 100.0
+        return 1.0
+    is_percent = False
     if txt[-1] == '%':
+        is_percent = True
         txt = txt[:-1]
-    return float(text_to_nr(txt))
+    ratio = float(text_to_nr(txt))
+    if is_percent:
+        ratio /= 100
+    return ratio
+
+def text_to_percent(txt):
+    if type(txt) in number_types:
+        return txt
+
+    return text_to_ratio(txt) * 100
 
 def text_to_nr(txt):
     if type(txt) in number_types:
