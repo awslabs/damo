@@ -113,6 +113,9 @@ class TestDamon(unittest.TestCase):
                 default_damon_intervals))
 
     def test_damon_intervals(self):
+        self.assertEqual(_damon.DamonIntervals(),
+                _damon.DamonIntervals(5000, 100000, 1000000))
+
         _test_damo_common.test_input_expects(self,
                 lambda x: _damon.kvpairs_to_DamonIntervals(json.loads(x)),
                 {
