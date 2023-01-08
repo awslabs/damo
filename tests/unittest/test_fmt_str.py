@@ -102,6 +102,7 @@ class TestDamoFmtStr(unittest.TestCase):
                 _damo_fmt_str.text_to_percent,
                 {'10%': 10.0,
                     12.34: 12.34,
+                    '12.34': 12.34,
                     '12.34%': 12.34,
                     '12.34 %': 12.34,
                     '1,234.567 %': 1234.567,
