@@ -101,10 +101,21 @@ class TestDamoFmtStr(unittest.TestCase):
         _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_percent,
                 {'10%': 10.0,
+                    12.34: 12.34,
                     '12.34%': 12.34,
                     '12.34 %': 12.34,
                     '1,234.567 %': 1234.567,
                     '1,234.567,89 %': 1234.56789})
+
+    def test_text_to_ratio(self):
+        _test_damo_common.test_input_expects(self,
+                _damo_fmt_str.text_to_ratio,
+                {'10%': 0.1,
+                    '12.34%': 0.1234,
+                    '200%': 2.0,
+                    0.5: 0.5,
+                    '1,234.567 %': 12.34567,
+                    '1,234.56': 1234.56})
 
     def test_text_to_bytes(self):
         _test_damo_common.test_input_expects(self, _damo_fmt_str.text_to_bytes,
