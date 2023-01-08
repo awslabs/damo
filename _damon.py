@@ -52,7 +52,7 @@ class DamonNrRegionsRange:
     min_nr_regions = None
     max_nr_regions = None
 
-    def __init__(self, min_, max_):
+    def __init__(self, min_=10, max_=1000):
         self.min_nr_regions = _damo_fmt_str.text_to_nr(min_)
         self.max_nr_regions = _damo_fmt_str.text_to_nr(max_)
 
@@ -78,8 +78,6 @@ class DamonNrRegionsRange:
 def kvpairs_to_DamonNrRegionsRange(kvpairs):
     return DamonNrRegionsRange(
             kvpairs['min_nr_regions'], kvpairs['max_nr_regions'])
-
-default_DamonNrRegionsRange = DamonNrRegionsRange(10, 1000)
 
 class DamonRegion:
     # [star, end)
@@ -695,7 +693,7 @@ def kvpairs_to_DamonCtx(kv):
             kvpairs_to_DamonIntervals(kv['intervals'])
                 if 'intervals' in kv else DamonIntervals(),
             kvpairs_to_DamonNrRegionsRange(kv['nr_regions'])
-                if 'nr_regions' in kv else default_DamonNrRegionsRange,
+                if 'nr_regions' in kv else DAmonNrRegionsRange(),
             kv['ops'],
             [kvpairs_to_DamonTarget(t) for t in kv['targets']],
             [kvpairs_to_Damos(s) for s in kv['schemes']]
