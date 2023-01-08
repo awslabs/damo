@@ -91,6 +91,11 @@ class TestDamoFmtStr(unittest.TestCase):
                 {
                     '134': 134,
                     'max': _damo_fmt_str.ulong_max})
+        _test_damo_common.test_input_expects(self,
+                _damo_fmt_str.text_to_sec,
+                {
+                    '134': 134,
+                    'max': _damo_fmt_str.ulong_max})
 
     def test_text_to_percent(self):
         _test_damo_common.test_input_expects(self,

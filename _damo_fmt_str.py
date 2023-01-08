@@ -135,6 +135,12 @@ def format_time_ms(time_ms, machine_friendly):
 
     return format_time_ns(time_ms * 1000000, machine_friendly)
 
+def format_time_sec(time_sec, machine_friendly):
+    if machine_friendly:
+        return '%d' % time_sec
+
+    return format_time_ns(time_sec * 1000000000, machine_friendly)
+
 def indent_lines(string, indent_width):
     return '\n'.join([' ' * indent_width + l for l in string.split('\n')])
 
@@ -233,6 +239,18 @@ def text_to_ms(txt):
     if txt == 'max':
         return ulong_max
     return int(text_to_us(txt) / 1000)
+
+def text_to_sec(txt):
+    if type(txt) in number_types:
+        return txt
+    try:
+        return float(txt)
+    except:
+        pass
+
+    if txt == 'max':
+        return ulong_max
+    return int(text_to_ms(txt) / 1000)
 
 def text_to_percent(txt):
     if type(txt) in number_types:
