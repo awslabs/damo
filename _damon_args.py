@@ -172,7 +172,7 @@ def set_explicit_target_argparser(parser):
             help='monitoring operations set')
     parser.add_argument('--target_pid', type=int, help='target pid')
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
-	    default=json.dumps([_damon.default_Damos.to_kvpairs()], indent=4), type=str,
+	    default=json.dumps([_damon.Damos().to_kvpairs()], indent=4),
 	    help='data access monitoring-based operation schemes')
     parser.add_argument('--kdamonds', metavar='<string or file>',
             help='key-value pairs format kdamonds config')

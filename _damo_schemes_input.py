@@ -86,7 +86,7 @@ import _damon_dbgfs
 import _damo_fmt_str
 
 def fields_to_v0_scheme(fields):
-    scheme = _damon.default_damos_scheme()
+    scheme = _damon.Damos()
     scheme.access_pattern = _damon.DamosAccessPattern(
             min_sz_bytes = _damo_fmt_str.text_to_bytes(fields[0]),
             max_sz_bytes = _damo_fmt_str.text_to_bytes(fields[1]),

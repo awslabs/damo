@@ -96,12 +96,11 @@ class TestDamon(unittest.TestCase):
 
     def test_is_monitoring_scheme(self):
         default_damon_intervals = _damon.DamonIntervals()
-        self.assertTrue(_damon.is_monitoring_scheme(_damon.monitoring_scheme,
-            default_damon_intervals))
-        self.assertTrue(_damon.is_monitoring_scheme(_damon.default_Damos,
+        default_scheme = _damon.Damos()
+        self.assertTrue(_damon.is_monitoring_scheme(default_scheme,
             default_damon_intervals))
 
-        copied = copy.deepcopy(_damon.monitoring_scheme)
+        copied = copy.deepcopy(default_scheme)
         copied.name = 'foo'
         self.assertTrue(_damon.is_monitoring_scheme(copied,
             default_damon_intervals))

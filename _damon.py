@@ -520,8 +520,11 @@ class Damos:
     stats = None
     tried_regions = None
 
-    def __init__(self, name, access_pattern, action, quotas, watermarks,
-            filters, stats, tried_regions=None):
+    # for monitoring only by default
+    def __init__(self, name='0', access_pattern=DamosAccessPattern(),
+            action=damos_action_stat, quotas=DamosQuotas(),
+            watermarks=DamosWatermarks(), filters=[], stats=None,
+            tried_regions=None):
         self.name = name
         self.access_pattern = access_pattern
         self.action = action
@@ -600,14 +603,8 @@ def kvpairs_to_Damos(kv):
             filters,
             None, None)
 
-monitoring_scheme = kvpairs_to_Damos({'name': '0'})
-default_Damos = monitoring_scheme
-
-def default_damos_scheme():
-    return copy.deepcopy(default_Damos)
-
 def is_monitoring_scheme(scheme, intervals):
-    return monitoring_scheme.effectively_equal(scheme, intervals)
+    return Damos().effectively_equal(scheme, intervals)
 
 class DamonRecord:
     rfile_buf = None

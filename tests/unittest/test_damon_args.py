@@ -55,7 +55,7 @@ class TestDamonArgs(unittest.TestCase):
                 _damon.DamonNrRegionsRange(10, 1000), 'paddr',
                 [_damon.DamonTarget('0', None,
                     [_damon.DamonRegion(1024, 4096)])],
-                [_damon.default_Damos]))
+                [_damon.Damos()]))
 
 if __name__ == '__main__':
     unittest.main()
