@@ -19,7 +19,7 @@ class DamonIntervals:
     aggr = None
     ops_update = None
 
-    def __init__(self, sample, aggr, ops_update):
+    def __init__(self, sample='5ms', aggr='100ms', ops_update='1s'):
         self.sample = _damo_fmt_str.text_to_us(sample)
         self.aggr = _damo_fmt_str.text_to_us(aggr)
         self.ops_update = _damo_fmt_str.text_to_us(ops_update)
