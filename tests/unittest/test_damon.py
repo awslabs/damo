@@ -141,6 +141,9 @@ class TestDamon(unittest.TestCase):
                 {'sample': '5000', 'aggr': '100000', 'ops_update': '1000000'})
 
     def test_damon_nr_regions_range(self):
+        self.assertEqual(_damon.DamonNrRegionsRange(),
+                _damon.DamonNrRegionsRange(10, 1000))
+
         expect = _damon.DamonNrRegionsRange(10, 1000)
         _test_damo_common.test_input_expects(self,
                 lambda x: _damon.DamonNrRegionsRange(*x),
