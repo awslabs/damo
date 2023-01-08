@@ -373,7 +373,9 @@ class DamosWatermarks:
     mid_permil = None
     low_permil = None
 
-    def __init__(self, metric, interval_us, high, mid, low):
+    # no limit by default
+    def __init__(self, metric=damos_wmarks_metric_none, interval_us=0,
+            high=0, mid=0, low=0):
         # 'none' or 'free_mem_rate'
         self.metric = metric
         self.interval_us = _damo_fmt_str.text_to_us(interval_us)
@@ -407,9 +409,6 @@ class DamosWatermarks:
 def kvpairs_to_DamosWatermarks(kv):
     return DamosWatermarks(*[kv[x] for x in
         ['metric', 'interval_us', 'high_permil', 'mid_permil', 'low_permil']])
-
-# no limit
-default_DamosWatermarks = DamosWatermarks(damos_wmarks_metric_none, 0, 0, 0, 0)
 
 class DamosFilter:
     name = None
@@ -597,7 +596,7 @@ def kvpairs_to_Damos(kv):
             kvpairs_to_DamosQuotas(kv['quotas'])
                 if 'quotas' in kv else DamosQuotas(),
             kvpairs_to_DamosWatermarks(kv['watermarks'])
-                if 'watermarks' in kv else default_DamosWatermarks,
+                if 'watermarks' in kv else DamosWatermarks(),
             filters,
             None, None)
 

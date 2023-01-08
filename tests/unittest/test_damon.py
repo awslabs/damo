@@ -258,5 +258,10 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(_damon.DamosQuotas(),
                 _damon.DamosQuotas(0, 0, 'max', 0, 0, 0))
 
+    def test_damos_watermarks(self):
+        self.assertEqual(_damon.DamosWatermarks(),
+                _damon.DamosWatermarks(_damon.damos_wmarks_metric_none,
+                    0, 0, 0, 0))
+
 if __name__ == '__main__':
     unittest.main()
