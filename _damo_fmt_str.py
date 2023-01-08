@@ -238,7 +238,7 @@ def text_to_ms(txt):
 
     if txt == 'max':
         return ulong_max
-    return int(text_to_us(txt) / 1000)
+    return text_to_us(txt) / 1000
 
 def text_to_sec(txt):
     if type(txt) in number_types:
@@ -250,7 +250,7 @@ def text_to_sec(txt):
 
     if txt == 'max':
         return ulong_max
-    return int(text_to_ms(txt) / 1000)
+    return text_to_ms(txt) / 1000
 
 def text_to_percent(txt):
     if type(txt) in number_types:
