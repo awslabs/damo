@@ -93,6 +93,9 @@ def format_time_ns(time_ns, machine_friendly):
         return '%d' % time_ns
 
     time_ns = float(time_ns)
+    if time_ns >= ulong_max:
+        return 'max'
+
     if time_ns >= hour_ns:
         hour = int(time_ns / hour_ns)
         hour_str = '%d h' % hour
