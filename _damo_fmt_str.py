@@ -291,6 +291,15 @@ def text_to_ratio(txt):
         ratio /= 100
     return ratio
 
+def text_to_permil(txt):
+    if type(txt) in number_types:
+        return txt
+    try:
+        return float(txt)
+    except: pass
+
+    return text_to_ratio(txt) * 1000
+
 def text_to_percent(txt):
     if type(txt) in number_types:
         return txt
