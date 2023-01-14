@@ -338,9 +338,11 @@ class DamosQuotas:
                 _damo_fmt_str.format_sz(self.time_ms * 1000000, raw),
                 _damo_fmt_str.format_time_ns(self.sz_bytes, raw),
                 _damo_fmt_str.format_time_ms(self.reset_interval_ms, raw)),
-            'priority: sz %d permil, nr_accesses %d permil, age %d permil' % (
-                self.weight_sz_permil, self.weight_nr_accesses_permil,
-                self.weight_age_permil),
+            'priority: sz %s, nr_accesses %s, age %s' % (
+                _damo_fmt_str.format_permil(self.weight_sz_permil, raw),
+                _damo_fmt_str.format_permil(
+                    self.weight_nr_accesses_permil, raw),
+                _damo_fmt_str.format_permil(self.weight_age_permil, raw)),
             ])
 
     def __str__(self):
