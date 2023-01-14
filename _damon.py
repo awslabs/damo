@@ -321,14 +321,16 @@ class DamosQuotas:
     weight_age_permil = None
 
     def __init__(self, time_ms=0, sz_bytes=0, reset_interval_ms='max',
-            weight_sz_permil=0, weight_nr_accesses_permil=0,
-            weight_age_permil=0):
+            weight_sz_permil='0 %', weight_nr_accesses_permil='0 %',
+            weight_age_permil='0 %'):
         self.time_ms = _damo_fmt_str.text_to_ms(time_ms)
         self.sz_bytes = _damo_fmt_str.text_to_bytes(sz_bytes)
         self.reset_interval_ms = _damo_fmt_str.text_to_ms(reset_interval_ms)
-        self.weight_sz_permil = weight_sz_permil
-        self.weight_nr_accesses_permil = weight_nr_accesses_permil
-        self.weight_age_permil = weight_age_permil
+        self.weight_sz_permil = _damo_fmt_str.text_to_permil(weight_sz_permil)
+        self.weight_nr_accesses_permil = _damo_fmt_str.text_to_permil(
+                weight_nr_accesses_permil)
+        self.weight_age_permil = _damo_fmt_str.text_to_permil(
+                weight_age_permil)
 
     def to_str(self, raw):
         return '\n'.join([
@@ -358,9 +360,12 @@ class DamosQuotas:
             ('sz_bytes', _damo_fmt_str.format_sz(self.sz_bytes, raw)),
             ('reset_interval_ms', _damo_fmt_str.format_time_ms_exact(
                 self.reset_interval_ms, raw)),
-            ('weight_sz_permil', self.weight_sz_permil),
-            ('weight_nr_accesses_permil', self.weight_nr_accesses_permil),
-            ('weight_age_permil', self.weight_age_permil),
+            ('weight_sz_permil',
+                _damo_fmt_str.format_permil(self.weight_sz_permil, raw)),
+            ('weight_nr_accesses_permil', _damo_fmt_str.format_permil(
+                self.weight_nr_accesses_permil, raw)),
+            ('weight_age_permil',
+                _damo_fmt_str.format_permil(self.weight_age_permil, raw)),
             ])
 
 def kvpairs_to_DamosQuotas(kv):
