@@ -82,6 +82,21 @@ class TestDamoFmtStr(unittest.TestCase):
                     0.0000000001: '0 %',
                     })
 
+    def test_format_permil(self):
+        _test_damo_common.test_input_expects(self,
+                lambda x: _damo_fmt_str.format_permil(x, False),
+                {
+                    123000: '12,300 %',
+                    123123.0001: '12,312.30001 %',
+                    100: '10 %',
+                    1: '0.1 %',
+                    0.1: '0.01 %',
+                    0.01: '0.001 %',
+                    0.001: '0.0001 %',
+                    0.000001: '0.0000001 %',
+                    0.0000001: '0 %',
+                    })
+
 
     def test_text_to_time(self):
         _test_damo_common.test_input_expects(self,
