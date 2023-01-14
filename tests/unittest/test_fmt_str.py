@@ -67,6 +67,22 @@ class TestDamoFmtStr(unittest.TestCase):
                     _damo_fmt_str.format_time_ms]:
                 self.assertEqual(func(input_, True), '%s' % input_)
 
+    def test_format_ratio(self):
+        _test_damo_common.test_input_expects(self,
+                lambda x: _damo_fmt_str.format_ratio(x, False),
+                {
+                    123: '12,300 %',
+                    123.1230001: '12,312.30001 %',
+                    0.1: '10 %',
+                    0.001: '0.1 %',
+                    0.0001: '0.01 %',
+                    0.00001: '0.001 %',
+                    0.000001: '0.0001 %',
+                    0.000000001: '0.0000001 %',
+                    0.0000000001: '0 %',
+                    })
+
+
     def test_text_to_time(self):
         _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_ns,
