@@ -58,7 +58,9 @@ class TestDamoFmtStr(unittest.TestCase):
                     59 * sec_ns + 123 * msec_ns:
                     ['3 d 2 h 1 m 59 s 123 ms', '74 h 1 m 59.123 s'],
                     3 * day_ns + 2 * hour_ns: ['3 d 2 h', '74 h'],
-                    1234 * day_ns + 2 * hour_ns: ['1,234 d 2 h', '29618 h']})
+                    1234 * day_ns + 2 * hour_ns: ['1,234 d 2 h', '29618 h'],
+                    _damo_fmt_str.ulong_max: ['max', 'max'],
+                    })
 
         for input_ in [123, 1234, 12345, 123456]:
             for func in [_damo_fmt_str.format_time_us,
