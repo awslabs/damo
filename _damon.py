@@ -391,14 +391,16 @@ class DamosWatermarks:
         # 'none' or 'free_mem_rate'
         self.metric = metric
         self.interval_us = _damo_fmt_str.text_to_us(interval_us)
-        self.high_permil = _damo_fmt_str.text_to_percent(high)
-        self.mid_permil = _damo_fmt_str.text_to_percent(mid)
-        self.low_permil = _damo_fmt_str.text_to_percent(low)
+        self.high_permil = _damo_fmt_str.text_to_permil(high)
+        self.mid_permil = _damo_fmt_str.text_to_permil(mid)
+        self.low_permil = _damo_fmt_str.text_to_permil(low)
 
     def to_str(self, raw):
         return '\n'.join([
-            '%s/%s/%s permil' % (self.high_permil, self.mid_permil,
-                self.low_permil),
+            '%s/%s/%s' % (
+                _damo_fmt_str.format_permil(self.high_permil, raw),
+                _damo_fmt_str.format_permil(self.mid_permil, raw),
+                _damo_fmt_str.format_permil(self.low_permil, raw)),
             'metric %s, interval %s' % (self.metric,
                 _damo_fmt_str.format_time_us(self.interval_us, raw))
             ])
