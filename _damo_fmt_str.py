@@ -163,6 +163,12 @@ def format_ratio(ratio, machine_friendly):
         return '%s %%' % over_percent_str
     return '%s.%s %%' % (over_percent_str, under_percent_str)
 
+def format_permil(permil, machine_friendly):
+    if machine_friendly:
+        return '%f' % ratio
+
+    return format_ratio(float(permil) / 1000, machine_friendly)
+
 def indent_lines(string, indent_width):
     return '\n'.join([' ' * indent_width + l for l in string.split('\n')])
 
