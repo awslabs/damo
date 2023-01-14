@@ -88,6 +88,9 @@ def format_time_ns_exact(time_ns, machine_friendly):
 def format_time_us_exact(time_us, machine_friendly):
     return format_time_ns_exact(time_us * us_ns, machine_friendly)
 
+def format_time_ms_exact(time_ms, machine_friendly):
+    return format_time_ns_exact(time_ms * ms_ns, machine_friendly)
+
 def format_time_ns(time_ns, machine_friendly):
     if machine_friendly:
         return '%d' % time_ns
