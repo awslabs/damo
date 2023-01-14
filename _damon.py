@@ -354,9 +354,14 @@ class DamosQuotas:
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
-            (attr, getattr(self, attr)) for attr in
-            ['time_ms', 'sz_bytes', 'reset_interval_ms', 'weight_sz_permil',
-                'weight_nr_accesses_permil', 'weight_age_permil']])
+            ('time_ms', _damo_fmt_str.format_time_ms_exact(self.time_ms, raw)),
+            ('sz_bytes', _damo_fmt_str.format_sz(self.sz_bytes, raw)),
+            ('reset_interval_ms', _damo_fmt_str.format_time_ms_exact(
+                self.reset_interval_ms, raw)),
+            ('weight_sz_permil', self.weight_sz_permil),
+            ('weight_nr_accesses_permil', self.weight_nr_accesses_permil),
+            ('weight_age_permil', self.weight_age_permil),
+            ])
 
 def kvpairs_to_DamosQuotas(kv):
     return DamosQuotas(kv['time_ms'], kv['sz_bytes'], kv['reset_interval_ms'],
