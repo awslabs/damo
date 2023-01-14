@@ -406,10 +406,14 @@ class DamosWatermarks:
                 self.low_permil == other.low_permil)
 
     def to_kvpairs(self, raw=False):
-        return collections.OrderedDict(
-                [(attr, getattr(self, attr)) for attr in [
-                    'metric', 'interval_us', 'high_permil', 'mid_permil',
-                    'low_permil']])
+        return collections.OrderedDict([
+                ('metric', self.metric),
+                ('interval_us', _damo_fmt_str.format_time_us_exact(
+                    self.interval_us, raw)),
+                ('high_permil', self.high_permil),
+                ('mid_permil', self.mid_permil),
+                ('low_permil', self.low_permil),
+                ])
 
 def kvpairs_to_DamosWatermarks(kv):
     return DamosWatermarks(*[kv[x] for x in
