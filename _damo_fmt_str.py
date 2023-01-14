@@ -147,6 +147,22 @@ def format_time_sec(time_sec, machine_friendly):
 
     return format_time_ns(time_sec * 1000000000, machine_friendly)
 
+def format_ratio(ratio, machine_friendly):
+    if machine_friendly:
+        return '%f' % ratio
+
+    over_percent = int(ratio * 100)
+    over_percent_str = format_nr(over_percent, machine_friendly)
+
+    under_percent = ratio * 100 % 1
+    under_percent_str = ('%.7f' % under_percent).rstrip('0')
+    # cut '0.' prefix
+    under_percent_str = under_percent_str[2:]
+
+    if under_percent_str == '':
+        return '%s %%' % over_percent_str
+    return '%s.%s %%' % (over_percent_str, under_percent_str)
+
 def indent_lines(string, indent_width):
     return '\n'.join([' ' * indent_width + l for l in string.split('\n')])
 
