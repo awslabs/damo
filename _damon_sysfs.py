@@ -362,7 +362,10 @@ def files_content_to_damos_stats(files_content):
 
 def files_content_to_damos_tried_regions(files_content):
     regions = []
-    for i in range(len(files_content)):
+    nr_region_dirs = len(files_content)
+    if 'sz_regions_sum' in files_content:
+        nr_region_dirs -= 1
+    for i in range(nr_region_dirs):
         regions.append(_damon.DamosTriedRegion(
             int(files_content['%d' % i]['start']),
             int(files_content['%d' % i]['end']),
