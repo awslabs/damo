@@ -870,20 +870,15 @@ def any_kdamond_running():
 def every_kdamond_turned_off():
     return not any_kdamond_running()
 
-def __wait_current_kdamonds_turned(on_off):
-    # on_off should be 'on' or 'off'
-    for kd_name in current_kdamond_names():
-        running = is_kdamond_running(kd_name)
-        while (on_off == 'on' and not running) or (
-                on_off == 'off' and running):
-            time.sleep(1)
-            running = is_kdamond_running(kd_name)
-
 def wait_current_kdamonds_turned_on():
-    __wait_current_kdamonds_turned('on')
+    for kd_name in current_kdamond_names():
+        while not is_kdamond_running(kd_name):
+            time.sleep(1)
 
 def wait_current_kdamonds_turned_off():
-    __wait_current_kdamonds_turned('off')
+    for kd_name in current_kdamond_names():
+        while is_kdamond_running(kd_name):
+            time.sleep(1)
 
 # DAMON control
 
