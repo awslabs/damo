@@ -12,10 +12,7 @@ def main():
     args = parser.parse_args()
 
     _damon.ensure_root_permission()
-    err = _damon.ensure_initialized(args)
-    if err != None:
-        print(err)
-        exit(1)
+    _damon.ensure_initialized(args)
 
     kdamonds = _damon_args.kdamonds_from_damon_args(args)
     kvpairs = [k.to_kvpairs() for k in kdamonds]
