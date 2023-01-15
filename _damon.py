@@ -825,6 +825,10 @@ def ensure_initialized(args):
         exit(1)
     initialized = True
 
+def ensure_root_and_initialized(args):
+    ensure_root_permission()
+    ensure_initialized(args)
+
 def damon_interface():
     if _damon_fs == _damon_sysfs:
         return 'sysfs'
