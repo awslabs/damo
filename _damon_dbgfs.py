@@ -41,13 +41,6 @@ def update_schemes_stats(kdamond_names):
 
 # for apply_kdamonds
 
-def attr_str_ctx(damon_ctx):
-    intervals = damon_ctx.intervals
-    nr_regions = damon_ctx.nr_regions
-    return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
-            intervals.ops_update, nr_regions.min_nr_regions,
-            nr_regions.max_nr_regions)
-
 def wops_for_target(target, target_has_pid):
     wops = []
     if target_has_pid:
@@ -67,18 +60,6 @@ def wops_for_target(target, target_has_pid):
             target.regions])
         wops.append({debugfs_init_regions: string})
     return wops
-
-def get_scheme_version():
-    scheme_version = 0
-    if feature_supported('schemes_speed_limit'):
-        scheme_version = 1
-    if feature_supported('schemes_prioritization'):
-        scheme_version = 2
-    if feature_supported('schemes_wmarks'):
-        scheme_version = 3
-    if feature_supported('schemes_quotas'):
-        scheme_version = 4
-    return scheme_version
 
 damos_action_to_int = {
         _damon.damos_action_willneed: 0,
@@ -154,6 +135,18 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     print('Unsupported scheme version: %d' % scheme_version)
     exit(1)
 
+def get_scheme_version():
+    scheme_version = 0
+    if feature_supported('schemes_speed_limit'):
+        scheme_version = 1
+    if feature_supported('schemes_prioritization'):
+        scheme_version = 2
+    if feature_supported('schemes_wmarks'):
+        scheme_version = 3
+    if feature_supported('schemes_quotas'):
+        scheme_version = 4
+    return scheme_version
+
 def wops_for_schemes(schemes, intervals):
     scheme_file_input_lines = []
     for scheme in schemes:
@@ -163,6 +156,13 @@ def wops_for_schemes(schemes, intervals):
     if scheme_file_input == '':
         scheme_file_input = '\n'
     return [{debugfs_schemes: scheme_file_input}]
+
+def attr_str_ctx(damon_ctx):
+    intervals = damon_ctx.intervals
+    nr_regions = damon_ctx.nr_regions
+    return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
+            intervals.ops_update, nr_regions.min_nr_regions,
+            nr_regions.max_nr_regions)
 
 def wops_for_kdamonds(kdamonds):
     if len(kdamonds) > 1:
