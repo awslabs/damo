@@ -470,9 +470,8 @@ def commit_inputs(kdamonds):
     for kdamond in kdamonds:
         err = _damo_fs.write_file(state_file_of(kdamond.name), 'commit')
         if err != None:
-            print(err)
-            return 1
-    return 0
+            return err
+    return None
 
 # features
 
