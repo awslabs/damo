@@ -22,8 +22,11 @@ debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
 debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
 debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
-def turn_damon(on_off, kdamonds_names):
-    return _damo_fs.write_files({debugfs_monitor_on: on_off})
+def turn_damon_on(kdamonds_names):
+    return _damo_fs.write_files({debugfs_monitor_on: 'on'})
+
+def turn_damon_off(kdamonds_names):
+    return _damo_fs.write_files({debugfs_monitor_on: 'off'})
 
 def is_kdamond_running(kdamond_name):
     content, err = _damo_fs.read_file(debugfs_monitor_on)
