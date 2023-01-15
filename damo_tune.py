@@ -30,8 +30,9 @@ def main(args=None):
         exit(1)
 
     kdamonds = _damon_args.apply_explicit_args_damon(args)
-    if _damon.commit_inputs(kdamonds):
-        print('could not commit inputs')
+    err = _damon.commit_inputs(kdamonds)
+    if err:
+        print('could not commit inputs (%s)' % err)
 
 if __name__ == '__main__':
     main()
