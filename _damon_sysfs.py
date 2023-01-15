@@ -294,22 +294,15 @@ def ensure_dirs_populated_for(kdamonds):
 
 def apply_kdamonds(kdamonds):
     if len(kdamonds) > 1:
-        print('currently only <=one kdamond is supported')
-        exit(1)
+        return 'currently only <=one kdamond is supported'
     if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
-        print('currently only <=one damon_ctx is supported')
-        exit(1)
+        return 'currently only <=one damon_ctx is supported'
     if (len(kdamonds) == 1 and len(kdamonds[0].contexts) == 1 and
             len(kdamonds[0].contexts[0].targets) > 1):
-        print('currently only <=one target is supported')
-        exit(1)
+        return 'currently only <=one target is supported'
     ensure_dirs_populated_for(kdamonds)
 
-    err = _damo_fs.write_files({kdamonds_dir: wops_for_kdamonds(kdamonds)})
-    if err != None:
-        print('kdamond applying failed: %s' % err)
-        traceback.print_exc()
-        return 1
+    return _damo_fs.write_files({kdamonds_dir: wops_for_kdamonds(kdamonds)})
 
 # for current_kdamonds()
 
@@ -548,5 +541,5 @@ def update_supported_features():
         for ops in ['vaddr', 'paddr', 'fvaddr']:
             feature_supports[ops] = ops in avail_ops
     if orig_kdamonds != None:
-        apply_kdamonds(orig_kdamonds)
+        err = apply_kdamonds(orig_kdamonds)
     return err

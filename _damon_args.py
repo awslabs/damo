@@ -111,11 +111,15 @@ def is_ongoing_target(args):
 
 def apply_explicit_args_damon(args):
     kdamonds = kdamonds_from_damon_args(args)
-    _damon.apply_kdamonds(kdamonds)
-    return kdamonds
+    err = _damon.apply_kdamonds(kdamonds)
+    if err:
+        return None, err
+    return kdamonds, None
 
 def turn_explicit_args_damon_on(args):
-    kdamonds = apply_explicit_args_damon(args)
+    kdamonds, err = apply_explicit_args_damon(args)
+    if err:
+        return err
     return _damon.turn_damon('on',
             [k.name for k in kdamonds]), kdamonds[0].contexts[0]
 
@@ -125,7 +129,9 @@ def turn_implicit_args_damon_on(args, record_request):
     if _damon.feature_supported('record'):
         ctx.record_request = record_request
     kdamonds = [_damon.Kdamond('0', state=None, pid=None, contexts=[ctx])]
-    _damon.apply_kdamonds(kdamonds)
+    err = _damon.apply_kdamonds(kdamonds)
+    if err:
+        return err, None
     return _damon.turn_damon('on', [k.name for k in kdamonds]), kdamonds
 
 # Commandline options setup helpers

@@ -62,7 +62,9 @@ def cleanup_exit(exit_code):
                 pass
             elif _damon.turn_damon('off', data_for_cleanup.kdamonds_names):
                 print('failed to turn damon off!')
-        _damon.apply_kdamonds(data_for_cleanup.orig_kdamonds)
+        err = _damon.apply_kdamonds(data_for_cleanup.orig_kdamonds)
+        if err:
+            print('failed restoring previous kdamonds setup (%s)' % err)
 
     if (data_for_cleanup.rfile_format != None and
             rfile_current_format != data_for_cleanup.rfile_format):

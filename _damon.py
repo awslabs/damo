@@ -888,7 +888,7 @@ def wait_current_kdamonds_turned_off():
 # DAMON control
 
 def apply_kdamonds(kdamonds):
-    _damon_fs.apply_kdamonds(kdamonds)
+    return _damon_fs.apply_kdamonds(kdamonds)
 
 def commit_inputs(kdamonds):
     if _damon_fs == _damon_dbgfs:

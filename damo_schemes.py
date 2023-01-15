@@ -23,7 +23,9 @@ def cleanup_exit(exit_code):
                 kdamonds_names_to_turn_off.append(kdamond_name)
     if _damon.turn_damon('off', kdamonds_names_to_turn_off):
         print('failed to turn damon off!')
-    _damon.apply_kdamonds(orig_kdamonds)
+    err = _damon.apply_kdamonds(orig_kdamonds)
+    if err:
+        print('failed restoring previous kdamonds setup (%s)' % err)
     exit(exit_code)
 
 def sighandler(signum, frame):

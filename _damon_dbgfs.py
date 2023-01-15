@@ -197,9 +197,7 @@ def wops_for_kdamonds(kdamonds):
     return write_contents
 
 def apply_kdamonds(kdamonds):
-    err = _damo_fs.write_files(wops_for_kdamonds(kdamonds))
-    if err:
-        print(err)
+    return _damo_fs.write_files(wops_for_kdamonds(kdamonds))
 
 # for current_kdamonds
 

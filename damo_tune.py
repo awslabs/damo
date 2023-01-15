@@ -29,7 +29,9 @@ def main(args=None):
         print('DAMON is not turned on')
         exit(1)
 
-    kdamonds = _damon_args.apply_explicit_args_damon(args)
+    kdamonds, err = _damon_args.apply_explicit_args_damon(args)
+    if err:
+        print('could not apply inputs (%s)' % err)
     err = _damon.commit_inputs(kdamonds)
     if err:
         print('could not commit inputs (%s)' % err)
