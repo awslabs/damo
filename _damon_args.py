@@ -17,9 +17,12 @@ import _damon
 def damos_from_args(args):
     schemes = []
     if not 'schemes' in args or args.schemes == None:
-        return schemes
+        return schemes, None
 
-    return _damo_schemes_input.damo_schemes_to_damos(args.schemes)
+    schemes, err = _damo_schemes_input.damo_schemes_to_damos(args.schemes)
+    if err:
+        return None, 'failed damo schemes arguents parsing (%s)' % err
+    return schemes, None
 
 def damon_ctx_from_damon_args(args):
     try:
@@ -65,7 +68,9 @@ def damon_ctx_from_damon_args(args):
     except Exception as e:
         return 'Wrong \'--target_pid\' argument (%s)' % e
 
-    schemes = damos_from_args(args)
+    schemes, err = damos_from_args(args)
+    if err:
+        return err
 
     try:
         return _damon.DamonCtx(
