@@ -55,7 +55,7 @@ def main(args=None):
     err, kdamonds = _damon_args.turn_implicit_args_damon_on(args,
             record_request=None)
     if err:
-        print('could not turn DAMON on')
+        print('could not turn DAMON on (%s)' % err)
         cleanup_exit(-3)
 
     kdamonds_names = [k.name for k in kdamonds]
