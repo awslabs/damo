@@ -13,8 +13,7 @@ import _damon
 import _damon_args
 
 def pr_damon_interface(args):
-    _damon.ensure_root_permission()
-    _damon.ensure_initialized(args)
+    _damon.ensure_root_and_initialized(args)
     print(_damon.damon_interface())
 
 subcmds = [

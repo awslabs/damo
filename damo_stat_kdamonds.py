@@ -56,9 +56,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    # Require root permission
-    _damon.ensure_root_permission()
-    _damon.ensure_initialized(args)
+    _damon.ensure_root_and_initialized(args)
 
     damo_stat.run_count_delay(__main, args)
 

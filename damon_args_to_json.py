@@ -11,8 +11,7 @@ def main():
     _damon_args.set_explicit_target_argparser(parser)
     args = parser.parse_args()
 
-    _damon.ensure_root_permission()
-    _damon.ensure_initialized(args)
+    _damon.ensure_root_and_initialized(args)
 
     kdamonds = _damon_args.kdamonds_from_damon_args(args)
     kvpairs = [k.to_kvpairs() for k in kdamonds]

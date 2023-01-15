@@ -19,8 +19,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    _damon.ensure_root_permission()
-    _damon.ensure_initialized(args)
+    _damon.ensure_root_and_initialized(args)
 
     if _damon.damon_interface() == 'debugfs':
         print('tune does not support debugfs interface')
