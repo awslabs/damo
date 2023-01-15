@@ -24,7 +24,7 @@ def main(args=None):
 
     err, ctx = _damon_args.turn_explicit_args_damon_on(args)
     if err:
-        print('could not turn on damon')
+        print('could not turn on damon (%s)' % err)
 
 if __name__ == '__main__':
     main()
