@@ -166,7 +166,7 @@ def main(args=None):
 
     if not _damon_args.is_ongoing_target(args) and args.self_started_target == True:
         os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
-    _damon.wait_current_kdamonds_turned('off')
+    _damon.wait_current_kdamonds_turned_off()
 
     cleanup_exit(0)
 

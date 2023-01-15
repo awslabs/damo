@@ -62,7 +62,7 @@ def main(args=None):
     if args.self_started_target == True:
         os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
     # damon will turn it off by itself if the target tasks are terminated.
-    _damon.wait_current_kdamonds_turned('off')
+    _damon.wait_current_kdamonds_turned_off()
 
     cleanup_exit(0)
 

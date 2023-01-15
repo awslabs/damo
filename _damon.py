@@ -870,7 +870,7 @@ def any_kdamond_running():
 def every_kdamond_turned_off():
     return not any_kdamond_running()
 
-def wait_current_kdamonds_turned(on_off):
+def __wait_current_kdamonds_turned(on_off):
     # on_off should be 'on' or 'off'
     for kd_name in current_kdamond_names():
         running = is_kdamond_running(kd_name)
@@ -878,6 +878,12 @@ def wait_current_kdamonds_turned(on_off):
                 on_off == 'off' and running):
             time.sleep(1)
             running = is_kdamond_running(kd_name)
+
+def wait_current_kdamonds_turned_on():
+    __wait_current_kdamonds_turned('on')
+
+def wait_current_kdamonds_turned_off():
+    __wait_current_kdamonds_turned('off')
 
 # DAMON control
 
@@ -902,4 +908,7 @@ def turn_damon(on_off, kdamonds_names):
     if err:
         return err
     # Early version of DAMON kernel turns it on/off asynchronously
-    wait_current_kdamonds_turned(on_off)
+    if on_off == 'on':
+        wait_current_kdamonds_turned_on()
+    else:   # 'off'
+        wait_current_kdamonds_turned_off()
