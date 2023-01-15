@@ -165,7 +165,7 @@ def format_ratio(ratio, machine_friendly):
 
 def format_permil(permil, machine_friendly):
     if machine_friendly:
-        return '%f' % ratio
+        return '%f' % permil
 
     return format_ratio(float(permil) / 1000, machine_friendly)
 
