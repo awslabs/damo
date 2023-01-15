@@ -135,8 +135,13 @@ class TestDamoSchemesInput(unittest.TestCase):
                     _damon.DamosFilter('1', 'memcg',
                         '/all/latency-critical', False)], None, None)]
 
+        def get_damos_from_damo_schemes(damo_schemes):
+            damos, err = _damo_schemes_input.damo_schemes_to_damos(
+                    damo_schemes)
+            return damos
+
         _test_damo_common.test_input_expects(self,
-                _damo_schemes_input.damo_schemes_to_damos,
+                get_damos_from_damo_schemes,
                 {
                     base_damos_str: expected_damos_wo_filters,
                     base_damos_str_with_comments: expected_damos_wo_filters,

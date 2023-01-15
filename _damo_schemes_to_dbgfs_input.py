@@ -22,7 +22,11 @@ def main():
     intervals = _damon.DamonIntervals(args.sample, args.aggr, args.aggr)
 
     lines = []
-    for damos in _damo_schemes_input.damo_schemes_to_damos(args.input):
+    damos_list, err = _damo_schemes_input.damo_schemes_to_damos(args.input)
+    if err:
+        print('cannot create damos from argument (%s)' % err)
+        exit(1)
+    for damos in damos_list:
         lines.append(
                 _damon_dbgfs.damos_to_debugfs_input(damos, intervals,
                     args.scheme_version))
