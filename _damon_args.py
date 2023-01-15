@@ -22,8 +22,14 @@ def damos_from_args(args):
     return _damo_schemes_input.damo_schemes_to_damos(args.schemes)
 
 def damon_ctx_from_damon_args(args):
-    intervals = _damon.DamonIntervals(args.sample, args.aggr, args.updr)
-    nr_regions = _damon.DamonNrRegionsRange(args.minr, args.maxr)
+    try:
+        intervals = _damon.DamonIntervals(args.sample, args.aggr, args.updr)
+    except Exception as e:
+        return None, 'invalid intervals arguments (%s)' % e
+    try:
+        nr_regions = _damon.DamonNrRegionsRange(args.minr, args.maxr)
+    except Exception as e:
+        return None, 'invalid nr_regions arguments (%s)' % e
     ops = args.ops
 
     init_regions = []
@@ -39,8 +45,7 @@ def damon_ctx_from_damon_args(args):
                 if init_regions and init_regions[-1].end > region.start:
                     raise Exception('regions overlap')
             except Exception as e:
-                print('Wrong \'--regions\' argument (%s)' % e)
-                exit(1)
+                return None, 'Wrong \'--regions\' argument (%s)' % e
             init_regions.append(region)
 
     if ops == 'paddr' and not init_regions:
@@ -48,14 +53,25 @@ def damon_ctx_from_damon_args(args):
             init_regions = _damo_paddr_layout.paddr_region_of(args.numa_node)
         else:
             init_regions = [_damo_paddr_layout.default_paddr_region()]
-        init_regions = [_damon.DamonRegion(r[0], r[1]) for r in init_regions]
+        try:
+            init_regions = [_damon.DamonRegion(r[0], r[1])
+                    for r in init_regions]
+        except Exception as e:
+            return 'Wrong \'--regions\' argument (%s)' % e
 
-    target = _damon.DamonTarget('0', args.target_pid
-            if _damon.target_has_pid(ops) else None, init_regions)
+    try:
+        target = _damon.DamonTarget('0', args.target_pid
+                if _damon.target_has_pid(ops) else None, init_regions)
+    except Exception as e:
+        return 'Wrong \'--target_pid\' argument (%s)' % e
 
     schemes = damos_from_args(args)
 
-    return _damon.DamonCtx('0', intervals, nr_regions, ops, [target], schemes)
+    try:
+        return _damon.DamonCtx(
+                '0', intervals, nr_regions, ops, [target], schemes), None
+    except Exception as e:
+        return None, 'Creating context from arguments failed (%s)' % e
 
 def uncomment_kvpairs_str(string):
     lines = []
@@ -73,9 +89,13 @@ def kdamonds_from_damon_args(args):
         else:
             kdamonds_str = args.kdamonds
         kdamonds_kvpairs = json.loads(uncomment_kvpairs_str(kdamonds_str))
-        return [kvpairs_to_Kdamond(kvpair) for kvpair in kdamonds_kvpairs]
+        return [kvpairs_to_Kdamond(kvpair)
+                for kvpair in kdamonds_kvpairs], None
+    ctx, err = damon_ctx_from_damon_args(args)
+    if err:
+        return None, err
     return [_damon.Kdamond(name='0', state=None, pid=None,
-        contexts=[damon_ctx_from_damon_args(args)])]
+        contexts=[ctx])], None
 
 def set_implicit_target_args_explicit(args):
     args.self_started_target = False
@@ -125,7 +145,9 @@ def turn_explicit_args_damon_on(args):
 
 def turn_implicit_args_damon_on(args, record_request):
     set_implicit_target_args_explicit(args)
-    ctx = damon_ctx_from_damon_args(args)
+    ctx, err = damon_ctx_from_damon_args(args)
+    if err:
+        return err, None
     if _damon.feature_supported('record'):
         ctx.record_request = record_request
     kdamonds = [_damon.Kdamond('0', state=None, pid=None, contexts=[ctx])]
