@@ -871,9 +871,7 @@ def every_kdamond_turned_off():
     return not any_kdamond_running()
 
 def wait_current_kdamonds_turned(on_off):
-    if not on_off in ['on', 'off']:
-        print('wait_current_kdamonds_turned() called with \'%s\'' % on_off)
-        exit(1)
+    # on_off should be 'on' or 'off'
     for kd_name in current_kdamond_names():
         running = is_kdamond_running(kd_name)
         while (on_off == 'on' and not running) or (
