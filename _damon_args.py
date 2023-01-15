@@ -120,7 +120,7 @@ def turn_explicit_args_damon_on(args):
     kdamonds, err = apply_explicit_args_damon(args)
     if err:
         return err
-    return _damon.turn_damon('on',
+    return _damon.turn_damon_on(
             [k.name for k in kdamonds]), kdamonds[0].contexts[0]
 
 def turn_implicit_args_damon_on(args, record_request):
@@ -132,7 +132,7 @@ def turn_implicit_args_damon_on(args, record_request):
     err = _damon.apply_kdamonds(kdamonds)
     if err:
         return err, None
-    return _damon.turn_damon('on', [k.name for k in kdamonds]), kdamonds
+    return _damon.turn_damon_on([k.name for k in kdamonds]), kdamonds
 
 # Commandline options setup helpers
 

@@ -903,7 +903,7 @@ def update_schemes_tried_regions(kdamond_names):
         return 'DAMON debugfs doesn\'t support schemes tried regions'
     return _damon_fs.update_schemes_tried_regions(kdamond_names)
 
-def turn_damon(on_off, kdamonds_names):
+def __turn_damon(on_off, kdamonds_names):
     err = _damon_fs.turn_damon(on_off, kdamonds_names)
     if err:
         return err
@@ -912,3 +912,9 @@ def turn_damon(on_off, kdamonds_names):
         wait_current_kdamonds_turned_on()
     else:   # 'off'
         wait_current_kdamonds_turned_off()
+
+def turn_damon_on(kdamonds_names):
+    return __turn_damon('on', kdamonds_names)
+
+def turn_damon_off(kdamonds_names):
+    return __turn_damon('off', kdamonds_names)

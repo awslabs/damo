@@ -60,8 +60,10 @@ def cleanup_exit(exit_code):
             if data_for_cleanup.kdamonds_names == None:
                 # turn on failed
                 pass
-            elif _damon.turn_damon('off', data_for_cleanup.kdamonds_names):
-                print('failed to turn damon off!')
+            else:
+                err = _damon.turn_damon_off(data_for_cleanup.kdamonds_names)
+                if err:
+                    print('failed to turn damon off (%s)' % err)
         err = _damon.apply_kdamonds(data_for_cleanup.orig_kdamonds)
         if err:
             print('failed restoring previous kdamonds setup (%s)' % err)
