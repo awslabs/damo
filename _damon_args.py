@@ -102,7 +102,7 @@ def set_implicit_target_args_explicit(args):
     if args.target == 'paddr':
         args.ops = 'paddr'
         args.target_pid = None
-        return
+        return None
     if not subprocess.call('which %s &> /dev/null' % args.target.split()[0],
             shell=True, executable='/bin/bash'):
         p = subprocess.Popen(args.target, shell=True, executable='/bin/bash')
@@ -111,18 +111,17 @@ def set_implicit_target_args_explicit(args):
         args.self_started_target = True
         if args.regions and _damon.feature_supported('fvaddr'):
             args.ops = 'fvaddr'
-        return
+        return None
     try:
         pid = int(args.target)
     except:
-        print('target \'%s\' is not supported' % args.target)
-        exit(1)
+        return 'target \'%s\' is not supported' % args.target
     args.ops = 'vaddr'
     args.target_pid = pid
     if args.regions and _damon.feature_supported('fvaddr'):
         args.ops = 'fvaddr'
 
-    return
+    return None
 
 # Command line processing helpers
 
@@ -146,7 +145,9 @@ def turn_explicit_args_damon_on(args):
             [k.name for k in kdamonds]), kdamonds[0].contexts[0]
 
 def turn_implicit_args_damon_on(args, record_request):
-    set_implicit_target_args_explicit(args)
+    err = set_implicit_target_args_explicit(args)
+    if err:
+        return err, None
     ctx, err = damon_ctx_from_damon_args(args)
     if err:
         return err, None

@@ -21,7 +21,8 @@ class TestDamonArgs(unittest.TestCase):
         args = parser.parse_args(
                 ('--sample 5000 --aggr 100000 --updr 1000000 ' +
                     '--minr 10 --maxr 1000 --regions=123-456 paddr').split())
-        _damon_args.set_implicit_target_args_explicit(args)
+        err = _damon_args.set_implicit_target_args_explicit(args)
+        self.assertEqual(err, None)
         ctx, err = _damon_args.damon_ctx_from_damon_args(args)
         self.assertEqual(err, None)
         self.assertEqual(ctx,
@@ -35,7 +36,8 @@ class TestDamonArgs(unittest.TestCase):
         args = parser.parse_args(
                 ('--sample 5ms --aggr 100ms --updr 1s ' +
                     '--minr 10 --maxr 1,000 --regions=1K-4K paddr').split())
-        _damon_args.set_implicit_target_args_explicit(args)
+        err = _damon_args.set_implicit_target_args_explicit(args)
+        self.assertEqual(err, None)
         ctx, err = _damon_args.damon_ctx_from_damon_args(args)
         self.assertEqual(err, None)
         self.assertEqual(ctx,
