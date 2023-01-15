@@ -886,8 +886,7 @@ def apply_kdamonds(kdamonds):
 
 def commit_inputs(kdamonds):
     if _damon_fs == _damon_dbgfs:
-        print('debugfs interface unsupport commit_inputs()')
-        exit(1)
+        return 'debugfs interface unsupport commit_inputs()'
     return _damon_fs.commit_inputs(kdamonds)
 
 def update_schemes_stats(kdamond_names):
