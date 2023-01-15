@@ -118,11 +118,11 @@ class TestDamon(unittest.TestCase):
         _test_damo_common.test_input_expects(self,
                 lambda x: _damon.kvpairs_to_DamonIntervals(json.loads(x)),
                 {
-                    json.dumps({'sample': 5000, 'aggr': 100000,
-                        'ops_update': 1000000}):
+                    json.dumps({'sample_us': 5000, 'aggr_us': 100000,
+                        'ops_update_us': 1000000}):
                     _damon.DamonIntervals(5000, 100000, 1000000),
-                    json.dumps({'sample': '5ms', 'aggr': '0.1s',
-                        'ops_update': '1s'}):
+                    json.dumps({'sample_us': '5ms', 'aggr_us': '0.1s',
+                        'ops_update_us': '1s'}):
                     _damon.DamonIntervals(5000, 100000, 1000000)})
 
         self.assertEqual('%s' % _damon.DamonIntervals(5000, 100000, 1000000),
@@ -133,11 +133,13 @@ class TestDamon(unittest.TestCase):
 
         self.assertEqual(
                 _damon.DamonIntervals(5000, 100000, 1000000).to_kvpairs(),
-                {'sample': '5 ms', 'aggr': '100 ms', 'ops_update': '1 s'})
+                {'sample_us': '5 ms', 'aggr_us': '100 ms',
+                    'ops_update_us': '1 s'})
         self.assertEqual(
                 _damon.DamonIntervals(
                     5000, 100000, 1000000).to_kvpairs(raw=True),
-                {'sample': '5000', 'aggr': '100000', 'ops_update': '1000000'})
+                {'sample_us': '5000', 'aggr_us': '100000',
+                    'ops_update_us': '1000000'})
 
     def test_damon_nr_regions_range(self):
         self.assertEqual(_damon.DamonNrRegionsRange(),

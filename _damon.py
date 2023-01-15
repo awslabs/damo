@@ -38,15 +38,15 @@ class DamonIntervals:
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
-            ('sample', _damo_fmt_str.format_time_us(self.sample, raw)),
-            ('aggr', _damo_fmt_str.format_time_us(self.aggr, raw)),
-            ('ops_update', _damo_fmt_str.format_time_us(self.ops_update,
+            ('sample_us', _damo_fmt_str.format_time_us(self.sample, raw)),
+            ('aggr_us', _damo_fmt_str.format_time_us(self.aggr, raw)),
+            ('ops_update_us', _damo_fmt_str.format_time_us(self.ops_update,
                 raw)),
             ])
 
 def kvpairs_to_DamonIntervals(kvpairs):
     return DamonIntervals(
-            kvpairs['sample'], kvpairs['aggr'], kvpairs['ops_update'])
+            kvpairs['sample_us'], kvpairs['aggr_us'], kvpairs['ops_update_us'])
 
 class DamonNrRegionsRange:
     min_nr_regions = None
