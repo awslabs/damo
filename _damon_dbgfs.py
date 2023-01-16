@@ -51,8 +51,7 @@ def wops_for_target(target, target_has_pid):
         tid = target.pid
     else:
         if not feature_supported('paddr'):
-            print('paddr is not supported')
-            exit(1)
+            raise Exception('paddr is not supported')
         wops.append({debugfs_target_ids: 'paddr\n'})
         tid = 42
     if feature_supported('init_regions_target_idx'):
@@ -135,8 +134,7 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     if scheme_version == 4:
         return v4_scheme
 
-    print('Unsupported scheme version: %d' % scheme_version)
-    exit(1)
+    raise Exception('Unsupported scheme version: %d' % scheme_version)
 
 def get_scheme_version():
     scheme_version = 0
@@ -169,15 +167,12 @@ def attr_str_ctx(damon_ctx):
 
 def wops_for_kdamonds(kdamonds):
     if len(kdamonds) > 1:
-        print('Currently only <=one kdamond is supported')
-        exit(1)
+        raise Exception('Currently only <=one kdamond is supported')
     if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
-        print('currently only <= one damon_ctx is supported')
-        exit(1)
+        raise Exception('currently only <= one damon_ctx is supported')
     if (len(kdamonds) == 1 and len(kdamonds[0].contexts) == 1 and
             len(kdamonds[0].contexts[0].targets) > 1):
-        print('currently only <= one target is supported')
-        exit(1)
+        raise Exception('currently only <= one target is supported')
     ctx = kdamonds[0].contexts[0]
 
     write_contents = []
@@ -230,8 +225,7 @@ def debugfs_output_to_damos(output, intervals_us):
     damos, err = _damo_schemes_input.damo_single_line_scheme_to_damos(
             line, '0')
     if err != None:
-        print('debugfs output to damos conversion failed (%s)' % err)
-        exit(1)
+        raise Exception('debugfs output to damos conversion failed (%s)' % err)
     damos.stats = _damon.DamosStats(*stat_fields)
     return damos
 
