@@ -663,13 +663,15 @@ class DamonCtx:
     # For old downstream kernels that supports record feature
     record_request = None
 
-    def __init__(self, name, intervals, nr_regions, ops, targets, schemes):
+    def __init__(self, name, intervals, nr_regions, ops, targets, schemes,
+            record_request=None):
         self.name = name
         self.intervals = intervals
         self.nr_regions = nr_regions
         self.ops = ops
         self.targets = targets
         self.schemes = schemes
+        self.record_request = record_request
 
     def to_str(self, raw):
         lines = ['%s (ops: %s)' % (self.name, self.ops)]
