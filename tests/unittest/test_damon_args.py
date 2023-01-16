@@ -12,9 +12,19 @@ sys.path.append(damo_dir)
 
 import _damon
 import _damon_args
+import _damon_sysfs
 
 class TestDamonArgs(unittest.TestCase):
     def test_damon_ctx_from_damon_args(self):
+        _damon_sysfs.feature_supports = {'init_regions': True, 'schemes': True,
+                'schemes_stat_qt_exceed': True, 'init_regions_target_idx':
+                True, 'schemes_prioritization': True, 'schemes_tried_regions':
+                False, 'record': False, 'schemes_quotas': True, 'fvaddr':
+                False, 'paddr': True, 'schemes_wmarks': True,
+                'schemes_speed_limit': True, 'schemes_stat_succ': True,
+                'vaddr': True}
+        _damon._damon_fs = _damon_sysfs
+
         parser = argparse.ArgumentParser()
         _damon_args.set_implicit_target_monitoring_argparser(parser)
 
