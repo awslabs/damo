@@ -69,9 +69,9 @@ def main(args=None):
                 print('wrong boundary input %s' % boundary)
             regions_boundary.append(parsed_boundary)
 
-    result = _damon_result.parse_damon_result(args.input, None)
-    if not result:
-        print('invalid')
+    result, err = _damon_result.parse_damon_result(args.input, None)
+    if err != None:
+        print('parsing failed (%s)' % err)
         exit(1)
 
     if len(result.target_snapshots) == 0:

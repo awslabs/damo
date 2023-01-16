@@ -38,9 +38,10 @@ def main(args=None):
     if args.sortby == 'time':
         nr_regions_sort = False
 
-    result = _damon_result.parse_damon_result(file_path, args.input_type)
-    if not result:
-        print('monitoring result file (%s) parsing failed' % file_path)
+    result, err = _damon_result.parse_damon_result(file_path, args.input_type)
+    if err != None:
+        print('monitoring result file (%s) parsing failed (%s)' %
+                (file_path, err))
         exit(1)
 
     orig_stdout = sys.stdout

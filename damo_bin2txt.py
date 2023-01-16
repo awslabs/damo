@@ -32,14 +32,24 @@ def main(args=None):
 
     if args.duration:
         print('read start')
-        result, f, fmt_version = _damon_result.parse_damon_result_for(
+        result, f, fmt_version, err = _damon_result.parse_damon_result_for(
                 file_path, args.input_type, None, None, args.duration[0])
+        if err != None:
+            print(err)
+            exit(1)
         print('now real read')
-        result, f, fmt_version = _damon_result.parse_damon_result_for(
+        result, f, fmt_version, err = _damon_result.parse_damon_result_for(
                 file_path, args.input_type, f, fmt_version, args.duration[1])
+        if err != None:
+            print(err)
+            exit(1)
         f.close()
     else:
-        result = _damon_result.parse_damon_result(file_path, args.input_type)
+        result, err = _damon_result.parse_damon_result(file_path,
+                args.input_type)
+        if err:
+            print('parsing damon result file (%s) failed (%s)' %
+                    (file_path, err))
 
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)

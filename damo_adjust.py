@@ -62,9 +62,10 @@ def main(args=None):
 
     file_path = args.input
 
-    result = _damon_result.parse_damon_result(file_path, args.input_type)
-    if not result:
-        print('monitoring result file (%s) parsing failed' % file_path)
+    result, err = _damon_result.parse_damon_result(file_path, args.input_type)
+    if err:
+        print('monitoring result file (%s) parsing failed (%s)' %
+                (file_path, err))
         exit(1)
 
     if args.aggregate_interval != None:

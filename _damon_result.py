@@ -72,8 +72,7 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
             fmt_version = 0
             f.seek(0)
     elif not fmt_version:
-        print('fmt_version is not given')
-        exit(1)
+        return None, None, None, 'fmt_version is not given'
 
     result = DAMONResult()
 
@@ -119,7 +118,7 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
                 snapshot.regions.append(region)
             target_snapshots.append(snapshot)
 
-    return result, f, fmt_version
+    return result, f, fmt_version, None
 
 def perf_script_to_damon_result(file_path, f, max_secs):
     result = None
@@ -202,8 +201,10 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
             file_type = 'perf_script'
 
     if file_type == 'record':
-        result, f, fmt_version = record_to_damon_result(result_file,
+        result, f, fmt_version, err = record_to_damon_result(result_file,
                 f, fmt_version, max_secs)
+        if err:
+            return None, None, None, err
     elif file_type == 'perf_script':
         result, f = perf_script_to_damon_result(result_file, f, max_secs)
         fmt_version = None
@@ -233,13 +234,15 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
                     region.nr_accesses == -1 and region.age == -1):
                 del snapshots[1]
 
-    return result, f, fmt_version
+    return result, f, fmt_version, None
 
 def parse_damon_result(result_file, file_type):
-    result, f, fmt_version = parse_damon_result_for(result_file, file_type,
-            None, None, None)
+    result, f, fmt_version, err = parse_damon_result_for(result_file,
+            file_type, None, None, None)
+    if err:
+        return None, err
     f.close()
-    return result
+    return result, None
 
 def write_damon_record(result, file_path, format_version, file_permission):
     with open(file_path, 'wb', file_permission) as f:

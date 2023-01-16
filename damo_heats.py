@@ -363,11 +363,11 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    damon_result = _damon_result.parse_damon_result(
+    damon_result, err = _damon_result.parse_damon_result(
             args.input, args.input_type)
-    if not damon_result:
-        print('monitoring result file (%s) parsing failed' % args.input)
-        exit(1)
+    if err != None:
+        print('monitoring result file (%s) parsing failed (%s)' %
+                (args.input, err))
 
     # Use 80x40 resolution as default for ascii plot
     if args.heatmap == 'stdout' and args.resol == [500, 500]:

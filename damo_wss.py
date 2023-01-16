@@ -117,9 +117,10 @@ def main(args=None):
         wss_sort = False
     raw_number = args.raw_number
 
-    result = _damon_result.parse_damon_result(file_path, args.input_type)
-    if not result:
-        print('monitoring result file (%s) parsing failed' % file_path)
+    result, err = _damon_result.parse_damon_result(file_path, args.input_type)
+    if err != None:
+        print('monitoring result file (%s) parsing failed (%s)' %
+                (file_path, err))
         exit(1)
 
     damo_adjust.adjust_result(result, args.work_time, args.exclude_samples)
