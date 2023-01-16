@@ -72,6 +72,7 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
             fmt_version = 0
             f.seek(0)
     elif not fmt_version:
+        f.close()
         return None, None, None, 'fmt_version is not given'
 
     result = DAMONResult()
