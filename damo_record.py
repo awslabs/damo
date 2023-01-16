@@ -155,8 +155,7 @@ def main(args=None):
     # Now the real works
     if not _damon_args.is_ongoing_target(args):
         # Turn DAMON on
-        err, kdamonds = _damon_args.turn_implicit_args_damon_on(args,
-                record_request=_damon.DamonRecord(args.rbuf, args.out))
+        err, kdamonds = _damon_args.turn_implicit_args_damon_on(args)
         if err:
             print('could not turn DAMON on (%s)' % err)
             cleanup_exit(-2)

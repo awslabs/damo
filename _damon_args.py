@@ -151,15 +151,15 @@ def turn_explicit_args_damon_on(args):
     return _damon.turn_damon_on(
             [k.name for k in kdamonds]), kdamonds[0].contexts[0]
 
-def turn_implicit_args_damon_on(args, record_request):
+def turn_implicit_args_damon_on(args):
     err = set_implicit_target_args_explicit(args)
     if err:
         return err, None
     ctx, err = damon_ctx_from_damon_args(args)
     if err:
         return err, None
-    if _damon.feature_supported('record'):
-        ctx.record_request = record_request
+    if _damon.feature_supported('record') and 'rbuf' in args:
+        ctx.record_request = _damon.DamonRecord(args.rbuf, args.out)
     kdamonds = [_damon.Kdamond('0', state=None, pid=None, contexts=[ctx])]
     err = _damon.apply_kdamonds(kdamonds)
     if err:
