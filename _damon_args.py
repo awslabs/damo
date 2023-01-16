@@ -70,13 +70,20 @@ def damon_ctx_from_damon_args(args):
     except Exception as e:
         return 'Wrong \'--target_pid\' argument (%s)' % e
 
+    record_request = None
+    if _damon.feature_supported('record') and 'rbuf' in args:
+        record_request = _damon.DamonRecord(args.rbuf, args.out)
+
     schemes, err = damos_from_args(args)
     if err:
         return err
 
     try:
-        return _damon.DamonCtx(
-                '0', intervals, nr_regions, ops, [target], schemes), None
+        ctx = _damon.DamonCtx(
+                '0', intervals, nr_regions, ops, [target], schemes)
+        if record_request:
+            ctx.record_request = record_request
+        return ctx, None
     except Exception as e:
         return None, 'Creating context from arguments failed (%s)' % e
 
@@ -158,8 +165,6 @@ def turn_implicit_args_damon_on(args):
     ctx, err = damon_ctx_from_damon_args(args)
     if err:
         return err, None
-    if _damon.feature_supported('record') and 'rbuf' in args:
-        ctx.record_request = _damon.DamonRecord(args.rbuf, args.out)
     kdamonds = [_damon.Kdamond('0', state=None, pid=None, contexts=[ctx])]
     err = _damon.apply_kdamonds(kdamonds)
     if err:
