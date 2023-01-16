@@ -74,7 +74,10 @@ def cleanup_exit(exit_code):
                 data_for_cleanup.rfile_format,
                 data_for_cleanup.rfile_permission)
 
-    os.chmod(data_for_cleanup.rfile_path, data_for_cleanup.rfile_permission)
+    # DAMON might not started at all
+    if os.path.isfile(data_for_cleanup.rfile_path):
+        os.chmod(data_for_cleanup.rfile_path,
+                data_for_cleanup.rfile_permission)
 
     exit(exit_code)
 
