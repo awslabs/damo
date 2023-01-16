@@ -82,10 +82,8 @@ def damon_ctx_from_damon_args(args):
         return err
 
     try:
-        ctx = _damon.DamonCtx(
-                '0', intervals, nr_regions, ops, [target], schemes)
-        if record_request:
-            ctx.record_request = record_request
+        ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, [target],
+                schemes, record_request)
         return ctx, None
     except Exception as e:
         return None, 'Creating context from arguments failed (%s)' % e
