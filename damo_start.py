@@ -22,7 +22,7 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    err, ctx = _damon_args.turn_explicit_args_damon_on(args)
+    err, kdamonds = _damon_args.turn_explicit_args_damon_on(args)
     if err:
         print('could not turn on damon (%s)' % err)
 

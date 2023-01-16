@@ -160,7 +160,7 @@ def turn_explicit_args_damon_on(args):
     if err:
         return err, None
     return _damon.turn_damon_on(
-            [k.name for k in kdamonds]), kdamonds[0].contexts[0]
+            [k.name for k in kdamonds]), kdamonds
 
 def turn_implicit_args_damon_on(args):
     err = set_implicit_target_args_explicit(args)
