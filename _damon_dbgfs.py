@@ -31,8 +31,7 @@ def turn_damon_off(kdamonds_names):
 def is_kdamond_running(kdamond_name):
     content, err = _damo_fs.read_file(debugfs_monitor_on)
     if err != None:
-        print(err)
-        return False
+        raise Exception('monitor_on file read failed: err')
     return content.strip() == 'on'
 
 'Return error'
