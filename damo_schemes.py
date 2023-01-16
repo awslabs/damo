@@ -53,8 +53,7 @@ def main(args=None):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    err, kdamonds = _damon_args.turn_implicit_args_damon_on(args,
-            record_request=None)
+    err, kdamonds = _damon_args.turn_implicit_args_damon_on(args)
     if err:
         print('could not turn DAMON on (%s)' % err)
         cleanup_exit(-3)
