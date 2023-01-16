@@ -34,6 +34,8 @@ def damon_ctx_from_damon_args(args):
     except Exception as e:
         return None, 'invalid nr_regions arguments (%s)' % e
     ops = args.ops
+    if not _damon.feature_supported(ops):
+        return None, '%s unsupported' % ops
 
     init_regions = []
     if args.regions:
