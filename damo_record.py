@@ -124,11 +124,7 @@ def backup_duplicate_output_file(output_file):
         os.rename(output_file, output_file + '.old')
 
 def set_argparser(parser):
-    _damon_args.set_implicit_target_monitoring_argparser(parser)
-    parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-            help='length of record result buffer')
-    parser.add_argument('-o', '--out', metavar='<file path>', type=str,
-            default='damon.data', help='output file path')
+    _damon_args.set_implicit_target_record_argparser(parser)
     parser.add_argument('--output_type', choices=['record', 'perf_script'],
             default=None, help='output file\'s type')
     parser.add_argument('--leave_perf_data', action='store_true',
