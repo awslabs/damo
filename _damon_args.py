@@ -72,7 +72,10 @@ def damon_ctx_from_damon_args(args):
 
     record_request = None
     if _damon.feature_supported('record') and 'rbuf' in args:
-        record_request = _damon.DamonRecord(args.rbuf, args.out)
+        try:
+            record_request = _damon.DamonRecord(args.rbuf, args.out)
+        except Exception as e:
+            return 'Wrong record arguments (%s)' % e
 
     schemes, err = damos_from_args(args)
     if err:
