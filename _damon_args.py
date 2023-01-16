@@ -166,14 +166,7 @@ def turn_implicit_args_damon_on(args):
     err = set_implicit_target_args_explicit(args)
     if err:
         return err, None
-    ctx, err = damon_ctx_from_damon_args(args)
-    if err:
-        return err, None
-    kdamonds = [_damon.Kdamond('0', state=None, pid=None, contexts=[ctx])]
-    err = _damon.apply_kdamonds(kdamonds)
-    if err:
-        return err, None
-    return _damon.turn_damon_on([k.name for k in kdamonds]), kdamonds
+    return turn_explicit_args_damon_on(args)
 
 # Commandline options setup helpers
 
