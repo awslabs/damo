@@ -24,19 +24,7 @@ def damos_from_args(args):
         return None, 'failed damo schemes arguents parsing (%s)' % err
     return schemes, None
 
-def damon_ctx_from_damon_args(args):
-    try:
-        intervals = _damon.DamonIntervals(args.sample, args.aggr, args.updr)
-    except Exception as e:
-        return None, 'invalid intervals arguments (%s)' % e
-    try:
-        nr_regions = _damon.DamonNrRegionsRange(args.minr, args.maxr)
-    except Exception as e:
-        return None, 'invalid nr_regions arguments (%s)' % e
-    ops = args.ops
-    if not _damon.feature_supported(ops):
-        return None, '%s unsupported' % ops
-
+def init_regions_from_damon_args(args):
     init_regions = []
     if args.regions:
         for region in args.regions.split():
@@ -53,7 +41,7 @@ def damon_ctx_from_damon_args(args):
                 return None, 'Wrong \'--regions\' argument (%s)' % e
             init_regions.append(region)
 
-    if ops == 'paddr' and not init_regions:
+    if args.ops == 'paddr' and not init_regions:
         if args.numa_node != None:
             init_regions = _damo_paddr_layout.paddr_region_of(args.numa_node)
         else:
@@ -62,7 +50,26 @@ def damon_ctx_from_damon_args(args):
             init_regions = [_damon.DamonRegion(r[0], r[1])
                     for r in init_regions]
         except Exception as e:
-            return 'Wrong \'--regions\' argument (%s)' % e
+            return None, 'Wrong \'--regions\' argument (%s)' % e
+
+    return init_regions, None
+
+def damon_ctx_from_damon_args(args):
+    try:
+        intervals = _damon.DamonIntervals(args.sample, args.aggr, args.updr)
+    except Exception as e:
+        return None, 'invalid intervals arguments (%s)' % e
+    try:
+        nr_regions = _damon.DamonNrRegionsRange(args.minr, args.maxr)
+    except Exception as e:
+        return None, 'invalid nr_regions arguments (%s)' % e
+    ops = args.ops
+    if not _damon.feature_supported(ops):
+        return None, '%s unsupported' % ops
+
+    init_regions, err = init_regions_from_damon_args(args)
+    if err:
+        return None, err
 
     try:
         target = _damon.DamonTarget('0', args.target_pid
