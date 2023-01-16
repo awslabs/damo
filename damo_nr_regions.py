@@ -76,8 +76,10 @@ def main(args=None):
         xlabel = 'runtime (percent)'
         if nr_regions_sort:
             xlabel = 'percentile'
-        _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
+        err = _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
                 'number of monitoring target regions')
+        if err:
+            print('plot failed (%s)' % err)
 
 if __name__ == '__main__':
     main()
