@@ -115,6 +115,7 @@ def kdamonds_from_damon_args(args):
         contexts=[ctx])], None
 
 def set_implicit_target_args_explicit(args):
+    args.kdamonds = None
     args.self_started_target = False
     if args.target == 'paddr':
         args.ops = 'paddr'
