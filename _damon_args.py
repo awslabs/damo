@@ -138,6 +138,11 @@ def set_implicit_target_args_explicit(args):
 
     return None
 
+def self_started_target(args):
+    if 'self_started_target' in args:
+        return args.self_started_target
+    return False
+
 # Command line processing helpers
 
 def is_ongoing_target(args):
