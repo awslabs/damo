@@ -107,6 +107,13 @@ def chk_handle_record_feature_support(args):
         if args.rbuf:
             print('# \'--rbuf\' will be ignored')
 
+    if damon_record_supported or args.rbuf:
+        print('''
+WARNING: --rbuf option and in-kernel record feature support will be deprecated.
+    Please report your usecase to sj@kernel.org, damon@lists.linux.dev and
+    linux-mm@kvack.org if you depend on those.
+''')
+
     if not args.rbuf:
         args.rbuf = 1024 * 1024
 
