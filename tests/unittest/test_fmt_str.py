@@ -139,7 +139,8 @@ class TestDamoFmtStr(unittest.TestCase):
                     '12.34%': 12.34,
                     '12.34 %': 12.34,
                     '1,234.567 %': 1234.567,
-                    '1,234.567,89 %': 1234.56789})
+                    '1,234.567,89 %': 1234.56789,
+                    '1,234': 1234})
 
     def test_text_to_permil(self):
         _test_damo_common.test_input_expects(self,
@@ -166,6 +167,7 @@ class TestDamoFmtStr(unittest.TestCase):
         _test_damo_common.test_input_expects(self, _damo_fmt_str.text_to_bytes,
                 {
                     '123': 123,
+                    '1,234': 1234,
                     '123 B': 123,
                     '2 K': 2048,
                     '2 KiB': 2048,
@@ -174,7 +176,7 @@ class TestDamoFmtStr(unittest.TestCase):
                     '2 G': 2 * 1 << 30,
                     '1,234.457 G': int(1234.457 * (1 << 30)),
                     '1,234.457 GiB': int(1234.457 * (1 << 30)),
-                    '1,234.457': 1234,
+                    '1,234.457': 1234.457,
                     '2 GiB': 2 * 1 << 30,
                     '2 T': 2 * 1 << 40,
                     '2 TiB': 2 * 1 << 40,
