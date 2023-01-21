@@ -318,13 +318,13 @@ def apply_kdamonds(kdamonds):
 
 def files_content_to_access_pattern(files_content):
     return _damon.DamosAccessPattern(
-            int(files_content['sz']['min']),
-            int(files_content['sz']['max']),
-            int(files_content['nr_accesses']['min']),
-            int(files_content['nr_accesses']['max']),
+            [int(files_content['sz']['min']),
+                int(files_content['sz']['max'])],
+            [int(files_content['nr_accesses']['min']),
+                int(files_content['nr_accesses']['max'])],
             _damon.unit_sample_intervals, # nr_accesses_unit
-            int(files_content['age']['min']),
-            int(files_content['age']['max']),
+            [int(files_content['age']['min']),
+                int(files_content['age']['max'])],
             _damon.unit_aggr_intervals) # age_unit
 
 def files_content_to_quotas(files_content):

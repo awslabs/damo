@@ -88,13 +88,13 @@ import _damo_fmt_str
 def fields_to_v0_scheme(fields):
     scheme = _damon.Damos()
     scheme.access_pattern = _damon.DamosAccessPattern(
-            min_sz_bytes = _damo_fmt_str.text_to_bytes(fields[0]),
-            max_sz_bytes = _damo_fmt_str.text_to_bytes(fields[1]),
-            min_nr_accesses = _damo_fmt_str.text_to_percent(fields[2]),
-            max_nr_accesses = _damo_fmt_str.text_to_percent(fields[3]),
+            sz_bytes = [_damo_fmt_str.text_to_bytes(fields[0]),
+                _damo_fmt_str.text_to_bytes(fields[1])],
+            nr_accesses = [_damo_fmt_str.text_to_percent(fields[2]),
+                _damo_fmt_str.text_to_percent(fields[3])],
             nr_accesses_unit = _damon.unit_percent,
-            min_age = _damo_fmt_str.text_to_us(fields[4]),
-            max_age = _damo_fmt_str.text_to_us(fields[5]),
+            age = [_damo_fmt_str.text_to_us(fields[4]),
+                _damo_fmt_str.text_to_us(fields[5])],
             age_unit = _damon.unit_usec)
     scheme.action = fields[6].lower()
     return scheme

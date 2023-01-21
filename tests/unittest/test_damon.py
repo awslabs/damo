@@ -27,8 +27,8 @@ class TestDamon(unittest.TestCase):
                 _damon.kvpairs_to_DamonTarget(target_kvpairs))
 
         damos = _damon.Damos('foo',
-                _damon.DamosAccessPattern(0, 10, 5, 8, _damon.unit_percent, 54,
-                    88, _damon.unit_usec),
+                _damon.DamosAccessPattern([0, 10], [5, 8], _damon.unit_percent,
+                    [54, 88], _damon.unit_usec),
                 'pageout',
                 _damon.DamosQuotas(100, 1024, 1000, 80, 76, 24),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
@@ -62,9 +62,9 @@ class TestDamon(unittest.TestCase):
 
     def test_damos_eq(self):
         damos = _damon.Damos('0',
-                access_pattern=_damon.DamosAccessPattern(4096,
-                    18446744073709551615, 0.0, 0.0, _damon.unit_percent,
-                    1000000, 4294900000, _damon.unit_usec),
+                access_pattern=_damon.DamosAccessPattern([4096,
+                    18446744073709551615], [0.0, 0.0], _damon.unit_percent,
+                    [1000000, 4294900000], _damon.unit_usec),
                 action='stat',
                 quotas=_damon.DamosQuotas(time_ms=0, sz_bytes=584792941,
                     reset_interval_ms=1000, weight_sz_permil=0,
@@ -79,12 +79,12 @@ class TestDamon(unittest.TestCase):
         self.assertNotEqual(damos, damos2)
 
         intervals = _damon.DamonIntervals(5000, 100000, 1000000)
-        pattern_human = _damon.DamosAccessPattern(123, 456,
-                15, 35, _damon.unit_percent,
-                5000000, 19000000, _damon.unit_usec)
-        pattern_machine = _damon.DamosAccessPattern(123, 456,
-                3, 7, _damon.unit_sample_intervals,
-                50, 190, _damon.unit_aggr_intervals)
+        pattern_human = _damon.DamosAccessPattern([123, 456],
+                [15, 35], _damon.unit_percent,
+                [5000000, 19000000], _damon.unit_usec)
+        pattern_machine = _damon.DamosAccessPattern([123, 456],
+                [3, 7], _damon.unit_sample_intervals,
+                [50, 190], _damon.unit_aggr_intervals)
 
         damos.access_pattern = pattern_human
         damos2 = copy.deepcopy(damos)
@@ -220,17 +220,17 @@ class TestDamon(unittest.TestCase):
 
     def test_damos_access_pattern(self):
         self.assertEqual(_damon.DamosAccessPattern(),
-                _damon.DamosAccessPattern('min', 'max',
-                    'min', 'max', _damon.unit_percent,
-                    'min', 'max', _damon.unit_usec))
+                _damon.DamosAccessPattern(['min', 'max'],
+                    ['min', 'max'], _damon.unit_percent,
+                    ['min', 'max'], _damon.unit_usec))
 
         intervals = _damon.DamonIntervals(5000, 100000, 1000000)
-        pattern_human = _damon.DamosAccessPattern(123, 456,
-                15, 35, _damon.unit_percent,
-                5000000, 19000000, _damon.unit_usec)
-        pattern_machine = _damon.DamosAccessPattern(123, 456,
-                3, 7, _damon.unit_sample_intervals,
-                50, 190, _damon.unit_aggr_intervals)
+        pattern_human = _damon.DamosAccessPattern([123, 456],
+                [15, 35], _damon.unit_percent,
+                [5000000, 19000000], _damon.unit_usec)
+        pattern_machine = _damon.DamosAccessPattern([123, 456],
+                [3, 7], _damon.unit_sample_intervals,
+                [50, 190], _damon.unit_aggr_intervals)
 
         self.assertEqual(
                 pattern_human.converted_for_units(

@@ -109,16 +109,16 @@ class TestDamoSchemesInput(unittest.TestCase):
                 human_readable_damos_kv_with_filters, indent=4)
 
         expected_damos_wo_filters = [_damon.Damos('0',
-                _damon.DamosAccessPattern(0, 0,
-                    0, 0, _damon.unit_sample_intervals,
-                    0, 0, _damon.unit_aggr_intervals),
+                _damon.DamosAccessPattern([0, 0],
+                    [0, 0], _damon.unit_sample_intervals,
+                    [0, 0], _damon.unit_aggr_intervals),
                 'stat',
                 _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None, None)]
         expected_damos_w_filters = [_damon.Damos('0',
-                _damon.DamosAccessPattern(0, 0,
-                    0, 0, _damon.unit_sample_intervals,
-                    0, 0, _damon.unit_aggr_intervals),
+                _damon.DamosAccessPattern([0, 0],
+                    [0, 0], _damon.unit_sample_intervals,
+                    [0, 0], _damon.unit_aggr_intervals),
                 'stat',
                 _damon.DamosQuotas(0, 0, 0, 0, 0, 0),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0),
