@@ -781,8 +781,8 @@ features = ['record',       # was in DAMON patchset, but not merged in mainline
             'schemes_stat_qt_exceed',   # merged in v5.17 (0e92c2ee9f45)
             'init_regions_target_idx',  # merged in v5.18 (144760f8e0c3)
             'fvaddr',       # merged in v5.19 (b82434471cd2)
-            'schemes_tried_regions',    # developing on top of v6.0
-            'schemes_filters',          # developing on top of v6.0
+            'schemes_tried_regions',    # merged in v6.2-rc1
+            'schemes_filters',          # merged in mm-unstable
             ]
 
 _damon_fs = None
