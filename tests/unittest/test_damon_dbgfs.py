@@ -36,7 +36,7 @@ class TestDamonDbgfs(unittest.TestCase):
                 {"4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n":
                     _damon.Damos('0',
                         access_pattern=_damon.DamosAccessPattern(
-                            [4096, 18446744073709551615],
+                            [4096, 18446744073709551616],
                             [0.0, 0.0], _damon.unit_percent,
                             [1000000.0, 4294900000.0], _damon.unit_usec),
                         action='stat',
@@ -74,7 +74,7 @@ class TestDamonDbgfs(unittest.TestCase):
                             {"/sys/kernel/debug/damon/init_regions":
                                 "0 1 100 0 100 200"},
                             {"/sys/kernel/debug/damon/schemes":
-                                "4096\t18446744073709551615\t0\t0\t10\t42949\t5\t0\t584792941\t1000\t0\t0\t0\t0\t0\t0\t0\t0"}],
+                                "4096\t18446744073709551616\t0\t0\t10\t42949\t5\t0\t584792941\t1000\t0\t0\t0\t0\t0\t0\t0\t0"}],
                             json.dumps(
                                 {
                                     "attrs": "5000 100000 1000000 10 1000\n",
@@ -96,7 +96,7 @@ class TestDamonDbgfs(unittest.TestCase):
                                     {"/sys/kernel/debug/damon/init_regions":
                                         ""},
                                     {"/sys/kernel/debug/damon/schemes":
-                                        "4096\t18446744073709551615\t0\t0\t10\t42949\t5\t0\t5368709120\t1000\t0\t3\t7\t1\t1000000\t999\t998\t995"}]
+                                        "4096\t18446744073709551616\t0\t0\t10\t42949\t5\t0\t5368709120\t1000\t0\t3\t7\t1\t1000000\t999\t998\t995"}]
                                     })
 
 if __name__ == '__main__':
