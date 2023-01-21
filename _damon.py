@@ -783,6 +783,7 @@ features = ['record',       # was in DAMON patchset, but not merged in mainline
             'fvaddr',       # merged in v5.19 (b82434471cd2)
             'schemes_tried_regions',    # merged in v6.2-rc1
             'schemes_filters',          # merged in mm-unstable
+            'schemes_tried_regions_sz', # developing
             ]
 
 _damon_fs = None
