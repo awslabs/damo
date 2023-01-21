@@ -6,7 +6,7 @@ Change human readable data access monitoring-based operation schemes input for
 'damo' to a '_damon.Damos' object.  Currently,
 
 - simple human-readable single line per scheme text and
-- comments-supporting json string format
+- json string format
 
 are supported.  Below are the example of the input.
 
@@ -40,11 +40,11 @@ Below are examples of simple human-readable single line per scheme text.
     # avoid the region using huge pages (call madvise() with MADV_NOHUGEPAGE).
     2M      max     0       25      100ms   max nohugepage
 
-Below is an exaple of the comments-supporting json string format.
+Below is an exaple of the json string format.
 
     [
-        # Just for monitoring
        {
+            "comment": "just for monitoring",
             "name": "0",
             "action": "stat",
             "access_pattern": {
@@ -170,14 +170,14 @@ def damo_schemes_to_damos(damo_schemes):
         with open(damo_schemes, 'r') as f:
             damo_schemes = f.read()
 
-    damo_schemes_lines = damo_schemes_lines_except_comments(damo_schemes)
-
     try:
-        kvpairs = json.loads('\n'.join(damo_schemes_lines))
+        kvpairs = json.loads(damo_schemes)
         return [_damon.kvpairs_to_Damos(kv) for kv in kvpairs], None
     except:
         # The input is not json file
         pass
+
+    damo_schemes_lines = damo_schemes_lines_except_comments(damo_schemes)
 
     damos_list = []
     for idx, line in enumerate(damo_schemes_lines):

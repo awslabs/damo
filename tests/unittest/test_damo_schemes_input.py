@@ -20,6 +20,7 @@ class TestDamoSchemesInput(unittest.TestCase):
     def test_damo_schemes_to_damos(self):
         base_damos_kv = [
                 {
+                    "comments": "just for testing",
                     "name": "0",
                     "action": "stat",
                     "access_pattern": {
@@ -95,12 +96,8 @@ class TestDamoSchemesInput(unittest.TestCase):
         base_damos_kv_with_filters[0]['filters'] = base_filters_kv
 
         base_damos_str = json.dumps(base_damos_kv, indent=4)
-        base_damos_str_with_comments = '\n\n# some comments\n'.join(
-                base_damos_str.split('\n'))
         human_readable_damos_str = json.dumps(human_readable_damos_kv,
                 indent=4)
-        human_readable_damos_str_with_comments = '\n\n# some comments\n'.join(
-                human_readable_damos_str.split('\n'))
 
         human_readable_damos_kv_with_filters = copy.deepcopy(
                 human_readable_damos_kv)
@@ -108,14 +105,8 @@ class TestDamoSchemesInput(unittest.TestCase):
 
         base_damos_with_filters_str = json.dumps(base_damos_kv_with_filters,
                 indent=4)
-        base_damos_with_filters_str_with_comments = (
-                '\n\n# some comments\n'.join(
-                    base_damos_with_filters_str.split('\n')))
         human_readable_damos_with_filters_str = json.dumps(
                 human_readable_damos_kv_with_filters, indent=4)
-        human_readable_damos_with_filters_str_with_comments = (
-                '\n\n# some comments\n'.join(
-                    human_readable_damos_with_filters_str.split('\n')))
 
         expected_damos_wo_filters = [_damon.Damos('0',
                 _damon.DamosAccessPattern(0, 0,
@@ -144,16 +135,9 @@ class TestDamoSchemesInput(unittest.TestCase):
                 get_damos_from_damo_schemes,
                 {
                     base_damos_str: expected_damos_wo_filters,
-                    base_damos_str_with_comments: expected_damos_wo_filters,
                     human_readable_damos_str: expected_damos_wo_filters,
-                    human_readable_damos_str_with_comments:
-                    expected_damos_wo_filters,
                     base_damos_with_filters_str: expected_damos_w_filters,
-                    base_damos_with_filters_str_with_comments:
-                    expected_damos_w_filters,
                     human_readable_damos_with_filters_str:
-                    expected_damos_w_filters,
-                    human_readable_damos_with_filters_str_with_comments:
                     expected_damos_w_filters})
 
 if __name__ == '__main__':

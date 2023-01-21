@@ -95,14 +95,6 @@ def damon_ctx_from_damon_args(args):
     except Exception as e:
         return None, 'Creating context from arguments failed (%s)' % e
 
-def uncomment_kvpairs_str(string):
-    lines = []
-    for line in string.split('\n'):
-        if line.strip().startswith('#'):
-            continue
-        lines.append(line)
-    return '\n'.join(lines).strip()
-
 def kdamonds_from_damon_args(args):
     if args.kdamonds:
         if os.path.isfile(args.kdamonds):
@@ -110,7 +102,7 @@ def kdamonds_from_damon_args(args):
                 kdamonds_str = f.read()
         else:
             kdamonds_str = args.kdamonds
-        kdamonds_kvpairs = json.loads(uncomment_kvpairs_str(kdamonds_str))
+        kdamonds_kvpairs = json.loads(kdamonds_str)
         return [kvpairs_to_Kdamond(kvpair)
                 for kvpair in kdamonds_kvpairs], None
     ctx, err = damon_ctx_from_damon_args(args)
