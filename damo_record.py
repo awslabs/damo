@@ -153,14 +153,14 @@ def main(args=None):
     signal.signal(signal.SIGTERM, sighandler)
 
     # Now the real works
-    if not _damon_args.is_ongoing_target(args):
+    is_ongoing = _damon_args.is_ongoing_target(args)
+    if not is_ongoing:
         # Turn DAMON on
         err, kdamonds = _damon_args.turn_implicit_args_damon_on(args)
         if err:
             print('could not turn DAMON on (%s)' % err)
             cleanup_exit(-2)
         data_for_cleanup.kdamonds_names = [k.name for k in kdamonds]
-
 
     if not damon_record_supported:
         # Record the monitoring results using perf
@@ -169,7 +169,7 @@ def main(args=None):
             '-o', data_for_cleanup.rfile_path + '.perf.data'])
     print('Press Ctrl+C to stop')
 
-    if not _damon_args.is_ongoing_target(args) and args.self_started_target == True:
+    if not is_ongoing and args.self_started_target == True:
         os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
     _damon.wait_current_kdamonds_turned_off()
 
