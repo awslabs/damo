@@ -46,6 +46,11 @@ def scheme_dir_of(kdamond_name, context_name, scheme_name):
     return os.path.join(
             schemes_dir_of(kdamond_name, context_name), '%s' % scheme_name)
 
+def scheme_tried_regions_dir_of(kdamond_name, context_name, scheme_name):
+    return os.path.join(
+            scheme_dir_of(kdamond_name, context_name, scheme_name),
+            'tried_regions')
+
 def filters_dir_of(kdamond_name, context_name, scheme_name):
     return os.path.join(
             scheme_dir_of(kdamond_name, context_name, scheme_name), 'filters')
@@ -535,10 +540,10 @@ def update_supported_features():
                     stats=None)])])]
         ensure_dirs_populated_for(kdamonds_for_feature_check)
 
-    if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'tried_regions')):
+    if os.path.isdir(scheme_tried_regions_dir_of(0, 0, 0)):
         feature_supports['schemes_tried_regions'] = True
 
-    if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'tried_regions',
+    if os.path.isfile(os.path.join(scheme_tried_regions_dir_of(0, 0, 0),
             'sz_regions_sum')):
         feature_supports['schemes_tried_regions_sz'] = True
 
