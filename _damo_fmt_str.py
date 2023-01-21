@@ -194,6 +194,15 @@ def text_to_bytes(txt):
     if type(txt) in number_types:
         return txt
 
+    try:
+        return float(txt)
+    except:
+        pass
+    try:
+        return float(text_to_nr(txt))
+    except:
+        pass
+
     if txt == 'min':
         return 0
     if txt == 'max':
@@ -251,6 +260,10 @@ def text_to_us(txt):
         return float(txt)
     except:
         pass
+    try:
+        return float(text_to_nr(txt))
+    except:
+        pass
 
     if txt == 'max':
         return ulong_max
@@ -263,6 +276,10 @@ def text_to_ms(txt):
         return float(txt)
     except:
         pass
+    try:
+        return float(text_to_nr(txt))
+    except:
+        pass
 
     if txt == 'max':
         return ulong_max
@@ -273,6 +290,10 @@ def text_to_sec(txt):
         return txt
     try:
         return float(txt)
+    except:
+        pass
+    try:
+        return float(text_to_nr(txt))
     except:
         pass
 
@@ -311,6 +332,10 @@ def text_to_percent(txt):
         return txt
     try:
         return float(txt)
+    except:
+        pass
+    try:
+        return float(text_to_nr(txt))
     except:
         pass
 
