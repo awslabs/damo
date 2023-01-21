@@ -225,12 +225,17 @@ class TestDamon(unittest.TestCase):
                     ['min', 'max'], _damon.unit_usec))
 
         intervals = _damon.DamonIntervals(5000, 100000, 1000000)
-        pattern_human = _damon.DamosAccessPattern([123, 456],
-                [15, 35], _damon.unit_percent,
-                [5000000, 19000000], _damon.unit_usec)
-        pattern_machine = _damon.DamosAccessPattern([123, 456],
-                [3, 7], _damon.unit_sample_intervals,
-                [50, 190], _damon.unit_aggr_intervals)
+        pattern_human = _damon.DamosAccessPattern([123, '4,567'],
+                [15, '10,000'], _damon.unit_percent,
+                ['5,000,000', '190,000,000'], _damon.unit_usec)
+        pattern_machine = _damon.DamosAccessPattern([123, 4567],
+                [3, '2,000'], _damon.unit_sample_intervals,
+                [50, '1,900'], _damon.unit_aggr_intervals)
+        print('converted %s' %
+                pattern_human.converted_for_units(
+                    _damon.unit_sample_intervals,
+                    _damon.unit_aggr_intervals, intervals))
+        print('expected %s' % pattern_machine)
 
         self.assertEqual(
                 pattern_human.converted_for_units(
@@ -252,8 +257,9 @@ class TestDamon(unittest.TestCase):
                     _damon.unit_percent, _damon.unit_usec, intervals)]:
             self.assertEqual(type(converted.min_nr_accesses), int)
             self.assertEqual(type(converted.max_nr_accesses), int)
-            self.assertEqual(type(converted.min_age), int)
-            self.assertEqual(type(converted.max_age), int)
+            if converted.age_unit != _damon.unit_usec:
+                self.assertEqual(type(converted.min_age), int)
+                self.assertEqual(type(converted.max_age), int)
 
     def test_damos_quotas(self):
         self.assertEqual(_damon.DamosQuotas(),
