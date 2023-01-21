@@ -195,6 +195,18 @@ def set_common_monitoring_argparser(parser):
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
             help='if target is \'paddr\', limit it to the numa node')
 
+def set_common_monitoring_argparser2(parser):
+    parser.add_argument('--intervals', nargs=3, default=['5ms', '100ms', '1s'],
+            metavar=('sample', 'aggr', 'update'),
+            help='monitoring intervals (us)')
+    parser.add_argument('--nr_regions', nargs=2, metavar=('min', 'max'),
+            default=[10, 1000],
+            help='min/max monitoring regions')
+    parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
+            type=str, default='', help='monitoring target address regions')
+    parser.add_argument('--numa_node', metavar='<node id>', type=int,
+            help='if target is \'paddr\', limit it to the numa node')
+
 def set_implicit_target_monitoring_argparser(parser):
     set_common_monitoring_argparser(parser)
     parser.add_argument('target', type=str, metavar='<target>',
