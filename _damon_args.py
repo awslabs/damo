@@ -199,7 +199,7 @@ def set_implicit_target_monitoring_argparser(parser):
 def set_implicit_target_record_argparser(parser):
     set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-            help='length of record result buffer')
+            help='length of record result buffer (WILL Be DEPRECATED)')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
             default='damon.data', help='output file path')
 
