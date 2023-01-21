@@ -12,3 +12,4 @@
 - Cleanup schemes test using damo stat
 - damo stat regions <access pattern>
 - damo stat regions --size <access pattern>
+- Deprecate --rbuf and in-kernel record feature support (by 2023-q2)
