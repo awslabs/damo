@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
+import signal
 import time
 
 import damo_stat_kdamonds
@@ -50,7 +51,13 @@ def set_argparser(parser):
 
     _damon_args.set_common_argparser(parser)
 
+def sighandler(signum, frame):
+    exit(0)
+
 def run_count_delay(func, args):
+    signal.signal(signal.SIGINT, sighandler)
+    signal.signal(signal.SIGTERM, sighandler)
+
     for i in range(args.count):
         func(args)
         if i != args.count - 1:
