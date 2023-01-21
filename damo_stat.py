@@ -37,7 +37,7 @@ def set_common_argparser(parser):
     parser.add_argument('--delay', metavar='<secs>', default=3, type=float,
             help='delay between repeated status prints')
     parser.add_argument('--count', metavar='<count>', default=1, type=int,
-            help='number of repeated status prints')
+            help='number of repeated status prints.  zero means infinite')
     parser.add_argument('--raw', action='store_true',
             help='print numbers in machine friendly raw form')
 
@@ -58,10 +58,12 @@ def run_count_delay(func, args):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    for i in range(args.count):
+    i = 0
+    while args.count == 0 or i < args.count:
         func(args)
         if i != args.count - 1:
             time.sleep(args.delay)
+        i += 1
 
 def main(args=None):
     if not args:
