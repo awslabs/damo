@@ -162,7 +162,7 @@ def main(args=None):
             cleanup_exit(-2)
         data_for_cleanup.kdamonds_names = [k.name for k in kdamonds]
 
-    if not damon_record_supported:
+    if not damon_record_supported or is_ongoing:
         # Record the monitoring results using perf
         data_for_cleanup.perf_pipe = subprocess.Popen([
             'perf', 'record', '-a', '-e', 'damon:damon_aggregated',
