@@ -165,16 +165,18 @@ class DamosAccessPattern:
             self.max_nr_accesses = _damo_fmt_str.text_to_percent(
                     nr_accesses[1])
         else:
-            self.min_nr_accesses = nr_accesses[0]
-            self.max_nr_accesses = nr_accesses[1]
+            self.min_nr_accesses = _damo_fmt_str.text_to_nr(
+                    nr_accesses[0])
+            self.max_nr_accesses = _damo_fmt_str.text_to_nr(
+                    nr_accesses[1])
         self.nr_accesses_unit = nr_accesses_unit
 
         if age_unit == unit_usec:
             self.min_age = _damo_fmt_str.text_to_us(age[0])
             self.max_age = _damo_fmt_str.text_to_us(age[1])
         else:
-            self.min_age = age[0]
-            self.max_age = age[1]
+            self.min_age = _damo_fmt_str.text_to_nr(age[0])
+            self.max_age = _damo_fmt_str.text_to_nr(age[1])
         self.age_unit = age_unit
 
     def to_str(self, raw):
