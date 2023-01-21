@@ -61,7 +61,7 @@ def main(args=None):
     kdamonds_names = [k.name for k in kdamonds]
 
     print('Press Ctrl+C to stop')
-    if args.self_started_target == True:
+    if _damon_args.self_started_target(args):
         os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
     # damon will turn it off by itself if the target tasks are terminated.
     _damon.wait_current_kdamonds_turned_off()

@@ -176,7 +176,7 @@ def main(args=None):
             '-o', data_for_cleanup.rfile_path + '.perf.data'])
     print('Press Ctrl+C to stop')
 
-    if not is_ongoing and args.self_started_target == True:
+    if _damon_args.self_started_target(args):
         os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
     _damon.wait_current_kdamonds_turned_off()
 
