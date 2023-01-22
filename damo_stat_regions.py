@@ -9,6 +9,9 @@ import _damo_fmt_str
 import _damo_subcmds
 import _damon
 
+def out_of_range(minval, val, maxval):
+    return val < minval or maxval < val
+
 def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
         access_pattern, raw_nr):
     for kdamond in _damon.current_kdamonds():
@@ -21,18 +24,16 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
                             _damon.unit_sample_intervals,
                             _damon.unit_aggr_intervals, ctx.intervals)
                     for region in scheme.tried_regions:
-                        sz = region.end - region.start
-                        if sz < access_pattern.min_sz_bytes:
+                        if out_of_range(access_pattern.min_sz_bytes,
+                                region.end - region.start,
+                                access_pattern.max_sz_bytes):
                             continue
-                        if sz > access_pattern.max_sz_bytes:
+                        if out_of_range(access_pattern.min_nr_accesses,
+                                region.nr_accesses,
+                                access_pattern.max_nr_accesses):
                             continue
-                        if region.nr_accesses < access_pattern.min_nr_accesses:
-                            continue
-                        if region.nr_accesses > access_pattern.max_nr_accesses:
-                            continue
-                        if region.age < access_pattern.min_age:
-                            continue
-                        if region.age > access_pattern.max_age:
+                        if out_of_range(access_pattern.min_age, region.age,
+                                access_pattern.max_age):
                             continue
                         print(region.to_str(raw_nr, ctx.intervals))
                     return
