@@ -31,7 +31,8 @@ def __pr_schemes_tried_regions(regions, intervals, access_pattern, size_only,
             print(region.to_str(raw_nr, intervals))
         else:
             total_sz += sz
-    print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
+    if size_only:
+        print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
 
 def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
         access_pattern, size_only, raw_nr):
