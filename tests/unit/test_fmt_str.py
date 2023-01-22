@@ -163,7 +163,12 @@ class TestDamoFmtStr(unittest.TestCase):
                     '12.34 %': 12.34,
                     '1,234.567 %': 1234.567,
                     '1,234.567,89 %': 1234.56789,
-                    '1,234': 1234})
+                    '1,234': 1234,
+                    '123': 123,
+                    '123.456': 123.456,
+                    123: 123,
+                    123.456: 123.456,
+                    })
 
     def test_text_to_permil(self):
         _test_damo_common.test_input_expects(self,
@@ -174,7 +179,12 @@ class TestDamoFmtStr(unittest.TestCase):
                     '1.234%': 12.34,
                     '1.234 %': 12.34,
                     '1,234.567 %': 12345.67,
-                    '1,234.567,89 %': 12345.6789})
+                    '1,234.567,89 %': 12345.6789,
+                    '123': 123,
+                    '123.456': 123.456,
+                    123: 123,
+                    123.456: 123.456,
+                    })
 
     def test_text_to_ratio(self):
         _test_damo_common.test_input_expects(self,
@@ -184,7 +194,12 @@ class TestDamoFmtStr(unittest.TestCase):
                     '200%': 2.0,
                     0.5: 0.5,
                     '1,234.567 %': 12.34567,
-                    '1,234.56': 1234.56})
+                    '1,234.56': 1234.56,
+                    '123': 123,
+                    '123.456': 123.456,
+                    123: 123,
+                    123.456: 123.456,
+                    })
 
     def test_text_to_bytes(self):
         _test_damo_common.test_input_expects(self, _damo_fmt_str.text_to_bytes,
@@ -207,7 +222,12 @@ class TestDamoFmtStr(unittest.TestCase):
                     '2 PiB': 2 * 1 << 50,
                     '2.0 PiB': 2 * 1 << 50,
                     '16384.000 PiB': (1 << 64) - 1,
-                    '2.0 EiB': 2 * 1 << 60})
+                    '2.0 EiB': 2 * 1 << 60,
+                    '123': 123,
+                    '123.456': 123.456,
+                    123: 123,
+                    123.456: 123.456,
+                    })
 
     def test_text_to_bool(self):
         _test_damo_common.test_input_expects(self, _damo_fmt_str.text_to_bool,
