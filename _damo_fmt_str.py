@@ -199,7 +199,7 @@ def text_to_nr(txt):
 
 def text_to_bytes(txt):
     try:
-        return float(text_to_nr(txt))
+        return text_to_nr(txt)
     except:
         pass
 
@@ -212,17 +212,17 @@ def text_to_bytes(txt):
     if len(txt) > 3:
         unit = txt[len(txt) - 3:]
         if unit in unit_to_bytes:
-            number = float(text_to_nr(txt[:-3]))
+            number = text_to_nr(txt[:-3])
         else:
             unit = None
 
     if unit == None:
         if txt[-1] in unit_to_bytes:
             unit = txt[-1]
-            number = float(text_to_nr(txt[:-1]))
+            number = text_to_nr(txt[:-1])
         else:
             unit = 'B'
-            number  = float(text_to_nr(txt))
+            number  = text_to_nr(txt)
 
     return min(ulong_max, int(number * unit_to_bytes[unit]))
 
@@ -231,7 +231,7 @@ unit_to_nsecs = {'ns': ns_ns, 'us': us_ns, 'ms': ms_ns, 's': sec_ns,
 
 def text_to_ns(txt):
     try:
-        return float(text_to_nr(txt))
+        return text_to_nr(txt)
     except:
         pass
     if txt == 'min':
@@ -251,15 +251,15 @@ def text_to_ns(txt):
 
     unit = txt[-2:]
     if unit in ['ns', 'us', 'ms']:
-        number = float(text_to_nr(txt[:-2]))
+        number = text_to_nr(txt[:-2])
     else:
         unit = txt[-1]
-        number = float(text_to_nr(txt[:-1]))
+        number = text_to_nr(txt[:-1])
     return number * unit_to_nsecs[unit]
 
 def text_to_us(txt):
     try:
-        return float(text_to_nr(txt))
+        return text_to_nr(txt)
     except:
         pass
 
@@ -269,7 +269,7 @@ def text_to_us(txt):
 
 def text_to_ms(txt):
     try:
-        return float(text_to_nr(txt))
+        return text_to_nr(txt)
     except:
         pass
 
@@ -279,7 +279,7 @@ def text_to_ms(txt):
 
 def text_to_sec(txt):
     try:
-        return float(text_to_nr(txt))
+        return text_to_nr(txt)
     except:
         pass
 
@@ -299,7 +299,7 @@ def text_to_ratio(txt):
     if txt[-1] == '%':
         is_percent = True
         txt = txt[:-1]
-    ratio = float(text_to_nr(txt))
+    ratio = text_to_nr(txt)
     if is_percent:
         ratio /= 100
     return ratio
@@ -315,7 +315,7 @@ def text_to_permil(txt):
 
 def text_to_percent(txt):
     try:
-        return float(text_to_nr(txt))
+        return text_to_nr(txt)
     except:
         pass
 
