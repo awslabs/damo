@@ -41,13 +41,13 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
             continue
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
-                if scheme == monitoring_scheme:
-                    access_pattern.convert_for_units(
-                            _damon.unit_sample_intervals,
-                            _damon.unit_aggr_intervals, ctx.intervals)
-                    __pr_schemes_tried_regions(scheme.tried_regions,
-                            ctx.intervals, access_pattern, size_only, raw_nr)
-                    return
+                if scheme != monitoring_scheme:
+                    continue
+                access_pattern.convert_for_units(_damon.unit_sample_intervals,
+                        _damon.unit_aggr_intervals, ctx.intervals)
+                __pr_schemes_tried_regions(scheme.tried_regions, ctx.intervals,
+                        access_pattern, size_only, raw_nr)
+                return
 
 def monitoring_kdamond_scheme():
     monitoring_kdamond = None
