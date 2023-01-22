@@ -14,6 +14,8 @@ def out_of_range(minval, val, maxval):
 
 def __pr_schemes_tried_regions(regions, intervals, access_pattern, size_only,
         raw_nr):
+    access_pattern.convert_for_units(_damon.unit_sample_intervals,
+            _damon.unit_aggr_intervals, ctx.intervals)
     total_sz = 0
     for region in regions:
         sz = region.end - region.start
@@ -43,8 +45,6 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
             for scheme in ctx.schemes:
                 if scheme != monitoring_scheme:
                     continue
-                access_pattern.convert_for_units(_damon.unit_sample_intervals,
-                        _damon.unit_aggr_intervals, ctx.intervals)
                 __pr_schemes_tried_regions(scheme.tried_regions, ctx.intervals,
                         access_pattern, size_only, raw_nr)
                 return
