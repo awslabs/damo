@@ -12,6 +12,27 @@ import _damon
 def out_of_range(minval, val, maxval):
     return val < minval or maxval < val
 
+def __pr_schemes_tried_regions(regions, intervals, access_pattern, size_only,
+        raw_nr):
+    total_sz = 0
+    for region in regions:
+        sz = region.end - region.start
+        if out_of_range(access_pattern.min_sz_bytes, sz,
+                access_pattern.max_sz_bytes):
+            continue
+        if out_of_range(access_pattern.min_nr_accesses,
+                region.nr_accesses,
+                access_pattern.max_nr_accesses):
+            continue
+        if out_of_range(access_pattern.min_age, region.age,
+                access_pattern.max_age):
+            continue
+        if not size_only:
+            print(region.to_str(raw_nr, intervals))
+        else:
+            total_sz += sz
+    print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
+
 def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
         access_pattern, size_only, raw_nr):
     for kdamond in _damon.current_kdamonds():
@@ -20,27 +41,11 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
                 if scheme == monitoring_scheme:
-                    total_sz = 0
                     access_pattern.convert_for_units(
                             _damon.unit_sample_intervals,
                             _damon.unit_aggr_intervals, ctx.intervals)
-                    for region in scheme.tried_regions:
-                        sz = region.end - region.start
-                        if out_of_range(access_pattern.min_sz_bytes, sz,
-                                access_pattern.max_sz_bytes):
-                            continue
-                        if out_of_range(access_pattern.min_nr_accesses,
-                                region.nr_accesses,
-                                access_pattern.max_nr_accesses):
-                            continue
-                        if out_of_range(access_pattern.min_age, region.age,
-                                access_pattern.max_age):
-                            continue
-                        if not size_only:
-                            print(region.to_str(raw_nr, ctx.intervals))
-                        else:
-                            total_sz += sz
-                    print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
+                    __pr_schemes_tried_regions(scheme.tried_regions,
+                            ctx.intervals, access_pattern, size_only, raw_nr)
                     return
 
 def monitoring_kdamond_scheme():
