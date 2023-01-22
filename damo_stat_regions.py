@@ -78,9 +78,6 @@ def set_argparser(parser):
     parser.add_argument('--age', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
             help='min/max age of scheme target regions (microseconds)')
-    parser.add_argument('--action', metavar='<action>',
-            default='stat',
-            help='action of the scheme')
 
 def __main(args):
     if not _damon.feature_supported('schemes_tried_regions'):
