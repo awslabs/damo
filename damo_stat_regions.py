@@ -13,19 +13,20 @@ def out_of_range(minval, val, maxval):
     return val < minval or maxval < val
 
 def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
-        access_pattern, raw_nr):
+        access_pattern, size_only, raw_nr):
     for kdamond in _damon.current_kdamonds():
         if kdamond.name != kdamond_name:
             continue
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
                 if scheme == monitoring_scheme:
+                    total_sz = 0
                     access_pattern.convert_for_units(
                             _damon.unit_sample_intervals,
                             _damon.unit_aggr_intervals, ctx.intervals)
                     for region in scheme.tried_regions:
-                        if out_of_range(access_pattern.min_sz_bytes,
-                                region.end - region.start,
+                        sz = region.end - region.start
+                        if out_of_range(access_pattern.min_sz_bytes, sz,
                                 access_pattern.max_sz_bytes):
                             continue
                         if out_of_range(access_pattern.min_nr_accesses,
@@ -35,7 +36,11 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
                         if out_of_range(access_pattern.min_age, region.age,
                                 access_pattern.max_age):
                             continue
-                        print(region.to_str(raw_nr, ctx.intervals))
+                        if not size_only:
+                            print(region.to_str(raw_nr, ctx.intervals))
+                        else:
+                            total_sz += sz
+                    print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
                     return
 
 def monitoring_kdamond_scheme():
@@ -49,7 +54,7 @@ def monitoring_kdamond_scheme():
                     return kdamond.name, scheme
     return None, None
 
-def update_pr_schemes_tried_regions(access_pattern, raw_nr):
+def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
     if _damon.every_kdamond_turned_off():
         print('no kdamond running')
         exit(1)
@@ -65,7 +70,7 @@ def update_pr_schemes_tried_regions(access_pattern, raw_nr):
         exit(1)
 
     pr_schemes_tried_regions(monitoring_kdamond, monitoring_scheme,
-            access_pattern, raw_nr)
+            access_pattern, size_only, raw_nr)
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
@@ -78,6 +83,8 @@ def set_argparser(parser):
     parser.add_argument('--age', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
             help='min/max age of scheme target regions (microseconds)')
+    parser.add_argument('--size_only', action='store_true',
+            help='print total size only')
 
 def __main(args):
     if not _damon.feature_supported('schemes_tried_regions'):
@@ -85,7 +92,7 @@ def __main(args):
         exit(1)
     access_pattern = _damon.DamosAccessPattern(args.sz_region,
             args.access_rate, _damon.unit_percent, args.age, _damon.unit_usec)
-    update_pr_schemes_tried_regions(access_pattern, args.raw)
+    update_pr_schemes_tried_regions(access_pattern, args.size_only, args.raw)
 
 def main(args=None):
     if not args:
