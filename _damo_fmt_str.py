@@ -223,6 +223,10 @@ unit_to_nsecs = {'ns': ns_ns, 'us': us_ns, 'ms': ms_ns, 's': sec_ns,
         'm': minute_ns, 'h': hour_ns, 'd': day_ns}
 
 def text_to_ns(txt):
+    try:
+        return float(text_to_nr(txt))
+    except:
+        pass
     if txt == 'min':
         return 0
     if txt == 'max':
