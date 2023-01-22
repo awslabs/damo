@@ -75,13 +75,10 @@ Below is an exaple of the json string format.
     ]
 """
 
-import argparse
 import json
 import os
-import platform
 
 import _damon
-import _damon_dbgfs
 
 import _damo_fmt_str
 
