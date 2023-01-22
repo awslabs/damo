@@ -9,9 +9,9 @@ do
 	do
 		if "$py" "$test_file" &> /dev/null
 		then
-			echo "PASS unittest-$py $(basename $test_file)"
+			echo "PASS unit-$py $(basename $test_file)"
 		else
-			echo "FAIL unittest-$py $(basename $test_file)"
+			echo "FAIL unit-$py $(basename $test_file)"
 			exit 1
 		fi
 	done
