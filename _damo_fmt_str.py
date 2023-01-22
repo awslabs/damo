@@ -201,16 +201,22 @@ def text_to_nr(txt):
         pass
     return float(new_txt)
 
-def text_to_bytes(txt):
+def try_common_input(txt):
+    'return success and number'
+    if txt == 'min':
+        return True, 0
+    if txt == 'max':
+        return True, ulong_max
     try:
-        return text_to_nr(txt)
+        return True, text_to_nr(txt)
     except:
         pass
+    return False, None
 
-    if txt == 'min':
-        return 0
-    if txt == 'max':
-        return ulong_max
+def text_to_bytes(txt):
+    success, number = try_common_input(txt)
+    if success:
+        return number
 
     unit = None
     if len(txt) > 3:
@@ -234,14 +240,9 @@ unit_to_nsecs = {'ns': ns_ns, 'us': us_ns, 'ms': ms_ns, 's': sec_ns,
         'm': minute_ns, 'h': hour_ns, 'd': day_ns}
 
 def text_to_ns(txt):
-    try:
-        return text_to_nr(txt)
-    except:
-        pass
-    if txt == 'min':
-        return 0
-    if txt == 'max':
-        return ulong_max
+    success, number = try_common_input(txt)
+    if success:
+        return number
 
     fields = txt.split()
     if len(fields) > 1:
@@ -262,33 +263,24 @@ def text_to_ns(txt):
     return number * unit_to_nsecs[unit]
 
 def text_to_us(txt):
-    try:
-        return text_to_nr(txt)
-    except:
-        pass
+    success, number = try_common_input(txt)
+    if success:
+        return number
 
-    if txt == 'max':
-        return ulong_max
     return text_to_ns(txt) / us_ns
 
 def text_to_ms(txt):
-    try:
-        return text_to_nr(txt)
-    except:
-        pass
+    success, number = try_common_input(txt)
+    if success:
+        return number
 
-    if txt == 'max':
-        return ulong_max
     return text_to_us(txt) / 1000
 
 def text_to_sec(txt):
-    try:
-        return text_to_nr(txt)
-    except:
-        pass
+    success, number = try_common_input(txt)
+    if success:
+        return number
 
-    if txt == 'max':
-        return ulong_max
     return text_to_ms(txt) / 1000
 
 def text_to_ratio(txt):
