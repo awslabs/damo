@@ -190,6 +190,13 @@ unit_to_bytes = {'B': 1, 'K': 1 << 10, 'KiB': 1 << 10,
         'T': 1 << 40, 'TiB': 1 << 40, 'P': 1 << 50, 'PiB': 1 << 50,
         'E': 1 << 60, 'EiB': 1 << 60}
 
+def text_to_nr(txt):
+    if type(txt) in number_types:
+        return txt
+
+    new_txt = ''.join([c for c in txt if c != ','])
+    return float(new_txt)
+
 def text_to_bytes(txt):
     try:
         return float(text_to_nr(txt))
@@ -313,13 +320,6 @@ def text_to_percent(txt):
         pass
 
     return text_to_ratio(txt) * 100
-
-def text_to_nr(txt):
-    if type(txt) in number_types:
-        return txt
-
-    new_txt = ''.join([c for c in txt if c != ','])
-    return float(new_txt)
 
 def text_to_nr_unit(txt):
     fields = txt.split()
