@@ -195,6 +195,10 @@ def text_to_nr(txt):
         return txt
 
     new_txt = ''.join([c for c in txt if c != ','])
+    try:
+        return int(new_txt)
+    except:
+        pass
     return float(new_txt)
 
 def text_to_bytes(txt):
