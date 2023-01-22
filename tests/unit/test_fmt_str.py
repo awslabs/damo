@@ -108,7 +108,11 @@ class TestDamoFmtStr(unittest.TestCase):
                 {
                     '1': 1,
                     '1 ns': 1,
-                    'max': _damo_fmt_str.ulong_max})
+                    'max': _damo_fmt_str.ulong_max,
+                    '123.456': 123.456,
+                    123: 123,
+                    123.456: 123.456,
+                    })
         _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_us,
                 {
@@ -122,17 +126,32 @@ class TestDamoFmtStr(unittest.TestCase):
                     '3 d 2 h 1 m 2 s':
                     3 * 24 * 60 * 60 * 1000 * 1000 + 7262 * 1000 * 1000,
                     '134': 134,
-                    'max': _damo_fmt_str.ulong_max})
+                    'max': _damo_fmt_str.ulong_max,
+                    '123': 123,
+                    '123.456': 123.456,
+                    123: 123,
+                    123.456: 123.456,
+                    })
         _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_ms,
                 {
                     '134': 134,
-                    'max': _damo_fmt_str.ulong_max})
+                    'max': _damo_fmt_str.ulong_max,
+                    '123': 123,
+                    '123.456': 123.456,
+                    123: 123,
+                    123.456: 123.456,
+                    })
         _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_sec,
                 {
                     '134': 134,
-                    'max': _damo_fmt_str.ulong_max})
+                    'max': _damo_fmt_str.ulong_max,
+                    '123': 123,
+                    '123.456': 123.456,
+                    123: 123,
+                    123.456: 123.456,
+                    })
 
     def test_text_to_percent(self):
         _test_damo_common.test_input_expects(self,
