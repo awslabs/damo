@@ -231,11 +231,6 @@ class TestDamon(unittest.TestCase):
         pattern_machine = _damon.DamosAccessPattern([123, 4567],
                 [3, '2,000'], _damon.unit_sample_intervals,
                 [50, '1,900'], _damon.unit_aggr_intervals)
-        print('converted %s' %
-                pattern_human.converted_for_units(
-                    _damon.unit_sample_intervals,
-                    _damon.unit_aggr_intervals, intervals))
-        print('expected %s' % pattern_machine)
 
         self.assertEqual(
                 pattern_human.converted_for_units(
