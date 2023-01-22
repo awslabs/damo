@@ -201,12 +201,12 @@ def text_to_nr(txt):
         pass
     return float(new_txt)
 
-def try_common_input(txt):
+def try_common_input(txt, min_val=0, max_val=ulong_max):
     'return success and number'
     if txt == 'min':
-        return True, 0
+        return True, min_val
     if txt == 'max':
-        return True, ulong_max
+        return True, max_val
     try:
         return True, text_to_nr(txt)
     except:
@@ -284,36 +284,30 @@ def text_to_sec(txt):
     return text_to_ms(txt) / 1000
 
 def text_to_ratio(txt):
-    if type(txt) in number_types:
-        return txt
+    success, number = try_common_input(txt, 0.0, 1.0)
+    if success:
+        return number
 
-    if txt == 'min':
-        return 0.0
-    if txt == 'max':
-        return 1.0
     is_percent = False
     if txt[-1] == '%':
         is_percent = True
         txt = txt[:-1]
     ratio = text_to_nr(txt)
     if is_percent:
-        ratio /= 100
+        ratio /= 100.0
     return ratio
 
 def text_to_permil(txt):
-    if type(txt) in number_types:
-        return txt
-    try:
-        return float(txt)
-    except: pass
+    success, number = try_common_input(txt, 0, 1000)
+    if success:
+        return number
 
     return text_to_ratio(txt) * 1000
 
 def text_to_percent(txt):
-    try:
-        return text_to_nr(txt)
-    except:
-        pass
+    success, number = try_common_input(txt, 0, 100)
+    if success:
+        return number
 
     return text_to_ratio(txt) * 100
 
