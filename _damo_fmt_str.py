@@ -191,13 +191,6 @@ unit_to_bytes = {'B': 1, 'K': 1 << 10, 'KiB': 1 << 10,
         'E': 1 << 60, 'EiB': 1 << 60}
 
 def text_to_bytes(txt):
-    if type(txt) in number_types:
-        return txt
-
-    try:
-        return float(txt)
-    except:
-        pass
     try:
         return float(text_to_nr(txt))
     except:
@@ -254,12 +247,6 @@ def text_to_ns(txt):
     return number * unit_to_nsecs[unit]
 
 def text_to_us(txt):
-    if type(txt) in number_types:
-        return txt
-    try:
-        return float(txt)
-    except:
-        pass
     try:
         return float(text_to_nr(txt))
     except:
@@ -270,12 +257,6 @@ def text_to_us(txt):
     return text_to_ns(txt) / us_ns
 
 def text_to_ms(txt):
-    if type(txt) in number_types:
-        return txt
-    try:
-        return float(txt)
-    except:
-        pass
     try:
         return float(text_to_nr(txt))
     except:
@@ -286,12 +267,6 @@ def text_to_ms(txt):
     return text_to_us(txt) / 1000
 
 def text_to_sec(txt):
-    if type(txt) in number_types:
-        return txt
-    try:
-        return float(txt)
-    except:
-        pass
     try:
         return float(text_to_nr(txt))
     except:
@@ -328,12 +303,6 @@ def text_to_permil(txt):
     return text_to_ratio(txt) * 1000
 
 def text_to_percent(txt):
-    if type(txt) in number_types:
-        return txt
-    try:
-        return float(txt)
-    except:
-        pass
     try:
         return float(text_to_nr(txt))
     except:
