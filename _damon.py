@@ -298,8 +298,10 @@ def kvpairs_to_DamosAccessPattern(kv):
     except:
         min_nr_accesses, nr_accesses_unit = _damo_fmt_str.text_to_nr_unit(
                 kv['min_nr_accesses'])
-        max_nr_accesses, nr_accesses_unit = _damo_fmt_str.text_to_nr_unit(
+        max_nr_accesses, nr_accesses_unit2 = _damo_fmt_str.text_to_nr_unit(
                 kv['max_nr_accesses'])
+        if nr_accesses_unit != nr_accesses_unit2:
+            raise Exception('nr_accesses units should be same')
 
     try:
         min_age = _damo_fmt_str.text_to_us(kv['min_age'])
@@ -307,7 +309,9 @@ def kvpairs_to_DamosAccessPattern(kv):
         age_unit = unit_usec
     except:
         min_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv['min_age'])
-        max_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv['max_age'])
+        max_age, age_unit2 = _damo_fmt_str.text_to_nr_unit(kv['max_age'])
+        if age_unit != age_unit2:
+            raise Exception('age units should be same')
 
     return DamosAccessPattern([_damo_fmt_str.text_to_bytes(kv['min_sz_bytes']),
             _damo_fmt_str.text_to_bytes(kv['max_sz_bytes'])], [min_nr_accesses,
