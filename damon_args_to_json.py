@@ -13,7 +13,7 @@ def main():
 
     _damon.ensure_root_and_initialized(args)
 
-    kdamonds, err = _damon_args.kdamonds_from_damon_args(args)
+    kdamonds, err = _damon_args.kdamonds_from_args(args)
     if err:
         print('creating kdamonds from arguments failed (%s)' % err)
         exit(1)

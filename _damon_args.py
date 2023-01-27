@@ -95,7 +95,7 @@ def damon_ctx_from_damon_args(args):
     except Exception as e:
         return None, 'Creating context from arguments failed (%s)' % e
 
-def kdamonds_from_damon_args(args):
+def kdamonds_from_args(args):
     if args.kdamonds:
         if os.path.isfile(args.kdamonds):
             with open(args.kdamonds, 'r') as f:
@@ -122,7 +122,7 @@ def is_ongoing_target(args):
     return args.target == 'ongoing'
 
 def apply_explicit_args_damon(args):
-    kdamonds, err = kdamonds_from_damon_args(args)
+    kdamonds, err = kdamonds_from_args(args)
     if err:
         return None, 'cannot create kdamonds from args'
     err = _damon.apply_kdamonds(kdamonds)

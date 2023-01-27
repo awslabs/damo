@@ -22,7 +22,7 @@ def main(args=None):
         args = parser.parse_args()
 
     kdamonds, err = [k.to_kvpairs(args.raw) for k in
-            _damon_args.kdamonds_from_damon_args(args)]
+            _damon_args.kdamonds_from_args(args)]
     if err:
         print('creating kdamonds from arguments failed (%s)' % err)
         exit(1)
