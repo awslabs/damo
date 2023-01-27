@@ -342,7 +342,7 @@ def test_init_regions_version(paddr_supported):
     orig_target_ids, err = read_value_for_restore(debugfs_target_ids)
     if err != None:
         raise Exception('debugfs target_ids read failed')
-    orig_init_regions = read_value_for_restore(debugfs_init_regions)
+    orig_init_regions, err = read_value_for_restore(debugfs_init_regions)
     if err != None:
         raise Exception('debugfs init_regions read failed')
 
