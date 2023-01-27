@@ -11,3 +11,4 @@
 - Support ongoing schemes
 - Cleanup schemes test using damo stat
 - Deprecate --rbuf and in-kernel record feature support (by 2023-q2)
+- Deprecate python2 support
