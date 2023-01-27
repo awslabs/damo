@@ -13,7 +13,7 @@ def read_file(filepath):
     except Exception as e:
         return None, 'reading %s failed (%s)' % (filepath, e)
     if _damon.pr_debug_log:
-        print('read \'%s\': \'%s\'' % (filepath, content))
+        print('read \'%s\': \'%s\'' % (filepath, content.strip()))
     return content, None
 
 def __read_files(root, max_depth, current_depth):
@@ -69,12 +69,12 @@ Returns None if success error string otherwise
 '''
 def write_file(filepath, content):
     if _damon.pr_debug_log:
-        print('write \'%s\' to \'%s\'' % (content, filepath))
+        print('write \'%s\' to \'%s\'' % (content.strip(), filepath))
     try:
         with open(filepath, 'w') as f:
             f.write(content)
     except Exception as e:
-        return 'writing %s to %s failed (%s)' % (content, filepath, e)
+        return 'writing %s to %s failed (%s)' % (content.strip(), filepath, e)
     return None
 
 def write_file_ensure(filepath, content):
