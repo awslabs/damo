@@ -164,19 +164,27 @@ class DamosAccessPattern:
                     nr_accesses[0])
             self.max_nr_accesses = _damo_fmt_str.text_to_percent(
                     nr_accesses[1])
-        else:
+        elif nr_accesses_unit == unit_sample_intervals:
             self.min_nr_accesses = _damo_fmt_str.text_to_nr(
                     nr_accesses[0])
             self.max_nr_accesses = _damo_fmt_str.text_to_nr(
                     nr_accesses[1])
+        else:
+            raise Exception('invalid access pattern nr_accesses_unit \'%s\'' %
+                    nr_accesses_unit)
+
         self.nr_accesses_unit = nr_accesses_unit
 
         if age_unit == unit_usec:
             self.min_age = _damo_fmt_str.text_to_us(age[0])
             self.max_age = _damo_fmt_str.text_to_us(age[1])
-        else:
+        elif age_unit == unit_aggr_intervals:
             self.min_age = _damo_fmt_str.text_to_nr(age[0])
             self.max_age = _damo_fmt_str.text_to_nr(age[1])
+        else:
+            raise Exception('invalid access pattern age_unit \'%s\'' %
+                    age_unit)
+
         self.age_unit = age_unit
 
     def to_str(self, raw):
