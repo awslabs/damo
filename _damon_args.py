@@ -54,13 +54,33 @@ def init_regions_from_damon_args(args):
 
     return init_regions, None
 
+def damon_intervals_from_args(args):
+    default_intervals = _damon.DamonIntervals()
+    intervals1 = _damon.DamonIntervals(args.sample, args.aggr, args.updr)
+    intervals2 = _damon.DamonIntervals(*args.monitoring_intervals)
+    if not intervals1 == default_intervals:
+        return intervals1
+    if not intervals2 == default_intervals:
+        return intervals2
+    return default_intervals
+
+def damon_nr_regions_range_from_args(args):
+    default_range = _damon.DamonNrRegionsRange()
+    range1 = _damon.DamonNrRegionsRange(args.minr, args.maxr)
+    range2 = _damon.DamonNrRegionsRange(*args.monitoring_nr_regions_range)
+    if not range1 == default_range:
+        return range1
+    if not range2 == default_range:
+        return range2
+    return default_range
+
 def damon_ctx_from_args(args):
     try:
-        intervals = _damon.DamonIntervals(args.sample, args.aggr, args.updr)
+        intervals = damon_intervals_from_args(args)
     except Exception as e:
         return None, 'invalid intervals arguments (%s)' % e
     try:
-        nr_regions = _damon.DamonNrRegionsRange(args.minr, args.maxr)
+        nr_regions = damon_nr_regions_range_from_args(args)
     except Exception as e:
         return None, 'invalid nr_regions arguments (%s)' % e
     ops = args.ops
@@ -178,6 +198,7 @@ def set_common_argparser(parser):
             help='Print debugging log')
 
 def set_monitoring_attrs_argparser(parser):
+    # for easier pinpoint setup
     parser.add_argument('-s', '--sample', metavar='<interval>',
             default=5000, help='sampling interval (us)')
     parser.add_argument('-a', '--aggr', metavar='<interval>',
@@ -189,7 +210,7 @@ def set_monitoring_attrs_argparser(parser):
     parser.add_argument('-m', '--maxr', metavar='<# regions>',
             default=1000, help='maximum number of regions')
 
-def set_monitoring_attrs_argparser2(parser):
+    # for easier total setup
     parser.add_argument('--monitoring_intervals', nargs=3,
             default=['5ms', '100ms', '1s'],
             metavar=('sample', 'aggr', 'update'),
