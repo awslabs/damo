@@ -256,6 +256,19 @@ class TestDamon(unittest.TestCase):
                 self.assertEqual(type(converted.min_age), int)
                 self.assertEqual(type(converted.max_age), int)
 
+        exception_raised = False
+        try:
+            _damon.DamosAccessPattern(nr_accesses=[0, 100], nr_accesses_unit='foo')
+        except:
+            exception_raised = True
+        self.assertTrue(exception_raised)
+        exception_raised = False
+        try:
+            _damon.DamosAccessPattern(age=[0, 100], age_unit='bar')
+        except:
+            exception_raised = True
+        self.assertTrue(exception_raised)
+
     def test_damos_quotas(self):
         self.assertEqual(_damon.DamosQuotas(),
                 _damon.DamosQuotas(0, 0, 'max', 0, 0, 0))
