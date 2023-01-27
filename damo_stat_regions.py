@@ -82,13 +82,13 @@ def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
     parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
-            help='min/max size of scheme target regions (bytes)')
+            help='min/max size of regions (bytes)')
     parser.add_argument('--access_rate', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
-            help='min/max access rate of scheme target regions (percent)')
+            help='min/max access rate of regions (percent)')
     parser.add_argument('--age', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
-            help='min/max age of scheme target regions (microseconds)')
+            help='min/max age of regions (microseconds)')
     parser.add_argument('--size_only', action='store_true',
             help='print total size only')
 
