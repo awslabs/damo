@@ -54,7 +54,7 @@ def init_regions_from_damon_args(args):
 
     return init_regions, None
 
-def damon_ctx_from_damon_args(args):
+def damon_ctx_from_args(args):
     try:
         intervals = _damon.DamonIntervals(args.sample, args.aggr, args.updr)
     except Exception as e:
@@ -103,7 +103,7 @@ def kdamonds_from_args(args):
         kdamonds_kvpairs = json.loads(kdamonds_str)
         return [kvpairs_to_Kdamond(kvpair)
                 for kvpair in kdamonds_kvpairs], None
-    ctx, err = damon_ctx_from_damon_args(args)
+    ctx, err = damon_ctx_from_args(args)
     if err:
         return None, err
     return [_damon.Kdamond(name='0', state=None, pid=None,

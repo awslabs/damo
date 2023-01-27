@@ -15,7 +15,7 @@ import _damon_args
 import _damon_sysfs
 
 class TestDamonArgs(unittest.TestCase):
-    def test_damon_ctx_from_damon_args(self):
+    def test_damon_ctx_from_args(self):
         _damon_sysfs.feature_supports = {'init_regions': True, 'schemes': True,
                 'schemes_stat_qt_exceed': True, 'init_regions_target_idx':
                 True, 'schemes_prioritization': True, 'schemes_tried_regions':
@@ -33,7 +33,7 @@ class TestDamonArgs(unittest.TestCase):
                     '--minr 10 --maxr 1000 --regions=123-456 paddr').split())
         err = _damon_args.set_implicit_target_args_explicit(args)
         self.assertEqual(err, None)
-        ctx, err = _damon_args.damon_ctx_from_damon_args(args)
+        ctx, err = _damon_args.damon_ctx_from_args(args)
         self.assertEqual(err, None)
         self.assertEqual(ctx,
             _damon.DamonCtx('0',
@@ -48,7 +48,7 @@ class TestDamonArgs(unittest.TestCase):
                     '--minr 10 --maxr 1,000 --regions=1K-4K paddr').split())
         err = _damon_args.set_implicit_target_args_explicit(args)
         self.assertEqual(err, None)
-        ctx, err = _damon_args.damon_ctx_from_damon_args(args)
+        ctx, err = _damon_args.damon_ctx_from_args(args)
         self.assertEqual(err, None)
         self.assertEqual(ctx,
             _damon.DamonCtx('0',
@@ -65,7 +65,7 @@ class TestDamonArgs(unittest.TestCase):
                 ('--sample 5ms --aggr 100ms --updr 1s ' +
                     '--minr 10 --maxr 1,000 --regions=1K-4K ' +
                     '--ops paddr').split())
-        ctx, err = _damon_args.damon_ctx_from_damon_args(args)
+        ctx, err = _damon_args.damon_ctx_from_args(args)
         self.assertEqual(err, None)
         self.assertEqual(ctx,
             _damon.DamonCtx('0',
