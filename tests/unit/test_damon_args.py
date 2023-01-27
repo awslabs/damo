@@ -75,5 +75,28 @@ class TestDamonArgs(unittest.TestCase):
                     [_damon.DamonRegion(1024, 4096)])],
                 [_damon.Damos()]))
 
+    def test_damon_intervals_from_args(self):
+        parser = argparse.ArgumentParser()
+        _damon_args.set_monitoring_attrs_argparser(parser)
+
+        args = parser.parse_args(
+                '--monitoring_intervals 4ms 120ms 1.5s'.split())
+        intervals = _damon_args.damon_intervals_from_args(args)
+        self.assertEqual(intervals, _damon.DamonIntervals('4ms', '120ms',
+            '1.5s'))
+
+        args = parser.parse_args('--sample 7ms'.split())
+        intervals = _damon_args.damon_intervals_from_args(args)
+        self.assertEqual(intervals, _damon.DamonIntervals('7ms'))
+
+    def test_damon_nr_regions_range_from_args(self):
+        parser = argparse.ArgumentParser()
+        _damon_args.set_monitoring_attrs_argparser(parser)
+
+        args = parser.parse_args(
+                '--monitoring_nr_regions_range 25 5000'.split())
+        nr_range = _damon_args.damon_nr_regions_range_from_args(args)
+        self.assertEqual(nr_range, _damon.DamonNrRegionsRange(25, 5000))
+
 if __name__ == '__main__':
     unittest.main()
