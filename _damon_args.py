@@ -179,7 +179,7 @@ def set_common_argparser(parser):
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')
 
-def set_common_monitoring_argparser(parser):
+def set_monitoring_attrs_argparser(parser):
     parser.add_argument('-s', '--sample', metavar='<interval>',
             default=5000, help='sampling interval (us)')
     parser.add_argument('-a', '--aggr', metavar='<interval>',
@@ -190,18 +190,17 @@ def set_common_monitoring_argparser(parser):
             default=10, help='minimal number of regions')
     parser.add_argument('-m', '--maxr', metavar='<# regions>',
             default=1000, help='maximum number of regions')
-    parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
-            type=str, default='', help='monitoring target address regions')
-    parser.add_argument('--numa_node', metavar='<node id>', type=int,
-            help='if target is \'paddr\', limit it to the numa node')
 
-def set_common_monitoring_argparser2(parser):
+def set_monitoring_attrs_argparser2(parser):
     parser.add_argument('--intervals', nargs=3, default=['5ms', '100ms', '1s'],
             metavar=('sample', 'aggr', 'update'),
             help='monitoring intervals (us)')
     parser.add_argument('--nr_regions', nargs=2, metavar=('min', 'max'),
             default=[10, 1000],
             help='min/max monitoring regions')
+
+def set_common_monitoring_argparser(parser):
+    set_monitoring_attrs_argparser(parser)
     parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
             type=str, default='', help='monitoring target address regions')
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
