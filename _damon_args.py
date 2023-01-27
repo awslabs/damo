@@ -111,6 +111,32 @@ def kdamonds_from_damon_args(args):
     return [_damon.Kdamond(name='0', state=None, pid=None,
         contexts=[ctx])], None
 
+def self_started_target(args):
+    if 'self_started_target' in args:
+        return args.self_started_target
+    return False
+
+# Command line processing helpers
+
+def is_ongoing_target(args):
+    return args.target == 'ongoing'
+
+def apply_explicit_args_damon(args):
+    kdamonds, err = kdamonds_from_damon_args(args)
+    if err:
+        return None, 'cannot create kdamonds from args'
+    err = _damon.apply_kdamonds(kdamonds)
+    if err:
+        return None, err
+    return kdamonds, None
+
+def turn_explicit_args_damon_on(args):
+    kdamonds, err = apply_explicit_args_damon(args)
+    if err:
+        return err, None
+    return _damon.turn_damon_on(
+            [k.name for k in kdamonds]), kdamonds
+
 def set_implicit_target_args_explicit(args):
     args.kdamonds = None
     args.self_started_target = False
@@ -137,32 +163,6 @@ def set_implicit_target_args_explicit(args):
         args.ops = 'fvaddr'
 
     return None
-
-def self_started_target(args):
-    if 'self_started_target' in args:
-        return args.self_started_target
-    return False
-
-# Command line processing helpers
-
-def is_ongoing_target(args):
-    return args.target == 'ongoing'
-
-def apply_explicit_args_damon(args):
-    kdamonds, err = kdamonds_from_damon_args(args)
-    if err:
-        return None, 'cannot create kdamonds from args'
-    err = _damon.apply_kdamonds(kdamonds)
-    if err:
-        return None, err
-    return kdamonds, None
-
-def turn_explicit_args_damon_on(args):
-    kdamonds, err = apply_explicit_args_damon(args)
-    if err:
-        return err, None
-    return _damon.turn_damon_on(
-            [k.name for k in kdamonds]), kdamonds
 
 def turn_implicit_args_damon_on(args):
     err = set_implicit_target_args_explicit(args)
