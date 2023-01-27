@@ -21,11 +21,10 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    kdamonds, err = [k.to_kvpairs(args.raw) for k in
-            _damon_args.kdamonds_from_args(args)]
+    kdamonds, err = _damon_args.kdamonds_from_args(args)
     if err:
-        print('creating kdamonds from arguments failed (%s)' % err)
-        exit(1)
+        print('invalid arguments (%s)' % err)
+    kdamonds = [k.to_kvpairs(args.raw) for k in kdamonds]
     print(json.dumps(kdamonds, indent=4))
 
 if __name__ == '__main__':
