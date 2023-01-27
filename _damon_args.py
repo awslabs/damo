@@ -122,10 +122,10 @@ def is_ongoing_target(args):
 def apply_explicit_args_damon(args):
     kdamonds, err = kdamonds_from_args(args)
     if err:
-        return None, 'cannot create kdamonds from args'
+        return None, 'cannot create kdamonds from args (%s)' % err
     err = _damon.apply_kdamonds(kdamonds)
     if err:
-        return None, err
+        return None, 'cannot apply kdamonds from args (%s)' % err
     return kdamonds, None
 
 def turn_explicit_args_damon_on(args):
