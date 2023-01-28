@@ -172,18 +172,19 @@ def set_implicit_target_args_explicit(args):
         is_cmd = False
     if is_cmd:
         p = subprocess.Popen(args.target, shell=True, executable='/bin/bash')
-        args.target_pid = p.pid
+        pid = p.pid
         args.self_started_target = True
-        set_ops_vaddr_fvaddr(args)
-        return None
-    try:
-        pid = int(args.target)
-    except:
-        return 'target \'%s\' is not supported' % args.target
+    else:
+        try:
+            pid = int(args.target)
+        except:
+            return 'target \'%s\' is not supported' % args.target
     args.target_pid = pid
     set_ops_vaddr_fvaddr(args)
-
-    return None
+    if args.regions and _damon.feature_supported('fvaddr'):
+        args.ops = 'fvaddr'
+    else:
+        args.ops = 'vaddr'
 
 def turn_implicit_args_damon_on(args):
     err = set_implicit_target_args_explicit(args)
