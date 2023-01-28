@@ -156,13 +156,13 @@ class TestDamon(unittest.TestCase):
         _test_damo_common.test_input_expects(self,
                 lambda x: _damon.kvpairs_to_DamonNrRegionsRange(json.loads(x)),
                 {
-                    json.dumps({'min_nr_regions': 10, 'max_nr_regions': 1000}):
+                    json.dumps({'min': 10, 'max': 1000}):
                     expect,
                     json.dumps(
-                        {'min_nr_regions': '10', 'max_nr_regions': '1000'}):
+                        {'min': '10', 'max': '1000'}):
                     expect,
                     json.dumps(
-                        {'min_nr_regions': '10', 'max_nr_regions': '1,000'}):
+                        {'min': '10', 'max': '1,000'}):
                     expect})
 
         self.assertEqual('%s' % _damon.DamonNrRegionsRange(10, 1000),
@@ -172,10 +172,10 @@ class TestDamon(unittest.TestCase):
                 '[10, 1000]')
 
         self.assertEqual(_damon.DamonNrRegionsRange(10, 1000).to_kvpairs(),
-                {'min_nr_regions': '10', 'max_nr_regions': '1,000'})
+                {'min': '10', 'max': '1,000'})
         self.assertEqual(_damon.DamonNrRegionsRange(10, 1000).to_kvpairs(
                         raw=True),
-                {'min_nr_regions': '10', 'max_nr_regions': '1000'})
+                {'min': '10', 'max': '1000'})
 
     def test_damon_region(self):
         _test_damo_common.test_input_expects(self,

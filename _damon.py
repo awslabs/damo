@@ -69,15 +69,15 @@ class DamonNrRegionsRange:
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
-            ('min_nr_regions',
+            ('min',
                 _damo_fmt_str.format_nr(self.min_nr_regions, raw)),
-            ('max_nr_regions',
+            ('max',
                 _damo_fmt_str.format_nr(self.max_nr_regions, raw)),
             ])
 
 def kvpairs_to_DamonNrRegionsRange(kvpairs):
     return DamonNrRegionsRange(
-            kvpairs['min_nr_regions'], kvpairs['max_nr_regions'])
+            kvpairs['min'], kvpairs['max'])
 
 class DamonRegion:
     # [star, end)
