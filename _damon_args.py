@@ -130,9 +130,7 @@ def kdamonds_for(args):
         contexts=[ctx])], None
 
 def self_started_target(args):
-    if 'self_started_target' in args:
-        return args.self_started_target
-    return False
+    return 'self_started_target' in args and args.self_started_target
 
 # Command line processing helpers
 
