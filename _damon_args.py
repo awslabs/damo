@@ -165,8 +165,12 @@ def set_implicit_target_args_explicit(args):
         args.ops = 'paddr'
         args.target_pid = None
         return None
-    if not subprocess.call('which %s &> /dev/null' % args.target.split()[0],
-            shell=True, executable='/bin/bash'):
+    try:
+        subprocess.check_output(['which', args.target.split()[0]])
+        is_cmd = True
+    except:
+        is_cmd = False
+    if is_cmd:
         p = subprocess.Popen(args.target, shell=True, executable='/bin/bash')
         args.target_pid = p.pid
         args.self_started_target = True
