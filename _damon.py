@@ -49,17 +49,17 @@ def kvpairs_to_DamonIntervals(kvpairs):
             kvpairs['sample_us'], kvpairs['aggr_us'], kvpairs['ops_update_us'])
 
 class DamonNrRegionsRange:
-    min_nr_regions = None
-    max_nr_regions = None
+    minimum = None
+    maximum = None
 
     def __init__(self, min_=10, max_=1000):
-        self.min_nr_regions = _damo_fmt_str.text_to_nr(min_)
-        self.max_nr_regions = _damo_fmt_str.text_to_nr(max_)
+        self.minimum = _damo_fmt_str.text_to_nr(min_)
+        self.maximum = _damo_fmt_str.text_to_nr(max_)
 
     def to_str(self, raw):
         return '[%s, %s]' % (
-                _damo_fmt_str.format_nr(self.min_nr_regions, raw),
-                _damo_fmt_str.format_nr(self.max_nr_regions, raw))
+                _damo_fmt_str.format_nr(self.minimum, raw),
+                _damo_fmt_str.format_nr(self.maximum, raw))
 
     def __str__(self):
         return self.to_str(False)
@@ -70,9 +70,9 @@ class DamonNrRegionsRange:
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
             ('min',
-                _damo_fmt_str.format_nr(self.min_nr_regions, raw)),
+                _damo_fmt_str.format_nr(self.minimum, raw)),
             ('max',
-                _damo_fmt_str.format_nr(self.max_nr_regions, raw)),
+                _damo_fmt_str.format_nr(self.maximum, raw)),
             ])
 
 def kvpairs_to_DamonNrRegionsRange(kvpairs):

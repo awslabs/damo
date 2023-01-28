@@ -227,8 +227,8 @@ def wops_for_monitoring_attrs(ctx):
             'update_us': '%d' % ctx.intervals.ops_update,
         },
         'nr_regions': {
-            'min': '%d' % ctx.nr_regions.min_nr_regions,
-            'max': '%d' % ctx.nr_regions.max_nr_regions,
+            'min': '%d' % ctx.nr_regions.minimum,
+            'max': '%d' % ctx.nr_regions.maximum,
         },
     }
 

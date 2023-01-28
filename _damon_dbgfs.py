@@ -161,8 +161,7 @@ def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
     nr_regions = damon_ctx.nr_regions
     return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
-            intervals.ops_update, nr_regions.min_nr_regions,
-            nr_regions.max_nr_regions)
+            intervals.ops_update, nr_regions.minimum, nr_regions.maximum)
 
 def wops_for_kdamonds(kdamonds):
     if len(kdamonds) > 1:
