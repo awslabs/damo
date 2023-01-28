@@ -21,7 +21,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    kdamonds, err = _damon_args.kdamonds_from_args(args)
+    kdamonds, err = _damon_args.kdamonds_for(args)
     if err:
         print('invalid arguments (%s)' % err)
     kdamonds = [k.to_kvpairs(args.raw) for k in kdamonds]

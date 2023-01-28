@@ -14,7 +14,7 @@ import _damon
 
 # Kdamonds construction from command line arguments
 
-def damos_from_args(args):
+def damos_for(args):
     schemes = []
     if not 'schemes' in args or args.schemes == None:
         return schemes, None
@@ -24,7 +24,7 @@ def damos_from_args(args):
         return None, 'failed damo schemes arguents parsing (%s)' % err
     return schemes, None
 
-def init_regions_from_args(args):
+def init_regions_for(args):
     init_regions = []
     if args.regions:
         for region in args.regions.split():
@@ -54,7 +54,7 @@ def init_regions_from_args(args):
 
     return init_regions, None
 
-def damon_intervals_from_args(args):
+def damon_intervals_for(args):
     default_intervals = _damon.DamonIntervals()
     intervals1 = _damon.DamonIntervals(args.sample, args.aggr, args.updr)
     intervals2 = _damon.DamonIntervals(*args.monitoring_intervals)
@@ -64,7 +64,7 @@ def damon_intervals_from_args(args):
         return intervals2
     return default_intervals
 
-def damon_nr_regions_range_from_args(args):
+def damon_nr_regions_range_for(args):
     default_range = _damon.DamonNrRegionsRange()
     range1 = _damon.DamonNrRegionsRange(args.minr, args.maxr)
     range2 = _damon.DamonNrRegionsRange(*args.monitoring_nr_regions_range)
@@ -74,18 +74,18 @@ def damon_nr_regions_range_from_args(args):
         return range2
     return default_range
 
-def damon_ctx_from_args(args):
+def damon_ctx_for(args):
     try:
-        intervals = damon_intervals_from_args(args)
+        intervals = damon_intervals_for(args)
     except Exception as e:
         return None, 'invalid intervals arguments (%s)' % e
     try:
-        nr_regions = damon_nr_regions_range_from_args(args)
+        nr_regions = damon_nr_regions_range_for(args)
     except Exception as e:
         return None, 'invalid nr_regions arguments (%s)' % e
     ops = args.ops
 
-    init_regions, err = init_regions_from_args(args)
+    init_regions, err = init_regions_for(args)
     if err:
         return None, err
 
@@ -102,7 +102,7 @@ def damon_ctx_from_args(args):
         except Exception as e:
             return 'Wrong record arguments (%s)' % e
 
-    schemes, err = damos_from_args(args)
+    schemes, err = damos_for(args)
     if err:
         return err
 
@@ -113,7 +113,7 @@ def damon_ctx_from_args(args):
     except Exception as e:
         return None, 'Creating context from arguments failed (%s)' % e
 
-def kdamonds_from_args(args):
+def kdamonds_for(args):
     if args.kdamonds:
         if os.path.isfile(args.kdamonds):
             with open(args.kdamonds, 'r') as f:
@@ -123,7 +123,7 @@ def kdamonds_from_args(args):
         kdamonds_kvpairs = json.loads(kdamonds_str)
         return [kvpairs_to_Kdamond(kvpair)
                 for kvpair in kdamonds_kvpairs], None
-    ctx, err = damon_ctx_from_args(args)
+    ctx, err = damon_ctx_for(args)
     if err:
         return None, err
     return [_damon.Kdamond(name='0', state=None, pid=None,
@@ -140,7 +140,7 @@ def is_ongoing_target(args):
     return args.target == 'ongoing'
 
 def apply_explicit_args_damon(args):
-    kdamonds, err = kdamonds_from_args(args)
+    kdamonds, err = kdamonds_for(args)
     if err:
         return None, 'cannot create kdamonds from args (%s)' % err
     err = _damon.apply_kdamonds(kdamonds)
