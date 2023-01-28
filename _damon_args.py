@@ -153,6 +153,11 @@ def turn_explicit_args_damon_on(args):
     return _damon.turn_damon_on(
             [k.name for k in kdamonds]), kdamonds
 
+def set_ops_vaddr_fvaddr(args):
+    args.ops = 'vaddr'
+    if args.regions and _damon.feature_supported('fvaddr'):
+        args.ops = 'fvaddr'
+
 def set_implicit_target_args_explicit(args):
     args.kdamonds = None
     args.self_started_target = False
@@ -163,20 +168,16 @@ def set_implicit_target_args_explicit(args):
     if not subprocess.call('which %s &> /dev/null' % args.target.split()[0],
             shell=True, executable='/bin/bash'):
         p = subprocess.Popen(args.target, shell=True, executable='/bin/bash')
-        args.ops = 'vaddr'
         args.target_pid = p.pid
         args.self_started_target = True
-        if args.regions and _damon.feature_supported('fvaddr'):
-            args.ops = 'fvaddr'
+        set_ops_vaddr_fvaddr(args)
         return None
     try:
         pid = int(args.target)
     except:
         return 'target \'%s\' is not supported' % args.target
-    args.ops = 'vaddr'
     args.target_pid = pid
-    if args.regions and _damon.feature_supported('fvaddr'):
-        args.ops = 'fvaddr'
+    set_ops_vaddr_fvaddr(args)
 
     return None
 
