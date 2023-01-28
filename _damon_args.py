@@ -24,7 +24,7 @@ def damos_from_args(args):
         return None, 'failed damo schemes arguents parsing (%s)' % err
     return schemes, None
 
-def init_regions_from_damon_args(args):
+def init_regions_from_args(args):
     init_regions = []
     if args.regions:
         for region in args.regions.split():
@@ -85,7 +85,7 @@ def damon_ctx_from_args(args):
         return None, 'invalid nr_regions arguments (%s)' % e
     ops = args.ops
 
-    init_regions, err = init_regions_from_damon_args(args)
+    init_regions, err = init_regions_from_args(args)
     if err:
         return None, err
 
