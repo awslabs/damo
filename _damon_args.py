@@ -213,10 +213,10 @@ def set_monitoring_attrs_argparser(parser):
     # for easier total setup
     parser.add_argument('--monitoring_intervals', nargs=3,
             default=['5ms', '100ms', '1s'],
-            metavar=('sample', 'aggr', 'update'),
+            metavar=('<sample>', '<aggr>', '<update>'),
             help='monitoring intervals (us)')
     parser.add_argument('--monitoring_nr_regions_range', nargs=2,
-            metavar=('min', 'max'), default=[10, 1000],
+            metavar=('<min>', '<max>'), default=[10, 1000],
             help='min/max number of monitoring regions')
 
 def set_monitoring_argparser(parser):
