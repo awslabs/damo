@@ -25,7 +25,7 @@ for damon_interface in $damon_interfaces
 do
 	testname2="$testname $damon_interface"
 	sudo "$damo" start --ops paddr --damon_interface "$damon_interface" \
-		-c monitoring.damos
+		-c monitoring.damos 2> /dev/null
 	if ! pidof kdamond.0 > /dev/null
 	then
 		echo "FAIL $testname2 (kdamond.0 pid not found after start)"
@@ -35,7 +35,7 @@ do
 
 	sudo timeout 3 "$damo" record ongoing \
 		--damon_interface "$damon_interface" &> /dev/null
-	if ! "$damo" validate
+	if ! "$damo" validate 2> /dev/null
 	then
 		echo "FAIL $testname2 (invalid record file)"
 		exit 1
@@ -60,14 +60,14 @@ do
 	fi
 	sudo timeout 3 "$damo" record ongoing \
 		--damon_interface "$damon_interface" &> /dev/null
-	if ! "$damo" validate --aggr 180000 220000
+	if ! "$damo" validate --aggr 180000 220000 2> /dev/null
 	then
 		echo "FAIL $testname2 (invalid record file after tune)"
 		exit 1
 	fi
 	echo "PASS $testname2 tune-record-ongoing-validate"
 
-	sudo "$damo" stop --damon_interface "$damon_interface"
+	sudo "$damo" stop --damon_interface "$damon_interface" 2> /dev/null
 	if pidof kdamond.0 > /dev/null
 	then
 		echo "FAIL $testname2 (kdamond.0 pid found after stop)"
