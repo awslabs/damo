@@ -176,7 +176,7 @@ def set_implicit_target_args_explicit(args):
             return 'target \'%s\' is not supported' % args.target
     args.target_pid = pid
     args.ops = 'vaddr'
-    if args.regions and _damon.feature_supported('fvaddr'):
+    if args.regions:
         args.ops = 'fvaddr'
 
 def turn_implicit_args_damon_on(args):
