@@ -93,9 +93,6 @@ def set_argparser(parser):
             help='print total size only')
 
 def __main(args):
-    if not _damon.feature_supported('schemes_tried_regions'):
-        print('schemes_tried_regions feature not supported')
-        exit(1)
     access_pattern = _damon.DamosAccessPattern(args.sz_region,
             args.access_rate, _damon.unit_percent, args.age, _damon.unit_usec)
     update_pr_schemes_tried_regions(access_pattern, args.size_only, args.raw)
