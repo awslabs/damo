@@ -66,9 +66,6 @@ def __main(args):
     if args.stat_type == 'schemes_stats':
         update_pr_schemes_stats(args.raw)
     elif args.stat_type == 'schemes_tried_regions':
-        if not _damon.feature_supported('schemes_tried_regions'):
-            print('schemes_tried_regions feature not supported')
-            exit(1)
         update_pr_schemes_tried_regions(args.raw)
 
 def main(args=None):
