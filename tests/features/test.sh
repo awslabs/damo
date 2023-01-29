@@ -18,7 +18,7 @@ test_features_list()
 	damon_interface=$1
 	expected="expected_features_list_$damon_interface"
 	result="result_features_list"
-	sudo "$damo" features --damon_interface "$damon_interface" \
+	sudo "$damo" features --damon_interface "$damon_interface" 2> /dev/null \
 		| awk -F':' '{print $1}' > "$result"
 	if ! diff -q "$expected" "$result"
 	then
