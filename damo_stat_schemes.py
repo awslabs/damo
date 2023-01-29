@@ -25,7 +25,7 @@ def update_pr_schemes_tried_regions(raw_nr):
             update_schemes_tried_regions=True)
     if err:
         print(err)
-        exit(1)
+        return
     kdamonds = _damon.current_kdamonds()
     pr_schemes_tried_regions(kdamonds, raw_nr)
 
@@ -34,7 +34,7 @@ def update_pr_schemes_stats(raw_nr):
             update_schemes_tried_regions=False)
     if err:
         print(err)
-        exit(1)
+        return
 
     kdamonds = _damon.current_kdamonds()
     
