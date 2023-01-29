@@ -34,7 +34,7 @@ __test_stat() {
 	python ./stairs.py &
 	stairs_pid=$!
 	sudo "$damo" schemes -c "$scheme" "$stairs_pid" \
-		--damon_interface "$damon_interface" > /dev/null &
+		--damon_interface "$damon_interface" &> /dev/null &
 
 	start_time=$SECONDS
 	applied=0
@@ -80,8 +80,8 @@ test_stat() {
 
 	testname="schemes-speed-limit $damon_interface"
 	if ! sudo "$damo" features supported \
-		--damon_interface "$damon_interface" | grep -w schemes_speed_limit > \
-		/dev/null
+		--damon_interface "$damon_interface" 2> /dev/null | \
+		grep -w schemes_speed_limit > /dev/null
 	then
 		echo "SKIP $testname (unsupported)"
 		return
@@ -168,7 +168,7 @@ measure_scheme_applied() {
 	timeout_after=$((wait_for + 2))
 	sudo timeout "$timeout_after" \
 		"$damo" schemes -c "$scheme" \
-		--damon_interface "$damon_interface" "$target" > /dev/null &
+		--damon_interface "$damon_interface" "$target" &> /dev/null &
 	damo_pid=$!
 
 	while true
@@ -205,14 +205,14 @@ test_wmarks() {
 	testname="schemes-wmarks $damon_interface"
 
 	if ! sudo "$damo" features supported \
-		--damon_interface "$damon_interface" | \
+		--damon_interface "$damon_interface" 2> /dev/null | \
 		grep -w schemes_wmarks > /dev/null
 	then
 		echo "SKIP $testname (unsupported)"
 		return
 	fi
 	if ! sudo "$damo" features supported \
-		--damon_interface "$damon_interface" | \
+		--damon_interface "$damon_interface" 2> /dev/null | \
 		grep -w paddr > /dev/null
 	then
 		echo "SKIP $testname (paddr unsupported)"
@@ -282,7 +282,7 @@ test_filters() {
 	fi
 
 	prcl_damos_json="prcl_damos.json"
-	sudo "$damo" start -c "$prcl_damos_json"
+	sudo "$damo" start -c "$prcl_damos_json" 2> /dev/null
 	"./$workload" &
 	workload_pid=$!
 	sleep 5
@@ -293,10 +293,10 @@ test_filters() {
 		exit 1
 	fi
 	kill -9 "$workload_pid"
-	sudo "$damo" stop
+	sudo "$damo" stop 2> /dev/null
 
 	prcl_no_anon_damos_json="prcl_no_anon_damos.json"
-	sudo "$damo" start -c "$prcl_no_anon_damos_json"
+	sudo "$damo" start -c "$prcl_no_anon_damos_json" 2> /dev/null
 	"./$workload" &
 	workload_pid=$!
 	sleep 5
@@ -307,7 +307,7 @@ test_filters() {
 		exit 1
 	fi
 	kill -9 "$workload_pid"
-	sudo "$damo" stop
+	sudo "$damo" stop 2> /dev/null
 
 	cgroup="/sys/fs/cgroup/unified/"
 	memcg_support="false"
@@ -329,7 +329,7 @@ test_filters() {
 	echo $$ | sudo tee "$cgroup/damos_filtered/cgroup.procs"
 
 	prcl_no_cgroup_damos_json="prcl_no_cgroup_damos.json"
-	sudo "$damo" start -c "$prcl_no_cgroup_damos_json"
+	sudo "$damo" start -c "$prcl_no_cgroup_damos_json" 2> /dev/null
 	"./$workload" &
 	workload_pid=$!
 	sleep 5
@@ -340,7 +340,7 @@ test_filters() {
 		exit 1
 	fi
 	kill -9 "$workload_pid"
-	sudo "$damo" stop
+	sudo "$damo" stop 2> /dev/null
 	for pid in $(cat "$cgroup/damos_filtered/cgroup.procs")
 	do
 		echo "move pid $pid"
@@ -371,7 +371,7 @@ fi
 for damon_interface in $damon_interfaces
 do
 	if ! sudo "$damo" features supported \
-	       --damon_interface "$damon_interface" | \
+	       --damon_interface "$damon_interface" 2> /dev/null | \
 	       grep -w "schemes" > /dev/null
 	then
 		echo "SKIP $(basename $(pwd))"
@@ -382,7 +382,7 @@ do
 	test_wmarks "$damon_interface"
 
 	if sudo "$damo" features supported \
-	       --damon_interface "$damon_interface" | \
+	       --damon_interface "$damon_interface" 2> /dev/null | \
 		grep -w "schemes_filters" > /dev/null
 	then
 		test_filters
