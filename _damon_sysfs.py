@@ -233,8 +233,11 @@ def wops_for_monitoring_attrs(ctx):
     }
 
 def wops_for_ctx(ctx):
+    ops = ctx.ops
+    if ops == 'fvaddr' and not feature_supported('fvaddr'):
+        ops = 'vaddr'
     return [
-            {'operations': ctx.ops},
+            {'operations': ops},
             {'monitoring_attrs': wops_for_monitoring_attrs(ctx)},
             {'targets': wops_for_targets(ctx)},
             {'schemes': wops_for_schemes(ctx)},
