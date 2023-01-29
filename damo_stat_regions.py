@@ -63,17 +63,17 @@ def monitoring_kdamond_scheme():
 def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
     if _damon.every_kdamond_turned_off():
         print('no kdamond running')
-        exit(1)
+        return
 
     monitoring_kdamond, monitoring_scheme = monitoring_kdamond_scheme()
     if monitoring_kdamond == None:
         print('no kdamond is having monitoring scheme')
-        exit(1)
+        return
 
     err = _damon.update_schemes_tried_regions([monitoring_kdamond])
     if err != None:
         print('update schemes tried regions fail: %s', err)
-        exit(1)
+        return
 
     pr_schemes_tried_regions(monitoring_kdamond, monitoring_scheme,
             access_pattern, size_only, raw_nr)
