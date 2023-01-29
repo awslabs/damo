@@ -93,9 +93,8 @@ def set_argparser(parser):
             help='print total size only')
 
 def __main(args):
-    access_pattern = _damon.DamosAccessPattern(args.sz_region,
-            args.access_rate, _damon.unit_percent, args.age, _damon.unit_usec)
-    update_pr_schemes_tried_regions(access_pattern, args.size_only, args.raw)
+    update_pr_schemes_tried_regions(args.damo_stat_regions_access_pattern,
+            args.size_only, args.raw)
 
 def main(args=None):
     if not args:
@@ -104,6 +103,10 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_and_initialized(args)
+
+    args.damo_stat_regions_access_pattern = _damon.DamosAccessPattern(
+            args.sz_region, args.access_rate, _damon.unit_percent, args.age,
+            _damon.unit_usec)
 
     damo_stat.run_count_delay(__main, args)
 
