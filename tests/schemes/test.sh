@@ -324,9 +324,9 @@ test_filters() {
 		echo "SKIP $testname (memcg not supported)"
 		return
 	fi
-	echo "+memory" | sudo tee "$cgroup/cgroup.subtree_control"
+	echo "+memory" | sudo tee "$cgroup/cgroup.subtree_control" > /dev/null
 	sudo mkdir "$cgroup/damos_filtered"
-	echo $$ | sudo tee "$cgroup/damos_filtered/cgroup.procs"
+	echo $$ | sudo tee "$cgroup/damos_filtered/cgroup.procs" > /dev/null
 
 	prcl_no_cgroup_damos_json="prcl_no_cgroup_damos.json"
 	sudo "$damo" start -c "$prcl_no_cgroup_damos_json" 2> /dev/null
@@ -343,8 +343,8 @@ test_filters() {
 	sudo "$damo" stop 2> /dev/null
 	for pid in $(cat "$cgroup/damos_filtered/cgroup.procs")
 	do
-		echo "move pid $pid"
-		echo "$pid" | sudo tee "$cgroup/cgroup.procs"
+		# echo "move pid $pid"
+		echo "$pid" | sudo tee "$cgroup/cgroup.procs" > /dev/null
 	done
 	rmdir "$cgroup/damos_filtered"
 
