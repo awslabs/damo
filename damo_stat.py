@@ -13,7 +13,7 @@ import _damo_subcmds
 import _damon
 import _damon_args
 
-def update_kdamonds(update_schemes_stat=True,
+def update_schemes(update_schemes_stat=True,
         update_schemes_tried_regions=True):
     if _damon.any_kdamond_running():
         names = _damon.current_kdamond_names()

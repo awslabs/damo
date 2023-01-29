@@ -21,7 +21,7 @@ def pr_schemes_tried_regions(kdamonds, raw_nr):
                     r.to_str(raw_nr) for r in scheme.tried_regions))
 
 def update_pr_schemes_tried_regions(raw_nr):
-    err = damo_stat.update_kdamonds(update_schemes_stat=False,
+    err = damo_stat.update_schemes(update_schemes_stat=False,
             update_schemes_tried_regions=True)
     if err:
         print(err)
@@ -30,7 +30,7 @@ def update_pr_schemes_tried_regions(raw_nr):
     pr_schemes_tried_regions(kdamonds, raw_nr)
 
 def update_pr_schemes_stats(raw_nr):
-    err = damo_stat.update_kdamonds(update_schemes_stat=True,
+    err = damo_stat.update_schemes(update_schemes_stat=True,
             update_schemes_tried_regions=False)
     if err:
         print(err)
