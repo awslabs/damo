@@ -4,7 +4,7 @@
 bindir=$(dirname "$0")
 cd "$bindir" || exit 1
 
-for test_dir in unit record report convert_schemes schemes \
+for test_dir in unit record report features convert_schemes schemes \
 	damon_reclaim damon_lru_sort start_stop
 do
 	if ! "./$test_dir/test.sh"
