@@ -153,11 +153,6 @@ def turn_explicit_args_damon_on(args):
     return _damon.turn_damon_on(
             [k.name for k in kdamonds]), kdamonds
 
-def set_ops_vaddr_fvaddr(args):
-    args.ops = 'vaddr'
-    if args.regions and _damon.feature_supported('fvaddr'):
-        args.ops = 'fvaddr'
-
 def set_implicit_target_args_explicit(args):
     args.kdamonds = None
     args.self_started_target = False
@@ -180,11 +175,9 @@ def set_implicit_target_args_explicit(args):
         except:
             return 'target \'%s\' is not supported' % args.target
     args.target_pid = pid
-    set_ops_vaddr_fvaddr(args)
+    args.ops = 'vaddr'
     if args.regions and _damon.feature_supported('fvaddr'):
         args.ops = 'fvaddr'
-    else:
-        args.ops = 'vaddr'
 
 def turn_implicit_args_damon_on(args):
     err = set_implicit_target_args_explicit(args)
