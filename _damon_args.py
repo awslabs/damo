@@ -158,7 +158,7 @@ def turn_explicit_args_damon_on(args):
     return _damon.turn_damon_on(
             [k.name for k in kdamonds]), kdamonds
 
-def set_deducible_target_args_explicit(args):
+def deduce_target(args):
     if args.deducible_target == None:
         return None
     args.target = args.deducible_target
@@ -189,7 +189,7 @@ def set_deducible_target_args_explicit(args):
         args.ops = 'fvaddr'
 
 def turn_unified_args_damon_on(args):
-    err = set_deducible_target_args_explicit(args)
+    err = deduce_target(args)
     if err:
         return err, None
     return turn_explicit_args_damon_on(args)
