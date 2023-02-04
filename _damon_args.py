@@ -246,16 +246,6 @@ def set_implicit_target_monitoring_argparser(parser):
             help='the target (command, pid, or special keywords) to monitor')
     set_common_argparser(parser)
 
-def set_implicit_target_record_argparser(parser):
-    if parser == None:
-        parser = argparse.ArgumentParser()
-    set_implicit_target_monitoring_argparser(parser)
-    parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-            help='length of record result buffer (!! WILL BE DEPRECATED)')
-    parser.add_argument('-o', '--out', metavar='<file path>', type=str,
-            default='damon.data', help='output file path')
-    return parser
-
 def set_implicit_target_schemes_argparser(parser):
     if parser == None:
         parser = argparse.ArgumentParser()
