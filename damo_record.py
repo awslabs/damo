@@ -5,7 +5,6 @@
 Record monitored data access patterns.
 """
 
-import argparse
 import os
 import signal
 import subprocess
@@ -133,20 +132,20 @@ def backup_duplicate_output_file(output_file):
         os.rename(output_file, output_file + '.old')
 
 def set_argparser(parser):
-    _damon_args.set_implicit_target_record_argparser(parser)
+    parser = _damon_args.set_implicit_target_record_argparser(parser)
     parser.add_argument('--output_type', choices=['record', 'perf_script'],
             default=None, help='output file\'s type')
     parser.add_argument('--leave_perf_data', action='store_true',
             default=False, help='don\'t remove the perf.data file')
     parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')
+    return parser
 
 def main(args=None):
     global data_for_cleanup
 
     if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
+        parser = set_argparser(None)
         args = parser.parse_args()
 
     _damon.ensure_root_and_initialized(args)
