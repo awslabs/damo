@@ -151,13 +151,6 @@ def apply_explicit_args_damon(args):
         return None, 'cannot apply kdamonds from args (%s)' % err
     return kdamonds, None
 
-def turn_explicit_args_damon_on(args):
-    kdamonds, err = apply_explicit_args_damon(args)
-    if err:
-        return err, None
-    return _damon.turn_damon_on(
-            [k.name for k in kdamonds]), kdamonds
-
 def deduce_target(args):
     if args.deducible_target == None:
         return None
@@ -192,7 +185,11 @@ def turn_unified_args_damon_on(args):
     err = deduce_target(args)
     if err:
         return err, None
-    return turn_explicit_args_damon_on(args)
+    kdamonds, err = apply_explicit_args_damon(args)
+    if err:
+        return err, None
+    return _damon.turn_damon_on(
+            [k.name for k in kdamonds]), kdamonds
 
 # Commandline options setup helpers
 
