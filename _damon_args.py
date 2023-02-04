@@ -186,6 +186,18 @@ def turn_implicit_args_damon_on(args):
         return err, None
     return turn_explicit_args_damon_on(args)
 
+def set_deducible_target_args_explicit(args):
+    if args.deducible_target == None:
+        return None
+    args.target = args.deducible_target
+    return set_implicit_target_args_explicit(args)
+
+def turn_unified_args_damon_on(args):
+    err = set_deducible_target_args_explicit(args)
+    if err:
+        return err, None
+    return turn_explicit_args_damon_on(args)
+
 # Commandline options setup helpers
 
 def set_common_argparser(parser):
@@ -263,4 +275,11 @@ def set_explicit_target_argparser(parser):
     parser.add_argument('--kdamonds', metavar='<string or file>',
             help='key-value pairs format kdamonds config')
     set_common_argparser(parser)
+    return parser
+
+def set_unified_argparser(parser):
+    parser = set_explicit_target_argparser(parser)
+    parser.add_argument('deducible_target', type=str,
+            metavar='<deducible target>', nargs='?',
+            help='the target (command, pid, or special keywords) to monitor')
     return parser
