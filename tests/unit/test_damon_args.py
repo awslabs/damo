@@ -102,8 +102,5 @@ class TestDamonArgs(unittest.TestCase):
         parser = _damon_args.set_explicit_target_argparser(None)
         self.assertTrue(parser != None)
 
-        parser = _damon_args.set_implicit_target_schemes_argparser(None)
-        self.assertTrue(parser != None)
-
 if __name__ == '__main__':
     unittest.main()
