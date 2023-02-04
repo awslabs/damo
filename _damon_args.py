@@ -5,6 +5,7 @@
 Command line arguments handling
 """
 
+import argparse
 import json
 import subprocess
 
@@ -230,19 +231,27 @@ def set_implicit_target_monitoring_argparser(parser):
     set_common_argparser(parser)
 
 def set_implicit_target_record_argparser(parser):
+    if parser == None:
+        parser = argparse.ArgumentParser()
     set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
             help='length of record result buffer (!! WILL BE DEPRECATED)')
     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
             default='damon.data', help='output file path')
+    return parser
 
 def set_implicit_target_schemes_argparser(parser):
+    if parser == None:
+        parser = argparse.ArgumentParser()
     set_implicit_target_monitoring_argparser(parser)
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
             type=str, default='damon.schemes',
             help='data access monitoring-based operation schemes')
+    return parser
 
 def set_explicit_target_argparser(parser):
+    if parser == None:
+        parser = argparse.ArgumentParser()
     set_monitoring_argparser(parser)
     parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
             default='paddr',
@@ -254,3 +263,4 @@ def set_explicit_target_argparser(parser):
     parser.add_argument('--kdamonds', metavar='<string or file>',
             help='key-value pairs format kdamonds config')
     set_common_argparser(parser)
+    return parser
