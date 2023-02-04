@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
-import argparse
 import signal
 import time
 
@@ -65,6 +64,7 @@ def set_argparser(parser):
         subcmd.add_parser(subparsers)
 
     _damon_args.set_common_argparser(parser)
+    return parser
 
 def sighandler(signum, frame):
     exit(0)
@@ -82,8 +82,7 @@ def run_count_delay(func, args):
 
 def main(args=None):
     if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
+        parser = set_argparser(None)
         args = parser.parse_args()
 
     for subcmd in subcmds:

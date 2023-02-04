@@ -5,18 +5,15 @@
 Update DAMON input parameters.
 """
 
-import argparse
-
 import _damon
 import _damon_args
 
 def set_argparser(parser):
-    _damon_args.set_explicit_target_argparser(parser)
+    return _damon_args.set_explicit_target_argparser(parser)
 
 def main(args=None):
     if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
+        parser = set_argparser(None)
         args = parser.parse_args()
 
     _damon.ensure_root_and_initialized(args)
