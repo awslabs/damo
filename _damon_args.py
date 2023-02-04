@@ -142,7 +142,7 @@ def is_ongoing_target(args):
         return args.deducible_target == 'ongoing'
     return False
 
-def apply_explicit_args_damon(args):
+def apply_kdamonds(args):
     kdamonds, err = kdamonds_for(args)
     if err:
         return None, 'cannot create kdamonds from args (%s)' % err
@@ -185,7 +185,7 @@ def turn_unified_args_damon_on(args):
     err = deduce_target(args)
     if err:
         return err, None
-    kdamonds, err = apply_explicit_args_damon(args)
+    kdamonds, err = apply_kdamonds(args)
     if err:
         return err, None
     return _damon.turn_damon_on(
