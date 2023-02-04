@@ -101,11 +101,11 @@ def damon_ctx_for(args):
         try:
             record_request = _damon.DamonRecord(args.rbuf, args.out)
         except Exception as e:
-            return 'Wrong record arguments (%s)' % e
+            return None, 'Wrong record arguments (%s)' % e
 
     schemes, err = damos_for(args)
     if err:
-        return err
+        return None, err
 
     try:
         ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, [target],
