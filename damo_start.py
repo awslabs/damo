@@ -10,7 +10,7 @@ import _damon_args
 import _damo_paddr_layout
 
 def set_argparser(parser):
-    return _damon_args.set_explicit_target_argparser(parser)
+    return _damon_args.set_unified_argparser(parser)
 
 def main(args=None):
     if not args:
@@ -19,7 +19,7 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    err, kdamonds = _damon_args.turn_explicit_args_damon_on(args)
+    err, kdamonds = _damon_args.turn_unified_args_damon_on(args)
     if err:
         print('could not turn on damon (%s)' % err)
 
