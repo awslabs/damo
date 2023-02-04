@@ -5,7 +5,6 @@
 Apply given operation schemes.
 """
 
-import argparse
 import os
 import signal
 import subprocess
@@ -34,15 +33,14 @@ def sighandler(signum, frame):
     cleanup_exit(signum)
 
 def set_argparser(parser):
-    _damon_args.set_implicit_target_schemes_argparser(parser)
+    return _damon_args.set_implicit_target_schemes_argparser(parser)
 
 def main(args=None):
     global orig_kdamonds
     global kdamonds_names
 
     if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
+        parser = set_argparser(None)
         args = parser.parse_args()
 
     _damon.ensure_root_and_initialized(args)
