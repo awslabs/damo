@@ -98,5 +98,15 @@ class TestDamonArgs(unittest.TestCase):
         nr_range = _damon_args.damon_nr_regions_range_for(args)
         self.assertEqual(nr_range, _damon.DamonNrRegionsRange(25, 5000))
 
+    def test_none_parser(self):
+        parser = _damon_args.set_explicit_target_argparser(None)
+        self.assertTrue(parser != None)
+
+        parser = _damon_args.set_implicit_target_record_argparser(None)
+        self.assertTrue(parser != None)
+
+        parser = _damon_args.set_implicit_target_record_argparser(None)
+        self.assertTrue(parser != None)
+
 if __name__ == '__main__':
     unittest.main()
