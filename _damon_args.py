@@ -136,7 +136,11 @@ def self_started_target(args):
 # Command line processing helpers
 
 def is_ongoing_target(args):
-    return args.target == 'ongoing'
+    if 'target' in args:
+        return args.target == 'ongoing'
+    if 'deducible_target' in args:
+        return args.deducible_target == 'ongoing'
+    return False
 
 def apply_explicit_args_damon(args):
     kdamonds, err = kdamonds_for(args)
