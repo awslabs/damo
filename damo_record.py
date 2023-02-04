@@ -132,7 +132,7 @@ def backup_duplicate_output_file(output_file):
         os.rename(output_file, output_file + '.old')
 
 def set_argparser(parser):
-    parser = _damon_args.set_implicit_target_record_argparser(parser)
+    parser = _damon_args.set_unified_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type', choices=['record', 'perf_script'],
             default=None, help='output file\'s type')
     parser.add_argument('--leave_perf_data', action='store_true',
@@ -164,7 +164,7 @@ def main(args=None):
     is_ongoing = _damon_args.is_ongoing_target(args)
     if not is_ongoing:
         # Turn DAMON on
-        err, kdamonds = _damon_args.turn_implicit_args_damon_on(args)
+        err, kdamonds = _damon_args.turn_unified_args_damon_on(args)
         if err:
             print('could not turn DAMON on (%s)' % err)
             cleanup_exit(-2)
