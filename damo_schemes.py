@@ -33,7 +33,7 @@ def sighandler(signum, frame):
     cleanup_exit(signum)
 
 def set_argparser(parser):
-    return _damon_args.set_implicit_target_schemes_argparser(parser)
+    return _damon_args.set_unified_argparser(parser, add_record_options=False)
 
 def main(args=None):
     global orig_kdamonds
@@ -51,7 +51,7 @@ def main(args=None):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    err, kdamonds = _damon_args.turn_implicit_args_damon_on(args)
+    err, kdamonds = _damon_args.turn_unified_args_damon_on(args)
     if err:
         print('could not turn DAMON on (%s)' % err)
         cleanup_exit(-3)
