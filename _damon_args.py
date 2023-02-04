@@ -97,7 +97,7 @@ def damon_ctx_for(args):
         return 'Wrong \'--target_pid\' argument (%s)' % e
 
     record_request = None
-    if 'rbuf' in args:
+    if 'rbuf' in args and args.rbuf != None:
         try:
             record_request = _damon.DamonRecord(args.rbuf, args.out)
         except Exception as e:
