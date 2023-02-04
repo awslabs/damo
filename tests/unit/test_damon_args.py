@@ -105,7 +105,7 @@ class TestDamonArgs(unittest.TestCase):
         parser = _damon_args.set_implicit_target_record_argparser(None)
         self.assertTrue(parser != None)
 
-        parser = _damon_args.set_implicit_target_record_argparser(None)
+        parser = _damon_args.set_implicit_target_schemes_argparser(None)
         self.assertTrue(parser != None)
 
 if __name__ == '__main__':
