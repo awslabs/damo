@@ -184,12 +184,6 @@ def set_implicit_target_args_explicit(args):
     if args.regions:
         args.ops = 'fvaddr'
 
-def turn_implicit_args_damon_on(args):
-    err = set_implicit_target_args_explicit(args)
-    if err:
-        return err, None
-    return turn_explicit_args_damon_on(args)
-
 def set_deducible_target_args_explicit(args):
     if args.deducible_target == None:
         return None
