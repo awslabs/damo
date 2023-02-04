@@ -246,15 +246,6 @@ def set_implicit_target_monitoring_argparser(parser):
             help='the target (command, pid, or special keywords) to monitor')
     set_common_argparser(parser)
 
-def set_implicit_target_schemes_argparser(parser):
-    if parser == None:
-        parser = argparse.ArgumentParser()
-    set_implicit_target_monitoring_argparser(parser)
-    parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
-            type=str, default='damon.schemes',
-            help='data access monitoring-based operation schemes')
-    return parser
-
 def set_explicit_target_argparser(parser):
     if parser == None:
         parser = argparse.ArgumentParser()
