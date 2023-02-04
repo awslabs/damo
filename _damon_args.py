@@ -277,9 +277,14 @@ def set_explicit_target_argparser(parser):
     set_common_argparser(parser)
     return parser
 
-def set_unified_argparser(parser):
+def set_unified_argparser(parser, add_record_options):
     parser = set_explicit_target_argparser(parser)
     parser.add_argument('deducible_target', type=str,
             metavar='<deducible target>', nargs='?',
             help='the target (command, pid, or special keywords) to monitor')
+    if add_record_options:
+        parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
+                help='length of record result buffer (!! WILL BE DEPRECATED)')
+        parser.add_argument('-o', '--out', metavar='<file path>', type=str,
+                default='damon.data', help='output file path')
     return parser
