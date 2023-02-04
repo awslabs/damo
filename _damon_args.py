@@ -158,7 +158,11 @@ def turn_explicit_args_damon_on(args):
     return _damon.turn_damon_on(
             [k.name for k in kdamonds]), kdamonds
 
-def set_implicit_target_args_explicit(args):
+def set_deducible_target_args_explicit(args):
+    if args.deducible_target == None:
+        return None
+    args.target = args.deducible_target
+
     args.kdamonds = None
     args.self_started_target = False
     if args.target == 'paddr':
@@ -183,12 +187,6 @@ def set_implicit_target_args_explicit(args):
     args.ops = 'vaddr'
     if args.regions:
         args.ops = 'fvaddr'
-
-def set_deducible_target_args_explicit(args):
-    if args.deducible_target == None:
-        return None
-    args.target = args.deducible_target
-    return set_implicit_target_args_explicit(args)
 
 def turn_unified_args_damon_on(args):
     err = set_deducible_target_args_explicit(args)
