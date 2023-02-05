@@ -242,8 +242,6 @@ def set_unified_argparser(parser, add_record_options):
 	    help='data access monitoring-based operation schemes')
     parser.add_argument('--kdamonds', metavar='<string or file>',
             help='key-value pairs format kdamonds config')
-    set_common_argparser(parser)
-
     parser.add_argument('deducible_target', type=str,
             metavar='<deducible target>', nargs='?',
             help='the target (command, pid, or special keywords) to monitor')
@@ -252,4 +250,5 @@ def set_unified_argparser(parser, add_record_options):
                 help='length of record result buffer (!! WILL BE DEPRECATED)')
         parser.add_argument('-o', '--out', metavar='<file path>', type=str,
                 default='damon.data', help='output file path')
+    set_common_argparser(parser)
     return parser
