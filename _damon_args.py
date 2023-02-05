@@ -9,8 +9,8 @@ import argparse
 import json
 import subprocess
 
-import _damo_schemes_input
 import _damo_paddr_layout
+import _damo_schemes_input
 import _damon
 
 # Kdamonds construction from command line arguments
