@@ -9,7 +9,7 @@ import _damon
 import _damon_args
 
 def set_argparser(parser):
-    return _damon_args.set_explicit_target_argparser(parser)
+    return _damon_args.set_unified_argparser(parser, add_record_options=False)
 
 def main(args=None):
     if not args:
