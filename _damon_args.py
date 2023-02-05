@@ -198,11 +198,11 @@ def set_common_argparser(parser):
 
 def set_monitoring_attrs_argparser(parser):
     # for easier pinpoint setup
-    parser.add_argument('-s', '--sample', metavar='<interval>',
+    parser.add_argument('-s', '--sample', metavar='<microseconds>',
             default=5000, help='sampling interval (us)')
-    parser.add_argument('-a', '--aggr', metavar='<interval>',
+    parser.add_argument('-a', '--aggr', metavar='<microseconds>',
             default=100000, help='aggregate interval (us)')
-    parser.add_argument('-u', '--updr', metavar='<interval>',
+    parser.add_argument('-u', '--updr', metavar='<microseconds>',
             default=1000000, help='regions update interval (us)')
     parser.add_argument('-n', '--minr', metavar='<# regions>',
             default=10, help='minimal number of regions')
