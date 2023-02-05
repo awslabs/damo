@@ -5,9 +5,9 @@ import os
 import sys
 import unittest
 
-bindir = os.path.dirname(os.path.realpath(__file__))
-damo_dir = os.path.join(bindir, '..', '..')
-sys.path.append(damo_dir)
+import _test_damo_common
+
+_test_damo_common.add_damo_dir_to_syspath()
 
 import _damon_sysfs
 
