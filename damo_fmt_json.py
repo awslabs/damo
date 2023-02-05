@@ -11,7 +11,7 @@ import json
 import _damon_args
 
 def set_argparser(parser):
-    _damon_args.set_explicit_target_argparser(parser)
+    _damon_args.set_unified_argparser(parser, add_record_options=False)
     parser.add_argument('--raw', action='store_true',
             help='print numbers in machine friendly raw form')
 
