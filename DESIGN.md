@@ -9,7 +9,7 @@ Below shows how `damo` works with DAMON/DAMOS in kernel.
            ▼              │read/write
       ┌──────────┐        ▼
       │Monitoring│   ┌─────────┐       User space
-    ──┤  result  ├───┤ debugfs ├─────────────────
+    ──┤  result  ├───┤  sysfs  ├─────────────────
       │   file   │   └─┬─────┬─┘     Kernel space
       └──────────┘     │     │Operation scheme
            ▲           │     ▼
