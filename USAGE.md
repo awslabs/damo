@@ -7,9 +7,9 @@ Prerequisites
 Kernel
 ------
 
-You should first ensure your system is running on a kernel built with
-``CONFIG_DAMON``, ``CONFIG_DAMON_VADDR``, ``CONFIG_DAMON_PADDR``, and
-``CONFIG_DAMON_DBGFS``.
+You should first ensure your system is running on a kernel built with at least
+``CONFIG_DAMON``, ``CONFIG_DAMON_VADDR``, ``CONFIG_DAMON_PADDR``,
+``CONFIG_DAMON_SYSFS``, and ``CONFIG_DAMON_DBGFS``.
 
 
 Sysfs or Debugfs
