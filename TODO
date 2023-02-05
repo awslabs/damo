@@ -11,13 +11,12 @@
 - Support ongoing schemes
 - Cleanup schemes test using damo stat
 - Deprecate --rbuf and in-kernel record feature support (by 2023-q2)
-- Deprecate python2 support
+- Deprecate python2 support (by 2023-q2)
 - Find a better and consistent rule for feature check
   - Check from subcommands
-  - Check from _damon
+  - Check from _damon (done)
   - Check from _damon_{sys,dbg}fs
   - No check at all
   - Or, goes from option 1 to option 4 incrementally
 - Move convert_schemes to unit test
 - Move record handling to _damon
-- Integrate implicit and explicit argparsers
