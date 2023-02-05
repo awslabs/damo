@@ -229,7 +229,7 @@ def set_monitoring_argparser(parser):
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
             help='if target is \'paddr\', limit it to the numa node')
 
-def set_unified_argparser(parser, add_record_options):
+def set_argparser(parser, add_record_options):
     if parser == None:
         parser = argparse.ArgumentParser()
     set_monitoring_argparser(parser)

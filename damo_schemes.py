@@ -33,7 +33,7 @@ def sighandler(signum, frame):
     cleanup_exit(signum)
 
 def set_argparser(parser):
-    return _damon_args.set_unified_argparser(parser, add_record_options=False)
+    return _damon_args.set_argparser(parser, add_record_options=False)
 
 def main(args=None):
     global orig_kdamonds

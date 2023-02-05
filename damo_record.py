@@ -132,7 +132,7 @@ def backup_duplicate_output_file(output_file):
         os.rename(output_file, output_file + '.old')
 
 def set_argparser(parser):
-    parser = _damon_args.set_unified_argparser(parser, add_record_options=True)
+    parser = _damon_args.set_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type', choices=['record', 'perf_script'],
             default=None, help='output file\'s type')
     parser.add_argument('--leave_perf_data', action='store_true',

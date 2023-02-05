@@ -10,7 +10,7 @@ import _damon_args
 import _damo_paddr_layout
 
 def set_argparser(parser):
-    return _damon_args.set_unified_argparser(parser, add_record_options=False)
+    return _damon_args.set_argparser(parser, add_record_options=False)
 
 def main(args=None):
     if not args:

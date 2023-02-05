@@ -26,7 +26,7 @@ class TestDamonArgs(unittest.TestCase):
         _damon._damon_fs = _damon_sysfs
 
         parser = argparse.ArgumentParser()
-        _damon_args.set_unified_argparser(parser, add_record_options=False)
+        _damon_args.set_argparser(parser, add_record_options=False)
 
         args = parser.parse_args(
                 ('--sample 5000 --aggr 100000 --updr 1000000 ' +
@@ -67,7 +67,7 @@ class TestDamonArgs(unittest.TestCase):
                 [_damon.Damos()]))
 
         parser = argparse.ArgumentParser()
-        _damon_args.set_unified_argparser(parser, add_record_options=False)
+        _damon_args.set_argparser(parser, add_record_options=False)
 
         args = parser.parse_args(
                 ('--sample 5ms --aggr 100ms --updr 1s ' +
@@ -107,7 +107,7 @@ class TestDamonArgs(unittest.TestCase):
         self.assertEqual(nr_range, _damon.DamonNrRegionsRange(25, 5000))
 
     def test_none_parser(self):
-        parser = _damon_args.set_unified_argparser(None,
+        parser = _damon_args.set_argparser(None,
                 add_record_options=False)
         self.assertTrue(parser != None)
 
