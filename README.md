@@ -26,7 +26,6 @@ Follow below instructions and commands to monitor and visualize the access
 pattern of your workload.
 
     $ # ensure your kernel is built with CONFIG_DAMON_*=y
-    $ sudo mount -t debugfs none /sys/kernel/debug/
     $ sudo pip3 install damo
     $ sudo damo record $(pidof <your workload>)
     $ damo report heats --heatmap stdout --stdout_heatmap_color emotion
