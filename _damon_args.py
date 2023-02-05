@@ -229,7 +229,7 @@ def set_monitoring_argparser(parser):
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
             help='if target is \'paddr\', limit it to the numa node')
 
-def set_explicit_target_argparser(parser):
+def set_unified_argparser(parser, add_record_options):
     if parser == None:
         parser = argparse.ArgumentParser()
     set_monitoring_argparser(parser)
@@ -243,10 +243,7 @@ def set_explicit_target_argparser(parser):
     parser.add_argument('--kdamonds', metavar='<string or file>',
             help='key-value pairs format kdamonds config')
     set_common_argparser(parser)
-    return parser
 
-def set_unified_argparser(parser, add_record_options):
-    parser = set_explicit_target_argparser(parser)
     parser.add_argument('deducible_target', type=str,
             metavar='<deducible target>', nargs='?',
             help='the target (command, pid, or special keywords) to monitor')
