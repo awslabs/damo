@@ -9,7 +9,7 @@ import os
 import subprocess
 
 import _damo_fs
-import _damo_schemes_input
+import _damon_args_schemes
 import _damon
 
 debugfs = '/sys/kernel/debug'
@@ -220,7 +220,7 @@ def debugfs_output_to_damos(output, intervals_us):
         fields[13] = file_content_to_damos_wmarks_metric(fields[13])
 
     line = ' '.join('%s' % x for x in fields) # remove stats
-    damos, err = _damo_schemes_input.damo_single_line_scheme_to_damos(
+    damos, err = _damon_args_schemes.damo_single_line_scheme_to_damos(
             line, '0')
     if err != None:
         raise Exception('debugfs output to damos conversion failed (%s)' % err)

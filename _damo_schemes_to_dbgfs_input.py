@@ -3,7 +3,7 @@
 
 import argparse
 
-import _damo_schemes_input
+import _damon_args_schemes
 import _damon
 import _damon_dbgfs
 
@@ -22,7 +22,7 @@ def main():
     intervals = _damon.DamonIntervals(args.sample, args.aggr, args.aggr)
 
     lines = []
-    damos_list, err = _damo_schemes_input.damo_schemes_to_damos(args.input)
+    damos_list, err = _damon_args_schemes.damo_schemes_to_damos(args.input)
     if err:
         print('cannot create damos from argument (%s)' % err)
         exit(1)

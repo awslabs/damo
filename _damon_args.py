@@ -10,7 +10,7 @@ import json
 import subprocess
 
 import _damo_paddr_layout
-import _damo_schemes_input
+import _damon_args_schemes
 import _damon
 
 # Kdamonds construction from command line arguments
@@ -20,7 +20,7 @@ def damos_for(args):
     if not 'schemes' in args or args.schemes == None:
         return schemes, None
 
-    schemes, err = _damo_schemes_input.damo_schemes_to_damos(args.schemes)
+    schemes, err = _damon_args_schemes.damo_schemes_to_damos(args.schemes)
     if err:
         return None, 'failed damo schemes arguents parsing (%s)' % err
     return schemes, None
