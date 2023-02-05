@@ -7,7 +7,6 @@ Start DAMON with given parameters.
 
 import _damon
 import _damon_args
-import _damo_paddr_layout
 
 def set_argparser(parser):
     return _damon_args.set_argparser(parser, add_record_options=False)
