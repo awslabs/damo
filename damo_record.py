@@ -9,12 +9,10 @@ import os
 import signal
 import subprocess
 import sys
-import time
 
 import _damon
 import _damon_args
 import _damon_result
-import _damo_paddr_layout
 
 class DataForCleanup:
     kdamonds_names = None
