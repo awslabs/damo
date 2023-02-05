@@ -12,11 +12,16 @@ You should first ensure your system is running on a kernel built with
 ``CONFIG_DAMON_DBGFS``.
 
 
-Debugfs
--------
+Sysfs or Debugfs
+----------------
 
-Because `damo` is using the debugfs interface of DAMON, you should ensure
-debugfs is mounted.  You can do the mounting manually as below:
+Because `damo` is using the sysfs or debugfs interface of DAMON, you should
+ensure at least one of those is mounted.  Note that DAMON debugfs interface is
+gonna deprecated in a near future.  Please use sysfs if possible.  If you
+depend on DAMON debugfs interface and cannot use sysfs interface, report your
+usecase to sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org.
+
+For debugfs, you can do the mounting manually as below:
 
     # mount -t debugfs none /sys/kernel/debug/
 
