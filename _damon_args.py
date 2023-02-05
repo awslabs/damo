@@ -136,11 +136,7 @@ def self_started_target(args):
 # Command line processing helpers
 
 def is_ongoing_target(args):
-    if 'target' in args:
-        return args.target == 'ongoing'
-    if 'deducible_target' in args:
-        return args.deducible_target == 'ongoing'
-    return False
+    return args.deducible_target == 'ongoing'
 
 def apply_kdamonds(args):
     kdamonds, err = kdamonds_for(args)
@@ -154,28 +150,28 @@ def apply_kdamonds(args):
 def deduce_target(args):
     if args.deducible_target == None:
         return None
-    args.target = args.deducible_target
 
     args.kdamonds = None
     args.self_started_target = False
-    if args.target == 'paddr':
+    if args.deducible_target == 'paddr':
         args.ops = 'paddr'
         args.target_pid = None
         return None
     try:
-        subprocess.check_output(['which', args.target.split()[0]])
+        subprocess.check_output(['which', args.deducible_target.split()[0]])
         is_cmd = True
     except:
         is_cmd = False
     if is_cmd:
-        p = subprocess.Popen(args.target, shell=True, executable='/bin/bash')
+        p = subprocess.Popen(args.deducible_target, shell=True,
+                executable='/bin/bash')
         pid = p.pid
         args.self_started_target = True
     else:
         try:
-            pid = int(args.target)
+            pid = int(args.deduce_target)
         except:
-            return 'target \'%s\' is not supported' % args.target
+            return 'target \'%s\' is not supported' % args.deducible_target
     args.target_pid = pid
     args.ops = 'vaddr'
     if args.regions:
