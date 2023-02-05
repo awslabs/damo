@@ -4,3 +4,4 @@ damon.data
 damon.data.old
 damon.data.perf.data.old
 damon.snap.data
+tests/schemes/alloc_1gb_spin
