@@ -7,12 +7,9 @@ Apply given operation schemes.
 
 import os
 import signal
-import subprocess
-import time
 
 import _damon
 import _damon_args
-import _damo_paddr_layout
 
 def cleanup_exit(exit_code):
     kdamonds_names_to_turn_off = []
