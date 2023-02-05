@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
-import os
-import sys
 import unittest
 
 import _test_damo_common

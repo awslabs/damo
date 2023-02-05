@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
-import os
-import sys
 import unittest
 
 import _test_damo_common

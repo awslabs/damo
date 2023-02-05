@@ -4,8 +4,6 @@
 import collections
 import copy
 import json
-import os
-import sys
 import unittest
 
 import _test_damo_common
