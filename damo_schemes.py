@@ -51,7 +51,7 @@ def main(args=None):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    err, kdamonds = _damon_args.turn_unified_args_damon_on(args)
+    err, kdamonds = _damon_args.turn_damon_on(args)
     if err:
         print('could not turn DAMON on (%s)' % err)
         cleanup_exit(-3)

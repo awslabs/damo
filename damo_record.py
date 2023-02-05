@@ -164,7 +164,7 @@ def main(args=None):
     is_ongoing = _damon_args.is_ongoing_target(args)
     if not is_ongoing:
         # Turn DAMON on
-        err, kdamonds = _damon_args.turn_unified_args_damon_on(args)
+        err, kdamonds = _damon_args.turn_damon_on(args)
         if err:
             print('could not turn DAMON on (%s)' % err)
             cleanup_exit(-2)

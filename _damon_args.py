@@ -181,7 +181,7 @@ def deduce_target(args):
     if args.regions:
         args.ops = 'fvaddr'
 
-def turn_unified_args_damon_on(args):
+def turn_damon_on(args):
     err = deduce_target(args)
     if err:
         return err, None
