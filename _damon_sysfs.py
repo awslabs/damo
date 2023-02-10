@@ -391,7 +391,7 @@ def files_content_to_scheme(scheme_name, files_content):
             files_content_to_damos_stats(files_content['stats']),
             files_content_to_damos_tried_regions(
                 files_content['tried_regions'])
-                if 'tried_regions' in files_content else None)
+                if 'tried_regions' in files_content else [])
 
 def files_content_to_regions(files_content):
     regions = []
