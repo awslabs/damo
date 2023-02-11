@@ -21,10 +21,9 @@ def update_schemes(update_schemes_stat=True,
             if err != None:
                 return 'update schemes stat fail (%s)' % err
         if update_schemes_tried_regions:
-            if _damon.feature_supported('schemes_tried_regions'):
-                err = _damon.update_schemes_tried_regions(names)
-                if err != None:
-                    return 'update schemes tried regions fail (%s)' % err
+            err = _damon.update_schemes_tried_regions(names)
+            if err != None:
+                return 'update schemes tried regions fail (%s)' % err
     return None
 
 def pr_damon_interface(args):
