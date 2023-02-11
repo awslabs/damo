@@ -374,7 +374,7 @@ def test_init_regions_version(paddr_supported):
     return version
 
 def chk_reset_file_paths():
-    'Set global variables for DAMON debugfs path.  Return error if failed'
+    'check essential DAMON debugfs files existence'
     global debugfs_damon
     global debugfs_attrs
     global debugfs_schemes
