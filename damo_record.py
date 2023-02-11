@@ -47,9 +47,10 @@ def cleanup_exit(exit_code):
 
         rfile_current_format = 'perf_script'
         perf_data = data_for_cleanup.rfile_path + '.perf.data'
-        subprocess.call('perf script -i \'%s\' > \'%s\'' %
-                (perf_data, data_for_cleanup.rfile_path),
-                shell=True, executable='/bin/bash')
+        script_output = subprocess.check_output(
+                ['perf', 'script', '-i', perf_data]).decode()
+        with open(data_for_cleanup.rfile_path, 'w') as f:
+            f.write(script_output)
         if data_for_cleanup.remove_perf_data:
             os.remove(perf_data)
     else:
