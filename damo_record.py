@@ -40,8 +40,7 @@ def change_rfile_format(rfile_path, src_format, dst_format, dst_permission):
 def cleanup_exit(exit_code):
     if data_for_cleanup.perf_pipe:
         try:
-            data_for_cleanup.perf_pipe.send_signal(signal.SIGINT)
-            data_for_cleanup.perf_pipe.wait()
+            _damon.stop_monitoring_record(data_for_cleanup.perf_pipe)
         except:
             # perf might already finished
             pass
@@ -170,9 +169,8 @@ def main(args=None):
 
     if not damon_record_supported or is_ongoing:
         # Record the monitoring results using perf
-        data_for_cleanup.perf_pipe = subprocess.Popen([
-            'perf', 'record', '-a', '-e', 'damon:damon_aggregated',
-            '-o', data_for_cleanup.rfile_path + '.perf.data'])
+        data_for_cleanup.perf_pipe = _damon.start_monitoring_record(
+                data_for_cleanup.rfile_path + '.perf.data')
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
