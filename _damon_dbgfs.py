@@ -184,7 +184,7 @@ def wops_for_kdamonds(kdamonds):
                 ctx.record_request.rfile_path)
         write_contents.append({debugfs_record: record_file_input})
 
-    if not debugfs_schemes:
+    if not feature_supported('schemes'):
         return write_contents
 
     write_contents += wops_for_schemes(ctx.schemes, ctx.intervals)
@@ -429,7 +429,7 @@ def update_supported_features():
         if init_regions_version == 2:
             feature_supports['init_regions_target_idx'] = True
 
-    if debugfs_schemes != None:
+    if feature_supported('schemes'):
         if test_debugfs_file_schemes(9):
             feature_supports['schemes_speed_limit'] = True
         elif test_debugfs_file_schemes(12):
