@@ -375,12 +375,6 @@ def test_init_regions_version(paddr_supported):
 
 def chk_essential_files():
     'check essential DAMON debugfs files existence'
-    global debugfs_damon
-    global debugfs_attrs
-    global debugfs_schemes
-    global debugfs_target_ids
-    global debugfs_monitor_on
-
     if not os.path.isdir(debugfs_damon):
         return 'damon debugfs dir (%s) not found' % debugfs_damon
 
