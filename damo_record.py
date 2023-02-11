@@ -26,14 +26,6 @@ class DataForCleanup:
 
 data_for_cleanup = DataForCleanup()
 
-def change_rfile_format(rfile_path, dst_format, dst_permission):
-    result, err = _damon_result.parse_damon_result(rfile_path, None)
-    if err:
-        raise Exception('parsing DAMON output failed (%s)' % err)
-
-    _damon_result.write_damon_result(result, rfile_path, dst_format,
-            dst_permission)
-
 def cleanup_exit(exit_code):
     if not data_for_cleanup.target_is_ongoing:
         if _damon.any_kdamond_running():
@@ -68,9 +60,11 @@ def cleanup_exit(exit_code):
 
     if (data_for_cleanup.rfile_format != None and
             rfile_current_format != data_for_cleanup.rfile_format):
-        change_rfile_format(data_for_cleanup.rfile_path,
+        err = _damon_result.update_result_file(data_for_cleanup.rfile_path,
                 data_for_cleanup.rfile_format,
                 data_for_cleanup.rfile_permission)
+        if err != None:
+            print('setting format and permission failed (%s)' % err)
 
     # DAMON might not started at all
     if os.path.isfile(data_for_cleanup.rfile_path):
