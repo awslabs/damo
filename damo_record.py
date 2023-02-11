@@ -96,11 +96,6 @@ def set_data_for_cleanup(data_for_cleanup, args, output_permission):
 def chk_handle_record_feature_support(args):
     damon_record_supported = _damon.feature_supported('record')
     if not damon_record_supported:
-        try:
-            subprocess.check_output(['which', 'perf'])
-        except:
-            print('perf is not installed')
-            exit(1)
         if args.rbuf:
             print('# \'--rbuf\' will be ignored')
 
