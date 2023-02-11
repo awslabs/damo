@@ -66,7 +66,6 @@ def cleanup_exit(exit_code):
         if err != None:
             print('setting format and permission failed (%s)' % err)
 
-    # DAMON might not started at all
     if os.path.isfile(data_for_cleanup.rfile_path):
         os.chmod(data_for_cleanup.rfile_path,
                 data_for_cleanup.rfile_permission)
