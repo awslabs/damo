@@ -38,6 +38,10 @@ do
 	if ! "$damo" validate 2> /dev/null
 	then
 		echo "FAIL $testname2 (invalid record file)"
+		if ! sudo "$damo" stop
+		then
+			echo "failed stopping DAMON"
+		fi
 		exit 1
 	fi
 	echo "PASS $testname2 record-ongoing-validate"
@@ -47,6 +51,10 @@ do
 		if ! sudo "$damo" stat schemes_tried_regions &> /dev/null
 		then
 			echo "FAIL $testname2 stat $i failed"
+			if ! sudo "$damo" stop
+			then
+				echo "failed stopping DAMON"
+			fi
 			exit 1
 		fi
 	done
@@ -56,6 +64,11 @@ do
 		--damon_interface "$damon_interface" &> /dev/null
 	then
 		echo "FAIL $testname2 tune"
+		if ! sudo "$damo" stop
+		then
+			echo "failed stopping DAMON"
+		fi
+
 		exit 1
 	fi
 	sudo timeout 3 "$damo" record ongoing \
@@ -63,6 +76,10 @@ do
 	if ! "$damo" validate --aggr 180000 220000 2> /dev/null
 	then
 		echo "FAIL $testname2 (invalid record file after tune)"
+		if ! sudo "$damo" stop
+		then
+			echo "failed stopping DAMON"
+		fi
 		exit 1
 	fi
 	echo "PASS $testname2 tune-record-ongoing-validate"
