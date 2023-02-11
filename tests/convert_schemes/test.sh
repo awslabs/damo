@@ -13,7 +13,8 @@ test_convert_file() {
 
 			expected=$(cat "./expects/$scheme_name.v$version")
 			converted=$(../../_damo_schemes_to_dbgfs_input.py \
-				--scheme_version "$version" "$input")
+				--scheme_version "$version" "$input" \
+				2> /dev/null)
 			if [ ! "$expected" = "$converted" ]
 			then
 				echo "FAIL convert-schemes (for $input, $version)"
@@ -34,7 +35,8 @@ test_convert_txt() {
 
 			input_txt=$(cat "$input_file")
 			converted=$(../../_damo_schemes_to_dbgfs_input.py \
-				--scheme_version "$version" "$input_txt")
+				--scheme_version "$version" "$input_txt" \
+				2> /dev/null)
 			if [ ! "$expected" = "$converted" ]
 			then
 				echo "FAIL convert-schemes (for $input_file)"
