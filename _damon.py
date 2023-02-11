@@ -929,9 +929,13 @@ def turn_damon_off(kdamonds_names):
     wait_current_kdamonds_turned_off()
 
 def start_monitoring_record(record_file):
+    try:
+        subprocess.check_output(['which', 'perf'])
+    except:
+        return None, 'perf is not installed'
     return subprocess.Popen(
             ['perf', 'record', '-a', '-e', 'damon:damon_aggregated', '-o',
-                record_file])
+                record_file]), None
 
 def stop_monitoring_record(perf_pipe):
     perf_pipe.send_signal(signal.SIGINT)
