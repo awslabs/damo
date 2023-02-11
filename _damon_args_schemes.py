@@ -77,6 +77,7 @@ Below is an exaple of the json string format.
 
 import json
 import os
+import sys
 
 import _damon
 
@@ -97,7 +98,7 @@ def fields_to_v0_scheme(fields):
     return scheme
 
 def warn_deprecation(nr_fields):
-    print('''
+    sys.stderr.write('''
 WARNING: scheme input of %d fields will be deprecated by 2023-Q2.  Please
 report your usecase to sj@kernel.org, damon@liss.linux.dev and
 linux-mm@kvack.org if you depend on those.''' % nr_fields)
