@@ -14,7 +14,6 @@ import _damon
 
 debugfs = '/sys/kernel/debug'
 debugfs_damon = os.path.join(debugfs, 'damon')
-debugfs_version = os.path.join(debugfs_damon, 'version')
 debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
 debugfs_record = os.path.join(debugfs_damon, 'record')
 debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
@@ -377,7 +376,6 @@ def test_init_regions_version(paddr_supported):
 def set_damon_debugfs_paths():
     'Set global variables for DAMON debugfs path.  Return error if failed'
     global debugfs_damon
-    global debugfs_version
     global debugfs_attrs
     global debugfs_record
     global debugfs_schemes
@@ -388,15 +386,13 @@ def set_damon_debugfs_paths():
     if not os.path.isdir(debugfs_damon):
         return 'damon debugfs dir (%s) not found' % debugfs_damon
 
-    for f in [debugfs_version, debugfs_attrs, debugfs_record, debugfs_schemes,
+    for f in [debugfs_attrs, debugfs_record, debugfs_schemes,
             debugfs_target_ids, debugfs_init_regions, debugfs_monitor_on]:
         # f could be None if this function is called before
         if f == None:
             continue
         if not os.path.isfile(f):
-            if f == debugfs_version:
-                debugfs_version = None
-            elif f == debugfs_record:
+            if f == debugfs_record:
                 debugfs_record = None
             elif f == debugfs_schemes:
                 debugfs_schemes = None
