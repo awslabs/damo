@@ -377,7 +377,6 @@ def chk_reset_file_paths():
     'Set global variables for DAMON debugfs path.  Return error if failed'
     global debugfs_damon
     global debugfs_attrs
-    global debugfs_record
     global debugfs_schemes
     global debugfs_target_ids
     global debugfs_init_regions
@@ -386,15 +385,13 @@ def chk_reset_file_paths():
     if not os.path.isdir(debugfs_damon):
         return 'damon debugfs dir (%s) not found' % debugfs_damon
 
-    for f in [debugfs_attrs, debugfs_record, debugfs_schemes,
+    for f in [debugfs_attrs, debugfs_schemes,
             debugfs_target_ids, debugfs_init_regions, debugfs_monitor_on]:
         # f could be None if this function is called before
         if f == None:
             continue
         if not os.path.isfile(f):
-            if f == debugfs_record:
-                debugfs_record = None
-            elif f == debugfs_schemes:
+            if f == debugfs_schemes:
                 debugfs_schemes = None
             elif f == debugfs_init_regions:
                 debugfs_init_regions = None
@@ -415,7 +412,7 @@ def update_supported_features():
     if _damon.any_kdamond_running():
         return 'debugfs feature update cannot be done while DAMON running'
 
-    if debugfs_record != None:
+    if os.path.isfile(debugfs_record):
         feature_supports['record'] = True
     if debugfs_schemes != None:
         feature_supports['schemes'] = True
