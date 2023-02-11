@@ -373,7 +373,7 @@ def test_init_regions_version(paddr_supported):
 
     return version
 
-def chk_reset_file_paths():
+def chk_essential_files():
     'check essential DAMON debugfs files existence'
     global debugfs_damon
     global debugfs_attrs
@@ -399,7 +399,7 @@ def update_supported_features():
         return None
     feature_supports = {x: False for x in _damon.features}
 
-    err = chk_reset_file_paths()
+    err = chk_essential_files()
     if err != None:
         return err
 
