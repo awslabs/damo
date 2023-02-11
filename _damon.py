@@ -8,6 +8,8 @@ Contains core functions for DAMON control.
 import collections
 import copy
 import os
+import signal
+import subprocess
 import time
 
 import _damo_fmt_str
@@ -925,3 +927,12 @@ def turn_damon_off(kdamonds_names):
     if err:
         return err
     wait_current_kdamonds_turned_off()
+
+def start_monitoring_record(record_file):
+    return subprocess.Popen(
+            ['perf', 'record', '-a', '-e', 'damon:damon_aggregated', '-o',
+                record_file])
+
+def stop_monitoring_record(perf_pipe):
+    perf_pipe.send_signal(signal.SIGINT)
+    perf_pipe.wait()
