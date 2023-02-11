@@ -379,24 +379,18 @@ def chk_reset_file_paths():
     global debugfs_attrs
     global debugfs_schemes
     global debugfs_target_ids
-    global debugfs_init_regions
     global debugfs_monitor_on
 
     if not os.path.isdir(debugfs_damon):
         return 'damon debugfs dir (%s) not found' % debugfs_damon
 
-    for f in [debugfs_attrs, debugfs_schemes,
-            debugfs_target_ids, debugfs_init_regions, debugfs_monitor_on]:
+    for f in [debugfs_attrs,
+            debugfs_target_ids, debugfs_monitor_on]:
         # f could be None if this function is called before
         if f == None:
             continue
         if not os.path.isfile(f):
-            if f == debugfs_schemes:
-                debugfs_schemes = None
-            elif f == debugfs_init_regions:
-                debugfs_init_regions = None
-            else:
-                return 'damon debugfs file (%s) not found' % f
+            return 'damon debugfs file (%s) not found' % f
     return None
 
 def update_supported_features():
@@ -422,7 +416,7 @@ def update_supported_features():
     if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
         feature_supports['paddr'] = True
 
-    if debugfs_init_regions != None:
+    if os.path.isfile(debugfs_init_regions):
         feature_supports['init_regions'] = True
         init_regions_version = test_init_regions_version(
                 feature_supports['paddr'])
