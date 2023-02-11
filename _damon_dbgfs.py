@@ -380,9 +380,6 @@ def chk_essential_files():
 
     for f in [debugfs_attrs,
             debugfs_target_ids, debugfs_monitor_on]:
-        # f could be None if this function is called before
-        if f == None:
-            continue
         if not os.path.isfile(f):
             return 'damon debugfs file (%s) not found' % f
     return None
