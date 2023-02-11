@@ -27,15 +27,12 @@ class DataForCleanup:
 data_for_cleanup = DataForCleanup()
 
 def change_rfile_format(rfile_path, dst_format, dst_permission):
-    rfile_path_mid = rfile_path + '.mid'
-    os.rename(rfile_path, rfile_path_mid)
-    result, err = _damon_result.parse_damon_result(rfile_path_mid, None)
+    result, err = _damon_result.parse_damon_result(rfile_path, None)
     if err:
         raise Exception('parsing DAMON output failed (%s)' % err)
 
     _damon_result.write_damon_result(result, rfile_path, dst_format,
             dst_permission)
-    os.remove(rfile_path_mid)
 
 def cleanup_exit(exit_code):
     if not data_for_cleanup.target_is_ongoing:
