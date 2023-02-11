@@ -38,6 +38,19 @@ def change_rfile_format(rfile_path, src_format, dst_format, dst_permission):
     os.remove(rfile_path_mid)
 
 def cleanup_exit(exit_code):
+    if not data_for_cleanup.target_is_ongoing:
+        if _damon.any_kdamond_running():
+            if data_for_cleanup.kdamonds_names == None:
+                # turn on failed
+                pass
+            else:
+                err = _damon.turn_damon_off(data_for_cleanup.kdamonds_names)
+                if err:
+                    print('failed to turn damon off (%s)' % err)
+        err = _damon.apply_kdamonds(data_for_cleanup.orig_kdamonds)
+        if err:
+            print('failed restoring previous kdamonds setup (%s)' % err)
+
     if data_for_cleanup.perf_pipe:
         try:
             _damon.stop_monitoring_record(data_for_cleanup.perf_pipe)
@@ -55,19 +68,6 @@ def cleanup_exit(exit_code):
             os.remove(perf_data)
     else:
         rfile_current_format = 'record'
-
-    if not data_for_cleanup.target_is_ongoing:
-        if _damon.any_kdamond_running():
-            if data_for_cleanup.kdamonds_names == None:
-                # turn on failed
-                pass
-            else:
-                err = _damon.turn_damon_off(data_for_cleanup.kdamonds_names)
-                if err:
-                    print('failed to turn damon off (%s)' % err)
-        err = _damon.apply_kdamonds(data_for_cleanup.orig_kdamonds)
-        if err:
-            print('failed restoring previous kdamonds setup (%s)' % err)
 
     if (data_for_cleanup.rfile_format != None and
             rfile_current_format != data_for_cleanup.rfile_format):
