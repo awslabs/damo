@@ -373,7 +373,7 @@ def test_init_regions_version(paddr_supported):
 
     return version
 
-def set_damon_debugfs_paths():
+def chk_reset_file_paths():
     'Set global variables for DAMON debugfs path.  Return error if failed'
     global debugfs_damon
     global debugfs_attrs
@@ -408,7 +408,7 @@ def update_supported_features():
         return None
     feature_supports = {x: False for x in _damon.features}
 
-    err = set_damon_debugfs_paths()
+    err = chk_reset_file_paths()
     if err != None:
         return err
 
