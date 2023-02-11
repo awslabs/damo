@@ -414,7 +414,7 @@ def update_supported_features():
 
     if os.path.isfile(debugfs_record):
         feature_supports['record'] = True
-    if debugfs_schemes != None:
+    if os.path.isfile(debugfs_schemes):
         feature_supports['schemes'] = True
 
     # virtual address space has supported since the beginning
