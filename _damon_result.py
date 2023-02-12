@@ -196,19 +196,18 @@ def perf_script_to_damon_result(file_path, f, max_secs):
 file_type_record = 'record'             # damo defined binary format
 file_type_perf_script = 'perf_script'   # perf script output
 
-def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
-    if not file_type:
-        output = subprocess.check_output(
-                ['file', '-b', result_file]).decode().strip()
-        if output == 'ASCII text':
+def parse_damon_result_for(result_file, f, fmt_version, max_secs):
+    output = subprocess.check_output(
+            ['file', '-b', result_file]).decode().strip()
+    if output == 'ASCII text':
+        file_type = file_type_perf_script
+    else:
+        try:
+            script_output = subprocess.check_output(
+                    ['perf', 'script', '-i', result_file]).decode()
             file_type = file_type_perf_script
-        else:
-            try:
-                script_output = subprocess.check_output(
-                        ['perf', 'script', '-i', result_file]).decode()
-                file_type = file_type_perf_script
-            except:
-                file_type = file_type_record
+        except:
+            file_type = file_type_record
 
     if file_type == file_type_record:
         result, f, fmt_version, err = record_to_damon_result(result_file,

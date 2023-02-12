@@ -31,13 +31,13 @@ def main(args=None):
     if args.duration:
         print('read start')
         result, f, fmt_version, err = _damon_result.parse_damon_result_for(
-                file_path, None, None, None, args.duration[0])
+                file_path, None, None, args.duration[0])
         if err != None:
             print(err)
             exit(1)
         print('now real read')
         result, f, fmt_version, err = _damon_result.parse_damon_result_for(
-                file_path, None, f, fmt_version, args.duration[1])
+                file_path, f, fmt_version, args.duration[1])
         if err != None:
             print(err)
             exit(1)
