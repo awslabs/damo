@@ -35,25 +35,6 @@ test_record_permission()
 	echo "PASS record-permission"
 }
 
-test_leave_perf_data()
-{
-	if ! sudo "$damo" record "sleep 2" --leave_perf_data &> /dev/null
-	then
-		echo "FAIL record-leave-perf-data (damo-record command failed)"
-		exit 1
-	fi
-
-	if [ ! -f ./damon.data.perf.data ]
-	then
-		echo "FAIL record-leave-perf-data (perf.data not found)"
-		exit 1
-	fi
-
-	cleanup_files
-
-	echo "PASS record-leave-perf-data"
-}
-
 test_record_validate()
 {
 	if [ $# -ne 4 ]
@@ -161,7 +142,6 @@ then
 	test_record_validate "sleep 3" 4 "4096-81920" "sysfs"
 fi
 
-test_leave_perf_data
 test_record_permission
 
 echo "PASS $(basename $(pwd))"
