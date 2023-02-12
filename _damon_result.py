@@ -193,20 +193,23 @@ def perf_script_to_damon_result(file_path, f, max_secs):
         f.close()
     return result, f
 
+file_type_record = 'record'             # damo defined binary format
+file_type_perf_script = 'perf_script'   # perf script output
+
 def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
     if not file_type:
-        file_type = 'record'
+        file_type = file_type_record
         output = subprocess.check_output(
                 ['file', '-b', result_file]).decode().strip()
         if output == 'ASCII text':
-            file_type = 'perf_script'
+            file_type = file_type_perf_script
 
-    if file_type == 'record':
+    if file_type == file_type_record:
         result, f, fmt_version, err = record_to_damon_result(result_file,
                 f, fmt_version, max_secs)
         if err:
             return None, None, None, err
-    elif file_type == 'perf_script':
+    elif file_type == file_type_perf_script:
         result, f = perf_script_to_damon_result(result_file, f, max_secs)
         fmt_version = None
     else:
@@ -304,9 +307,9 @@ def write_damon_result(result, file_path, file_type, file_permission):
             fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
             target_snapshots.append(fake_snapshot)
             result.nr_snapshots += 1
-    if file_type == 'record':
+    if file_type == file_type_record:
         write_damon_record(result, file_path, 2, file_permission)
-    elif file_type == 'perf_script':
+    elif file_type == file_type_perf_script:
         write_damon_perf_script(result, file_path, file_permission)
     else:
         print('unsupported file type: %s' % file_type)
