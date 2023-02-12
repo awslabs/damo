@@ -557,16 +557,17 @@ class Damos:
     tried_regions = None
 
     # for monitoring only by default
-    def __init__(self, name='0', access_pattern=DamosAccessPattern(),
-            action=damos_action_stat, quotas=DamosQuotas(),
-            watermarks=DamosWatermarks(), filters=[], stats=None,
+    def __init__(self, name='0', access_pattern=None, action=damos_action_stat,
+            quotas=None, watermarks=None, filters=None, stats=None,
             tried_regions=None):
         self.name = name
-        self.access_pattern = access_pattern
+        self.access_pattern = (access_pattern
+                if access_pattern != None else DamosAccessPattern())
         self.action = action
-        self.quotas = quotas
-        self.watermarks = watermarks
-        self.filters = filters
+        self.quotas = quotas if quotas != None else DamosQuotas()
+        self.watermarks = (watermarks
+                if watermarks != None else DamosWatermarks())
+        self.filters = filters if filters != None else []
         self.stats = stats
         self.tried_regions = tried_regions
 
