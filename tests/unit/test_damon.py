@@ -56,6 +56,13 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(kdamond,
             _damon.kvpairs_to_Kdamond(kdamond_kvpairs))
 
+    def test_damos_default_immutable(self):
+        damos = _damon.Damos()
+        before = damos.quotas.time_ms
+        damos.quotas.time_ms = 123
+        damos = _damon.Damos()
+        self.assertEqual(before, damos.quotas.time_ms)
+
     def test_damos_eq(self):
         damos = _damon.Damos('0',
                 access_pattern=_damon.DamosAccessPattern([4096,
