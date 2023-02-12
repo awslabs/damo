@@ -11,8 +11,6 @@ import _damo_fmt_str
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
-    parser.add_argument('--input_type', choices=['record', 'perf_script'],
-            default=None, help='input file\'s type')
     parser.add_argument('--duration', type=float, metavar='<seconds>', nargs=2,
             help='start and end time offset for record to parse')
     parser.add_argument('--raw_number', action='store_true',
@@ -33,20 +31,19 @@ def main(args=None):
     if args.duration:
         print('read start')
         result, f, fmt_version, err = _damon_result.parse_damon_result_for(
-                file_path, args.input_type, None, None, args.duration[0])
+                file_path, None, None, None, args.duration[0])
         if err != None:
             print(err)
             exit(1)
         print('now real read')
         result, f, fmt_version, err = _damon_result.parse_damon_result_for(
-                file_path, args.input_type, f, fmt_version, args.duration[1])
+                file_path, None, f, fmt_version, args.duration[1])
         if err != None:
             print(err)
             exit(1)
         f.close()
     else:
-        result, err = _damon_result.parse_damon_result(file_path,
-                args.input_type)
+        result, err = _damon_result.parse_damon_result(file_path)
         if err:
             print('parsing damon result file (%s) failed (%s)' %
                     (file_path, err))

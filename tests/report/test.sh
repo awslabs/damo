@@ -27,7 +27,7 @@ mkdir -p results
 test_report "$damo report raw" "raw"
 
 test_report \
-	"$damo report raw --input_type perf_script -i perf.data.script" \
+	"$damo report raw -i perf.data.script" \
 	"raw_perf_script"
 
 test_report "$damo report wss -r 1 101 1 --raw_number" "wss"

@@ -332,8 +332,6 @@ def plot_heatmap(data_file, output_file, args):
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
-    parser.add_argument('--input_type', choices=['record', 'perf_script'],
-            default=None, help='input file\'s type')
 
     parser.add_argument('--tid', metavar='<id>', type=int,
             help='target id')
@@ -363,8 +361,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    damon_result, err = _damon_result.parse_damon_result(
-            args.input, args.input_type)
+    damon_result, err = _damon_result.parse_damon_result(args.input)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (args.input, err))

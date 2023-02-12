@@ -75,8 +75,6 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
-    parser.add_argument('--input_type', choices=['record', 'perf_script'],
-            default=None, help='input file\'s type')
     parser.add_argument('--range', '-r', type=int, nargs=3,
             metavar=('<start>', '<stop>', '<step>'), default=[0,101,25],
             help='range of wss percentiles to print')
@@ -117,7 +115,7 @@ def main(args=None):
         wss_sort = False
     raw_number = args.raw_number
 
-    result, err = _damon_result.parse_damon_result(file_path, args.input_type)
+    result, err = _damon_result.parse_damon_result(file_path)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))

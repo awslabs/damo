@@ -13,8 +13,6 @@ import _damon_result
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
-    parser.add_argument('--input_type', choices=['record', 'perf_script'],
-            default=None, help='input file\'s type')
     parser.add_argument('--range', '-r', type=int, nargs=3,
             metavar=('<start>', '<stop>', '<step>'),
             help='range of percentiles to print')
@@ -38,7 +36,7 @@ def main(args=None):
     if args.sortby == 'time':
         nr_regions_sort = False
 
-    result, err = _damon_result.parse_damon_result(file_path, args.input_type)
+    result, err = _damon_result.parse_damon_result(file_path)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))
