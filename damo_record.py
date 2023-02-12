@@ -21,7 +21,6 @@ class DataForCleanup:
     rfile_path = None
     rfile_format = None
     rfile_permission = None
-    remove_perf_data = False
     perf_pipe = None
 
 data_for_cleanup = DataForCleanup()
@@ -53,8 +52,7 @@ def cleanup_exit(exit_code):
                 ['perf', 'script', '-i', perf_data]).decode()
         with open(data_for_cleanup.rfile_path, 'w') as f:
             f.write(script_output)
-        if data_for_cleanup.remove_perf_data:
-            os.remove(perf_data)
+        os.remove(perf_data)
     else:
         rfile_current_format = 'record'
 
@@ -79,7 +77,6 @@ def set_data_for_cleanup(data_for_cleanup, args, output_permission):
     data_for_cleanup.target_is_ongoing = _damon_args.is_ongoing_target(args)
     data_for_cleanup.rfile_format = args.output_type
     data_for_cleanup.rfile_path = args.out
-    data_for_cleanup.remove_perf_data = not args.leave_perf_data
     data_for_cleanup.rfile_permission = output_permission
     data_for_cleanup.orig_kdamonds = _damon.current_kdamonds()
 
@@ -117,8 +114,6 @@ def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type', choices=['record', 'perf_script'],
             default='perf_script', help='output file\'s type')
-    parser.add_argument('--leave_perf_data', action='store_true',
-            default=False, help='don\'t remove the perf.data file')
     parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')
     return parser
