@@ -246,7 +246,7 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
 
     return result, f, fmt_version, None
 
-def parse_damon_result(result_file, file_type):
+def parse_damon_result(result_file, file_type=None):
     result, f, fmt_version, err = parse_damon_result_for(result_file,
             file_type, None, None, None)
     if err:
