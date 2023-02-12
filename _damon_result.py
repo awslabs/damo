@@ -246,9 +246,9 @@ def parse_damon_result_for(result_file, file_type, f, fmt_version, max_secs):
 
     return result, f, fmt_version, None
 
-def parse_damon_result(result_file, file_type=None):
-    result, f, fmt_version, err = parse_damon_result_for(result_file,
-            file_type, None, None, None)
+def parse_damon_result(result_file):
+    result, f, fmt_version, err = parse_damon_result_for(result_file, None,
+            None, None)
     if err:
         return None, err
     f.close()
@@ -321,7 +321,7 @@ def write_damon_result(result, file_path, file_type, file_permission):
         print('unsupported file type: %s' % file_type)
 
 def update_result_file(file_path, file_format, file_permission):
-    result, err = parse_damon_result(file_path, None)
+    result, err = parse_damon_result(file_path)
     if err:
         return err
     write_damon_result(result, file_path, file_format, file_permission)
