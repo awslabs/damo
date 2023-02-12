@@ -47,12 +47,10 @@ def cleanup_exit(exit_code):
             pass
 
         rfile_current_format = 'perf_script'
-        perf_data = data_for_cleanup.rfile_path + '.perf.data'
         script_output = subprocess.check_output(
-                ['perf', 'script', '-i', perf_data]).decode()
+                ['perf', 'script', '-i', data_for_cleanup.rfile_path]).decode()
         with open(data_for_cleanup.rfile_path, 'w') as f:
             f.write(script_output)
-        os.remove(perf_data)
     else:
         rfile_current_format = 'record'
 
@@ -150,7 +148,7 @@ def main(args=None):
     if not damon_record_supported or is_ongoing:
         # Record the monitoring results using perf
         data_for_cleanup.perf_pipe, err = _damon.start_monitoring_record(
-                data_for_cleanup.rfile_path + '.perf.data')
+                data_for_cleanup.rfile_path)
         if err != None:
             print('could not start recording (%s)' % err)
             cleanup_exit(-3)
