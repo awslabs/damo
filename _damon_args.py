@@ -169,7 +169,7 @@ def deduce_target(args):
         args.self_started_target = True
     else:
         try:
-            pid = int(args.deduce_target)
+            pid = int(args.deducible_target)
         except:
             return 'target \'%s\' is not supported' % args.deducible_target
     args.target_pid = pid
