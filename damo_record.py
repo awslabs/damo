@@ -45,12 +45,14 @@ def cleanup_exit(exit_code):
         except:
             # perf might already finished
             pass
-
-        rfile_current_format = 'perf_script'
-        script_output = subprocess.check_output(
-                ['perf', 'script', '-i', data_for_cleanup.rfile_path]).decode()
-        with open(data_for_cleanup.rfile_path, 'w') as f:
-            f.write(script_output)
+        if data_for_cleanup.rfile_format != 'perf_data':
+            script_output = subprocess.check_output(
+                    ['perf', 'script', '-i', data_for_cleanup.rfile_path]).decode()
+            with open(data_for_cleanup.rfile_path, 'w') as f:
+                f.write(script_output)
+            rfile_current_format = 'perf_script'
+        else:
+            rfile_current_format = 'perf_data'
     else:
         rfile_current_format = 'record'
 
@@ -110,7 +112,8 @@ def backup_duplicate_output_file(output_file):
 
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
-    parser.add_argument('--output_type', choices=['record', 'perf_script'],
+    parser.add_argument('--output_type',
+            choices=['record', 'perf_data', 'perf_script'],
             default='perf_script', help='output file\'s type')
     parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')
