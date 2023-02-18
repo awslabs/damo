@@ -25,6 +25,8 @@ class DataForCleanup:
 
 data_for_cleanup = DataForCleanup()
 
+import time
+
 def cleanup_exit(exit_code):
     if not data_for_cleanup.target_is_ongoing:
         if _damon.any_kdamond_running():
@@ -46,6 +48,9 @@ def cleanup_exit(exit_code):
             # perf might already finished
             pass
         rfile_current_format = 'perf_data'
+        # for some reason, 'perf script' from updat_result_file() fails.
+        # Probably some timing issue.  Work around by sleeping.
+        time.sleep(0.5)
     else:
         rfile_current_format = 'record'
 
