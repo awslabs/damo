@@ -114,13 +114,12 @@ def record_to_damon_result(file_path):
 
     return result, None
 
-def perf_script_to_damon_result(file_path, f):
+def perf_script_to_damon_result(file_path):
     result = None
     nr_read_regions = 0
     parse_start_time = None
 
-    if not f:
-        f = open(file_path, 'r')
+    f = open(file_path, 'r')
 
     for line in f:
         line = line.strip()
@@ -178,7 +177,7 @@ def perf_script_to_damon_result(file_path, f):
             nr_read_regions = 0
 
     f.close()
-    return result, f
+    return result
 
 file_type_record = 'record'             # damo defined binary format
 file_type_perf_script = 'perf_script'   # perf script output
@@ -201,7 +200,7 @@ def parse_damon_result_for(result_file, f, fmt_version):
         if err:
             return None, None, None, err
     elif file_type == file_type_perf_script:
-        result, f = perf_script_to_damon_result(result_file, f)
+        result = perf_script_to_damon_result(result_file)
         fmt_version = None
     else:
         print('unknown result file type: %s (%s)' % (file_type, result_file))
