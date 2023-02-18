@@ -228,8 +228,8 @@ def parse_damon_result(result_file):
 
     return result, None
 
-def write_damon_record(result, file_path, format_version, file_permission):
-    with open(file_path, 'wb', file_permission) as f:
+def write_damon_record(result, file_path, format_version):
+    with open(file_path, 'wb') as f:
         f.write(b'damon_recfmt_ver')
         f.write(struct.pack('i', format_version))
 
@@ -252,7 +252,7 @@ def write_damon_record(result, file_path, format_version, file_permission):
                     f.write(struct.pack('L', region.end))
                     f.write(struct.pack('I', region.nr_accesses))
 
-def write_damon_perf_script(result, file_path, file_permission):
+def write_damon_perf_script(result, file_path):
     '''
     Example of the normal perf script output:
 
@@ -261,7 +261,7 @@ def write_damon_perf_script(result, file_path, file_permission):
             140731667070976-140731668037632: 0 3
     '''
 
-    with open(file_path, 'w', file_permission) as f:
+    with open(file_path, 'w') as f:
         for snapshot_idx in range(result.nr_snapshots):
             for tid in result.target_snapshots:
                 snapshot = result.target_snapshots[tid][snapshot_idx]
@@ -288,9 +288,9 @@ def write_damon_result(result, file_path, file_type, file_permission):
             target_snapshots.append(fake_snapshot)
             result.nr_snapshots += 1
     if file_type == file_type_record:
-        write_damon_record(result, file_path, 2, file_permission)
+        write_damon_record(result, file_path, 2)
     elif file_type == file_type_perf_script:
-        write_damon_perf_script(result, file_path, file_permission)
+        write_damon_perf_script(result, file_path)
     else:
         print('write unsupported file type: %s' % file_type)
     os.chmod(file_path, file_permission)
