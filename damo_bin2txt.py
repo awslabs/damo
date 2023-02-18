@@ -28,25 +28,10 @@ def main(args=None):
         print('input file (%s) is not exist' % file_path)
         exit(1)
 
-    if args.duration:
-        print('read start')
-        result, f, fmt_version, err = _damon_result.parse_damon_result_for(
-                file_path, None, None, args.duration[0])
-        if err != None:
-            print(err)
-            exit(1)
-        print('now real read')
-        result, f, fmt_version, err = _damon_result.parse_damon_result_for(
-                file_path, f, fmt_version, args.duration[1])
-        if err != None:
-            print(err)
-            exit(1)
-        f.close()
-    else:
-        result, err = _damon_result.parse_damon_result(file_path)
-        if err:
-            print('parsing damon result file (%s) failed (%s)' %
-                    (file_path, err))
+    result, err = _damon_result.parse_damon_result(file_path)
+    if err:
+        print('parsing damon result file (%s) failed (%s)' %
+                (file_path, err))
 
     if not result:
         print('monitoring result file (%s) parsing failed' % file_path)
@@ -65,6 +50,12 @@ def main(args=None):
                 _damo_fmt_str.format_time_ns(base_time, args.raw_number))
 
         for snapshot in snapshots:
+            if args.duration:
+                time_offset_sec = (snapshot.start_time - base_time) / 1000000000
+                if time_offset_sec < args.duration[0]:
+                    continue
+                if time_offset_sec > args.duration[1]:
+                    break
             print('monitoring_start:    %16s' %
                     _damo_fmt_str.format_time_ns(
                         snapshot.start_time - base_time, args.raw_number))
