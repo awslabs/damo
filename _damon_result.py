@@ -293,6 +293,7 @@ def write_damon_result(result, file_path, file_type, file_permission):
         write_damon_perf_script(result, file_path, file_permission)
     else:
         print('write unsupported file type: %s' % file_type)
+    os.chmod(file_path, file_permission)
 
 def update_result_file(file_path, file_format, file_permission):
     result, err = parse_damon_result(file_path)
