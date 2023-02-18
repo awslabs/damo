@@ -116,7 +116,7 @@ def record_to_damon_result(file_path, f, fmt_version):
 
     return result, f, fmt_version, None
 
-def perf_script_to_damon_result(file_path, f, max_secs):
+def perf_script_to_damon_result(file_path, f):
     result = None
     nr_read_regions = 0
     parse_start_time = None
@@ -148,11 +148,6 @@ def perf_script_to_damon_result(file_path, f, max_secs):
             result = DAMONResult()
         if parse_start_time == None:
             parse_start_time = end_time
-        elif max_secs != None and (
-                end_time - parse_start_time > max_secs * 1000000000):
-            # reverse seek of text file is not supported, we simply remove
-            # over-read line.
-            break
 
         target_id = int(fields[5].split('=')[1])
 
@@ -184,8 +179,7 @@ def perf_script_to_damon_result(file_path, f, max_secs):
         if nr_read_regions == nr_regions:
             nr_read_regions = 0
 
-    if max_secs == None:
-        f.close()
+    f.close()
     return result, f
 
 file_type_record = 'record'             # damo defined binary format
@@ -210,7 +204,7 @@ def parse_damon_result_for(result_file, f, fmt_version, max_secs):
         if err:
             return None, None, None, err
     elif file_type == file_type_perf_script:
-        result, f = perf_script_to_damon_result(result_file, f, max_secs)
+        result, f = perf_script_to_damon_result(result_file, f)
         fmt_version = None
     else:
         print('unknown result file type: %s (%s)' % (file_type, result_file))
