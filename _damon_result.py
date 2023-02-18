@@ -56,6 +56,7 @@ class DAMONResult:
 
     def __init__(self):
         self.target_snapshots = {}
+        self.nr_snapshots = 0
 
 def record_to_damon_result(file_path):
     result = None
