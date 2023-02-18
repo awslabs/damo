@@ -55,8 +55,7 @@ def cleanup_exit(exit_code):
                 data_for_cleanup.rfile_permission)
         if err != None:
             print('setting format and permission failed (%s)' % err)
-
-    if os.path.isfile(data_for_cleanup.rfile_path):
+    else:
         os.chmod(data_for_cleanup.rfile_path,
                 data_for_cleanup.rfile_permission)
 
