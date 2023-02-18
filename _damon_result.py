@@ -201,7 +201,7 @@ def parse_damon_result(result_file):
                 script_output = f.read()
         result = perf_script_to_damon_result(script_output)
     else:
-        return None, None, 'unknown result file type: %s (%s)' % (
+        return None, 'unknown result file type: %s (%s)' % (
                 file_type, result_file)
 
     for snapshots in result.target_snapshots.values():
