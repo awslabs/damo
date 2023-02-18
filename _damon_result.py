@@ -57,7 +57,7 @@ class DAMONResult:
     def __init__(self):
         self.target_snapshots = {}
 
-def record_to_damon_result(file_path, f, fmt_version, max_secs):
+def record_to_damon_result(file_path, f, fmt_version):
     result = None
     parse_start_time = None
 
@@ -80,8 +80,7 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
     while True:
         timebin = f.read(16)
         if len(timebin) != 16:
-            if max_secs == None:
-                f.close()
+            f.close()
             break
         sec = struct.unpack('l', timebin[0:8])[0]
         nsec = struct.unpack('l', timebin[8:16])[0]
@@ -89,10 +88,6 @@ def record_to_damon_result(file_path, f, fmt_version, max_secs):
 
         if not parse_start_time:
             parse_start_time = end_time
-        elif max_secs != None and (
-                end_time - parse_start_time > max_secs * 1000000000):
-            f.seek(-16, 1)
-            break
 
         nr_tasks = struct.unpack('I', f.read(4))[0]
         for t in range(nr_tasks):
@@ -211,7 +206,7 @@ def parse_damon_result_for(result_file, f, fmt_version, max_secs):
 
     if file_type == file_type_record:
         result, f, fmt_version, err = record_to_damon_result(result_file,
-                f, fmt_version, max_secs)
+                f, fmt_version)
         if err:
             return None, None, None, err
     elif file_type == file_type_perf_script:
