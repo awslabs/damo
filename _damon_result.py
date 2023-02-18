@@ -57,9 +57,10 @@ class DAMONResult:
     def __init__(self):
         self.target_snapshots = {}
 
-def record_to_damon_result(file_path, f, fmt_version):
+def record_to_damon_result(file_path, f):
     result = None
     parse_start_time = None
+    fmt_version = None
 
     if f == None:
         f = open(file_path, 'rb')
@@ -73,7 +74,7 @@ def record_to_damon_result(file_path, f, fmt_version):
             f.seek(0)
     elif not fmt_version:
         f.close()
-        return None, None, None, 'fmt_version is not given'
+        return None, None, 'fmt_version is not given'
 
     result = DAMONResult()
 
@@ -114,7 +115,7 @@ def record_to_damon_result(file_path, f, fmt_version):
                 snapshot.regions.append(region)
             target_snapshots.append(snapshot)
 
-    return result, f, fmt_version, None
+    return result, f, None
 
 def perf_script_to_damon_result(file_path, f):
     result = None
@@ -199,8 +200,7 @@ def parse_damon_result_for(result_file, f, fmt_version):
             file_type = file_type_record
 
     if file_type == file_type_record:
-        result, f, fmt_version, err = record_to_damon_result(result_file,
-                f, fmt_version)
+        result, f, err = record_to_damon_result(result_file, f)
         if err:
             return None, None, None, err
     elif file_type == file_type_perf_script:
