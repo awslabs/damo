@@ -202,8 +202,8 @@ def parse_damon_result_for(result_file, f):
     elif file_type == file_type_perf_script:
         result = perf_script_to_damon_result(result_file)
     else:
-        print('unknown result file type: %s (%s)' % (file_type, result_file))
-        return None
+        return None, None, 'unknown result file type: %s (%s)' % (
+                file_type, result_file)
 
     for snapshots in result.target_snapshots.values():
         if len(snapshots) < 2:
