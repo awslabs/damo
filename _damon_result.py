@@ -112,7 +112,7 @@ def record_to_damon_result(file_path):
 
     f.close()
 
-    return result, None
+    return result
 
 def perf_script_to_damon_result(script_output):
     result = None
@@ -194,9 +194,7 @@ def parse_damon_result(result_file):
             file_type = file_type_record
 
     if file_type == file_type_record:
-        result, err = record_to_damon_result(result_file)
-        if err:
-            return None, None, err
+        result = record_to_damon_result(result_file)
     elif file_type == file_type_perf_script:
         if script_output == None:
             with open(result_file, 'r') as f:
