@@ -182,7 +182,7 @@ def perf_script_to_damon_result(file_path):
 file_type_record = 'record'             # damo defined binary format
 file_type_perf_script = 'perf_script'   # perf script output
 
-def parse_damon_result_for(result_file, f, fmt_version):
+def parse_damon_result_for(result_file, f):
     output = subprocess.check_output(
             ['file', '-b', result_file]).decode().strip()
     if output == 'ASCII text':
@@ -198,10 +198,9 @@ def parse_damon_result_for(result_file, f, fmt_version):
     if file_type == file_type_record:
         result, err = record_to_damon_result(result_file)
         if err:
-            return None, None, None, err
+            return None, None, err
     elif file_type == file_type_perf_script:
         result = perf_script_to_damon_result(result_file)
-        fmt_version = None
     else:
         print('unknown result file type: %s (%s)' % (file_type, result_file))
         return None
@@ -228,11 +227,10 @@ def parse_damon_result_for(result_file, f, fmt_version):
                     region.nr_accesses == -1 and region.age == -1):
                 del snapshots[1]
 
-    return result, f, fmt_version, None
+    return result, f, None
 
 def parse_damon_result(result_file):
-    result, f, fmt_version, err = parse_damon_result_for(result_file, None,
-            None)
+    result, f, err = parse_damon_result_for(result_file, None)
     if err:
         return None, err
     if f != None:
