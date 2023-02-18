@@ -292,7 +292,7 @@ def write_damon_result(result, file_path, file_type, file_permission):
     elif file_type == file_type_perf_script:
         write_damon_perf_script(result, file_path, file_permission)
     else:
-        print('unsupported file type: %s' % file_type)
+        print('write unsupported file type: %s' % file_type)
 
 def update_result_file(file_path, file_format, file_permission):
     result, err = parse_damon_result(file_path)
