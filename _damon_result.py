@@ -57,25 +57,20 @@ class DAMONResult:
     def __init__(self):
         self.target_snapshots = {}
 
-def record_to_damon_result(file_path, f):
+def record_to_damon_result(file_path):
     result = None
     parse_start_time = None
     fmt_version = None
 
-    if f == None:
-        f = open(file_path, 'rb')
+    f = open(file_path, 'rb')
 
-        # read record format version
-        mark = f.read(16)
-        if mark == b'damon_recfmt_ver':
-            fmt_version = struct.unpack('i', f.read(4))[0]
-        else:
-            fmt_version = 0
-            f.seek(0)
-    elif not fmt_version:
-        f.close()
-        return None, None, 'fmt_version is not given'
-
+    # read record format version
+    mark = f.read(16)
+    if mark == b'damon_recfmt_ver':
+        fmt_version = struct.unpack('i', f.read(4))[0]
+    else:
+        fmt_version = 0
+        f.seek(0)
     result = DAMONResult()
 
     while True:
@@ -115,7 +110,9 @@ def record_to_damon_result(file_path, f):
                 snapshot.regions.append(region)
             target_snapshots.append(snapshot)
 
-    return result, f, None
+    f.close()
+
+    return result, None
 
 def perf_script_to_damon_result(file_path, f):
     result = None
@@ -200,7 +197,7 @@ def parse_damon_result_for(result_file, f, fmt_version):
             file_type = file_type_record
 
     if file_type == file_type_record:
-        result, f, err = record_to_damon_result(result_file, f)
+        result, err = record_to_damon_result(result_file)
         if err:
             return None, None, None, err
     elif file_type == file_type_perf_script:
@@ -239,7 +236,8 @@ def parse_damon_result(result_file):
             None)
     if err:
         return None, err
-    f.close()
+    if f != None:
+        f.close()
     return result, None
 
 def write_damon_record(result, file_path, format_version, file_permission):
