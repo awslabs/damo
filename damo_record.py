@@ -45,14 +45,7 @@ def cleanup_exit(exit_code):
         except:
             # perf might already finished
             pass
-        if data_for_cleanup.rfile_format != 'perf_data':
-            script_output = subprocess.check_output(
-                    ['perf', 'script', '-i', data_for_cleanup.rfile_path]).decode()
-            with open(data_for_cleanup.rfile_path, 'w') as f:
-                f.write(script_output)
-            rfile_current_format = 'perf_script'
-        else:
-            rfile_current_format = 'perf_data'
+        rfile_current_format = 'perf_data'
     else:
         rfile_current_format = 'record'
 
