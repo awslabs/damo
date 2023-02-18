@@ -19,5 +19,3 @@
   - No check at all
   - Or, goes from option 1 to option 4 incrementally
 - Move record handling to _damon
-- Fixup perf.data handling in parse_damon_result_for()
-- damo_record: Support perf.data output type
