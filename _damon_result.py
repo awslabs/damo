@@ -112,7 +112,7 @@ def record_to_damon_result(file_path):
     return result
 
 def perf_script_to_damon_result(script_output):
-    result = None
+    result = DAMONResult()
     nr_read_regions = 0
 
     for line in script_output.split('\n'):
@@ -135,8 +135,6 @@ def perf_script_to_damon_result(script_output):
         if fields[4] != 'damon:damon_aggregated:':
             continue
         end_time = int(float(fields[3][:-1]) * 1000000000)
-        if not result:
-            result = DAMONResult()
 
         target_id = int(fields[5].split('=')[1])
 
