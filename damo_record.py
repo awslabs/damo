@@ -30,10 +30,7 @@ import time
 def cleanup_exit(exit_code):
     if not data_for_cleanup.target_is_ongoing:
         if _damon.any_kdamond_running():
-            if data_for_cleanup.kdamonds_names == None:
-                # turn on failed
-                pass
-            else:
+            if data_for_cleanup.kdamonds_names != None:
                 err = _damon.turn_damon_off(data_for_cleanup.kdamonds_names)
                 if err:
                     print('failed to turn damon off (%s)' % err)
