@@ -60,7 +60,6 @@ class DAMONResult:
 
 def record_to_damon_result(file_path):
     result = None
-    parse_start_time = None
     fmt_version = None
 
     f = open(file_path, 'rb')
@@ -82,9 +81,6 @@ def record_to_damon_result(file_path):
         sec = struct.unpack('l', timebin[0:8])[0]
         nsec = struct.unpack('l', timebin[8:16])[0]
         end_time = sec * 1000000000 + nsec
-
-        if not parse_start_time:
-            parse_start_time = end_time
 
         nr_tasks = struct.unpack('I', f.read(4))[0]
         for t in range(nr_tasks):
