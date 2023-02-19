@@ -44,7 +44,7 @@ def cleanup_exit(exit_code):
         rfile_current_format = 'perf_data'
         # for some reason, 'perf script' from updat_result_file() fails.
         # Probably some timing issue.  Work around by sleeping.
-        time.sleep(0.5)
+        time.sleep(0.1)
     else:
         rfile_current_format = 'record'
 
