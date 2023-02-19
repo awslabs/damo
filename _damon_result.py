@@ -251,9 +251,8 @@ def write_damon_perf_script(result, file_path):
     '''
 
     with open(file_path, 'w') as f:
-        for snapshot_idx in range(result.nr_snapshots):
-            for tid in result.target_snapshots:
-                snapshot = result.target_snapshots[tid][snapshot_idx]
+        for snapshots in result.target_snapshots.values():
+            for snapshot in snapshots:
                 for region in snapshot.regions:
                     f.write(' '.join(['kdamond.x', 'xxxx', 'xxxx',
                         '%f:' % (snapshot.end_time / 1000000000.0),
