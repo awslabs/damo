@@ -113,7 +113,7 @@ def record_to_damon_result(file_path):
 
 def perf_script_to_damon_result(script_output):
     result = DAMONResult()
-    nr_read_regions = 0
+    snapshot = None
 
     for line in script_output.split('\n'):
         line = line.strip()
@@ -134,8 +134,16 @@ def perf_script_to_damon_result(script_output):
             continue
         if fields[4] != 'damon:damon_aggregated:':
             continue
-        end_time = int(float(fields[3][:-1]) * 1000000000)
 
+        start_addr, end_addr = [int(x) for x in fields[7][:-1].split('-')]
+        nr_accesses = int(fields[8])
+        if len(fields) == 10:
+            age = int(fields[9])
+        else:
+            age = None
+        region = DAMONRegion(start_addr, end_addr, nr_accesses, age)
+
+        end_time = int(float(fields[3][:-1]) * 1000000000)
         target_id = int(fields[5].split('=')[1])
 
         if not target_id in result.target_snapshots:
@@ -145,26 +153,16 @@ def perf_script_to_damon_result(script_output):
             start_time = None
         else:
             start_time = target_snapshots[-1].end_time
-
         nr_regions = int(fields[6].split('=')[1])
-        addrs = [int(x) for x in fields[7][:-1].split('-')]
-        nr_accesses = int(fields[8])
-        if len(fields) == 10:
-            age = int(fields[9])
-        else:
-            age = None
 
-        if nr_read_regions == 0:
+        if snapshot == None:
             snapshot = DAMONSnapshot(start_time, end_time, target_id)
             target_snapshots.append(snapshot)
-
         snapshot = target_snapshots[-1]
-        snapshot.regions.append(
-                DAMONRegion(addrs[0], addrs[1], nr_accesses, age))
+        snapshot.regions.append(region)
 
-        nr_read_regions += 1
-        if nr_read_regions == nr_regions:
-            nr_read_regions = 0
+        if len(snapshot.regions) == nr_regions:
+            snapshot = None
 
     return result
 
