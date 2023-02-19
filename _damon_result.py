@@ -222,9 +222,8 @@ def write_damon_record(result, file_path, format_version):
         f.write(b'damon_recfmt_ver')
         f.write(struct.pack('i', format_version))
 
-        for snapshot_idx in range(result.nr_snapshots):
-            for tid in result.target_snapshots:
-                snapshot = result.target_snapshots[tid][snapshot_idx]
+        for snapshots in result.target_snapshots.values():
+            for snapshot in snapshots:
                 f.write(struct.pack('l', snapshot.end_time // 1000000000))
                 f.write(struct.pack('l', snapshot.end_time % 1000000000))
 
