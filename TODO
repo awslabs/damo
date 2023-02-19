@@ -20,3 +20,4 @@
   - Or, goes from option 1 to option 4 incrementally
 - Move record handling to _damon
 - Debug perf script timing issue
+- Remove DAMONResult.nr_snapshots
