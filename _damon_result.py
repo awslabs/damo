@@ -236,6 +236,9 @@ def write_damon_record(result, file_path, format_version):
 
                 f.write(struct.pack('I', len(snapshot.regions)))
                 for region in snapshot.regions:
+                    # skip fake snapshot
+                    if region.nr_accesses == -1:
+                        continue
                     f.write(struct.pack('L', region.start))
                     f.write(struct.pack('L', region.end))
                     f.write(struct.pack('I', region.nr_accesses))
