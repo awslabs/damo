@@ -9,37 +9,23 @@ import struct
 
 import _damon_result
 
-def adjust_result(result, aggregate_interval, nr_snapshots_to_skip): 
-    interval = float(result.end_time - result.start_time) / result.nr_snapshots
-    nr_shots_in_aggr = int(max(round(aggregate_interval * 1000 / interval), 1))
-    target_snapshots = result.target_snapshots
+def adjusted_snapshots(snapshots, aggregate_interval_us):
+    adjusted = []
+    to_aggregate = []
+    for snapshot in snapshots:
+        to_aggregate.append(snapshot)
+        interval_ns = to_aggregate[-1].end_time - to_aggregate[0].start_time
+        if interval_ns >= aggregate_interval_us * 1000:
+            adjusted.append(_damon_result.aggregate_snapshots(to_aggregate))
+            to_aggregate = []
+    return adjusted
 
-    if nr_shots_in_aggr <= 1:
-        return
-
-    start_time = 0
-    end_time = 0
-    nr_snapshots = int(max((result.nr_snapshots - nr_snapshots_to_skip), 0) /
-            nr_shots_in_aggr)
-
-    for tid in target_snapshots:
-        # Skip first several snapshots as regions may not adjusted yet.
-        snapshots = target_snapshots[tid][nr_snapshots_to_skip:]
-        if start_time == 0:
-            start_time = snapshots[0].start_time
-            end_time = snapshots[-1].end_time
-
-        aggregated_snapshots = []
-        for i in range(0, len(snapshots), nr_shots_in_aggr):
-            to_aggregate = snapshots[i:
-                    min(i + nr_shots_in_aggr, len(snapshots))]
-            aggregated_snapshots.append(
-                    _damon_result.aggregate_snapshots(to_aggregate))
-        target_snapshots[tid] = aggregated_snapshots
-
-    result.start_time = start_time
-    result.end_time = end_time
-    result.nr_snapshots = nr_snapshots
+def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
+    for tid, snapshots in result.target_snapshots.items():
+        result.target_snapshots[tid] = adjusted_snapshots(
+                snapshots[nr_snapshots_to_skip:], aggregate_interval)
+    result.start_time = result.target_snapshots.values()[0][0].start_time
+    result.end_time = result.target_snapshots.values()[0][-1].end_time
 
 def set_argparser(parser):
     parser.add_argument('--aggregate_interval', type=int, default=None,
