@@ -114,7 +114,6 @@ def record_to_damon_result(file_path):
 def perf_script_to_damon_result(script_output):
     result = None
     nr_read_regions = 0
-    parse_start_time = None
 
     for line in script_output.split('\n'):
         line = line.strip()
@@ -138,8 +137,6 @@ def perf_script_to_damon_result(script_output):
         end_time = int(float(fields[3][:-1]) * 1000000000)
         if not result:
             result = DAMONResult()
-        if parse_start_time == None:
-            parse_start_time = end_time
 
         target_id = int(fields[5].split('=')[1])
 
