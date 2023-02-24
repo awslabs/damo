@@ -39,7 +39,6 @@ class DAMONRegion:
 class DAMONSnapshot:
     start_time = None
     end_time = None
-    target_id = None
     regions = None
 
     def __init__(self, start_time, end_time):
