@@ -151,7 +151,7 @@ def pr_heats(args, damon_result):
 
     # __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax)
 
-    snapshots = damon_result.target_snapshots[tid]
+    snapshots = damon_result.record_of(tid).snapshots
     pixels = heat_pixels_from_snapshots(snapshots, [tmin, tmax], [amin, amax],
             [tres, ares])
 
@@ -238,8 +238,8 @@ def overlapping_regions(regions1, regions2):
 def get_guide_info(damon_result):
     "return the set of guide information for the moitoring result"
     guides = {}
-    for snapshots in damon_result.target_snapshots.values():
-        for snapshot in snapshots:
+    for record in damon_result.records:
+        for snapshot in record.snapshots:
             monitor_time = snapshot.end_time
             tid = snapshot.target_id
             if not tid in guides:
