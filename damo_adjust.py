@@ -24,8 +24,6 @@ def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
     for tid, snapshots in result.target_snapshots.items():
         result.target_snapshots[tid] = adjusted_snapshots(
                 snapshots[nr_snapshots_to_skip:], aggregate_interval)
-    result.start_time = result.target_snapshots.values()[0][0].start_time
-    result.end_time = result.target_snapshots.values()[0][-1].end_time
 
 def set_argparser(parser):
     parser.add_argument('--aggregate_interval', type=int, default=None,
