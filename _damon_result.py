@@ -48,13 +48,23 @@ class DAMONSnapshot:
         self.target_id = target_id
         self.regions = []
 
+class DAMONRecord:
+    target_id = None
+    snapshots = None
+
+    def __init__(self, target_id):
+        self.target_id = target_id
+        self.snapshots = []
+
 class DAMONResult:
     start_time = None
     end_time = None
     target_snapshots = None    # {target_id: [snapshot]}
+    records = None
 
     def __init__(self):
         self.target_snapshots = {}
+        self.records = []
 
 def record_to_damon_result(file_path):
     result = None
