@@ -66,6 +66,14 @@ class DAMONResult:
         self.target_snapshots = {}
         self.records = []
 
+    def record_of(self, target_id):
+        for record in records:
+            if record.target_id == target_id:
+                return record
+        record = DAMONRecord(target_id)
+        self.records.append(record)
+        return record
+
 def record_to_damon_result(file_path):
     result = None
     fmt_version = None
