@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
+import copy
 import os
 import struct
 import subprocess
@@ -123,7 +124,7 @@ def record_to_damon_result(file_path):
                 region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
                 snapshot.regions.append(region)
             target_snapshots.append(snapshot)
-            record.snapshots.append(snapshot)
+            record.snapshots.append(copy.deepcopy(snapshot))
 
     f.close()
 
@@ -177,7 +178,7 @@ def perf_script_to_damon_result(script_output):
         if snapshot == None:
             snapshot = DAMONSnapshot(start_time, end_time, target_id)
             target_snapshots.append(snapshot)
-            record.snapshots.append(snapshot)
+            record.snapshots.append(copy.deepcopy(snapshot))
         snapshot = target_snapshots[-1]
         snapshot.regions.append(region)
 
@@ -299,7 +300,7 @@ def write_damon_result(result, file_path, file_type):
             fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
             target_snapshots.append(fake_snapshot)
             record = result.record_of(snapshot.target_id)
-            record.snapshots.append(fake_snapshot)
+            record.snapshots.append(copy.deepcopy(fake_snapshot))
     if file_type == file_type_record:
         write_damon_record(result, file_path, 2)
     elif file_type == file_type_perf_script:
