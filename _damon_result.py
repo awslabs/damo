@@ -226,6 +226,8 @@ def parse_damon_result(result_file):
             result.end_time = end_time
 
         snapshots[0].start_time = snapshots[0].end_time - snapshot_time
+        record = result.record_of(snapshots[0].target_id)
+        record.snapshots[0].start_time = snapshots[0].start_time
 
         # cut out the fake snapshot for end time
         if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
@@ -233,6 +235,7 @@ def parse_damon_result(result_file):
             if (region.start == 0 and region.end == 0 and
                     region.nr_accesses == -1 and region.age == -1):
                 del snapshots[1]
+                del record.snapshots[1]
 
     return result, None
 
@@ -295,6 +298,8 @@ def write_damon_result(result, file_path, file_type):
             # -1 nr_accesses/ -1 age means fake
             fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
             target_snapshots.append(fake_snapshot)
+            record = result.record_of(snapshot.target_id)
+            record.snapshots.append(fake_snapshot)
     if file_type == file_type_record:
         write_damon_record(result, file_path, 2)
     elif file_type == file_type_perf_script:
