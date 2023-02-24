@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
-import copy
 import os
 import struct
 import subprocess
@@ -106,9 +105,6 @@ def record_to_damon_result(file_path):
             else:
                 target_id = struct.unpack('L', f.read(8))[0]
 
-            if not target_id in result.target_snapshots:
-                result.target_snapshots[target_id] = []
-            target_snapshots = result.target_snapshots[target_id]
             record = result.record_of(target_id)
             if len(record.snapshots) == 0:
                 start_time = None
@@ -123,8 +119,7 @@ def record_to_damon_result(file_path):
                 nr_accesses = struct.unpack('I', f.read(4))[0]
                 region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
                 snapshot.regions.append(region)
-            target_snapshots.append(snapshot)
-            record.snapshots.append(copy.deepcopy(snapshot))
+            record.snapshots.append(snapshot)
 
     f.close()
 
@@ -165,9 +160,6 @@ def perf_script_to_damon_result(script_output):
         end_time = int(float(fields[3][:-1]) * 1000000000)
         target_id = int(fields[5].split('=')[1])
 
-        if not target_id in result.target_snapshots:
-            result.target_snapshots[target_id] = []
-        target_snapshots = result.target_snapshots[target_id]
         record = result.record_of(target_id)
         if len(record.snapshots) == 0:
             start_time = None
@@ -177,13 +169,9 @@ def perf_script_to_damon_result(script_output):
 
         if snapshot == None:
             snapshot = DAMONSnapshot(start_time, end_time, target_id)
-            target_snapshots.append(snapshot)
-            record.snapshots.append(copy.deepcopy(snapshot))
-        snapshot = target_snapshots[-1]
-        snapshot.regions.append(region)
-
+            record.snapshots.append(snapshot)
         snapshot = record.snapshots[-1]
-        snapshot.regions.append(copy.deepcopy(region))
+        snapshot.regions.append(region)
 
         if len(snapshot.regions) == nr_regions:
             snapshot = None
@@ -239,7 +227,6 @@ def parse_damon_result(result_file):
             region = snapshots[1].regions[0]
             if (region.start == 0 and region.end == 0 and
                     region.nr_accesses == -1 and region.age == -1):
-                del result.target_snapshots[record.target_id][1]
                 del record.snapshots[1]
 
     return result, None
@@ -306,8 +293,6 @@ def write_damon_result(result, file_path, file_type):
             # -1 nr_accesses/ -1 age means fake
             fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
             snapshots.append(fake_snapshot)
-            result.target_snapshots[snapshot.target_id].append(
-                    copy.deepcopy(fake_snapshot))
     if file_type == file_type_record:
         write_damon_record(result, file_path, 2)
     elif file_type == file_type_perf_script:
