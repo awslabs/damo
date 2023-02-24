@@ -182,6 +182,9 @@ def perf_script_to_damon_result(script_output):
         snapshot = target_snapshots[-1]
         snapshot.regions.append(region)
 
+        snapshot = record.snapshots[-1]
+        snapshot.regions.append(copy.deepcopy(region))
+
         if len(snapshot.regions) == nr_regions:
             snapshot = None
 
