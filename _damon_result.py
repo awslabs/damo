@@ -217,8 +217,6 @@ def parse_damon_result(result_file):
             result.end_time = end_time
 
         snapshots[0].start_time = snapshots[0].end_time - snapshot_time
-        record = result.record_of(snapshots[0].target_id)
-        record.snapshots[0].start_time = snapshots[0].start_time
 
         # cut out the fake snapshot for end time
         if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
