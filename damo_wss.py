@@ -15,9 +15,10 @@ import damo_adjust
 
 def get_wss_dists(result, acc_thres, sz_thres, do_sort):
     wss_dists = {}
-    for tid in result.target_snapshots.keys():
+    for record in result.records:
+        tid = record.target_id
         wss_dist = []
-        for idx, snapshot in enumerate(result.target_snapshots[tid]):
+        for idx, snapshot in enumerate(record.snapshots):
             wss = 0
             for r in snapshot.regions:
                 # Ignore regions not fulfill working set conditions
