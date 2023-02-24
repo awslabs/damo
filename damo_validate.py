@@ -74,16 +74,17 @@ def main(args=None):
         print('parsing failed (%s)' % err)
         exit(1)
 
-    if len(result.target_snapshots) == 0:
+    if len(result.records) == 0:
         print('target snapshots is zero')
         exit(1)
 
-    for target in result.target_snapshots:
-        nr_snapshots = len(result.target_snapshots[target])
+    for record in result.records:
+        target = record.target_id
+        nr_snapshots = len(record.snapshots)
         nr_allowed_errors = nr_snapshots * args.allow_error / 100.0
         nr_aggr_interval_errors = 0
         nr_nr_regions_erros = 0
-        for snapshot in result.target_snapshots[target]:
+        for snapshot in record.snapshots:
             aggr_interval_us = (snapshot.end_time - snapshot.start_time) / 1000
             nr_aggr_interval_errors += assert_value_in_range( aggr_interval_us,
                     args.aggr, 'aggregate interval',
