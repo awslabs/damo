@@ -51,16 +51,14 @@ def main(args=None):
     print('# <percentile> <# regions>')
 
     for record in result.records:
-        tid = record.target_id
-        # Skip firs 20 regions as those would not adaptively adjusted
-        snapshots = record.snapshots[20:]
         nr_regions_dist = []
-        for snapshot in snapshots:
+        # Skip firs 20 regions as those would not adaptively adjusted
+        for snapshot in record.snapshots[20:]:
             nr_regions_dist.append(len(snapshot.regions))
         if nr_regions_sort:
             nr_regions_dist.sort(reverse=False)
 
-        print('# target_id\t%s' % tid)
+        print('# target_id\t%s' % record.target_id)
         print('# avr:\t%d' % (sum(nr_regions_dist) / len(nr_regions_dist)))
         for percentile in percentiles:
             thres_idx = int(percentile / 100.0 * len(nr_regions_dist))
