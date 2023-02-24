@@ -110,10 +110,10 @@ def record_to_damon_result(file_path):
                 result.target_snapshots[target_id] = []
             target_snapshots = result.target_snapshots[target_id]
             record = result.record_of(target_id)
-            if len(target_snapshots) == 0:
+            if len(record.snapshots) == 0:
                 start_time = None
             else:
-                start_time = target_snapshots[-1].end_time
+                start_time = record.snapshots[-1].end_time
 
             snapshot = DAMONSnapshot(start_time, end_time, target_id)
             nr_regions = struct.unpack('I', f.read(4))[0]
@@ -169,10 +169,10 @@ def perf_script_to_damon_result(script_output):
             result.target_snapshots[target_id] = []
         target_snapshots = result.target_snapshots[target_id]
         record = result.record_of(target_id)
-        if len(target_snapshots) == 0:
+        if len(record.snapshots) == 0:
             start_time = None
         else:
-            start_time = target_snapshots[-1].end_time
+            start_time = record.snapshots[-1].end_time
         nr_regions = int(fields[6].split('=')[1])
 
         if snapshot == None:
@@ -217,7 +217,8 @@ def parse_damon_result(result_file):
         return None, 'unknown result file type: %s (%s)' % (
                 file_type, result_file)
 
-    for snapshots in result.target_snapshots.values():
+    for record in result.records:
+        snapshots = record.snapshots
         if len(snapshots) < 2:
             break
         if not result.start_time:
@@ -238,7 +239,7 @@ def parse_damon_result(result_file):
             region = snapshots[1].regions[0]
             if (region.start == 0 and region.end == 0 and
                     region.nr_accesses == -1 and region.age == -1):
-                del snapshots[1]
+                del result.target_snapshots[record.target_id][1]
                 del record.snapshots[1]
 
     return result, None
@@ -248,7 +249,8 @@ def write_damon_record(result, file_path, format_version):
         f.write(b'damon_recfmt_ver')
         f.write(struct.pack('i', format_version))
 
-        for snapshots in result.target_snapshots.values():
+        for record in result.records:
+            snapshots = record.snapshots
             for snapshot in snapshots:
                 f.write(struct.pack('l', snapshot.end_time // 1000000000))
                 f.write(struct.pack('l', snapshot.end_time % 1000000000))
@@ -279,7 +281,8 @@ def write_damon_perf_script(result, file_path):
     '''
 
     with open(file_path, 'w') as f:
-        for snapshots in result.target_snapshots.values():
+        for record in result.records:
+            snapshots = record.snapshots
             for snapshot in snapshots:
                 for region in snapshot.regions:
                     f.write(' '.join(['kdamond.x', 'xxxx', 'xxxx',
@@ -291,19 +294,20 @@ def write_damon_perf_script(result, file_path):
                             region.nr_accesses, region.age)]) + '\n')
 
 def write_damon_result(result, file_path, file_type):
-    for target_snapshots in result.target_snapshots.values():
-        if len(target_snapshots) == 1:
+    for record in result.records:
+        snapshots = record.snapshots
+        if len(snapshots) == 1:
             # we cannot know start/end time of single snapshot from the file
             # to allow it with later read, write a fake snapshot
-            snapshot = target_snapshots[0]
+            snapshot = snapshots[0]
             snap_duration = snapshot.end_time - snapshot.start_time
             fake_snapshot = DAMONSnapshot(snapshot.end_time,
                     snapshot.end_time + snap_duration, snapshot.target_id)
             # -1 nr_accesses/ -1 age means fake
             fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
-            target_snapshots.append(fake_snapshot)
-            record = result.record_of(snapshot.target_id)
-            record.snapshots.append(copy.deepcopy(fake_snapshot))
+            snapshots.append(fake_snapshot)
+            result.target_snapshots[snapshot.target_id].append(
+                    copy.deepcopy(fake_snapshot))
     if file_type == file_type_record:
         write_damon_record(result, file_path, 2)
     elif file_type == file_type_perf_script:
