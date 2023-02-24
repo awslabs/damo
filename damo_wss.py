@@ -16,9 +16,8 @@ import damo_adjust
 def get_wss_dists(result, acc_thres, sz_thres, do_sort):
     wss_dists = {}
     for record in result.records:
-        tid = record.target_id
         wss_dist = []
-        for idx, snapshot in enumerate(record.snapshots):
+        for snapshot in record.snapshots:
             wss = 0
             for r in snapshot.regions:
                 # Ignore regions not fulfill working set conditions
@@ -30,13 +29,12 @@ def get_wss_dists(result, acc_thres, sz_thres, do_sort):
             wss_dist.append(wss)
         if do_sort:
             wss_dist.sort(reverse=False)
-        wss_dists[tid] = wss_dist
+        wss_dists[record.target_id] = wss_dist
     return wss_dists
 
 def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
     print('# <percentile> <wss>')
-    for tid in wss_dists.keys():
-        wss_dist = wss_dists[tid]
+    for tid, wss_dist in wss_dists.items():
         print('# target_id\t%s' % tid)
         print('# avr:\t%s' % _damo_fmt_str.format_sz(
             sum(wss_dist) / len(wss_dist), raw_number))
