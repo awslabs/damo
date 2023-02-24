@@ -67,7 +67,7 @@ class DAMONResult:
         self.records = []
 
     def record_of(self, target_id):
-        for record in records:
+        for record in self.records:
             if record.target_id == target_id:
                 return record
         record = DAMONRecord(target_id)
@@ -108,6 +108,7 @@ def record_to_damon_result(file_path):
             if not target_id in result.target_snapshots:
                 result.target_snapshots[target_id] = []
             target_snapshots = result.target_snapshots[target_id]
+            record = result.record_of(target_id)
             if len(target_snapshots) == 0:
                 start_time = None
             else:
@@ -122,6 +123,7 @@ def record_to_damon_result(file_path):
                 region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
                 snapshot.regions.append(region)
             target_snapshots.append(snapshot)
+            record.snapshots.append(snapshot)
 
     f.close()
 
@@ -165,6 +167,7 @@ def perf_script_to_damon_result(script_output):
         if not target_id in result.target_snapshots:
             result.target_snapshots[target_id] = []
         target_snapshots = result.target_snapshots[target_id]
+        record = result.record_of(target_id)
         if len(target_snapshots) == 0:
             start_time = None
         else:
@@ -174,6 +177,7 @@ def perf_script_to_damon_result(script_output):
         if snapshot == None:
             snapshot = DAMONSnapshot(start_time, end_time, target_id)
             target_snapshots.append(snapshot)
+            record.snapshots.append(snapshot)
         snapshot = target_snapshots[-1]
         snapshot.regions.append(region)
 
