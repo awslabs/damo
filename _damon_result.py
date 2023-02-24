@@ -51,12 +51,10 @@ class DAMONSnapshot:
 class DAMONResult:
     start_time = None
     end_time = None
-    nr_snapshots = None
     target_snapshots = None    # {target_id: [snapshot]}
 
     def __init__(self):
         self.target_snapshots = {}
-        self.nr_snapshots = 0
 
 def record_to_damon_result(file_path):
     result = None
@@ -204,7 +202,6 @@ def parse_damon_result(result_file):
 
             result.start_time = start_time - snapshot_time
             result.end_time = end_time
-            result.nr_snapshots = nr_snapshots + 1
 
         snapshots[0].start_time = snapshots[0].end_time - snapshot_time
 
@@ -276,7 +273,6 @@ def write_damon_result(result, file_path, file_type):
             # -1 nr_accesses/ -1 age means fake
             fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
             target_snapshots.append(fake_snapshot)
-            result.nr_snapshots += 1
     if file_type == file_type_record:
         write_damon_record(result, file_path, 2)
     elif file_type == file_type_perf_script:
