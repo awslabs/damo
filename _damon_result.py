@@ -59,11 +59,9 @@ class DAMONRecord:
 class DAMONResult:
     start_time = None
     end_time = None
-    target_snapshots = None    # {target_id: [snapshot]}
     records = None
 
     def __init__(self):
-        self.target_snapshots = {}
         self.records = []
 
     def record_of(self, target_id):
