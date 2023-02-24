@@ -67,7 +67,7 @@ def main(args=None):
                     _damo_fmt_str.format_time_ns(
                         snapshot.end_time - snapshot.start_time,
                         args.raw_number))
-            print('target_id: %s' % snapshot.target_id)
+            print('target_id: %s' % record.target_id)
             print('nr_regions: %s' % len(snapshot.regions))
             print('# %10s %12s  %12s  %11s %5s' %
                     ('start_addr', 'end_addr', 'length', 'nr_accesses', 'age'))

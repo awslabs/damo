@@ -243,9 +243,9 @@ def write_damon_record(result, file_path, format_version):
                 f.write(struct.pack('I', 1))
 
                 if format_version == 1:
-                    f.write(struct.pack('i', snapshot.target_id))
+                    f.write(struct.pack('i', record.target_id))
                 else:
-                    f.write(struct.pack('L', snapshot.target_id))
+                    f.write(struct.pack('L', record.target_id))
 
                 f.write(struct.pack('I', len(snapshot.regions)))
                 for region in snapshot.regions:
@@ -273,7 +273,7 @@ def write_damon_perf_script(result, file_path):
                     f.write(' '.join(['kdamond.x', 'xxxx', 'xxxx',
                         '%f:' % (snapshot.end_time / 1000000000.0),
                         'damon:damon_aggregated:',
-                        'target_id=%s' % snapshot.target_id,
+                        'target_id=%s' % record.target_id,
                         'nr_regions=%d' % len(snapshot.regions),
                         '%d-%d: %d %s' % (region.start, region.end,
                             region.nr_accesses, region.age)]) + '\n')
@@ -287,7 +287,7 @@ def write_damon_result(result, file_path, file_type):
             snapshot = snapshots[0]
             snap_duration = snapshot.end_time - snapshot.start_time
             fake_snapshot = DAMONSnapshot(snapshot.end_time,
-                    snapshot.end_time + snap_duration, snapshot.target_id)
+                    snapshot.end_time + snap_duration, record.target_id)
             # -1 nr_accesses/ -1 age means fake
             fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
             snapshots.append(fake_snapshot)

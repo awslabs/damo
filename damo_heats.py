@@ -241,7 +241,7 @@ def get_guide_info(damon_result):
     for record in damon_result.records:
         for snapshot in record.snapshots:
             monitor_time = snapshot.end_time
-            tid = snapshot.target_id
+            tid = record.target_id
             if not tid in guides:
                 guides[tid] = GuideInfo(tid, monitor_time)
             guide = guides[tid]
