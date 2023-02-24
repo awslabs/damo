@@ -42,10 +42,9 @@ class DAMONSnapshot:
     target_id = None
     regions = None
 
-    def __init__(self, start_time, end_time, target_id):
+    def __init__(self, start_time, end_time):
         self.start_time = start_time
         self.end_time = end_time
-        self.target_id = target_id
         self.regions = []
 
 class DAMONRecord:
@@ -109,7 +108,7 @@ def record_to_damon_result(file_path):
             else:
                 start_time = record.snapshots[-1].end_time
 
-            snapshot = DAMONSnapshot(start_time, end_time, target_id)
+            snapshot = DAMONSnapshot(start_time, end_time)
             nr_regions = struct.unpack('I', f.read(4))[0]
             for r in range(nr_regions):
                 start_addr = struct.unpack('L', f.read(8))[0]
@@ -166,7 +165,7 @@ def perf_script_to_damon_result(script_output):
         nr_regions = int(fields[6].split('=')[1])
 
         if snapshot == None:
-            snapshot = DAMONSnapshot(start_time, end_time, target_id)
+            snapshot = DAMONSnapshot(start_time, end_time)
             record.snapshots.append(snapshot)
         snapshot = record.snapshots[-1]
         snapshot.regions.append(region)
@@ -285,7 +284,7 @@ def write_damon_result(result, file_path, file_type):
             snapshot = snapshots[0]
             snap_duration = snapshot.end_time - snapshot.start_time
             fake_snapshot = DAMONSnapshot(snapshot.end_time,
-                    snapshot.end_time + snap_duration, record.target_id)
+                    snapshot.end_time + snap_duration)
             # -1 nr_accesses/ -1 age means fake
             fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
             snapshots.append(fake_snapshot)
@@ -340,6 +339,6 @@ def aggregate_snapshots(snapshots):
             region.nr_accesses += nr_acc_to_add[region]
 
     new_snapshot = DAMONSnapshot(snapshots[0].start_time,
-            snapshots[-1].end_time, snapshots[0].target_id)
+            snapshots[-1].end_time)
     new_snapshot.regions = new_regions
     return new_snapshot
