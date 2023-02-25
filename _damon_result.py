@@ -181,22 +181,16 @@ def parse_damon_result(result_file):
     if output == 'ASCII text':
         with open(result_file, 'r') as f:
             script_output = f.read()
-        file_type = file_type_perf_script
     else:
         try:
             script_output = subprocess.check_output(
                     ['perf', 'script', '-i', result_file]).decode()
-            file_type = file_type_perf_script
         except:
-            file_type = file_type_record
-
-    if file_type == file_type_record:
-        result = record_to_damon_result(result_file)
-    elif file_type == file_type_perf_script:
+            pass
+    if script_output:
         result = perf_script_to_damon_result(script_output)
     else:
-        return None, 'unknown result file type: %s (%s)' % (
-                file_type, result_file)
+        result = record_to_damon_result(result_file)
 
     for record in result.records:
         snapshots = record.snapshots
