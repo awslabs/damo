@@ -21,15 +21,6 @@ gonna deprecated in a near future.  Please use sysfs if possible.  If you
 depend on DAMON debugfs interface and cannot use sysfs interface, report your
 usecase to sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org.
 
-For debugfs, you can do the mounting manually as below:
-
-    # mount -t debugfs none /sys/kernel/debug/
-
-or append below line to your ``/etc/fstab`` file so that your system can
-automatically mount debugfs from next booting:
-
-    debugfs /sys/kernel/debug debugfs defaults 0 0
-
 
 Install
 -------
