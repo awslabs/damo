@@ -179,6 +179,8 @@ def perf_script_to_damon_result(script_output):
             start_time = None
         else:
             start_time = record.snapshots[-1].end_time
+            if start_time > end_time:
+                return None, 'trace is not time-sorted'
         nr_regions = int(fields[6].split('=')[1])
 
         if snapshot == None:
@@ -191,7 +193,7 @@ def perf_script_to_damon_result(script_output):
             snapshot = None
 
     set_missing_times(result)
-    return result
+    return result, None
 
 def parse_damon_result(result_file):
     script_output = None
@@ -206,9 +208,8 @@ def parse_damon_result(result_file):
                     ['perf', 'script', '-i', result_file]).decode()
         except:
             pass
-    err = None
     if script_output:
-        result = perf_script_to_damon_result(script_output)
+        result, err = perf_script_to_damon_result(script_output)
     else:
         result, err = record_to_damon_result(result_file)
 
