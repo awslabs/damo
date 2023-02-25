@@ -7,7 +7,6 @@ Record monitored data access patterns.
 
 import os
 import signal
-import subprocess
 import sys
 
 import _damon
