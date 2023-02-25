@@ -25,8 +25,6 @@ class DataForCleanup:
 
 data_for_cleanup = DataForCleanup()
 
-import time
-
 def cleanup_exit(exit_code):
     if data_for_cleanup.kdamonds_names != None:
         # ignore returning error, as kdamonds may already finished
@@ -42,9 +40,6 @@ def cleanup_exit(exit_code):
             # perf might already finished
             pass
         rfile_current_format = 'perf_data'
-        # for some reason, 'perf script' from updat_result_file() fails.
-        # Probably some timing issue.  Work around by sleeping.
-        time.sleep(0.1)
     else:
         rfile_current_format = 'record'
 
