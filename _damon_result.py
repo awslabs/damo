@@ -75,16 +75,15 @@ def set_missing_times(result):
         snapshots = record.snapshots
         if len(snapshots) < 2:
             break
-        if not result.start_time:
-            end_time = snapshots[-1].end_time
-            start_time = snapshots[0].end_time
-            nr_snapshots = len(snapshots) - 1
-            snapshot_time = float(end_time - start_time) / nr_snapshots
+        end_time = snapshots[-1].end_time
+        start_time = snapshots[0].end_time
+        nr_snapshots = len(snapshots) - 1
+        snapshot_time = float(end_time - start_time) / nr_snapshots
+        snapshots[0].start_time = snapshots[0].end_time - snapshot_time
 
+        if not result.start_time or result.start_time > snapshots[0].start_time:
             result.start_time = start_time - snapshot_time
             result.end_time = end_time
-
-        snapshots[0].start_time = snapshots[0].end_time - snapshot_time
 
         # cut out the fake snapshot for end time
         if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
