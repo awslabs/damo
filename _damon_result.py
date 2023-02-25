@@ -171,9 +171,6 @@ def perf_script_to_damon_result(script_output):
 
     return result
 
-file_type_record = 'record'             # damo defined binary format
-file_type_perf_script = 'perf_script'   # perf script output
-
 def parse_damon_result(result_file):
     script_output = None
     output = subprocess.check_output(
@@ -264,6 +261,9 @@ def write_damon_perf_script(result, file_path):
                         'nr_regions=%d' % len(snapshot.regions),
                         '%d-%d: %d %s' % (region.start, region.end,
                             region.nr_accesses, region.age)]) + '\n')
+
+file_type_record = 'record'             # damo defined binary format
+file_type_perf_script = 'perf_script'   # perf script output
 
 def write_damon_result(result, file_path, file_type):
     for record in result.records:
