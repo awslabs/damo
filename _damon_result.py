@@ -56,7 +56,6 @@ class DAMONRecord:
 
 class DAMONResult:
     start_time = None
-    end_time = None
     records = None
 
     def __init__(self):
@@ -83,7 +82,6 @@ def set_missing_times(result):
 
         if not result.start_time or result.start_time > snapshots[0].start_time:
             result.start_time = start_time - snapshot_time
-            result.end_time = end_time
 
         # if number of snapshots is one, write_damon_record() adds a fake
         # snapshot for snapshot start time deduction.  Remove it now.
