@@ -123,6 +123,8 @@ def record_to_damon_result(file_path):
                 start_time = None
             else:
                 start_time = record.snapshots[-1].end_time
+                if end_time < start_time:
+                    return None, 'snapshot is not sorted by time'
 
             snapshot = DAMONSnapshot(start_time, end_time)
             nr_regions = struct.unpack('I', f.read(4))[0]
@@ -135,7 +137,7 @@ def record_to_damon_result(file_path):
             record.snapshots.append(snapshot)
 
     set_missing_times(result)
-    return result
+    return result, None
 
 def perf_script_to_damon_result(script_output):
     result = DAMONResult()
@@ -204,12 +206,13 @@ def parse_damon_result(result_file):
                     ['perf', 'script', '-i', result_file]).decode()
         except:
             pass
+    err = None
     if script_output:
         result = perf_script_to_damon_result(script_output)
     else:
-        result = record_to_damon_result(result_file)
+        result, err = record_to_damon_result(result_file)
 
-    return result, None
+    return result, err
 
 def write_damon_record(result, file_path, format_version):
     with open(file_path, 'wb') as f:
