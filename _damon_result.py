@@ -70,6 +70,29 @@ class DAMONResult:
         self.records.append(record)
         return record
 
+def set_missing_times(result):
+    for record in result.records:
+        snapshots = record.snapshots
+        if len(snapshots) < 2:
+            break
+        if not result.start_time:
+            end_time = snapshots[-1].end_time
+            start_time = snapshots[0].end_time
+            nr_snapshots = len(snapshots) - 1
+            snapshot_time = float(end_time - start_time) / nr_snapshots
+
+            result.start_time = start_time - snapshot_time
+            result.end_time = end_time
+
+        snapshots[0].start_time = snapshots[0].end_time - snapshot_time
+
+        # cut out the fake snapshot for end time
+        if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
+            region = snapshots[1].regions[0]
+            if (region.start == 0 and region.end == 0 and
+                    region.nr_accesses == -1 and region.age == -1):
+                del record.snapshots[1]
+
 def record_to_damon_result(file_path):
     result = None
     fmt_version = None
@@ -116,6 +139,8 @@ def record_to_damon_result(file_path):
                 region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
                 snapshot.regions.append(region)
             record.snapshots.append(snapshot)
+
+    set_missing_times(result)
     return result
 
 def perf_script_to_damon_result(script_output):
@@ -169,6 +194,7 @@ def perf_script_to_damon_result(script_output):
         if len(snapshot.regions) == nr_regions:
             snapshot = None
 
+    set_missing_times(result)
     return result
 
 def parse_damon_result(result_file):
@@ -188,28 +214,6 @@ def parse_damon_result(result_file):
         result = perf_script_to_damon_result(script_output)
     else:
         result = record_to_damon_result(result_file)
-
-    for record in result.records:
-        snapshots = record.snapshots
-        if len(snapshots) < 2:
-            break
-        if not result.start_time:
-            end_time = snapshots[-1].end_time
-            start_time = snapshots[0].end_time
-            nr_snapshots = len(snapshots) - 1
-            snapshot_time = float(end_time - start_time) / nr_snapshots
-
-            result.start_time = start_time - snapshot_time
-            result.end_time = end_time
-
-        snapshots[0].start_time = snapshots[0].end_time - snapshot_time
-
-        # cut out the fake snapshot for end time
-        if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
-            region = snapshots[1].regions[0]
-            if (region.start == 0 and region.end == 0 and
-                    region.nr_accesses == -1 and region.age == -1):
-                del record.snapshots[1]
 
     return result, None
 
