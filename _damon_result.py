@@ -116,9 +116,6 @@ def record_to_damon_result(file_path):
                 region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
                 snapshot.regions.append(region)
             record.snapshots.append(snapshot)
-
-    f.close()
-
     return result
 
 def perf_script_to_damon_result(script_output):
