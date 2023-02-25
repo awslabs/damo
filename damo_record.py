@@ -76,8 +76,8 @@ def chk_handle_record_feature_support(args):
 
     if damon_record_supported or args.rbuf:
         sys.stderr.write('''
-WARNING: --rbuf option and in-kernel record feature support will be deprecated
-    by 2023-Q2.
+WARNING: --rbuf option and in-kernel record feature support is deprecated.
+    The support will be removed by 2023-Q2.
     Please report your usecase to sj@kernel.org, damon@lists.linux.dev and
     linux-mm@kvack.org if you depend on those.
 ''')

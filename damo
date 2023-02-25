@@ -28,7 +28,7 @@ import _damo_subcmds
 def check_warn_python_version():
     if sys.version.startswith('2.'):
         sys.stderr.write('''
-WARNING: damo will deprecate python2 support by 2023-Q2.  Please report your
+WARNING: damo will remove python2 support by 2023-Q2.  Please report your
     usecase to sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if
     you depend on those.
 
