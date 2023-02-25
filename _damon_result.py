@@ -85,7 +85,8 @@ def set_missing_times(result):
             result.start_time = start_time - snapshot_time
             result.end_time = end_time
 
-        # cut out the fake snapshot for end time
+        # if number of snapshots is one, write_damon_record() adds a fake
+        # snapshot for snapshot start time deduction.  Remove it now.
         if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
             region = snapshots[1].regions[0]
             if (region.start == 0 and region.end == 0 and
