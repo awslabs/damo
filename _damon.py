@@ -150,8 +150,7 @@ unit_aggr_intervals = 'aggr_intervals'
 
 class DamosAccessPattern:
     sz_bytes = None
-    min_nr_accesses = None
-    max_nr_accesses = None
+    nr_accesses = None
     nr_accesses_unit = None # unit_{percent,sample_intervals}
     min_age = None
     max_age = None
@@ -171,8 +170,7 @@ class DamosAccessPattern:
         else:
             raise Exception('invalid access pattern nr_accesses_unit \'%s\'' %
                     nr_accesses_unit)
-        self.min_nr_accesses = fn(nr_accesses[0])
-        self.max_nr_accesses = fn(nr_accesses[1])
+        self.nr_accesses = [fn(nr_accesses[0]), fn(nr_accesses[1])]
         self.nr_accesses_unit = nr_accesses_unit
 
         if age_unit == unit_usec:
@@ -197,8 +195,8 @@ class DamosAccessPattern:
         else:
             unit = self.nr_accesses_unit
         lines.append('nr_accesses: [%s %s, %s %s]' % (
-                _damo_fmt_str.format_nr(self.min_nr_accesses, raw), unit,
-                _damo_fmt_str.format_nr(self.max_nr_accesses, raw), unit))
+                _damo_fmt_str.format_nr(self.nr_accesses[0], raw), unit,
+                _damo_fmt_str.format_nr(self.nr_accesses[1], raw), unit))
         if self.age_unit == unit_usec:
             min_age = _damo_fmt_str.format_time_us_exact(self.min_age, raw)
             max_age = _damo_fmt_str.format_time_us_exact(self.max_age, raw)
@@ -216,8 +214,7 @@ class DamosAccessPattern:
     def __eq__(self, other):
         return (type(self) == type(other) and
                 self.sz_bytes == other.sz_bytes and
-                self.min_nr_accesses == other.min_nr_accesses and
-                self.max_nr_accesses == other.max_nr_accesses and
+                self.nr_accesses == other.nr_accesses and
                 self.nr_accesses_unit == other.nr_accesses_unit and
                 self.min_age == other.min_age and self.max_age == other.max_age
                 and self.age_unit == other.age_unit)
@@ -259,9 +256,9 @@ class DamosAccessPattern:
         if unit == unit_percent:
             unit = '%'
         min_nr_accesses = '%s %s' % (
-                _damo_fmt_str.format_nr(self.min_nr_accesses, raw), unit)
+                _damo_fmt_str.format_nr(self.nr_accesses[0], raw), unit)
         max_nr_accesses = '%s %s' % (
-                _damo_fmt_str.format_nr(self.max_nr_accesses, raw), unit)
+                _damo_fmt_str.format_nr(self.nr_accesses[1], raw), unit)
         if self.age_unit == unit_usec:
             min_age = _damo_fmt_str.format_time_us_exact(self.min_age, raw)
             max_age = _damo_fmt_str.format_time_us_exact(self.max_age, raw)
@@ -288,15 +285,15 @@ class DamosAccessPattern:
         max_nr_accesses_sample_intervals = intervals.aggr / intervals.sample
         # percent to sample_intervals
         if nr_accesses_unit == unit_sample_intervals:
-            self.min_nr_accesses = int(self.min_nr_accesses *
+            self.nr_accesses[0] = int(self.nr_accesses[0] *
                     max_nr_accesses_sample_intervals / 100)
-            self.max_nr_accesses = int(self.max_nr_accesses *
+            self.nr_accesses[1] = int(self.nr_accesses[1] *
                     max_nr_accesses_sample_intervals / 100)
         # sample_intervals to percent
         else:
-            self.min_nr_accesses = int(self.min_nr_accesses * 100.0 /
+            self.nr_accesses[0] = int(self.nr_accesses[0] * 100.0 /
                     max_nr_accesses_sample_intervals)
-            self.max_nr_accesses = int(self.max_nr_accesses * 100.0 /
+            self.nr_accesses[1] = int(self.nr_accesses[1] * 100.0 /
                     max_nr_accesses_sample_intervals)
         self.nr_accesses_unit = nr_accesses_unit
 

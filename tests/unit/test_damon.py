@@ -254,8 +254,8 @@ class TestDamon(unittest.TestCase):
                     _damon.unit_aggr_intervals, intervals),
                 pattern_machine.converted_for_units(
                     _damon.unit_percent, _damon.unit_usec, intervals)]:
-            self.assertEqual(type(converted.min_nr_accesses), int)
-            self.assertEqual(type(converted.max_nr_accesses), int)
+            self.assertEqual(type(converted.nr_accesses[0]), int)
+            self.assertEqual(type(converted.nr_accesses[1]), int)
             if converted.age_unit != _damon.unit_usec:
                 self.assertEqual(type(converted.min_age), int)
                 self.assertEqual(type(converted.max_age), int)

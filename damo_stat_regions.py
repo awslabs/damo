@@ -22,9 +22,9 @@ def __pr_schemes_tried_regions(regions, intervals, access_pattern, size_only,
         if out_of_range(access_pattern.sz_bytes[0], sz,
                 access_pattern.sz_bytes[1]):
             continue
-        if out_of_range(access_pattern.min_nr_accesses,
+        if out_of_range(access_pattern.nr_accesses[0],
                 region.nr_accesses,
-                access_pattern.max_nr_accesses):
+                access_pattern.nr_accesses[1]):
             continue
         if out_of_range(access_pattern.min_age, region.age,
                 access_pattern.max_age):
