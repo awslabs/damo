@@ -219,15 +219,15 @@ class DamosAccessPattern:
     def from_kvpairs(cls, kv):
         try:
             min_nr_accesses = _damo_fmt_str.text_to_percent(
-                    kv['min_nr_accesses'])
+                    kv['nr_accesses']['min'])
             max_nr_accesses = _damo_fmt_str.text_to_percent(
-                    kv['max_nr_accesses'])
+                    kv['nr_accesses']['max'])
             nr_accesses_unit = unit_percent
         except:
             min_nr_accesses, nr_accesses_unit = _damo_fmt_str.text_to_nr_unit(
-                    kv['min_nr_accesses'])
+                    kv['nr_accesses']['min'])
             max_nr_accesses, nr_accesses_unit2 = _damo_fmt_str.text_to_nr_unit(
-                    kv['max_nr_accesses'])
+                    kv['nr_accesses']['max'])
             if nr_accesses_unit != nr_accesses_unit2:
                 raise Exception('nr_accesses units should be same')
 
@@ -269,8 +269,8 @@ class DamosAccessPattern:
                 _damo_fmt_str.format_sz(self.sz_bytes[0], raw)),
             ('max_sz_bytes',
                 _damo_fmt_str.format_sz(self.sz_bytes[1], raw)),
-            ('min_nr_accesses', min_nr_accesses),
-            ('max_nr_accesses', max_nr_accesses),
+            ('nr_accesses', (collections.OrderedDict([
+                ('min', min_nr_accesses), ('max', max_nr_accesses)]))),
             ('min_age', min_age),
             ('max_age', max_age)
             ])

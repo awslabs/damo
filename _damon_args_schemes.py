@@ -50,8 +50,7 @@ Below is an exaple of the json string format.
             "access_pattern": {
                 "min_sz_bytes": "0 B",
                 "max_sz_bytes": "max",
-                "min_nr_accesses": "0 %",
-                "max_nr_accesses": "100 %",
+                "nr_accesses": {"min": "0 %", "max": "100 %"},
                 "min_age": "0 ns",
                 "max_age": "max"
             },
