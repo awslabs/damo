@@ -175,8 +175,8 @@ def wops_for_scheme_access_pattern(pattern, ctx):
 
     return {
         'sz': {
-            'min': '%d' % pattern.min_sz_bytes,
-            'max': '%d' % pattern.max_sz_bytes,
+            'min': '%d' % pattern.sz_bytes[0],
+            'max': '%d' % pattern.sz_bytes[1],
         },
         'nr_accesses': {
             'min': '%d' % pattern.min_nr_accesses,

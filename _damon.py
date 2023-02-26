@@ -149,8 +149,7 @@ unit_usec = 'usec'
 unit_aggr_intervals = 'aggr_intervals'
 
 class DamosAccessPattern:
-    min_sz_bytes = None
-    max_sz_bytes = None
+    sz_bytes = None
     min_nr_accesses = None
     max_nr_accesses = None
     nr_accesses_unit = None # unit_{percent,sample_intervals}
@@ -162,8 +161,8 @@ class DamosAccessPattern:
     def __init__(self, sz_bytes=['min', 'max'],
             nr_accesses=['min', 'max'], nr_accesses_unit=unit_percent,
             age=['min', 'max'], age_unit=unit_usec):
-        self.min_sz_bytes = _damo_fmt_str.text_to_bytes(sz_bytes[0])
-        self.max_sz_bytes = _damo_fmt_str.text_to_bytes(sz_bytes[1])
+        self.sz_bytes = [_damo_fmt_str.text_to_bytes(sz_bytes[0]),
+                _damo_fmt_str.text_to_bytes(sz_bytes[1])]
 
         if nr_accesses_unit == unit_percent:
             fn = _damo_fmt_str.text_to_percent
@@ -190,8 +189,8 @@ class DamosAccessPattern:
 
     def to_str(self, raw):
         lines = [
-            'sz: [%s, %s]' % (_damo_fmt_str.format_sz(self.min_sz_bytes, raw),
-                _damo_fmt_str.format_sz(self.max_sz_bytes, raw)),
+            'sz: [%s, %s]' % (_damo_fmt_str.format_sz(self.sz_bytes[0], raw),
+                _damo_fmt_str.format_sz(self.sz_bytes[1], raw)),
             ]
         if self.nr_accesses_unit == unit_percent:
             unit = '%'
@@ -216,9 +215,8 @@ class DamosAccessPattern:
 
     def __eq__(self, other):
         return (type(self) == type(other) and
-                self.min_sz_bytes ==
-                other.min_sz_bytes and self.max_sz_bytes == other.max_sz_bytes
-                and self.min_nr_accesses == other.min_nr_accesses and
+                self.sz_bytes == other.sz_bytes and
+                self.min_nr_accesses == other.min_nr_accesses and
                 self.max_nr_accesses == other.max_nr_accesses and
                 self.nr_accesses_unit == other.nr_accesses_unit and
                 self.min_age == other.min_age and self.max_age == other.max_age
@@ -275,9 +273,9 @@ class DamosAccessPattern:
 
         return collections.OrderedDict([
             ('min_sz_bytes',
-                _damo_fmt_str.format_sz(self.min_sz_bytes, raw)),
+                _damo_fmt_str.format_sz(self.sz_bytes[0], raw)),
             ('max_sz_bytes',
-                _damo_fmt_str.format_sz(self.max_sz_bytes, raw)),
+                _damo_fmt_str.format_sz(self.sz_bytes[1], raw)),
             ('min_nr_accesses', min_nr_accesses),
             ('max_nr_accesses', max_nr_accesses),
             ('min_age', min_age),

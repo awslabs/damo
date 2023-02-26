@@ -19,8 +19,8 @@ def __pr_schemes_tried_regions(regions, intervals, access_pattern, size_only,
     total_sz = 0
     for region in regions:
         sz = region.end - region.start
-        if out_of_range(access_pattern.min_sz_bytes, sz,
-                access_pattern.max_sz_bytes):
+        if out_of_range(access_pattern.sz_bytes[0], sz,
+                access_pattern.sz_bytes[1]):
             continue
         if out_of_range(access_pattern.min_nr_accesses,
                 region.nr_accesses,
