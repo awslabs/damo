@@ -7,8 +7,7 @@
 			"nr_accesses_unit": "percent",
 			"nr_accesses": {"min": "min", "max": "min"},
 			"age_unit": "usec",
-			"min_age": "1s",
-			"max_age": "max"
+			"age": {"min": "1s", "max": "max"}
 		},
 		"action": "pageout",
 		"filters": [

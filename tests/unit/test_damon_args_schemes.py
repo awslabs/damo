@@ -25,8 +25,9 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "nr_accesses": {
                             "min": "0 sample_intervals",
                             "max": "0 sample_intervals"},
-                        "min_age": "0 aggr_intervals",
-                        "max_age": "0 aggr_intervals"
+                        "age": {
+                            "min": "0 aggr_intervals",
+                            "max": "0 aggr_intervals"},
                         },
                     "quotas": {
                         "time_ms": 0,
@@ -55,8 +56,9 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "nr_accesses": {
                             "min": "0 sample_intervals",
                             "max": "0 sample_intervals"},
-                        "min_age": "0 aggr_intervals",
-                        "max_age": "0 aggr_intervals"
+                        "age": {
+                            "min": "0 aggr_intervals",
+                            "max": "0 aggr_intervals"},
                         },
                     "quotas": {
                         "time_ms": "0s",

@@ -51,8 +51,7 @@ Below is an exaple of the json string format.
                 "min_sz_bytes": "0 B",
                 "max_sz_bytes": "max",
                 "nr_accesses": {"min": "0 %", "max": "100 %"},
-                "min_age": "0 ns",
-                "max_age": "max"
+                "age": {"min": "0 ns", "max": "max"}
             },
             "quotas": {
                 "time_ms": 0,

@@ -232,12 +232,13 @@ class DamosAccessPattern:
                 raise Exception('nr_accesses units should be same')
 
         try:
-            min_age = _damo_fmt_str.text_to_us(kv['min_age'])
-            max_age = _damo_fmt_str.text_to_us(kv['max_age'])
+            min_age = _damo_fmt_str.text_to_us(kv['age']['min'])
+            max_age = _damo_fmt_str.text_to_us(kv['age']['max'])
             age_unit = unit_usec
         except:
-            min_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv['min_age'])
-            max_age, age_unit2 = _damo_fmt_str.text_to_nr_unit(kv['max_age'])
+            min_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv['age']['min'])
+            max_age, age_unit2 = _damo_fmt_str.text_to_nr_unit(
+                    kv['age']['max'])
             if age_unit != age_unit2:
                 raise Exception('age units should be same')
 
@@ -271,8 +272,8 @@ class DamosAccessPattern:
                 _damo_fmt_str.format_sz(self.sz_bytes[1], raw)),
             ('nr_accesses', (collections.OrderedDict([
                 ('min', min_nr_accesses), ('max', max_nr_accesses)]))),
-            ('min_age', min_age),
-            ('max_age', max_age)
+            ('age', (collections.OrderedDict([
+                ('min', min_age), ('max', max_age)]))),
             ])
 
     def convert_nr_accesses_unit(self, nr_accesses_unit, intervals):
