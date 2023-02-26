@@ -217,28 +217,27 @@ class DamosAccessPattern:
 
     @classmethod
     def from_kvpairs(cls, kv):
+        kv_ = kv['nr_accesses']
         try:
-            min_nr_accesses = _damo_fmt_str.text_to_percent(
-                    kv['nr_accesses']['min'])
-            max_nr_accesses = _damo_fmt_str.text_to_percent(
-                    kv['nr_accesses']['max'])
+            min_nr_accesses = _damo_fmt_str.text_to_percent(kv_['min'])
+            max_nr_accesses = _damo_fmt_str.text_to_percent(kv_['max'])
             nr_accesses_unit = unit_percent
         except:
             min_nr_accesses, nr_accesses_unit = _damo_fmt_str.text_to_nr_unit(
-                    kv['nr_accesses']['min'])
+                    kv_['min'])
             max_nr_accesses, nr_accesses_unit2 = _damo_fmt_str.text_to_nr_unit(
-                    kv['nr_accesses']['max'])
+                    kv_['max'])
             if nr_accesses_unit != nr_accesses_unit2:
                 raise Exception('nr_accesses units should be same')
 
+        kv_ = kv['age']
         try:
-            min_age = _damo_fmt_str.text_to_us(kv['age']['min'])
-            max_age = _damo_fmt_str.text_to_us(kv['age']['max'])
+            min_age = _damo_fmt_str.text_to_us(kv_['min'])
+            max_age = _damo_fmt_str.text_to_us(kv_['max'])
             age_unit = unit_usec
         except:
-            min_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv['age']['min'])
-            max_age, age_unit2 = _damo_fmt_str.text_to_nr_unit(
-                    kv['age']['max'])
+            min_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv_['min'])
+            max_age, age_unit2 = _damo_fmt_str.text_to_nr_unit(kv_['max'])
             if age_unit != age_unit2:
                 raise Exception('age units should be same')
 
