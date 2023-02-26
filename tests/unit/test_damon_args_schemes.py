@@ -20,8 +20,7 @@ class TestDamoSchemesInput(unittest.TestCase):
                     "name": "0",
                     "action": "stat",
                     "access_pattern": {
-                        "min_sz_bytes": 0,
-                        "max_sz_bytes": 0,
+                        "sz_bytes": {"min": 0, "max": 0},
                         "nr_accesses": {
                             "min": "0 sample_intervals",
                             "max": "0 sample_intervals"},
@@ -51,8 +50,7 @@ class TestDamoSchemesInput(unittest.TestCase):
                     "name": "0",
                     "action": "stat",
                     "access_pattern": {
-                        "min_sz_bytes": "min",
-                        "max_sz_bytes": "min",
+                        "sz_bytes": {"min": "min", "max": "min"},
                         "nr_accesses": {
                             "min": "0 sample_intervals",
                             "max": "0 sample_intervals"},

@@ -243,8 +243,8 @@ class DamosAccessPattern:
                 raise Exception('age units should be same')
 
         return DamosAccessPattern(
-                [_damo_fmt_str.text_to_bytes(kv['min_sz_bytes']),
-                    _damo_fmt_str.text_to_bytes(kv['max_sz_bytes'])],
+                [_damo_fmt_str.text_to_bytes(kv['sz_bytes']['min']),
+                    _damo_fmt_str.text_to_bytes(kv['sz_bytes']['max'])],
                 [min_nr_accesses, max_nr_accesses], nr_accesses_unit,
                 [min_age, max_age], age_unit)
 
@@ -266,10 +266,9 @@ class DamosAccessPattern:
                     _damo_fmt_str.format_nr(self.age[1], raw), self.age_unit)
 
         return collections.OrderedDict([
-            ('min_sz_bytes',
-                _damo_fmt_str.format_sz(self.sz_bytes[0], raw)),
-            ('max_sz_bytes',
-                _damo_fmt_str.format_sz(self.sz_bytes[1], raw)),
+            ('sz_bytes', (collections.OrderedDict([
+                ('min', _damo_fmt_str.format_sz(self.sz_bytes[0], raw)),
+                ('max', _damo_fmt_str.format_sz(self.sz_bytes[1], raw))]))),
             ('nr_accesses', (collections.OrderedDict([
                 ('min', min_nr_accesses), ('max', max_nr_accesses)]))),
             ('age', (collections.OrderedDict([

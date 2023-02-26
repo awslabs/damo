@@ -2,8 +2,7 @@
 	{
 		"name": "0",
 		"access_pattern": {
-			"min_sz_bytes": "min",
-			"max_sz_bytes": "max",
+			"sz_bytes": {"min": "min", "max": "max"},
 			"nr_accesses_unit": "percent",
 			"nr_accesses": {"min": "min", "max": "min"},
 			"age_unit": "usec",

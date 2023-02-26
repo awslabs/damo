@@ -48,8 +48,7 @@ Below is an exaple of the json string format.
             "name": "0",
             "action": "stat",
             "access_pattern": {
-                "min_sz_bytes": "0 B",
-                "max_sz_bytes": "max",
+                "sz_bytes": {"min": "0 B", "max": "max"},
                 "nr_accesses": {"min": "0 %", "max": "100 %"},
                 "age": {"min": "0 ns", "max": "max"}
             },
