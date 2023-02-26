@@ -204,8 +204,10 @@ def parse_damon_result(result_file):
             script_output = f.read()
     else:
         try:
-            script_output = subprocess.check_output(
-                    ['perf', 'script', '-i', result_file]).decode()
+            with open(os.devnull, 'w') as fnull:
+                script_output = subprocess.check_output(
+                        ['perf', 'script', '-i', result_file],
+                        stderr=fnull).decode()
         except:
             pass
     if script_output:
