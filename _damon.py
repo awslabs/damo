@@ -152,8 +152,7 @@ class DamosAccessPattern:
     sz_bytes = None
     nr_accesses = None
     nr_accesses_unit = None # unit_{percent,sample_intervals}
-    min_age = None
-    max_age = None
+    age = None
     age_unit = None #  unit_{usec,aggr_intervals}
 
     # every region by default, so that it can be used for monitoring
@@ -180,9 +179,7 @@ class DamosAccessPattern:
         else:
             raise Exception('invalid access pattern age_unit \'%s\'' %
                     age_unit)
-
-        self.min_age = fn(age[0])
-        self.max_age = fn(age[1])
+        self.age = [fn(age[0]), fn(age[1])]
         self.age_unit = age_unit
 
     def to_str(self, raw):
@@ -198,13 +195,13 @@ class DamosAccessPattern:
                 _damo_fmt_str.format_nr(self.nr_accesses[0], raw), unit,
                 _damo_fmt_str.format_nr(self.nr_accesses[1], raw), unit))
         if self.age_unit == unit_usec:
-            min_age = _damo_fmt_str.format_time_us_exact(self.min_age, raw)
-            max_age = _damo_fmt_str.format_time_us_exact(self.max_age, raw)
+            min_age = _damo_fmt_str.format_time_us_exact(self.age[0], raw)
+            max_age = _damo_fmt_str.format_time_us_exact(self.age[1], raw)
         else:
             min_age = '%s %s' % (
-                    _damo_fmt_str.format_nr(self.min_age, raw), self.age_unit)
+                    _damo_fmt_str.format_nr(self.age[0], raw), self.age_unit)
             max_age = '%s %s' % (
-                    _damo_fmt_str.format_nr(self.max_age, raw), self.age_unit)
+                    _damo_fmt_str.format_nr(self.age[1], raw), self.age_unit)
         lines.append('age: [%s, %s]' % (min_age, max_age))
         return '\n'.join(lines)
 
@@ -216,8 +213,7 @@ class DamosAccessPattern:
                 self.sz_bytes == other.sz_bytes and
                 self.nr_accesses == other.nr_accesses and
                 self.nr_accesses_unit == other.nr_accesses_unit and
-                self.min_age == other.min_age and self.max_age == other.max_age
-                and self.age_unit == other.age_unit)
+                self.age == other.age and self.age_unit == other.age_unit)
 
     @classmethod
     def from_kvpairs(cls, kv):
@@ -260,13 +256,13 @@ class DamosAccessPattern:
         max_nr_accesses = '%s %s' % (
                 _damo_fmt_str.format_nr(self.nr_accesses[1], raw), unit)
         if self.age_unit == unit_usec:
-            min_age = _damo_fmt_str.format_time_us_exact(self.min_age, raw)
-            max_age = _damo_fmt_str.format_time_us_exact(self.max_age, raw)
+            min_age = _damo_fmt_str.format_time_us_exact(self.age[0], raw)
+            max_age = _damo_fmt_str.format_time_us_exact(self.age[1], raw)
         else:
             min_age = '%s %s' % (
-                    _damo_fmt_str.format_nr(self.min_age, raw), self.age_unit)
+                    _damo_fmt_str.format_nr(self.age[0], raw), self.age_unit)
             max_age = '%s %s' % (
-                    _damo_fmt_str.format_nr(self.max_age, raw), self.age_unit)
+                    _damo_fmt_str.format_nr(self.age[1], raw), self.age_unit)
 
         return collections.OrderedDict([
             ('min_sz_bytes',
@@ -302,12 +298,12 @@ class DamosAccessPattern:
             return
         # aggr_intervals to usec
         if age_unit == unit_usec:
-            self.min_age = self.min_age * intervals.aggr
-            self.max_age = self.max_age * intervals.aggr
+            self.age[0] = self.age[0] * intervals.aggr
+            self.age[1] = self.age[1] * intervals.aggr
         # usec to aggr_intervals
         else:
-            self.min_age = int(self.min_age / intervals.aggr)
-            self.max_age = int(self.max_age / intervals.aggr)
+            self.age[0] = int(self.age[0] / intervals.aggr)
+            self.age[1] = int(self.age[1] / intervals.aggr)
         self.age_unit = age_unit
 
     def convert_for_units(self, nr_accesses_unit, age_unit, intervals):

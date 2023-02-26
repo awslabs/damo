@@ -257,8 +257,8 @@ class TestDamon(unittest.TestCase):
             self.assertEqual(type(converted.nr_accesses[0]), int)
             self.assertEqual(type(converted.nr_accesses[1]), int)
             if converted.age_unit != _damon.unit_usec:
-                self.assertEqual(type(converted.min_age), int)
-                self.assertEqual(type(converted.max_age), int)
+                self.assertEqual(type(converted.age[0]), int)
+                self.assertEqual(type(converted.age[1]), int)
 
         exception_raised = False
         try:

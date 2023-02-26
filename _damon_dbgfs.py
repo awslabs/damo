@@ -100,7 +100,7 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%s' % (
             pattern.sz_bytes[0], pattern.sz_bytes[1],
             pattern.nr_accesses[0], pattern.nr_accesses[1],
-            pattern.min_age, pattern.max_age,
+            pattern.age[0], pattern.age[1],
             damos_action_to_file_input(damos.action))
     if scheme_version == 0:
         return v0_scheme
