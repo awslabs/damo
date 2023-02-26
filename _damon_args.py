@@ -122,7 +122,7 @@ def kdamonds_for(args):
         else:
             kdamonds_str = args.kdamonds
         kdamonds_kvpairs = json.loads(kdamonds_str)
-        return [kvpairs_to_Kdamond(kvpair)
+        return [Kdamond.from_kvpairs(kvpair)
                 for kvpair in kdamonds_kvpairs], None
     ctx, err = damon_ctx_for(args)
     if err:

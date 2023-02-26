@@ -20,7 +20,7 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(list(target_kvpairs.keys()),
                 ['name', 'pid', 'regions'])
         self.assertEqual(target,
-                _damon.kvpairs_to_DamonTarget(target_kvpairs))
+                _damon.DamonTarget.from_kvpairs(target_kvpairs))
 
         damos = _damon.Damos('foo',
                 _damon.DamosAccessPattern([0, 10], [5, 8], _damon.unit_percent,
@@ -35,7 +35,7 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(list(damos_kvpairs.keys()),
                 ['name', 'action', 'access_pattern', 'quotas', 'watermarks',
                     'filters'])
-        self.assertEqual(damos, _damon.kvpairs_to_Damos(damos_kvpairs))
+        self.assertEqual(damos, _damon.Damos.from_kvpairs(damos_kvpairs))
 
         ctx = _damon.DamonCtx('test_ctx',
                 _damon.DamonIntervals(5000, 100000, 1000000),
@@ -46,7 +46,7 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(list(ctx_kvpairs.keys()),
                 ['name', 'intervals', 'nr_regions', 'ops', 'targets',
                     'schemes'])
-        self.assertEqual(ctx, _damon.kvpairs_to_DamonCtx(ctx_kvpairs))
+        self.assertEqual(ctx, _damon.DamonCtx.from_kvpairs(ctx_kvpairs))
 
         kdamond = _damon.Kdamond('bar', 'off', 123, [ctx])
         kdamond_kvpairs = kdamond.to_kvpairs()
@@ -54,7 +54,7 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(list(kdamond_kvpairs.keys()),
                 ['name', 'state', 'pid', 'contexts'])
         self.assertEqual(kdamond,
-            _damon.kvpairs_to_Kdamond(kdamond_kvpairs))
+            _damon.Kdamond.from_kvpairs(kdamond_kvpairs))
 
     def test_damos_default_immutable(self):
         damos = _damon.Damos()
@@ -119,7 +119,7 @@ class TestDamon(unittest.TestCase):
                 _damon.DamonIntervals(5000, 100000, 1000000))
 
         _test_damo_common.test_input_expects(self,
-                lambda x: _damon.kvpairs_to_DamonIntervals(json.loads(x)),
+                lambda x: _damon.DamonIntervals.from_kvpairs(json.loads(x)),
                 {
                     json.dumps({'sample_us': 5000, 'aggr_us': 100000,
                         'ops_update_us': 1000000}):
@@ -157,7 +157,8 @@ class TestDamon(unittest.TestCase):
                     tuple(['10', '1,000']): expect})
 
         _test_damo_common.test_input_expects(self,
-                lambda x: _damon.kvpairs_to_DamonNrRegionsRange(json.loads(x)),
+                lambda x: _damon.DamonNrRegionsRange.from_kvpairs(
+                    json.loads(x)),
                 {
                     json.dumps({'min': 10, 'max': 1000}):
                     expect,
@@ -191,7 +192,7 @@ class TestDamon(unittest.TestCase):
                     })
 
         _test_damo_common.test_input_expects(self,
-                lambda x: _damon.kvpairs_to_DamonRegion(json.loads(x)),
+                lambda x: _damon.DamonRegion.from_kvpairs(json.loads(x)),
                 {
                     json.dumps({'start': '123', 'end': '456'}):
                     _damon.DamonRegion(123, 456),

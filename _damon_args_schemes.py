@@ -179,7 +179,7 @@ def damo_schemes_to_damos(damo_schemes):
 
     try:
         kvpairs = json.loads(damo_schemes)
-        return [_damon.kvpairs_to_Damos(kv) for kv in kvpairs], None
+        return [_damon.Damos.from_kvpairs(kv) for kv in kvpairs], None
     except:
         # The input is not json file
         pass
