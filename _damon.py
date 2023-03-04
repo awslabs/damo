@@ -217,35 +217,35 @@ class DamosAccessPattern:
 
     @classmethod
     def from_kvpairs(cls, kv):
+        sz_bytes = [_damo_fmt_str.text_to_bytes(kv['sz_bytes']['min']),
+                _damo_fmt_str.text_to_bytes(kv['sz_bytes']['max'])]
+
         kv_ = kv['nr_accesses']
         try:
-            min_nr_accesses = _damo_fmt_str.text_to_percent(kv_['min'])
-            max_nr_accesses = _damo_fmt_str.text_to_percent(kv_['max'])
+            nr_accesses = [_damo_fmt_str.text_to_percent(kv_['min']),
+                    _damo_fmt_str.text_to_percent(kv_['max'])]
             nr_accesses_unit = unit_percent
         except:
-            min_nr_accesses, nr_accesses_unit = _damo_fmt_str.text_to_nr_unit(
-                    kv_['min'])
-            max_nr_accesses, nr_accesses_unit2 = _damo_fmt_str.text_to_nr_unit(
-                    kv_['max'])
+            min_, nr_accesses_unit = _damo_fmt_str.text_to_nr_unit(kv_['min'])
+            max_, nr_accesses_unit2 = _damo_fmt_str.text_to_nr_unit(kv_['max'])
             if nr_accesses_unit != nr_accesses_unit2:
                 raise Exception('nr_accesses units should be same')
+            nr_accesses = [min_, max_]
 
         kv_ = kv['age']
         try:
-            min_age = _damo_fmt_str.text_to_us(kv_['min'])
-            max_age = _damo_fmt_str.text_to_us(kv_['max'])
+            age = [_damo_fmt_str.text_to_us(kv_['min']),
+                    _damo_fmt_str.text_to_us(kv_['max'])]
             age_unit = unit_usec
         except:
             min_age, age_unit = _damo_fmt_str.text_to_nr_unit(kv_['min'])
             max_age, age_unit2 = _damo_fmt_str.text_to_nr_unit(kv_['max'])
             if age_unit != age_unit2:
                 raise Exception('age units should be same')
+            age = [min_age, max_age]
 
-        return DamosAccessPattern(
-                [_damo_fmt_str.text_to_bytes(kv['sz_bytes']['min']),
-                    _damo_fmt_str.text_to_bytes(kv['sz_bytes']['max'])],
-                [min_nr_accesses, max_nr_accesses], nr_accesses_unit,
-                [min_age, max_age], age_unit)
+        return DamosAccessPattern(sz_bytes, nr_accesses, nr_accesses_unit, age,
+                age_unit)
 
     def to_kvpairs(self, raw=False):
         unit = self.nr_accesses_unit
