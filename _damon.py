@@ -535,14 +535,25 @@ class DamosTriedRegion:
         return self.to_str(False)
 
 # TODO: check support of pageout and lru_(de)prio
-damos_action_willneed = 'willneed'
-damos_action_cold = 'cold'
-damos_action_pageout = 'pageout'
-damos_action_hugepage = 'hugepage'
-damos_action_nohugepage = 'nohugepage'
-damos_action_lru_prio = 'lru_prio'
-damos_action_lru_deprio = 'lru_deprio'
-damos_action_stat = 'stat'
+damos_actions = [
+        'willneed',
+        'cold',
+        'pageout',
+        'hugepage',
+        'nohugepage',
+        'lru_prio',
+        'lru_deprio',
+        'stat',
+        ]
+
+damos_action_willneed = damos_actions[0]
+damos_action_cold = damos_actions[1]
+damos_action_pageout = damos_actions[2]
+damos_action_hugepage = damos_actions[3]
+damos_action_nohugepage = damos_actions[4]
+damos_action_lru_prio = damos_actions[5]
+damos_action_lru_deprio = damos_actions[6]
+damos_action_stat = damos_actions[7]
 
 class Damos:
     name = None
