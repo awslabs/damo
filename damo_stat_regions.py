@@ -97,7 +97,6 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
         err = _damon.commit_inputs(running_kdamonds)
         if err != None:
             print('monitoring schemes commit failed: %s' % err)
-            # TODO: remove monitoring schemes
             return
 
     err = _damon.update_schemes_tried_regions([k.name for k in
