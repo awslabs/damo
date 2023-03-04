@@ -75,7 +75,7 @@ def uninstall_schemes(kdamonds, schemes):
     if err != None:
         print('monitoring schemes uninstall failed: %s' % err)
         return
-    err = _damon.commit_inputs(kdamonds)
+    err = _damon.commit_applied([k.name for k in kdamonds])
     if err != None:
         print('monitoring schemes uninstall commit failed: %s' % err)
         return
@@ -94,7 +94,7 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
         if err != None:
             print('monitoring schemes install failed: %s' % err)
             return
-        err = _damon.commit_inputs(running_kdamonds)
+        err = _damon.commit_applied([k.name for k in running_kdamonds])
         if err != None:
             print('monitoring schemes commit failed: %s' % err)
             return

@@ -922,10 +922,10 @@ def wait_current_kdamonds_turned_off():
 def apply_kdamonds(kdamonds):
     return _damon_fs.apply_kdamonds(kdamonds)
 
-def commit_inputs(kdamonds):
+def commit_applied(kdamond_names):
     if _damon_fs == _damon_dbgfs:
-        return 'debugfs interface unsupport commit_inputs()'
-    return _damon_fs.commit_inputs(kdamonds)
+        return 'debugfs interface unsupport commit_applied()'
+    return _damon_fs.commit_applied(kdamond_names)
 
 def update_schemes_stats(kdamond_names):
     return _damon_fs.update_schemes_stats(kdamond_names)
