@@ -49,6 +49,22 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
                 __pr_schemes_tried_regions(scheme.tried_regions, ctx.intervals,
                         access_pattern, size_only, raw_nr)
 
+def uninstall_schemes(kdamonds, schemes):
+    installed_schemes_ids = [id(s) for s in schemes]
+    for kdamond in kdamonds:
+        for ctx in kdamond.contexts:
+            for scheme in ctx.schemes:
+                if id(scheme) in installed_schemes_ids:
+                    ctx.schemes.remove(scheme)
+    err = _damon.apply_kdamonds(kdamonds)
+    if err != None:
+        print('monitoring schemes uninstall failed: %s' % err)
+        return
+    err = _damon.commit_inputs(kdamonds)
+    if err != None:
+        print('monitoring schemes uninstall commit failed: %s' % err)
+        return
+
 def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
     if _damon.every_kdamond_turned_off():
         print('no kdamond running')
@@ -98,20 +114,7 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
                     pr_schemes_tried_regions(kdamond.name, scheme,
                             access_pattern, size_only, raw_nr)
 
-    installed_schemes_ids = [id(s) for s in installed_schemes]
-    for kdamond in running_kdamonds:
-        for ctx in kdamond.contexts:
-            for scheme in ctx.schemes:
-                if id(scheme) in installed_schemes_ids:
-                    ctx.schemes.remove(scheme)
-    err = _damon.apply_kdamonds(running_kdamonds)
-    if err != None:
-        print('monitoring schemes uninstall failed: %s' % err)
-        return
-    err = _damon.commit_inputs(running_kdamonds)
-    if err != None:
-        print('monitoring schemes uninstall commit failed: %s' % err)
-        return
+    uninstall_schemes(running_kdamonds, installed_schemes)
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
