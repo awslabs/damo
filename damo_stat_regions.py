@@ -103,7 +103,7 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
         running_kdamonds])
     if err != None:
         print('update schemes tried regions fail: %s' % err)
-        # TODO: remove monitoring schemes
+        uninstall_schemes(running_kdamonds, installed_schemes)
         return
 
     for kdamond in running_kdamonds:
