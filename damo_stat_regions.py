@@ -49,6 +49,21 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
                 __pr_schemes_tried_regions(scheme.tried_regions, ctx.intervals,
                         access_pattern, size_only, raw_nr)
 
+def install_monitoring_scheme(kdamonds):
+    installed_schemes = []
+    for kdamond in kdamonds:
+        for ctx in kdamond.contexts:
+            ctx_has_monitoring_scheme = False
+            for scheme in ctx.schemes:
+                if _damon.is_monitoring_scheme(scheme, ctx.intervals):
+                    ctx_has_monitoring_scheme = True
+                    break
+            if not ctx_has_monitoring_scheme:
+                scheme = _damon.Damos(name='%d' % len(ctx.schemes))
+                ctx.schemes.append(scheme)
+                installed_schemes.append(scheme)
+    return installed_schemes
+
 def uninstall_schemes(kdamonds, schemes):
     installed_schemes_ids = [id(s) for s in schemes]
     for kdamond in kdamonds:
@@ -72,18 +87,7 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
         return
 
     # ensure each kdamonds have a monitoring scheme
-    installed_schemes = []
-    for kdamond in running_kdamonds:
-        for ctx in kdamond.contexts:
-            ctx_has_monitoring_scheme = False
-            for scheme in ctx.schemes:
-                if _damon.is_monitoring_scheme(scheme, ctx.intervals):
-                    ctx_has_monitoring_scheme = True
-                    break
-            if not ctx_has_monitoring_scheme:
-                scheme = _damon.Damos(name='%d' % len(ctx.schemes))
-                ctx.schemes.append(scheme)
-                installed_schemes.append(scheme)
+    installed_schemes = install_monitoring_scheme(running_kdamonds)
 
     if len(installed_schemes) != 0:
         err = _damon.apply_kdamonds(running_kdamonds)
