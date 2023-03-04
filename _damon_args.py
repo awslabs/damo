@@ -225,6 +225,23 @@ def set_monitoring_argparser(parser):
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
             help='if target is \'paddr\', limit it to the numa node')
 
+def set_damos_argparser(parser):
+    parser.add_argument('--damos_sz_region', metavar=('<min>', '<max>'),
+            nargs=2, default=['min', 'max'],
+            help='min/max size of damos target regions (bytes)')
+    parser.add_argument('--damos_access_rate', metavar=('<min>', '<max>'),
+            nargs=2, default=['min', 'max'],
+            help='min/max access rate of damos target regions (percent)')
+    parser.add_argument('--damos_age', metavar=('<min>', '<max>'), nargs=2,
+            default=['min', 'max'],
+            help='min/max age of damos target regions (microseconds)')
+    parser.add_argument('--damos_action', metavar='<action>',
+            choices=[_damon.damos_action_willneed, _damon.damos_action_cold,
+                _damon.damos_action_pageout, _damon.damos_action_hugepage,
+                _damon.damos_action_nohugepage, _damon.damos_action_lru_prio,
+                _damon.damos_action_lru_deprio, _damon.damos_action_stat],
+            help='damos action to apply to the target regions')
+
 def set_argparser(parser, add_record_options):
     if parser == None:
         parser = argparse.ArgumentParser()
@@ -233,6 +250,7 @@ def set_argparser(parser, add_record_options):
             default='paddr',
             help='monitoring operations set')
     parser.add_argument('--target_pid', type=int, help='target pid')
+    set_damos_argparser(parser)
     parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
 	    default=json.dumps([_damon.Damos().to_kvpairs()], indent=4),
 	    help='data access monitoring-based operation schemes')
