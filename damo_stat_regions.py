@@ -66,18 +66,14 @@ def uninstall_schemes(kdamonds, schemes):
         return
 
 def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
-    if _damon.every_kdamond_turned_off():
+    running_kdamonds = _damon.running_kdamonds()
+    if len(running_kdamonds) == 0:
         print('no kdamond running')
         return
 
     # ensure each kdamonds have a monitoring scheme
     installed_schemes = []
-    running_kdamonds = []
-    kdamonds = _damon.current_kdamonds()
-    for kdamond in kdamonds:
-        if kdamond.state == 'off':
-            continue
-        running_kdamonds.append(kdamond)
+    for kdamond in running_kdamonds:
         for ctx in kdamond.contexts:
             ctx_has_monitoring_scheme = False
             for scheme in ctx.schemes:
