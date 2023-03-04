@@ -85,7 +85,7 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
                     ctx_has_monitoring_scheme = True
                     break
             if not ctx_has_monitoring_scheme:
-                scheme = Damos(name='%d' % len(ctx.schemes))
+                scheme = _damon.Damos(name='%d' % len(ctx.schemes))
                 ctx.schemes.append(scheme)
                 installed_schemes.append(scheme)
 
