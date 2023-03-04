@@ -49,17 +49,6 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
                 __pr_schemes_tried_regions(scheme.tried_regions, ctx.intervals,
                         access_pattern, size_only, raw_nr)
 
-def monitoring_kdamond_scheme():
-    monitoring_kdamond = None
-    monitoring_scheme = None
-    kdamonds = _damon.current_kdamonds()
-    for kdamond in kdamonds:
-        for ctx in kdamond.contexts:
-            for scheme in ctx.schemes:
-                if _damon.is_monitoring_scheme(scheme, ctx.intervals):
-                    return kdamond.name, scheme
-    return None, None
-
 def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
     if _damon.every_kdamond_turned_off():
         print('no kdamond running')
