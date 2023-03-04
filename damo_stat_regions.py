@@ -26,8 +26,8 @@ def __pr_schemes_tried_regions(regions, intervals, access_pattern, size_only,
                 region.nr_accesses,
                 access_pattern.nr_accesses[1]):
             continue
-        if out_of_range(access_pattern.min_age, region.age,
-                access_pattern.max_age):
+        if out_of_range(access_pattern.age[0], region.age,
+                access_pattern.age[1]):
             continue
         if not size_only:
             print(region.to_str(raw_nr, intervals))
