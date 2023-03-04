@@ -114,6 +114,21 @@ class TestDamon(unittest.TestCase):
         self.assertTrue(_damon.is_monitoring_scheme(copied,
             default_damon_intervals))
 
+    def test_damos_action_validity(self):
+        exception_raised = False
+        try:
+            _damon.Damos(action='foo')
+        except:
+            exception_raised = True
+        self.assertTrue(exception_raised)
+        for action in _damon.damos_actions:
+            exception_raised = False
+            try:
+                _damon.Damos(action=action)
+            except:
+                exception_raised = True
+            self.assertFalse(exception_raised)
+
     def test_damon_intervals(self):
         self.assertEqual(_damon.DamonIntervals(),
                 _damon.DamonIntervals(5000, 100000, 1000000))
