@@ -572,6 +572,8 @@ class Damos:
         self.name = name
         self.access_pattern = (access_pattern
                 if access_pattern != None else DamosAccessPattern())
+        if not action in damos_actions:
+            raise Exception('wrong damos action: %s' % action)
         self.action = action
         self.quotas = quotas if quotas != None else DamosQuotas()
         self.watermarks = (watermarks
