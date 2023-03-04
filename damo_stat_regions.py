@@ -43,7 +43,8 @@ def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
             continue
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
-                if scheme != monitoring_scheme:
+                if not scheme.effectively_equal(monitoring_scheme,
+                        ctx.intervals):
                     continue
                 __pr_schemes_tried_regions(scheme.tried_regions, ctx.intervals,
                         access_pattern, size_only, raw_nr)
