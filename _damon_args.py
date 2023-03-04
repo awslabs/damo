@@ -236,10 +236,7 @@ def set_damos_argparser(parser):
             default=['min', 'max'],
             help='min/max age of damos target regions (microseconds)')
     parser.add_argument('--damos_action', metavar='<action>',
-            choices=[_damon.damos_action_willneed, _damon.damos_action_cold,
-                _damon.damos_action_pageout, _damon.damos_action_hugepage,
-                _damon.damos_action_nohugepage, _damon.damos_action_lru_prio,
-                _damon.damos_action_lru_deprio, _damon.damos_action_stat],
+            choices=_damon.damos_actions,
             help='damos action to apply to the target regions')
 
 def set_argparser(parser, add_record_options):
