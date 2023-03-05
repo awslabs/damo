@@ -22,6 +22,7 @@ def __pr_schemes_tried_regions(regions, intervals, size_only, raw_nr):
 def pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
     for kdamond in _damon.running_kdamonds():
         for ctx in kdamond.contexts:
+            print('kdamond %s ctx %s' % (kdamond.name, ctx.name))
             for scheme in ctx.schemes:
                 if scheme.effectively_equal(monitor_scheme, ctx.intervals):
                     __pr_schemes_tried_regions(scheme.tried_regions,
