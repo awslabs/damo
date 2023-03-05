@@ -147,6 +147,15 @@ def stage_kdamonds(args):
         return None, 'cannot apply kdamonds from args (%s)' % err
     return kdamonds, None
 
+def commit_kdamonds(args):
+    kdamonds, err = kdamonds_for(args)
+    if err:
+        return None, 'cannot create kdamonds to commit from args (%s)' % err
+    err = _damon.commit(kdamonds)
+    if err:
+        return None, 'cannot commit kdamonds (%s)' % err
+    return kdamonds, None
+
 def deduce_target(args):
     if args.deducible_target == None:
         return None
