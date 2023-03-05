@@ -29,7 +29,7 @@ def pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
                             ctx.intervals, size_only, raw_nr)
                     break
 
-def install_scheme_if_needed(kdamonds, scheme_to_install):
+def install_commit_scheme_if_needed(kdamonds, scheme_to_install):
     installed = False
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
@@ -41,7 +41,11 @@ def install_scheme_if_needed(kdamonds, scheme_to_install):
             if not ctx_has_the_scheme:
                 installed = True
                 ctx.schemes.append(scheme_to_install)
-    return installed
+    if installed:
+        err = _damon.commit(kdamonds)
+        if err != None:
+            return 'monitoring schemes install failed: %s' % err
+    return None
 
 def uninstall_schemes(kdamonds, scheme_id):
     for kdamond in kdamonds:
@@ -61,13 +65,10 @@ def update_pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
         return
 
     # ensure each kdamonds have a monitoring scheme
-    installed = install_scheme_if_needed(running_kdamonds, monitor_scheme)
-
-    if installed:
-        err = _damon.commit(running_kdamonds)
-        if err != None:
-            print('monitoring schemes install failed: %s' % err)
-            return
+    err = install_commit_scheme_if_needed(running_kdamonds, monitor_scheme)
+    if err:
+        print('monitoring scheme install failed: %s' % err)
+        return
 
     err = _damon.update_schemes_tried_regions([k.name for k in
         running_kdamonds])
