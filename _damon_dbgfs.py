@@ -40,7 +40,7 @@ def update_schemes_stats(kdamond_names):
 
 # update_schemes_tried_regions are not supported
 
-# for apply_kdamonds
+# for stage_kdamonds
 
 def wops_for_target(target, target_has_pid):
     wops = []
@@ -191,7 +191,7 @@ def wops_for_kdamonds(kdamonds):
 
     return write_contents
 
-def apply_kdamonds(kdamonds):
+def stage_kdamonds(kdamonds):
     return _damo_fs.write_files(wops_for_kdamonds(kdamonds))
 
 # for current_kdamonds

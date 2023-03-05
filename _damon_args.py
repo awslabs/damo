@@ -138,11 +138,11 @@ def self_started_target(args):
 def is_ongoing_target(args):
     return args.deducible_target == 'ongoing'
 
-def apply_kdamonds(args):
+def stage_kdamonds(args):
     kdamonds, err = kdamonds_for(args)
     if err:
         return None, 'cannot create kdamonds from args (%s)' % err
-    err = _damon.apply_kdamonds(kdamonds)
+    err = _damon.stage_kdamonds(kdamonds)
     if err:
         return None, 'cannot apply kdamonds from args (%s)' % err
     return kdamonds, None
@@ -181,7 +181,7 @@ def turn_damon_on(args):
     err = deduce_target(args)
     if err:
         return err, None
-    kdamonds, err = apply_kdamonds(args)
+    kdamonds, err = stage_kdamonds(args)
     if err:
         return err, None
     return _damon.turn_damon_on(

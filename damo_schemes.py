@@ -20,7 +20,7 @@ def cleanup_exit(exit_code):
     err = _damon.turn_damon_off(kdamonds_names_to_turn_off)
     if err:
         print('failed to turn damon off (%s)' % err)
-    err = _damon.apply_kdamonds(orig_kdamonds)
+    err = _damon.stage_kdamonds(orig_kdamonds)
     if err:
         print('failed restoring previous kdamonds setup (%s)' % err)
     exit(exit_code)

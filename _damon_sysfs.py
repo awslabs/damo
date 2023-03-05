@@ -125,7 +125,7 @@ def update_schemes_tried_regions(kdamond_names):
             return err
     return None
 
-# for apply_kdamonds
+# for stage_kdamonds
 
 def wops_for_scheme_filter(damos_filter):
     return {
@@ -305,7 +305,7 @@ def ensure_dirs_populated_for(kdamonds):
                             scheme.name),
                         '%d' % len(scheme.filters))
 
-def apply_kdamonds(kdamonds):
+def stage_kdamonds(kdamonds):
     if len(kdamonds) > 1:
         return 'currently only <=one kdamond is supported'
     if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
@@ -558,5 +558,5 @@ def update_supported_features():
         for ops in ['vaddr', 'paddr', 'fvaddr']:
             feature_supports[ops] = ops in avail_ops
     if orig_kdamonds != None:
-        err = apply_kdamonds(orig_kdamonds)
+        err = stage_kdamonds(orig_kdamonds)
     return err

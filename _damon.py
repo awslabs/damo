@@ -919,8 +919,8 @@ def wait_current_kdamonds_turned_off():
 
 # DAMON control
 
-def apply_kdamonds(kdamonds):
-    return _damon_fs.apply_kdamonds(kdamonds)
+def stage_kdamonds(kdamonds):
+    return _damon_fs.stage_kdamonds(kdamonds)
 
 def commit_applied(kdamond_names):
     if _damon_fs == _damon_dbgfs:
@@ -928,7 +928,7 @@ def commit_applied(kdamond_names):
     return _damon_fs.commit_applied(kdamond_names)
 
 def commit(kdamonds):
-    err = apply_kdamonds(kdamonds)
+    err = stage_kdamonds(kdamonds)
     if err:
         return 'staging updates failed (%s)' % err
     err = commit_applied([k.name for k in kdamonds])

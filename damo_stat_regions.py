@@ -67,7 +67,7 @@ def uninstall_schemes(kdamonds, schemes):
             for scheme in ctx.schemes:
                 if id(scheme) in installed_schemes_ids:
                     ctx.schemes.remove(scheme)
-    err = _damon.apply_kdamonds(kdamonds)
+    err = _damon.stage_kdamonds(kdamonds)
     if err != None:
         print('monitoring schemes uninstall failed: %s' % err)
         return
@@ -86,7 +86,7 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
     installed_schemes = install_monitoring_scheme(running_kdamonds)
 
     if len(installed_schemes) != 0:
-        err = _damon.apply_kdamonds(running_kdamonds)
+        err = _damon.stage_kdamonds(running_kdamonds)
         if err != None:
             print('monitoring schemes install failed: %s' % err)
             return
