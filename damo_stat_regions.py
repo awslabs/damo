@@ -55,7 +55,7 @@ def uninstall_schemes(kdamonds, scheme_id):
                     ctx.schemes.remove(scheme)
     err = _damon.commit(kdamonds)
     if err != None:
-        return 'monitoring schemes uninstall failed: %s' % err
+        return 'committing scheme uninstalled kdamonds failed: %s' % err
 
 def update_pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
     running_kdamonds = _damon.running_kdamonds()
