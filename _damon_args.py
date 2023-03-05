@@ -114,7 +114,41 @@ def damon_ctx_for(args):
     except Exception as e:
         return None, 'Creating context from arguments failed (%s)' % e
 
+def deduce_target(args):
+    if args.deducible_target == None:
+        return None
+
+    args.kdamonds = None
+    args.self_started_target = False
+    if args.deducible_target == 'paddr':
+        args.ops = 'paddr'
+        args.target_pid = None
+        return None
+    try:
+        subprocess.check_output(['which', args.deducible_target.split()[0]])
+        is_cmd = True
+    except:
+        is_cmd = False
+    if is_cmd:
+        p = subprocess.Popen(args.deducible_target, shell=True,
+                executable='/bin/bash')
+        pid = p.pid
+        args.self_started_target = True
+    else:
+        try:
+            pid = int(args.deducible_target)
+        except:
+            return 'target \'%s\' is not supported' % args.deducible_target
+    args.target_pid = pid
+    args.ops = 'vaddr'
+    if args.regions:
+        args.ops = 'fvaddr'
+
 def kdamonds_for(args):
+    err = deduce_target(args)
+    if err:
+        return None, err
+
     if args.kdamonds:
         if os.path.isfile(args.kdamonds):
             with open(args.kdamonds, 'r') as f:
@@ -155,36 +189,6 @@ def commit_kdamonds(args):
     if err:
         return None, 'cannot commit kdamonds (%s)' % err
     return kdamonds, None
-
-def deduce_target(args):
-    if args.deducible_target == None:
-        return None
-
-    args.kdamonds = None
-    args.self_started_target = False
-    if args.deducible_target == 'paddr':
-        args.ops = 'paddr'
-        args.target_pid = None
-        return None
-    try:
-        subprocess.check_output(['which', args.deducible_target.split()[0]])
-        is_cmd = True
-    except:
-        is_cmd = False
-    if is_cmd:
-        p = subprocess.Popen(args.deducible_target, shell=True,
-                executable='/bin/bash')
-        pid = p.pid
-        args.self_started_target = True
-    else:
-        try:
-            pid = int(args.deducible_target)
-        except:
-            return 'target \'%s\' is not supported' % args.deducible_target
-    args.target_pid = pid
-    args.ops = 'vaddr'
-    if args.regions:
-        args.ops = 'fvaddr'
 
 def turn_damon_on(args):
     err = deduce_target(args)
