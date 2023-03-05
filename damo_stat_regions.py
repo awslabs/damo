@@ -9,30 +9,13 @@ import _damo_fmt_str
 import _damo_subcmds
 import _damon
 
-def out_of_range(minval, val, maxval):
-    return val < minval or maxval < val
-
-def __pr_schemes_tried_regions(regions, intervals, access_pattern, size_only,
-        raw_nr):
-    access_pattern.convert_for_units(_damon.unit_sample_intervals,
-            _damon.unit_aggr_intervals, intervals)
+def __pr_schemes_tried_regions(regions, intervals, size_only, raw_nr):
     total_sz = 0
     for region in regions:
-        sz = region.end - region.start
-        if out_of_range(access_pattern.sz_bytes[0], sz,
-                access_pattern.sz_bytes[1]):
-            continue
-        if out_of_range(access_pattern.nr_accesses[0],
-                region.nr_accesses,
-                access_pattern.nr_accesses[1]):
-            continue
-        if out_of_range(access_pattern.age[0], region.age,
-                access_pattern.age[1]):
-            continue
         if not size_only:
             print(region.to_str(raw_nr, intervals))
         else:
-            total_sz += sz
+            total_sz += (region.end - region.start)
     if size_only:
         print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
 
@@ -43,7 +26,7 @@ def pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
             for scheme in ctx.schemes:
                 if scheme.effectively_equal(monitor_scheme, ctx.intervals):
                     __pr_schemes_tried_regions(scheme.tried_regions,
-                            ctx.intervals, access_pattern, size_only, raw_nr)
+                            ctx.intervals, size_only, raw_nr)
                     break
 
 def install_scheme_if_needed(kdamonds, scheme_to_install):
