@@ -44,7 +44,7 @@ def install_commit_scheme_if_needed(kdamonds, scheme_to_install):
     if installed:
         err = _damon.commit(kdamonds)
         if err != None:
-            return 'monitoring schemes install failed: %s' % err
+            return 'committing scheme installed kdamonds failed: %s' % err
     return None
 
 def uninstall_schemes(kdamonds, scheme_id):
