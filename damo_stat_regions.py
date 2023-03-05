@@ -37,35 +37,34 @@ def __pr_schemes_tried_regions(regions, intervals, access_pattern, size_only,
         print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
 
 def pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
+    monitor_scheme = _damon.Damos(access_pattern=access_pattern)
     for kdamond in _damon.running_kdamonds():
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
-                if _damon.is_monitoring_scheme(scheme, ctx.intervals):
+                if scheme.effectively_equal(monitor_scheme, ctx.intervals):
                     __pr_schemes_tried_regions(scheme.tried_regions,
                             ctx.intervals, access_pattern, size_only, raw_nr)
                     break
 
-def install_monitoring_scheme(kdamonds):
-    installed_schemes = []
+def install_scheme_if_needed(kdamonds, scheme_to_install):
+    installed = False
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
-            ctx_has_monitoring_scheme = False
+            ctx_has_the_scheme = False
             for scheme in ctx.schemes:
-                if _damon.is_monitoring_scheme(scheme, ctx.intervals):
-                    ctx_has_monitoring_scheme = True
+                if scheme.effectively_equal(scheme_to_install, ctx.intervals):
+                    ctx_has_the_scheme = True
                     break
-            if not ctx_has_monitoring_scheme:
-                scheme = _damon.Damos(name='%d' % len(ctx.schemes))
-                ctx.schemes.append(scheme)
-                installed_schemes.append(scheme)
-    return installed_schemes
+            if not ctx_has_the_scheme:
+                installed = True
+                ctx.schemes.append(scheme_to_install)
+    return installed
 
-def uninstall_schemes(kdamonds, schemes):
-    installed_schemes_ids = [id(s) for s in schemes]
+def uninstall_schemes(kdamonds, scheme_id):
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
-                if id(scheme) in installed_schemes_ids:
+                if id(scheme) == scheme_id:
                     ctx.schemes.remove(scheme)
     err = _damon.commit(kdamonds)
     if err != None:
@@ -78,10 +77,11 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
         print('no kdamond running')
         return
 
+    scheme = _damon.Damos(access_pattern=access_pattern)
     # ensure each kdamonds have a monitoring scheme
-    installed_schemes = install_monitoring_scheme(running_kdamonds)
+    installed = install_scheme_if_needed(running_kdamonds, scheme)
 
-    if len(installed_schemes) != 0:
+    if installed:
         err = _damon.commit(running_kdamonds)
         if err != None:
             print('monitoring schemes install failed: %s' % err)
@@ -91,12 +91,12 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
         running_kdamonds])
     if err != None:
         print('update schemes tried regions fail: %s' % err)
-        uninstall_schemes(running_kdamonds, installed_schemes)
+        uninstall_schemes(running_kdamonds, id(scheme))
         return
 
     pr_schemes_tried_regions(access_pattern, size_only, raw_nr)
 
-    uninstall_schemes(running_kdamonds, installed_schemes)
+    uninstall_schemes(running_kdamonds, id(scheme))
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
