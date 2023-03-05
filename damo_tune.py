@@ -26,12 +26,9 @@ def main(args=None):
         print('DAMON is not turned on')
         exit(1)
 
-    kdamonds, err = _damon_args.stage_kdamonds(args)
+    kdamonds, err = _damon_args.commit_kdamonds(args)
     if err:
-        print('could not apply inputs (%s)' % err)
-    err = _damon.commit_staged([k.name for k in kdamonds])
-    if err:
-        print('could not commit inputs (%s)' % err)
+        print('tuning failed (%s)' % err)
 
 if __name__ == '__main__':
     main()
