@@ -927,6 +927,15 @@ def commit_applied(kdamond_names):
         return 'debugfs interface unsupport commit_applied()'
     return _damon_fs.commit_applied(kdamond_names)
 
+def commit(kdamonds):
+    err = apply_kdamonds(kdamonds)
+    if err:
+        return 'staging updates failed (%s)' % err
+    err = commit_applied([k.name for k in kdamonds])
+    if err:
+        return 'commit staged updates filed (%s)' % err
+    return None
+
 def update_schemes_stats(kdamond_names):
     return _damon_fs.update_schemes_stats(kdamond_names)
 
