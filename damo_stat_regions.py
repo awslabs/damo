@@ -19,8 +19,7 @@ def __pr_schemes_tried_regions(regions, intervals, size_only, raw_nr):
     if size_only:
         print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
 
-def pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
-    monitor_scheme = _damon.Damos(access_pattern=access_pattern)
+def pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
     for kdamond in _damon.running_kdamonds():
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
@@ -77,7 +76,7 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
         uninstall_schemes(running_kdamonds, id(scheme))
         return
 
-    pr_schemes_tried_regions(access_pattern, size_only, raw_nr)
+    pr_schemes_tried_regions(scheme, size_only, raw_nr)
 
     uninstall_schemes(running_kdamonds, id(scheme))
 
