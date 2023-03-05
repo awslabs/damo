@@ -43,6 +43,7 @@ def pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
                 if _damon.is_monitoring_scheme(scheme, ctx.intervals):
                     __pr_schemes_tried_regions(scheme.tried_regions,
                             ctx.intervals, access_pattern, size_only, raw_nr)
+                    break
 
 def install_monitoring_scheme(kdamonds):
     installed_schemes = []
