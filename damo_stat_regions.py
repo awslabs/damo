@@ -112,9 +112,5 @@ def main(args=None):
 
     damo_stat.run_count_delay(__main, args)
 
-    for i in range(args.count):
-        if i != args.count - 1:
-            time.sleep(args.delay)
-
 if __name__ == '__main__':
     main()
