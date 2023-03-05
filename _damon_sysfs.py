@@ -472,7 +472,7 @@ def current_kdamond_names():
     return [x for x in _damo_fs.read_files_recursive(kdamonds_dir).keys()
             if x != 'nr_kdamonds']
 
-def commit_applied(kdamond_names):
+def commit_staged(kdamond_names):
     for kdamond_name in kdamond_names:
         err = _damo_fs.write_file(state_file_of(kdamond_name), 'commit')
         if err != None:

@@ -29,7 +29,7 @@ def main(args=None):
     kdamonds, err = _damon_args.stage_kdamonds(args)
     if err:
         print('could not apply inputs (%s)' % err)
-    err = _damon.commit_applied([k.name for k in kdamonds])
+    err = _damon.commit_staged([k.name for k in kdamonds])
     if err:
         print('could not commit inputs (%s)' % err)
 

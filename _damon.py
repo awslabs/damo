@@ -922,16 +922,16 @@ def wait_current_kdamonds_turned_off():
 def stage_kdamonds(kdamonds):
     return _damon_fs.stage_kdamonds(kdamonds)
 
-def commit_applied(kdamond_names):
+def commit_staged(kdamond_names):
     if _damon_fs == _damon_dbgfs:
-        return 'debugfs interface unsupport commit_applied()'
-    return _damon_fs.commit_applied(kdamond_names)
+        return 'debugfs interface unsupport commit_staged()'
+    return _damon_fs.commit_staged(kdamond_names)
 
 def commit(kdamonds):
     err = stage_kdamonds(kdamonds)
     if err:
         return 'staging updates failed (%s)' % err
-    err = commit_applied([k.name for k in kdamonds])
+    err = commit_staged([k.name for k in kdamonds])
     if err:
         return 'commit staged updates filed (%s)' % err
     return None
