@@ -55,8 +55,7 @@ def uninstall_schemes(kdamonds, scheme_id):
                     ctx.schemes.remove(scheme)
     err = _damon.commit(kdamonds)
     if err != None:
-        print('monitoring schemes uninstall failed: %s' % err)
-        return
+        return 'monitoring schemes uninstall failed: %s' % err
 
 def update_pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
     running_kdamonds = _damon.running_kdamonds()
@@ -74,12 +73,16 @@ def update_pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
         running_kdamonds])
     if err != None:
         print('update schemes tried regions fail: %s' % err)
-        uninstall_schemes(running_kdamonds, id(monitor_scheme))
+        err = uninstall_schemes(running_kdamonds, id(monitor_scheme))
+        if err:
+            print('monitoring scheme uninstall failed: %s' % err)
         return
 
     pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr)
 
-    uninstall_schemes(running_kdamonds, id(monitor_scheme))
+    err = uninstall_schemes(running_kdamonds, id(monitor_scheme))
+    if err:
+        print('monitoring scheme uninstall failed: %s' % err)
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
