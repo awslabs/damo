@@ -53,15 +53,14 @@ def uninstall_schemes(kdamonds, scheme_id):
         print('monitoring schemes uninstall failed: %s' % err)
         return
 
-def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
+def update_pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
     running_kdamonds = _damon.running_kdamonds()
     if len(running_kdamonds) == 0:
         print('no kdamond running')
         return
 
-    scheme = _damon.Damos(access_pattern=access_pattern)
     # ensure each kdamonds have a monitoring scheme
-    installed = install_scheme_if_needed(running_kdamonds, scheme)
+    installed = install_scheme_if_needed(running_kdamonds, monitor_scheme)
 
     if installed:
         err = _damon.commit(running_kdamonds)
@@ -73,12 +72,12 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
         running_kdamonds])
     if err != None:
         print('update schemes tried regions fail: %s' % err)
-        uninstall_schemes(running_kdamonds, id(scheme))
+        uninstall_schemes(running_kdamonds, id(monitor_scheme))
         return
 
-    pr_schemes_tried_regions(scheme, size_only, raw_nr)
+    pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr)
 
-    uninstall_schemes(running_kdamonds, id(scheme))
+    uninstall_schemes(running_kdamonds, id(monitor_scheme))
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
@@ -95,8 +94,8 @@ def set_argparser(parser):
             help='print total size only')
 
 def __main(args):
-    update_pr_schemes_tried_regions(args.damo_stat_regions_access_pattern,
-            args.size_only, args.raw)
+    update_pr_schemes_tried_regions(args.monitor_scheme, args.size_only,
+            args.raw)
 
 def main(args=None):
     if not args:
@@ -106,9 +105,10 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    args.damo_stat_regions_access_pattern = _damon.DamosAccessPattern(
-            args.sz_region, args.access_rate, _damon.unit_percent, args.age,
-            _damon.unit_usec)
+    args.monitor_scheme = _damon.Damos(
+            access_pattern=_damon.DamosAccessPattern(
+                args.sz_region, args.access_rate, _damon.unit_percent,
+                args.age, _damon.unit_usec))
 
     damo_stat.run_count_delay(__main, args)
 
