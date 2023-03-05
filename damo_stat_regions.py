@@ -36,18 +36,13 @@ def __pr_schemes_tried_regions(regions, intervals, access_pattern, size_only,
     if size_only:
         print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
 
-def pr_schemes_tried_regions(kdamond_name, monitoring_scheme,
-        access_pattern, size_only, raw_nr):
-    for kdamond in _damon.current_kdamonds():
-        if kdamond.name != kdamond_name:
-            continue
+def pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
+    for kdamond in _damon.running_kdamonds():
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
-                if not scheme.effectively_equal(monitoring_scheme,
-                        ctx.intervals):
-                    continue
-                __pr_schemes_tried_regions(scheme.tried_regions, ctx.intervals,
-                        access_pattern, size_only, raw_nr)
+                if _damon.is_monitoring_scheme(scheme, ctx.intervals):
+                    __pr_schemes_tried_regions(scheme.tried_regions,
+                            ctx.intervals, access_pattern, size_only, raw_nr)
 
 def install_monitoring_scheme(kdamonds):
     installed_schemes = []
@@ -106,12 +101,7 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, raw_nr):
         uninstall_schemes(running_kdamonds, installed_schemes)
         return
 
-    for kdamond in running_kdamonds:
-        for ctx in kdamond.contexts:
-            for scheme in ctx.schemes:
-                if _damon.is_monitoring_scheme(scheme, ctx.intervals):
-                    pr_schemes_tried_regions(kdamond.name, scheme,
-                            access_pattern, size_only, raw_nr)
+    pr_schemes_tried_regions(access_pattern, size_only, raw_nr)
 
     uninstall_schemes(running_kdamonds, installed_schemes)
 
