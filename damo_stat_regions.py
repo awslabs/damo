@@ -44,8 +44,9 @@ def install_scheme_if_needed(kdamonds, scheme_to_install):
     if installed:
         err = _damon.commit(kdamonds)
         if err != None:
-            return 'committing scheme installed kdamonds failed: %s' % err
-    return None
+            return (False,
+                    'committing scheme installed kdamonds failed: %s' % err)
+    return installed, None
 
 def uninstall_schemes(kdamonds, scheme_id):
     for kdamond in kdamonds:
@@ -64,7 +65,7 @@ def update_pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
         return
 
     # ensure each kdamonds have a monitoring scheme
-    err = install_scheme_if_needed(running_kdamonds, monitor_scheme)
+    installed, err = install_scheme_if_needed(running_kdamonds, monitor_scheme)
     if err:
         print('monitoring scheme install failed: %s' % err)
         return
