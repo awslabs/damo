@@ -98,7 +98,9 @@ def warn_deprecation(nr_fields):
     sys.stderr.write('''
 WARNING: scheme input of %d fields is deprecated.  The support will be removed
 by 2023-Q2.  Please report your usecase to sj@kernel.org, damon@liss.linux.dev
-and linux-mm@kvack.org if you depend on those.''' % nr_fields)
+and linux-mm@kvack.org if you depend on those.
+
+''' % nr_fields)
 
 def fields_to_v1_scheme(fields):
     warn_deprecation(len(fields))
@@ -153,7 +155,9 @@ future.  Please consider using json format or --damos_* commandline options
 instead.
 
 Please report your usecase to sj@kernel.org, damon@liss.linux.dev
-and linux-mm@kvack.org if you depend on it.''')
+and linux-mm@kvack.org if you depend on it.
+
+''')
 
     fields = line.split()
     try:
