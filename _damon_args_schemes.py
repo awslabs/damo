@@ -146,6 +146,15 @@ def fields_to_v4_scheme(fields):
 
 def damo_single_line_scheme_to_damos(line, name):
     '''Returns Damos object and err'''
+
+    sys.stderr.write('''
+WARNING: single line per-scheme scheme input may be deprecated in a near
+future.  Please consider using json format or --damos_* commandline options
+instead.
+
+Please report your usecase to sj@kernel.org, damon@liss.linux.dev
+and linux-mm@kvack.org if you depend on it.''')
+
     fields = line.split()
     try:
         if len(fields) == 7:
