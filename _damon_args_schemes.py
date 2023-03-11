@@ -194,10 +194,26 @@ def damo_schemes_to_damos(damo_schemes):
         damos_list.append(damos)
     return damos_list, None
 
+def damos_for_detail_option(args):
+    try:
+        return _damon.Damos(
+                access_pattern=_damon.DamosAccessPattern(
+                    args.damos_sz_region, args.damos_access_rate,
+                    _damon.unit_percent, args.damos_age, _damon.unit_usec),
+                action=args.damos_action), None
+    except Exception as e:
+        return None, 'Wrong \'--damos_*\' argument (%s)' % e
+
 def damos_for(args):
     schemes = []
     if not 'schemes' in args or args.schemes == None:
-        return schemes, None
+        if args.damos_action:
+            damos, err = damos_for_detail_option(args)
+            if err != None:
+                return None, err
+            return [damos], None
+        else:
+            return schemes, None
 
     schemes, err = damo_schemes_to_damos(args.schemes)
     if err:
