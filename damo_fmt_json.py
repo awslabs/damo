@@ -24,6 +24,7 @@ def main(args=None):
     kdamonds, err = _damon_args.kdamonds_for(args)
     if err:
         print('invalid arguments (%s)' % err)
+        return
     kdamonds = [k.to_kvpairs(args.raw) for k in kdamonds]
     print(json.dumps(kdamonds, indent=4))
 
