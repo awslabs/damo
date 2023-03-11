@@ -207,7 +207,7 @@ def damo_schemes_to_damos(damo_schemes):
         damos_list.append(damos)
     return damos_list, None
 
-def damos_for_detail_option(args):
+def options_to_scheme(args):
     try:
         return _damon.Damos(
                 access_pattern=_damon.DamosAccessPattern(
@@ -219,7 +219,7 @@ def damos_for_detail_option(args):
 
 def damos_for(args):
     if args.damos_action:
-        damos, err = damos_for_detail_option(args)
+        damos, err = options_to_scheme(args)
         if err != None:
             return None, err
         return [damos], None
