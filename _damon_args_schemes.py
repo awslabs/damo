@@ -224,7 +224,6 @@ def damos_for(args):
             return None, err
         return [damos], None
 
-    schemes = []
     if not 'schemes' in args or args.schemes == None:
         return [], None
 
