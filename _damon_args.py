@@ -191,9 +191,6 @@ def commit_kdamonds(args):
     return kdamonds, None
 
 def turn_damon_on(args):
-    err = deduce_target(args)
-    if err:
-        return err, None
     kdamonds, err = stage_kdamonds(args)
     if err:
         return err, None
