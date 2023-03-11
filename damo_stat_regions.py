@@ -74,16 +74,18 @@ def update_pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
         running_kdamonds])
     if err != None:
         print('update schemes tried regions fail: %s' % err)
-        err = uninstall_schemes(running_kdamonds, id(monitor_scheme))
-        if err:
-            print('monitoring scheme uninstall failed: %s' % err)
-        return
+        if installed:
+            err = uninstall_schemes(running_kdamonds, id(monitor_scheme))
+            if err:
+                print('monitoring scheme uninstall failed: %s' % err)
+            return
 
     pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr)
 
-    err = uninstall_schemes(running_kdamonds, id(monitor_scheme))
-    if err:
-        print('monitoring scheme uninstall failed: %s' % err)
+    if installed:
+        err = uninstall_schemes(running_kdamonds, id(monitor_scheme))
+        if err:
+            print('monitoring scheme uninstall failed: %s' % err)
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
