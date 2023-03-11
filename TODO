@@ -20,6 +20,4 @@
   - Or, goes from option 1 to option 4 incrementally
 - Move record handling to _damon
 - Debug perf script timing issue
-- Implement scheme command line arguments
-- Implement priority-based regions stat output sorting
 - Implement histogram stat regions output
