@@ -39,8 +39,8 @@ def install_scheme_if_needed(kdamonds, scheme_to_install):
                     ctx_has_the_scheme = True
                     break
             if not ctx_has_the_scheme:
-                installed = True
                 ctx.schemes.append(scheme_to_install)
+                installed = True
     if installed:
         err = _damon.commit(kdamonds)
         if err != None:
