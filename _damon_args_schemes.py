@@ -214,15 +214,15 @@ def damos_for_detail_option(args):
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
 
 def damos_for(args):
+    if args.damos_action:
+        damos, err = damos_for_detail_option(args)
+        if err != None:
+            return None, err
+        return [damos], None
+
     schemes = []
     if not 'schemes' in args or args.schemes == None:
-        if args.damos_action:
-            damos, err = damos_for_detail_option(args)
-            if err != None:
-                return None, err
-            return [damos], None
-        else:
-            return schemes, None
+        return [], None
 
     schemes, err = damo_schemes_to_damos(args.schemes)
     if err:
