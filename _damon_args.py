@@ -15,16 +15,6 @@ import _damon
 
 # Kdamonds construction from command line arguments
 
-def damos_for(args):
-    schemes = []
-    if not 'schemes' in args or args.schemes == None:
-        return schemes, None
-
-    schemes, err = _damon_args_schemes.damo_schemes_to_damos(args.schemes)
-    if err:
-        return None, 'failed damo schemes arguents parsing (%s)' % err
-    return schemes, None
-
 def init_regions_for(args):
     init_regions = []
     if args.regions:
@@ -103,7 +93,7 @@ def damon_ctx_for(args):
         except Exception as e:
             return None, 'Wrong record arguments (%s)' % e
 
-    schemes, err = damos_for(args)
+    schemes, err = _damon_args_schemes.damos_for(args)
     if err:
         return None, err
 

@@ -193,3 +193,13 @@ def damo_schemes_to_damos(damo_schemes):
             return None, ('invalid schemes input (%s)' % err)
         damos_list.append(damos)
     return damos_list, None
+
+def damos_for(args):
+    schemes = []
+    if not 'schemes' in args or args.schemes == None:
+        return schemes, None
+
+    schemes, err = damo_schemes_to_damos(args.schemes)
+    if err:
+        return None, 'failed damo schemes arguents parsing (%s)' % err
+    return schemes, None
