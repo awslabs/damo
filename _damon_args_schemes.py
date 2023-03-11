@@ -190,7 +190,7 @@ def damo_schemes_to_damos(damo_schemes):
     try:
         kvpairs = json.loads(damo_schemes)
         return [_damon.Damos.from_kvpairs(kv) for kv in kvpairs], None
-    except:
+    except Exception as json_err:
         # The input is not json file
         pass
 
@@ -203,7 +203,9 @@ def damo_schemes_to_damos(damo_schemes):
             continue
         damos, err = damo_single_line_scheme_to_damos(line, '%d' % idx)
         if err != None:
-            return None, ('invalid schemes input (%s)' % err)
+            return None, ('invalid input: ' +
+                    'neither json (%s), nor per-line scheme (%s)'
+                    % (json_err, err))
         damos_list.append(damos)
     return damos_list, None
 
