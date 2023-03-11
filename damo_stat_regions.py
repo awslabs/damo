@@ -48,16 +48,6 @@ def install_scheme_if_needed(kdamonds, scheme_to_install):
                     'committing scheme installed kdamonds failed: %s' % err)
     return installed, None
 
-def uninstall_schemes(kdamonds, scheme_id):
-    for kdamond in kdamonds:
-        for ctx in kdamond.contexts:
-            for scheme in ctx.schemes:
-                if id(scheme) == scheme_id:
-                    ctx.schemes.remove(scheme)
-    err = _damon.commit(kdamonds)
-    if err != None:
-        return 'committing scheme uninstalled kdamonds failed: %s' % err
-
 def update_pr_schemes_tried_regions(monitor_scheme, size_only, raw_nr):
     orig_kdamonds = _damon.current_kdamonds()
     running_kdamonds = _damon.running_kdamonds()
