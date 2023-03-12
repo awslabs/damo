@@ -77,6 +77,15 @@ def read_record_format_version(f):
         f.seek(0)
         return 0
 
+def read_end_time_from_record_file(f):
+    timebin = f.read(16)
+    if len(timebin) != 16:
+        return None
+    sec = struct.unpack('l', timebin[0:8])[0]
+    nsec = struct.unpack('l', timebin[8:16])[0]
+    end_time = sec * 1000000000 + nsec
+    return end_time
+
 def read_snapshot_from_record_file(f, start_time, end_time):
     snapshot = DAMONSnapshot(start_time, end_time)
     nr_regions = struct.unpack('I', f.read(4))[0]
@@ -92,14 +101,10 @@ def record_to_damon_result(file_path):
     with open(file_path, 'rb') as f:
         fmt_version = read_record_format_version(f)
         result = DAMONResult()
-
         while True:
-            timebin = f.read(16)
-            if len(timebin) != 16:
+            end_time = read_end_time_from_record_file(f)
+            if end_time == None:
                 break
-            sec = struct.unpack('l', timebin[0:8])[0]
-            nsec = struct.unpack('l', timebin[8:16])[0]
-            end_time = sec * 1000000000 + nsec
 
             nr_tasks = struct.unpack('I', f.read(4))[0]
             for t in range(nr_tasks):
