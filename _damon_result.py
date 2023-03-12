@@ -78,6 +78,14 @@ def read_snapshot_from_record_file(f, start_time, end_time):
         snapshot.regions.append(region)
     return snapshot
 
+# if number of snapshots is one, write_damon_record() adds a fake snapshot for
+# snapshot start time deduction.
+def is_fake_snapshot(snapshot):
+    if len(snapshot.regions) != 1:
+        return False
+    r = snapshot.regions[0]
+    return r.start == 0 and r.end == 0 and r.nr_accesses == -1 and r.age == -1
+
 def set_missing_times(result):
     for record in result.records:
         snapshots = record.snapshots
@@ -89,13 +97,8 @@ def set_missing_times(result):
         snapshot_time = float(end_time - start_time) / nr_snapshots
         snapshots[0].start_time = snapshots[0].end_time - snapshot_time
 
-        # if number of snapshots is one, write_damon_record() adds a fake
-        # snapshot for snapshot start time deduction.  Remove it now.
-        if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
-            region = snapshots[1].regions[0]
-            if (region.start == 0 and region.end == 0 and
-                    region.nr_accesses == -1 and region.age == -1):
-                del record.snapshots[1]
+        if is_fake_snapshot(snapshots[-1]):
+            del record.snapshots[-1]
 
 def record_to_damon_result(file_path):
     with open(file_path, 'rb') as f:
