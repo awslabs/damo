@@ -86,7 +86,7 @@ def is_fake_snapshot(snapshot):
     r = snapshot.regions[0]
     return r.start == 0 and r.end == 0 and r.nr_accesses == -1 and r.age == -1
 
-def set_missing_times(result):
+def set_first_snapshot_start_time(result):
     for record in result.records:
         snapshots = record.snapshots
         if len(snapshots) < 2:
@@ -127,7 +127,7 @@ def record_to_damon_result(file_path):
                         start_time, end_time)
                 record.snapshots.append(snapshot)
 
-    set_missing_times(result)
+    set_first_snapshot_start_time(result)
     return result, None
 
 def perf_script_to_damon_result(script_output):
@@ -183,7 +183,7 @@ def perf_script_to_damon_result(script_output):
         if len(snapshot.regions) == nr_regions:
             snapshot = None
 
-    set_missing_times(result)
+    set_first_snapshot_start_time(result)
     return result, None
 
 def parse_damon_result(result_file):
