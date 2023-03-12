@@ -166,7 +166,6 @@ def perf_script_to_damon_result(script_output):
     snapshot = None
 
     for line in script_output.split('\n'):
-        line = line.strip()
         region, end_time, target_id, nr_regions = parse_perf_script_line(line)
         if region == None:
             continue
