@@ -69,50 +69,48 @@ def set_missing_times(result):
                 del record.snapshots[1]
 
 def record_to_damon_result(file_path):
-    f = open(file_path, 'rb')
+    with open(file_path, 'rb') as f:
+        # read record format version
+        mark = f.read(16)
+        if mark == b'damon_recfmt_ver':
+            fmt_version = struct.unpack('i', f.read(4))[0]
+        else:
+            fmt_version = 0
+            f.seek(0)
+        result = DAMONResult()
 
-    # read record format version
-    mark = f.read(16)
-    if mark == b'damon_recfmt_ver':
-        fmt_version = struct.unpack('i', f.read(4))[0]
-    else:
-        fmt_version = 0
-        f.seek(0)
-    result = DAMONResult()
+        while True:
+            timebin = f.read(16)
+            if len(timebin) != 16:
+                break
+            sec = struct.unpack('l', timebin[0:8])[0]
+            nsec = struct.unpack('l', timebin[8:16])[0]
+            end_time = sec * 1000000000 + nsec
 
-    while True:
-        timebin = f.read(16)
-        if len(timebin) != 16:
-            f.close()
-            break
-        sec = struct.unpack('l', timebin[0:8])[0]
-        nsec = struct.unpack('l', timebin[8:16])[0]
-        end_time = sec * 1000000000 + nsec
+            nr_tasks = struct.unpack('I', f.read(4))[0]
+            for t in range(nr_tasks):
+                if fmt_version == 1:
+                    target_id = struct.unpack('i', f.read(4))[0]
+                else:
+                    target_id = struct.unpack('L', f.read(8))[0]
 
-        nr_tasks = struct.unpack('I', f.read(4))[0]
-        for t in range(nr_tasks):
-            if fmt_version == 1:
-                target_id = struct.unpack('i', f.read(4))[0]
-            else:
-                target_id = struct.unpack('L', f.read(8))[0]
+                record = result.record_of(target_id)
+                if len(record.snapshots) == 0:
+                    start_time = None
+                else:
+                    start_time = record.snapshots[-1].end_time
+                    if end_time < start_time:
+                        return None, 'snapshot is not sorted by time'
 
-            record = result.record_of(target_id)
-            if len(record.snapshots) == 0:
-                start_time = None
-            else:
-                start_time = record.snapshots[-1].end_time
-                if end_time < start_time:
-                    return None, 'snapshot is not sorted by time'
-
-            snapshot = DAMONSnapshot(start_time, end_time)
-            nr_regions = struct.unpack('I', f.read(4))[0]
-            for r in range(nr_regions):
-                start_addr = struct.unpack('L', f.read(8))[0]
-                end_addr = struct.unpack('L', f.read(8))[0]
-                nr_accesses = struct.unpack('I', f.read(4))[0]
-                region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
-                snapshot.regions.append(region)
-            record.snapshots.append(snapshot)
+                snapshot = DAMONSnapshot(start_time, end_time)
+                nr_regions = struct.unpack('I', f.read(4))[0]
+                for r in range(nr_regions):
+                    start_addr = struct.unpack('L', f.read(8))[0]
+                    end_addr = struct.unpack('L', f.read(8))[0]
+                    nr_accesses = struct.unpack('I', f.read(4))[0]
+                    region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
+                    snapshot.regions.append(region)
+                record.snapshots.append(snapshot)
 
     set_missing_times(result)
     return result, None
