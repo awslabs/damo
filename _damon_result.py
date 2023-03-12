@@ -148,6 +148,10 @@ def parse_perf_script_line(line):
         if fields[4] != 'damon:damon_aggregated:':
             return None, None, None, None
 
+        end_time = int(float(fields[3][:-1]) * 1000000000)
+        target_id = int(fields[5].split('=')[1])
+        nr_regions = int(fields[6].split('=')[1])
+
         start_addr, end_addr = [int(x) for x in fields[7][:-1].split('-')]
         nr_accesses = int(fields[8])
         if len(fields) == 10:
@@ -156,9 +160,6 @@ def parse_perf_script_line(line):
             age = None
         region = DAMONRegion(start_addr, end_addr, nr_accesses, age)
 
-        end_time = int(float(fields[3][:-1]) * 1000000000)
-        target_id = int(fields[5].split('=')[1])
-        nr_regions = int(fields[6].split('=')[1])
         return region, end_time, target_id, nr_regions
 
 def perf_script_to_damon_result(script_output):
