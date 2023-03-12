@@ -49,25 +49,6 @@ class DAMONResult:
         self.records.append(record)
         return record
 
-def set_missing_times(result):
-    for record in result.records:
-        snapshots = record.snapshots
-        if len(snapshots) < 2:
-            break
-        end_time = snapshots[-1].end_time
-        start_time = snapshots[0].end_time
-        nr_snapshots = len(snapshots) - 1
-        snapshot_time = float(end_time - start_time) / nr_snapshots
-        snapshots[0].start_time = snapshots[0].end_time - snapshot_time
-
-        # if number of snapshots is one, write_damon_record() adds a fake
-        # snapshot for snapshot start time deduction.  Remove it now.
-        if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
-            region = snapshots[1].regions[0]
-            if (region.start == 0 and region.end == 0 and
-                    region.nr_accesses == -1 and region.age == -1):
-                del record.snapshots[1]
-
 def read_record_format_version(f):
     # read record format version
     mark = f.read(16)
@@ -96,6 +77,25 @@ def read_snapshot_from_record_file(f, start_time, end_time):
         region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
         snapshot.regions.append(region)
     return snapshot
+
+def set_missing_times(result):
+    for record in result.records:
+        snapshots = record.snapshots
+        if len(snapshots) < 2:
+            break
+        end_time = snapshots[-1].end_time
+        start_time = snapshots[0].end_time
+        nr_snapshots = len(snapshots) - 1
+        snapshot_time = float(end_time - start_time) / nr_snapshots
+        snapshots[0].start_time = snapshots[0].end_time - snapshot_time
+
+        # if number of snapshots is one, write_damon_record() adds a fake
+        # snapshot for snapshot start time deduction.  Remove it now.
+        if len(snapshots) == 2 and len(snapshots[1].regions) == 1:
+            region = snapshots[1].regions[0]
+            if (region.start == 0 and region.end == 0 and
+                    region.nr_accesses == -1 and region.age == -1):
+                del record.snapshots[1]
 
 def record_to_damon_result(file_path):
     with open(file_path, 'rb') as f:
