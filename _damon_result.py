@@ -130,12 +130,7 @@ def record_to_damon_result(file_path):
     set_first_snapshot_start_time(result)
     return result, None
 
-def perf_script_to_damon_result(script_output):
-    result = DAMONResult()
-    snapshot = None
-
-    for line in script_output.split('\n'):
-        line = line.strip()
+def parse_perf_script_line(line):
         '''
         example line is as below:
 
@@ -147,12 +142,11 @@ def perf_script_to_damon_result(script_output):
 
         [1] https://lore.kernel.org/linux-mm/df8d52f1fb2f353a62ff34dc09fe99e32ca1f63f.1636610337.git.xhao@linux.alibaba.com/
         '''
-
         fields = line.strip().split()
         if not len(fields) in [9, 10]:
-            continue
+            return None, None, None, None
         if fields[4] != 'damon:damon_aggregated:':
-            continue
+            return None, None, None, None
 
         start_addr, end_addr = [int(x) for x in fields[7][:-1].split('-')]
         nr_accesses = int(fields[8])
@@ -164,6 +158,18 @@ def perf_script_to_damon_result(script_output):
 
         end_time = int(float(fields[3][:-1]) * 1000000000)
         target_id = int(fields[5].split('=')[1])
+        nr_regions = int(fields[6].split('=')[1])
+        return region, end_time, target_id, nr_regions
+
+def perf_script_to_damon_result(script_output):
+    result = DAMONResult()
+    snapshot = None
+
+    for line in script_output.split('\n'):
+        line = line.strip()
+        region, end_time, target_id, nr_regions = parse_perf_script_line(line)
+        if region == None:
+            continue
 
         record = result.record_of(target_id)
         if len(record.snapshots) == 0:
@@ -172,7 +178,6 @@ def perf_script_to_damon_result(script_output):
             start_time = record.snapshots[-1].end_time
             if start_time > end_time:
                 return None, 'trace is not time-sorted'
-        nr_regions = int(fields[6].split('=')[1])
 
         if snapshot == None:
             snapshot = DAMONSnapshot(start_time, end_time)
