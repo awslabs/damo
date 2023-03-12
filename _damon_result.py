@@ -193,9 +193,8 @@ def perf_script_to_damon_result(script_output):
 
 def parse_damon_result(result_file):
     script_output = None
-    output = subprocess.check_output(
-            ['file', '-b', result_file]).decode().strip()
-    if output == 'ASCII text':
+    if subprocess.check_output(
+            ['file', '-b', result_file]).decode().strip() == 'ASCII text':
         with open(result_file, 'r') as f:
             script_output = f.read()
     else:
