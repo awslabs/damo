@@ -69,9 +69,6 @@ def set_missing_times(result):
                 del record.snapshots[1]
 
 def record_to_damon_result(file_path):
-    result = None
-    fmt_version = None
-
     f = open(file_path, 'rb')
 
     # read record format version
