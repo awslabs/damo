@@ -68,6 +68,17 @@ def set_missing_times(result):
                     region.nr_accesses == -1 and region.age == -1):
                 del record.snapshots[1]
 
+def read_snapshot_from_record_file(f, start_time, end_time):
+    snapshot = DAMONSnapshot(start_time, end_time)
+    nr_regions = struct.unpack('I', f.read(4))[0]
+    for r in range(nr_regions):
+        start_addr = struct.unpack('L', f.read(8))[0]
+        end_addr = struct.unpack('L', f.read(8))[0]
+        nr_accesses = struct.unpack('I', f.read(4))[0]
+        region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
+        snapshot.regions.append(region)
+    return snapshot
+
 def record_to_damon_result(file_path):
     with open(file_path, 'rb') as f:
         # read record format version
@@ -101,15 +112,8 @@ def record_to_damon_result(file_path):
                     start_time = record.snapshots[-1].end_time
                     if end_time < start_time:
                         return None, 'snapshot is not sorted by time'
-
-                snapshot = DAMONSnapshot(start_time, end_time)
-                nr_regions = struct.unpack('I', f.read(4))[0]
-                for r in range(nr_regions):
-                    start_addr = struct.unpack('L', f.read(8))[0]
-                    end_addr = struct.unpack('L', f.read(8))[0]
-                    nr_accesses = struct.unpack('I', f.read(4))[0]
-                    region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
-                    snapshot.regions.append(region)
+                snapshot = read_snapshot_from_record_file(f,
+                        start_time, end_time)
                 record.snapshots.append(snapshot)
 
     set_missing_times(result)
