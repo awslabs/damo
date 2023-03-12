@@ -5,7 +5,7 @@
 Change human readable data access monitoring-based operation schemes input for
 'damo' to a '_damon.Damos' object.  Currently,
 
-- simple human-readable single line per scheme text and
+- simple human-readable single line per scheme text (will be deprecated) and
 - json string format
 
 are supported.  Below are the example of the input.
