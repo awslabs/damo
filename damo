@@ -7,6 +7,8 @@ import os
 os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sys
 
+import _damo_python2_support
+
 import damo_adjust
 import damo_features
 import damo_fmt_json
@@ -23,15 +25,6 @@ import damo_tune
 import damo_validate
 
 import _damo_subcmds
-
-def check_warn_python_version():
-    if sys.version.startswith('2.'):
-        sys.stderr.write('''
-WARNING: damo will remove python2 support by 2023-Q2.  Please report your
-    usecase to sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if
-    you depend on those.
-
-''')
 
 def pr_damo_version(args_not_use):
     bindir = os.path.dirname(os.path.abspath(__file__))
@@ -82,7 +75,6 @@ class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
         return parts
 
 def main():
-    check_warn_python_version()
     parser = argparse.ArgumentParser(formatter_class=SubCmdHelpFormatter)
 
     subparser = parser.add_subparsers(title='command', dest='command',
