@@ -68,6 +68,15 @@ def set_missing_times(result):
                     region.nr_accesses == -1 and region.age == -1):
                 del record.snapshots[1]
 
+def read_record_format_version(f):
+    # read record format version
+    mark = f.read(16)
+    if mark == b'damon_recfmt_ver':
+        return struct.unpack('i', f.read(4))[0]
+    else:
+        f.seek(0)
+        return 0
+
 def read_snapshot_from_record_file(f, start_time, end_time):
     snapshot = DAMONSnapshot(start_time, end_time)
     nr_regions = struct.unpack('I', f.read(4))[0]
@@ -81,13 +90,7 @@ def read_snapshot_from_record_file(f, start_time, end_time):
 
 def record_to_damon_result(file_path):
     with open(file_path, 'rb') as f:
-        # read record format version
-        mark = f.read(16)
-        if mark == b'damon_recfmt_ver':
-            fmt_version = struct.unpack('i', f.read(4))[0]
-        else:
-            fmt_version = 0
-            f.seek(0)
+        fmt_version = read_record_format_version(f)
         result = DAMONResult()
 
         while True:
