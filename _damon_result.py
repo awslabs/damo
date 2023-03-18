@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import os
+import signal
 import struct
 import subprocess
 
@@ -328,3 +329,23 @@ def aggregate_snapshots(snapshots):
             snapshots[-1].end_time)
     new_snapshot.regions = new_regions
     return new_snapshot
+
+def start_monitoring_record(record_file):
+    try:
+        subprocess.check_output(['which', 'perf'])
+    except:
+        return None, 'perf is not installed'
+    return subprocess.Popen(
+            ['perf', 'record', '-a', '-e', 'damon:damon_aggregated', '-o',
+                record_file]), None
+
+def stop_monitoring_record(perf_pipe, file_path, file_format, file_permission):
+    try:
+        perf_pipe.send_signal(signal.SIGINT)
+        perf_pipe.wait()
+    except:
+        # perf might already finished
+        pass
+    if file_format != 'perf_data':
+        update_result_file(file_path, file_format)
+    os.chmod(file_path, file_permission)
