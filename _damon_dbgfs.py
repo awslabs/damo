@@ -204,25 +204,40 @@ def debugfs_output_to_damos(output, intervals_us):
         nr_stat_fields = 2
     stat_fields = fields[-1 * nr_stat_fields:]
     fields = [int(x) for x in output.strip().split()][:-1 * nr_stat_fields]
+
+    sz_bytes = fields[:2]
+
     # convert nr_accesses from sample intervals to percent
     max_nr_accesses = intervals_us.aggr / intervals_us.sample
     fields[2] = float(fields[2]) * 100 / max_nr_accesses
     fields[3] = float(fields[3]) * 100 / max_nr_accesses
+    nr_accesses = fields[2:4]
+    nr_accesses_unit = _damon.unit_percent
+
     # convert ages in update_interval to us
     fields[4] = intervals_us.aggr * fields[4]
     fields[5] = intervals_us.aggr * fields[5]
+    age = fields[4:6]
+    age_unit = _damon.unit_usec
     fields[6] = file_content_to_damos_action(fields[6])
+    action = fields[6]
 
-    if len(fields) == 17:
-        fields[12] = file_content_to_damos_wmarks_metric(fields[12])
-    elif len(fields) == 18:
-        fields[13] = file_content_to_damos_wmarks_metric(fields[13])
+    if len(fields) == 7:
+        damos = _damon.Damos(sz_bytes=sz_bytes, nr_accesses=nr_accesses,
+            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit,
+            action=action)
+    else:
+        if len(fields) == 17:
+            fields[12] = file_content_to_damos_wmarks_metric(fields[12])
+        elif len(fields) == 18:
+            fields[13] = file_content_to_damos_wmarks_metric(fields[13])
 
-    line = ' '.join('%s' % x for x in fields) # remove stats
-    damos, err = _damon_args_schemes.damo_single_line_scheme_to_damos(
-            line, '0')
-    if err != None:
-        raise Exception('debugfs output to damos conversion failed (%s)' % err)
+        line = ' '.join('%s' % x for x in fields) # remove stats
+        damos, err = _damon_args_schemes.damo_single_line_scheme_to_damos(
+                line, '0')
+        if err != None:
+            raise Exception(
+                    'debugfs output to damos conversion failed (%s)' % err)
     damos.stats = _damon.DamosStats(*stat_fields)
     return damos
 
