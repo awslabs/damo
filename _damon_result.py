@@ -351,5 +351,8 @@ def stop_monitoring_record(perf_pipe):
         # perf might already finished
         pass
     if file_format != 'perf_data':
-        update_result_file(file_path, file_format)
+        err = update_result_file(file_path, file_format)
+        if err != None:
+            print('converting format from perf_data to %s failed (%s)' %
+                    (file_format, err))
     os.chmod(file_path, file_permission)
