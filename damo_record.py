@@ -36,9 +36,7 @@ def cleanup_exit(exit_code):
         exit(exit_code)
 
     if data_for_cleanup.perf_pipe:
-        _damon_result.stop_monitoring_record(data_for_cleanup.perf_pipe,
-                data_for_cleanup.rfile_path, data_for_cleanup.rfile_format,
-                data_for_cleanup.rfile_permission)
+        _damon_result.stop_monitoring_record(data_for_cleanup.perf_pipe)
         exit(exit_code)
     else:
         rfile_current_format = 'record'
@@ -135,7 +133,8 @@ def main(args=None):
     if not damon_record_supported or is_ongoing:
         # Record the monitoring results using perf
         data_for_cleanup.perf_pipe, err = _damon_result.start_monitoring_record(
-                data_for_cleanup.rfile_path)
+                data_for_cleanup.rfile_path, data_for_cleanup.rfile_format,
+                data_for_cleanup.rfile_permission)
         if err != None:
             print('could not start recording (%s)' % err)
             cleanup_exit(-3)
