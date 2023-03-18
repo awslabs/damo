@@ -94,16 +94,7 @@ def fields_to_v0_scheme(fields):
     scheme.action = fields[6].lower()
     return scheme
 
-def warn_deprecation(nr_fields):
-    sys.stderr.write('''
-WARNING: scheme input of %d fields is deprecated.  The support will be removed
-by 2023-Q2.  Please report your usecase to sj@kernel.org, damon@liss.linux.dev
-and linux-mm@kvack.org if you depend on those.
-
-''' % nr_fields)
-
 def fields_to_v1_scheme(fields):
-    warn_deprecation(len(fields))
     scheme = fields_to_v0_scheme(fields)
     scheme.quotas.sz_bytes = _damo_fmt_str.text_to_bytes(fields[7])
     scheme.quotas.reset_interval_ms = _damo_fmt_str.text_to_ms(
@@ -111,7 +102,6 @@ def fields_to_v1_scheme(fields):
     return scheme
 
 def fields_to_v2_scheme(fields):
-    warn_deprecation(len(fields))
     scheme = fields_to_v1_scheme(fields)
     scheme.quotas.weight_sz_permil = int(fields[9])
     scheme.quotas.weight_nr_accesses_permil = int(fields[10])
@@ -119,7 +109,6 @@ def fields_to_v2_scheme(fields):
     return scheme
 
 def fields_to_v3_scheme(fields):
-    warn_deprecation(len(fields))
     scheme = fields_to_v2_scheme(fields)
     scheme.watermarks.metric = fields[12].lower()
     scheme.watermarks.interval_us = _damo_fmt_str.text_to_us(
