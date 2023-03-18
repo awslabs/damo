@@ -4,6 +4,8 @@
 import argparse
 import os
 
+import _damon
+
 class PaddrRange:
     start = None
     end = None
@@ -172,6 +174,8 @@ def main():
     parser.add_argument('--numa_node', type=int, metavar='<node id>',
             help='print ranges of this numa node only')
     args = parser.parse_args()
+
+    _damon.ensure_root_permission()
 
     ranges = []
     for r in paddr_ranges():
