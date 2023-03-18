@@ -32,6 +32,9 @@ def cleanup_exit(exit_code):
         if err:
             print('failed restoring previous kdamonds setup (%s)' % err)
 
+    if exit_code in [-2, -3]:
+        exit(exit_code)
+
     if data_for_cleanup.perf_pipe:
         try:
             _damon.stop_monitoring_record(data_for_cleanup.perf_pipe)
