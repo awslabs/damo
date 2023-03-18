@@ -38,15 +38,13 @@ def cleanup_exit(exit_code):
     if data_for_cleanup.perf_pipe:
         _damon_result.stop_monitoring_record(data_for_cleanup.perf_pipe)
         exit(exit_code)
-    else:
-        rfile_current_format = 'record'
 
-    if rfile_current_format != data_for_cleanup.rfile_format:
+    if data_for_cleanup.rfile_format != 'record':
         err = _damon_result.update_result_file(data_for_cleanup.rfile_path,
                 data_for_cleanup.rfile_format)
         if err != None:
-            print('converting format from %s to %s failed (%s)' %
-                    (rfile_current_format, data_for_cleanup.rfile_format, err))
+            print('converting format from record to %s failed (%s)' %
+                    (data_for_cleanup.rfile_format, err))
     os.chmod(data_for_cleanup.rfile_path, data_for_cleanup.rfile_permission)
 
     exit(exit_code)
