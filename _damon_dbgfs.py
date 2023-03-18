@@ -7,6 +7,7 @@ Contains core functions for DAMON debugfs control.
 
 import os
 import subprocess
+import sys
 
 import _damo_fs
 import _damon
@@ -425,6 +426,14 @@ def chk_essential_files():
             return 'damon debugfs file (%s) not found' % f
     return None
 
+def warn_deprecated_kernel():
+    sys.stderr.write('''
+WARNING: This kernel is running non-mainlined DAMOS implementation.  Support of
+    it from DAMO is deprecated.  The support will be removed by 2023-Q2.
+    Please report your usecase to sj@kernel.org, damon@lists.linux.dev and
+    linux-mm@kvack.org if you depend on those.
+''')
+
 def update_supported_features():
     global feature_supports
     if feature_supports != None:
@@ -477,4 +486,7 @@ def update_supported_features():
             feature_supports['schemes_quotas'] = True
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
+
+    if get_scheme_version() < 4:
+        warn_deprecated_kernel()
     return None
