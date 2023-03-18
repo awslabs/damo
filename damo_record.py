@@ -36,12 +36,10 @@ def cleanup_exit(exit_code):
         exit(exit_code)
 
     if data_for_cleanup.perf_pipe:
-        try:
-            _damon.stop_monitoring_record(data_for_cleanup.perf_pipe)
-        except:
-            # perf might already finished
-            pass
-        rfile_current_format = 'perf_data'
+        _damon.stop_monitoring_record(data_for_cleanup.perf_pipe,
+                data_for_cleanup.rfile_path, data_for_cleanup.rfile_format,
+                data_for_cleanup.rfile_permission)
+        exit(exit_code)
     else:
         rfile_current_format = 'record'
 

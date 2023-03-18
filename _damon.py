@@ -13,6 +13,7 @@ import subprocess
 import time
 
 import _damo_fmt_str
+import _damon_result
 
 # Core data structures
 
@@ -965,6 +966,13 @@ def start_monitoring_record(record_file):
             ['perf', 'record', '-a', '-e', 'damon:damon_aggregated', '-o',
                 record_file]), None
 
-def stop_monitoring_record(perf_pipe):
-    perf_pipe.send_signal(signal.SIGINT)
-    perf_pipe.wait()
+def stop_monitoring_record(perf_pipe, file_path, file_format, file_permission):
+    try:
+        perf_pipe.send_signal(signal.SIGINT)
+        perf_pipe.wait()
+    except:
+        # perf might already finished
+        pass
+    if file_format != 'perf_data':
+        _damon_result.update_result_file(file_path, file_format)
+    os.chmod(file_path, file_permission)
