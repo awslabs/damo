@@ -77,6 +77,8 @@ def memblock_ranges():
         for f in sys_node_files:
             if not f.startswith('memory'):
                 continue
+            if f[6:] == '_failure':
+                continue
             index = int(f[6:])
             sys_state = os.path.join(SYSFS, sys_node, f, 'state')
             state = readfile(sys_state).strip()
