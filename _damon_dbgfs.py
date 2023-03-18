@@ -195,6 +195,22 @@ def stage_kdamonds(kdamonds):
 
 # for current_kdamonds
 
+def debugfs_schemes_output_fields_to_access_pattern(fields, intervals_us):
+    sz_bytes = fields[:2]
+
+    # convert nr_accesses from sample intervals to percent
+    max_nr_accesses = intervals_us.aggr / intervals_us.sample
+    nr_accesses = [float(fields[2]) * 100 / max_nr_accesses,
+            float(fields[3]) * 100 / max_nr_accesses]
+    nr_accesses_unit = _damon.unit_percent
+
+    # convert ages in update_interval to us
+    age = [intervals_us.aggr * fields[4], intervals_us.aggr * fields[5]]
+    age_unit = _damon.unit_usec
+
+    return _damon.DamosAccessPattern(sz_bytes, nr_accesses, nr_accesses_unit,
+            age, age_unit)
+
 def debugfs_output_to_damos(output, intervals_us):
     fields = [int(x) for x in output.strip().split()]
     if feature_supported('schemes_stat_succ'):
@@ -204,50 +220,25 @@ def debugfs_output_to_damos(output, intervals_us):
     stat_fields = fields[-1 * nr_stat_fields:]
     fields = [int(x) for x in output.strip().split()][:-1 * nr_stat_fields]
 
-    sz_bytes = fields[:2]
-
-    # convert nr_accesses from sample intervals to percent
-    max_nr_accesses = intervals_us.aggr / intervals_us.sample
-    fields[2] = float(fields[2]) * 100 / max_nr_accesses
-    fields[3] = float(fields[3]) * 100 / max_nr_accesses
-    nr_accesses = fields[2:4]
-    nr_accesses_unit = _damon.unit_percent
-
-    # convert ages in update_interval to us
-    fields[4] = intervals_us.aggr * fields[4]
-    fields[5] = intervals_us.aggr * fields[5]
-    age = fields[4:6]
-    age_unit = _damon.unit_usec
-    fields[6] = file_content_to_damos_action(fields[6])
-    action = fields[6]
+    access_pattern = debugfs_schemes_output_fields_to_access_pattern(fields,
+            intervals_us)
+    action = file_content_to_damos_action(fields[6])
 
     if len(fields) == 7:
-        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
-            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
-            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
-            action=action)
+        damos = _damon.Damos(access_pattern=access_pattern, action=action)
     elif len(fields) == 9:
-        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
-            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
-            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
-            action=action)
+        damos = _damon.Damos(access_pattern=access_pattern, action=action)
         damos.quotas.sz_bytes = fields[7]
         damos.quotas.reset_interval_ms = fields[8]
     elif len(fields) == 12:
-        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
-            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
-            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
-            action=action)
+        damos = _damon.Damos(access_pattern=access_pattern, action=action)
         damos.quotas.sz_bytes = fields[7]
         damos.quotas.reset_interval_ms = fields[8]
         damos.quotas.weight_sz_permil = fields[9]
         damos.quotas.weight_nr_accesses_permil = fields[10]
         damos.quotas.weight_age_permil = fields[11]
     elif len(fields) == 17:
-        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
-            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
-            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
-            action=action)
+        damos = _damon.Damos(access_pattern=access_pattern, action=action)
         damos.quotas.sz_bytes = fields[7]
         damos.quotas.reset_interval_ms = fields[8]
         damos.quotas.weight_sz_permil = fields[9]
@@ -260,10 +251,7 @@ def debugfs_output_to_damos(output, intervals_us):
         damos.watermarks.mid_permil = fields[15]
         damos.watermarks.low_permil = fields[16]
     elif len(fields) == 18:
-        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
-            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
-            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
-            action=action)
+        damos = _damon.Damos(access_pattern=access_pattern, action=action)
         damos.quotas.time_ms = fields[7]
         damos.quotas.sz_bytes = fields[8]
         damos.quotas.reset_interval_ms = fields[9]
