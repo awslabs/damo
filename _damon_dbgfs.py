@@ -9,7 +9,6 @@ import os
 import subprocess
 
 import _damo_fs
-import _damon_args_schemes
 import _damon
 
 debugfs = '/sys/kernel/debug'
@@ -223,21 +222,60 @@ def debugfs_output_to_damos(output, intervals_us):
     action = fields[6]
 
     if len(fields) == 7:
-        damos = _damon.Damos(sz_bytes=sz_bytes, nr_accesses=nr_accesses,
-            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit,
+        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
+            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
+            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
             action=action)
-    else:
-        if len(fields) == 17:
-            fields[12] = file_content_to_damos_wmarks_metric(fields[12])
-        elif len(fields) == 18:
-            fields[13] = file_content_to_damos_wmarks_metric(fields[13])
-
-        line = ' '.join('%s' % x for x in fields) # remove stats
-        damos, err = _damon_args_schemes.damo_single_line_scheme_to_damos(
-                line, '0')
-        if err != None:
-            raise Exception(
-                    'debugfs output to damos conversion failed (%s)' % err)
+    elif len(fields) == 9:
+        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
+            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
+            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
+            action=action)
+        damos.quotas.sz_bytes = fields[7]
+        damos.quotas.reset_interval_ms = fields[8]
+    elif len(fields) == 12:
+        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
+            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
+            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
+            action=action)
+        damos.quotas.sz_bytes = fields[7]
+        damos.quotas.reset_interval_ms = fields[8]
+        damos.quotas.weight_sz_permil = fields[9]
+        damos.quotas.weight_nr_accesses_permil = fields[10]
+        damos.quotas.weight_age_permil = fields[11]
+    elif len(fields) == 17:
+        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
+            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
+            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
+            action=action)
+        damos.quotas.sz_bytes = fields[7]
+        damos.quotas.reset_interval_ms = fields[8]
+        damos.quotas.weight_sz_permil = fields[9]
+        damos.quotas.weight_nr_accesses_permil = fields[10]
+        damos.quotas.weight_age_permil = fields[11]
+        damos.watermarks.metric = file_content_to_damos_wmarks_metric(
+                fields[12])
+        damos.watermarks.interval_us = fields[13]
+        damos.watermarks.high_permil = fields[14]
+        damos.watermarks.mid_permil = fields[15]
+        damos.watermarks.low_permil = fields[16]
+    elif len(fields) == 18:
+        damos = _damon.Damos(access_pattern=_damon.DamosAccessPattern(
+            sz_bytes=sz_bytes, nr_accesses=nr_accesses,
+            nr_accesses_unit=nr_accesses_unit, age=age, age_unit=age_unit),
+            action=action)
+        damos.quotas.time_ms = fields[7]
+        damos.quotas.sz_bytes = fields[8]
+        damos.quotas.reset_interval_ms = fields[9]
+        damos.quotas.weight_sz_permil = fields[10]
+        damos.quotas.weight_nr_accesses_permil = fields[11]
+        damos.quotas.weight_age_permil = fields[12]
+        damos.watermarks.metric = file_content_to_damos_wmarks_metric(
+                fields[13])
+        damos.watermarks.interval_us = fields[14]
+        damos.watermarks.high_permil = fields[15]
+        damos.watermarks.mid_permil = fields[16]
+        damos.watermarks.low_permil = fields[17]
     damos.stats = _damon.DamosStats(*stat_fields)
     return damos
 
