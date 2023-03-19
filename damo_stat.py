@@ -12,21 +12,6 @@ import _damo_subcmds
 import _damon
 import _damon_args
 
-def update_schemes(update_schemes_stat=True,
-        update_schemes_tried_regions=True):
-    names = _damon.running_kdamond_names()
-    if len(names) == 0:
-        return 'no kdamond running'
-    if update_schemes_stat:
-        err = _damon.update_schemes_stats(names)
-        if err != None:
-            return 'update schemes stat fail (%s)' % err
-    if update_schemes_tried_regions:
-        err = _damon.update_schemes_tried_regions(names)
-        if err != None:
-            return 'update schemes tried regions fail (%s)' % err
-    return None
-
 def pr_damon_interface(args):
     _damon.ensure_root_and_initialized(args)
     print(_damon.damon_interface())
