@@ -32,9 +32,9 @@ def __pr_schemes_tried_regions(regions, intervals, size_only, sortby,
     if size_only:
         print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
 
-def update_pr_schemes_tried_regions(monitor_scheme, size_only, sortby,
+def update_pr_schemes_tried_regions(access_pattern, size_only, sortby,
         prio_weights, raw_nr):
-    snapshots, err = _damon_result.get_snapshots(monitor_scheme.access_pattern)
+    snapshots, err = _damon_result.get_snapshots(access_pattern)
     if snapshots == None:
         print(err)
         return
@@ -67,7 +67,7 @@ def set_argparser(parser):
             help='priority weights for priority calculation')
 
 def __main(args):
-    update_pr_schemes_tried_regions(args.monitor_scheme, args.size_only,
+    update_pr_schemes_tried_regions(args.access_pattern, args.size_only,
             args.sortby, args.priority_weights, args.raw)
 
 def main(args=None):
@@ -78,10 +78,8 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    args.monitor_scheme = _damon.Damos(
-            access_pattern=_damon.DamosAccessPattern(
-                args.sz_region, args.access_rate, _damon.unit_percent,
-                args.age, _damon.unit_usec))
+    args.access_pattern = _damon.DamosAccessPattern(args.sz_region,
+            args.access_rate, _damon.unit_percent, args.age, _damon.unit_usec)
 
     damo_stat.run_count_delay(__main, args)
 
