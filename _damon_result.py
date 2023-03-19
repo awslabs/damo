@@ -390,15 +390,14 @@ def tried_regions_to_snapshot(tried_regions, aggr_interval_us):
     return snapshot
 
 def tried_regions_to_snapshots(monitor_scheme):
-    snapshots = {} # {kdamond name: [kdamond, {ctx name: [ctx, Snapshot]}}
+    snapshots = {} # {kdamond: {ctx: Snapshot}}
     for kdamond in _damon.running_kdamonds():
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
                 if scheme.effectively_equal(monitor_scheme, ctx.intervals):
                     snapshot = tried_regions_to_snapshot(scheme.tried_regions,
                             ctx.intervals.aggr)
-                    snapshots[kdamond.name] = [kdamond,
-                            {ctx.name: [ctx, snapshot]}]
+                    snapshots[kdamond] = {ctx: snapshot}
                     break
     return snapshots
 

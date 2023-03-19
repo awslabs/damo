@@ -39,10 +39,9 @@ def update_pr_schemes_tried_regions(monitor_scheme, size_only, sortby,
         print(err)
         return
 
-    for kdamond_name, kdamond_snapshots in snapshots.items():
-        for ctx_name, ctx_snapshot in kdamond_snapshots[1].items():
-            print('kdamond %s ctx %s' % (kdamond_name, ctx_name))
-            ctx, snapshot = ctx_snapshot
+    for kdamond, ctx_snapshots in snapshots.items():
+        for ctx, snapshot in ctx_snapshots.items():
+            print('kdamond %s ctx %s' % (kdamond.name, ctx.name))
             __pr_schemes_tried_regions(snapshot.regions, ctx.intervals,
                     size_only, sortby, prio_weights, raw_nr)
 
