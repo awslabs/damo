@@ -14,18 +14,17 @@ import _damon_args
 
 def update_schemes(update_schemes_stat=True,
         update_schemes_tried_regions=True):
-    if _damon.any_kdamond_running():
-        names = _damon.current_kdamond_names()
-        if update_schemes_stat:
-            err = _damon.update_schemes_stats(names)
-            if err != None:
-                return 'update schemes stat fail (%s)' % err
-        if update_schemes_tried_regions:
-            err = _damon.update_schemes_tried_regions(names)
-            if err != None:
-                return 'update schemes tried regions fail (%s)' % err
-    else:
+    names = _damon.running_kdamond_names()
+    if len(names) == 0:
         return 'no kdamond running'
+    if update_schemes_stat:
+        err = _damon.update_schemes_stats(names)
+        if err != None:
+            return 'update schemes stat fail (%s)' % err
+    if update_schemes_tried_regions:
+        err = _damon.update_schemes_tried_regions(names)
+        if err != None:
+            return 'update schemes tried regions fail (%s)' % err
     return None
 
 def pr_damon_interface(args):
