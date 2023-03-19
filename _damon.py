@@ -905,6 +905,9 @@ def current_kdamond_names():
 def running_kdamonds():
     return [k for k in current_kdamonds() if k.state == 'on']
 
+def running_kdamond_names():
+    return [k.name for k in current_kdamonds() if k.state == 'on']
+
 def any_kdamond_running():
     for kd_name in current_kdamond_names():
         if is_kdamond_running(kd_name):
