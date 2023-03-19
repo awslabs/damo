@@ -360,7 +360,7 @@ def stop_monitoring_record(perf_pipe):
                     (file_format, err))
     os.chmod(file_path, file_permission)
 
-def install_scheme_if_needed(kdamonds, scheme_to_install):
+def ensure_scheme_installed(kdamonds, scheme_to_install):
     installed = False
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
@@ -410,8 +410,7 @@ def get_snapshots(access_pattern):
 
     monitor_scheme = _damon.Damos(access_pattern=access_pattern)
 
-    # ensure each kdamonds have a monitoring scheme
-    installed, err = install_scheme_if_needed(running_kdamonds, monitor_scheme)
+    installed, err = ensure_scheme_installed(running_kdamonds, monitor_scheme)
     if err:
         return None, 'monitoring scheme install failed: %s' % err
 
