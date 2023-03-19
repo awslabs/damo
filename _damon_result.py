@@ -5,6 +5,9 @@ import os
 import signal
 import struct
 import subprocess
+import time
+
+import _damon
 
 class DAMONRegion:
     start = None
@@ -356,3 +359,76 @@ def stop_monitoring_record(perf_pipe):
             print('converting format from perf_data to %s failed (%s)' %
                     (file_format, err))
     os.chmod(file_path, file_permission)
+
+def install_scheme_if_needed(kdamonds, scheme_to_install):
+    installed = False
+    for kdamond in kdamonds:
+        for ctx in kdamond.contexts:
+            ctx_has_the_scheme = False
+            for scheme in ctx.schemes:
+                if scheme.effectively_equal(scheme_to_install, ctx.intervals):
+                    ctx_has_the_scheme = True
+                    break
+            if not ctx_has_the_scheme:
+                ctx.schemes.append(scheme_to_install)
+                installed = True
+    if installed:
+        err = _damon.commit(kdamonds)
+        if err != None:
+            return (False,
+                    'committing scheme installed kdamonds failed: %s' % err)
+    return installed, None
+
+def tried_regions_to_snapshot(tried_regions, aggr_interval_us):
+    snapshot_end_time_ns = time.time() * 1000000000
+    snapshot_start_time_ns = snapshot_end_time_ns - aggr_interval_us * 1000
+    snapshot = DAMONSnapshot(snapshot_start_time_ns, snapshot_end_time_ns)
+
+    for tried_region in tried_regions:
+        snapshot.regions.append(DAMONRegion(tried_region.start,
+            tried_region.end, tried_region.nr_accesses, tried_region.age))
+    return snapshot
+
+def tried_regions_to_snapshots(monitor_scheme):
+    snapshots = {} # {kdamond name: [kdamond, {ctx name: [ctx, Snapshot]}}
+    for kdamond in _damon.running_kdamonds():
+        for ctx in kdamond.contexts:
+            for scheme in ctx.schemes:
+                if scheme.effectively_equal(monitor_scheme, ctx.intervals):
+                    snapshot = tried_regions_to_snapshot(scheme.tried_regions,
+                            ctx.intervals.aggr)
+                    snapshots[kdamond.name] = [kdamond,
+                            {ctx.name: [ctx, snapshot]}]
+                    break
+    return snapshots
+
+def get_snapshots(access_pattern):
+    'return DAMONSnapshots and an error'
+    orig_kdamonds = _damon.current_kdamonds()
+    running_kdamonds = _damon.running_kdamonds()
+    if len(running_kdamonds) == 0:
+        return None, 'no kdamond running'
+
+    monitor_scheme = _damon.Damos(access_pattern=access_pattern)
+
+    # ensure each kdamonds have a monitoring scheme
+    installed, err = install_scheme_if_needed(running_kdamonds, monitor_scheme)
+    if err:
+        return None, 'monitoring scheme install failed: %s' % err
+
+    err = _damon.update_schemes_tried_regions([k.name for k in
+        running_kdamonds])
+    if err != None:
+        if installed:
+            err = _damon.commit(orig_kdamonds)
+            if err:
+                return None, 'monitoring scheme uninstall failed: %s' % err
+        return None, 'updating schemes tried regions fail: %s' % err
+
+    snapshots = tried_regions_to_snapshots(monitor_scheme)
+
+    if installed:
+        err = _damon.commit(orig_kdamonds)
+        if err:
+            return snapshots, 'monitoring scheme uninstall failed: %s' % err
+    return snapshots, None
