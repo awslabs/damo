@@ -721,6 +721,9 @@ class DamonCtx:
     def __eq__(self, other):
         return self.__str__() == other.__str__()
 
+    def __hash__(self):
+        return hash(self.__str__())
+
     @classmethod
     def from_kvpairs(cls, kv):
         ctx = DamonCtx(kv['name'],
@@ -778,6 +781,9 @@ class Kdamond:
 
     def __eq__(self, other):
         return self.__str__() == other.__str__()
+
+    def __hash__(self):
+        return hash(self.__str__())
 
     @classmethod
     def from_kvpairs(cls, kv):
