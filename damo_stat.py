@@ -24,6 +24,8 @@ def update_schemes(update_schemes_stat=True,
             err = _damon.update_schemes_tried_regions(names)
             if err != None:
                 return 'update schemes tried regions fail (%s)' % err
+    else:
+        return 'no kdamond running'
     return None
 
 def pr_damon_interface(args):
