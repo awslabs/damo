@@ -18,11 +18,10 @@ def update_pr_kdamonds_summary(json_format, raw_nr):
     print('\n'.join(summary))
 
 def update_pr_kdamonds(json_format, raw_nr):
-    err = damo_stat.update_schemes()
+    kdamonds, err = _damon.schemes_updated_running_kdamonds()
     if err != None:
         print(err)
         return
-    kdamonds = _damon.current_kdamonds()
     if json_format:
         print(json.dumps([k.to_kvpairs(raw_nr) for k in kdamonds], indent=4))
     else:
