@@ -10,6 +10,7 @@ import time
 import _damon
 
 PERF = 'perf'
+PERF_EVENT = 'damon:damon_aggregated'
 
 class DAMONRegion:
     start = None
@@ -201,6 +202,19 @@ def set_perf_path(perf_path):
     global PERF
     PERF = perf_path
 
+    # Test perf record for damon event
+    err = None
+    try:
+        subprocess.check_output(['which', PERF])
+        try:
+            subprocess.check_output([PERF, 'record', '-e', PERF_EVENT, '--', 'sleep', '0'],
+                                    stderr=subprocess.PIPE)
+        except:
+            err = 'perf record not working with "%s"' % PERF
+    except:
+        err = 'perf not found at "%s"' % PERF
+    return err
+
 def parse_damon_result(result_file):
     script_output = None
     if subprocess.check_output(
@@ -341,12 +355,8 @@ def aggregate_snapshots(snapshots):
 
 record_requests = {}
 def start_monitoring_record(file_path, file_format, file_permission):
-    try:
-        subprocess.check_output(['which', PERF])
-    except:
-        return None, 'perf is not installed'
     pipe = subprocess.Popen(
-            [PERF, 'record', '-a', '-e', 'damon:damon_aggregated', '-o',
+            [PERF, 'record', '-a', '-e', PERF_EVENT, '-o',
                 file_path])
     record_requests[pipe] = [file_path, file_format, file_permission]
     return pipe, None

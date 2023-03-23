@@ -115,8 +115,11 @@ def main(args=None):
     output_permission = chk_handle_output_permission(args.output_permission)
     backup_duplicate_output_file(args.out)
 
-    # Set perf path in _damon_result
-    _damon_result.set_perf_path(args.perf_path)
+    # Set perf path and check its sanity
+    err = _damon_result.set_perf_path(args.perf_path)
+    if err != None:
+        print(err)
+        cleanup_exit(-3)
 
     # Setup for cleanup
     set_data_for_cleanup(data_for_cleanup, args, output_permission)
