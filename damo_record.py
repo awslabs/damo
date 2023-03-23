@@ -97,6 +97,8 @@ def set_argparser(parser):
             default='record', help='output file\'s type')
     parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')
+    parser.add_argument('--perf_path', type=str, default='perf',
+            help='path of perf tool ')
     return parser
 
 def main(args=None):
@@ -112,6 +114,9 @@ def main(args=None):
     damon_record_supported = chk_handle_record_feature_support(args)
     output_permission = chk_handle_output_permission(args.output_permission)
     backup_duplicate_output_file(args.out)
+
+    # Set perf path in _damon_result
+    _damon_result.set_perf_path(args.perf_path)
 
     # Setup for cleanup
     set_data_for_cleanup(data_for_cleanup, args, output_permission)
