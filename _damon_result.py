@@ -197,6 +197,10 @@ def perf_script_to_damon_result(script_output):
     set_first_snapshot_start_time(result)
     return result, None
 
+def set_perf_path(perf_path):
+    global PERF
+    PERF = perf_path
+
 def parse_damon_result(result_file):
     script_output = None
     if subprocess.check_output(
