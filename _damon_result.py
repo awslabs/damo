@@ -9,6 +9,8 @@ import time
 
 import _damon
 
+PERF = 'perf'
+
 class DAMONRegion:
     start = None
     end = None
@@ -205,7 +207,7 @@ def parse_damon_result(result_file):
         try:
             with open(os.devnull, 'w') as fnull:
                 script_output = subprocess.check_output(
-                        ['perf', 'script', '-i', result_file],
+                        [PERF, 'script', '-i', result_file],
                         stderr=fnull).decode()
         except:
             pass
@@ -336,11 +338,11 @@ def aggregate_snapshots(snapshots):
 record_requests = {}
 def start_monitoring_record(file_path, file_format, file_permission):
     try:
-        subprocess.check_output(['which', 'perf'])
+        subprocess.check_output(['which', PERF])
     except:
         return None, 'perf is not installed'
     pipe = subprocess.Popen(
-            ['perf', 'record', '-a', '-e', 'damon:damon_aggregated', '-o',
+            [PERF, 'record', '-a', '-e', 'damon:damon_aggregated', '-o',
                 file_path])
     record_requests[pipe] = [file_path, file_format, file_permission]
     return pipe, None
