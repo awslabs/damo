@@ -117,9 +117,6 @@ def kdamonds_from_json_arg(arg):
         return None, e
 
 def deduce_target(args):
-    if args.deducible_target == None:
-        return None
-
     args.self_started_target = False
     if args.deducible_target == 'paddr':
         args.ops = 'paddr'
@@ -149,12 +146,13 @@ def kdamonds_for(args):
     if args.kdamonds:
         return kdamonds_from_json_arg(args.kdamonds)
 
-    err = deduce_target(args)
-    if err:
+    if args.deducible_target:
         kdamonds, e = kdamonds_from_json_arg(args.deducible_target)
-        if e != None:
-            return None, 'not deducible (%s), not json (%s)' % (err, e)
-        return kdamonds, e
+        if e == None:
+            return kdamonds, e
+        err = deduce_target(args)
+        if err:
+            return None, err
 
     ctx, err = damon_ctx_for(args)
     if err:
