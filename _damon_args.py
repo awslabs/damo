@@ -254,7 +254,7 @@ def set_argparser(parser, add_record_options):
             help='monitoring operations set')
     parser.add_argument('--target_pid', type=int, help='target pid')
     set_damos_argparser(parser)
-    parser.add_argument('-c', '--schemes', metavar='<file or schemes in text>',
+    parser.add_argument('-c', '--schemes', metavar='<json string or file>',
 	    help='data access monitoring-based operation schemes')
     parser.add_argument('--kdamonds', metavar='<string or file>',
             help='key-value pairs format kdamonds config')
