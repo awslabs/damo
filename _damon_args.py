@@ -104,6 +104,18 @@ def damon_ctx_for(args):
     except Exception as e:
         return None, 'Creating context from arguments failed (%s)' % e
 
+def kdamonds_from_json_arg(arg):
+    try:
+        if os.path.isfile(arg):
+            with open(arg, 'r') as f:
+                kdamonds_str = f.read()
+        else:
+            kdamonds_str = arg
+        kdamonds_kvpairs = json.loads(kdamonds_str)
+        return [kdamond.from_kvpairs(kvp) for kvp in kdamonds_kvpairs], None
+    except Exception as e:
+        return None, e
+
 def deduce_target(args):
     if args.deducible_target == None:
         return None
@@ -137,27 +149,14 @@ def deduce_target(args):
 def kdamonds_for(args):
     err = deduce_target(args)
     if err:
-        try:
-            if os.path.isfile(args.deducible_target):
-                with open(args.deducible_target, 'r') as f:
-                    kdamonds_str = f.read()
-            else:
-                kdamonds_str = args.deducible_target
-            kdamonds_kvpairs = json.loads(kdamonds_str)
-            return [kdamond.from_kvpairs(kvpair)
-                    for kvpair in kdamonds_kvpairs], None
-        except Exception as e:
+        kdamonds, e = kdamonds_from_json_arg(args.deducible_target)
+        if e != None:
             return None, 'not deducible (%s), not json (%s)' % (err, e)
+        return kdamonds, e
 
     if args.kdamonds:
-        if os.path.isfile(args.kdamonds):
-            with open(args.kdamonds, 'r') as f:
-                kdamonds_str = f.read()
-        else:
-            kdamonds_str = args.kdamonds
-        kdamonds_kvpairs = json.loads(kdamonds_str)
-        return [Kdamond.from_kvpairs(kvpair)
-                for kvpair in kdamonds_kvpairs], None
+        return kdamonds_from_json_arg(args.kdamonds)
+
     ctx, err = damon_ctx_for(args)
     if err:
         return None, err
