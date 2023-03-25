@@ -243,49 +243,34 @@ operation action should be applied to memory regions showing specific data
 access pattern.  Then, it starts the data access monitoring and automatically
 applies the schemes to the targets.
 
-The operation schemes should be saved in a text file in the below format and
-passed to ``schemes`` subcommand via ``--schemes`` option.
+The data access pattern can be specified as range of the size, access frequency
+rate, and the time that the region has maintained the size and access frequency
+rate.  The operations action can be ``willneed``, ``cold``, ``pageout``,
+``hugepage`` or ``nohugepage``.  Each of the actions works the same to the
+``madvise()`` system call hints having the name.
 
-    min-size max-size min-acc max-acc min-age max-age action
-
-The format also supports comments, several units for size and age of regions,
-and human-readable action names.  Currently supported operation actions are
-``willneed``, ``cold``, ``pageout``, ``hugepage`` and ``nohugepage``.  Each of
-the actions works the same to the ``madvise()`` system call hints having the
-name.  Please also note that the range is inclusive (closed interval), and
-``0`` for max values means infinite. Below example schemes are possible.
-
-    # format is:
-    # <min/max size> <min/max frequency (0-100)> <min/max age> <action>
-    #
-    # B/K/M/G/T for Bytes/KiB/MiB/GiB/TiB
-    # us/ms/s/m/h/d for micro-seconds/milli-seconds/seconds/minutes/hours/days
-    # 'min/max' for possible min/max value.
-
-    # if a region keeps a high access frequency for >=100ms, put the region on
-    # the head of the LRU list (call madvise() with MADV_WILLNEED).
-    min    max      80      max     100ms   max willneed
-
-    # if a region keeps a low access frequency for >=200ms and <=one hour, put
-    # the region on the tail of the LRU list (call madvise() with MADV_COLD).
-    min     max     10      20      200ms   1h  cold
-
-    # if a region keeps a very low access frequency for >=60 seconds, swap out
-    # the region immediately (call madvise() with MADV_PAGEOUT).
-    min     max     0       10      60s     max pageout
-
-    # if a region of a size >=2MiB keeps a very high access frequency for
-    # >=100ms, let the region to use huge pages (call madvise() with
-    # MADV_HUGEPAGE).
-    2M      max     90      100     100ms   max hugepage
-
-    # If a region of a size >=2MiB keeps a small access frequency for >=100ms,
-    # avoid the region using huge pages (call madvise() with MADV_NOHUGEPAGE).
-    2M      max     0       25      100ms   max nohugepage
+The data access pattern and the action can be specified using command line
+options of the subcommand which having ``--damos_`` prefix.  Please use
+``--help`` option for the list of the options.
 
 For example, you can make a running process named 'foo' to use huge pages for
 memory regions keeping 2MB or larger size and having very high access frequency
 for at least 100 milliseconds using the below commands:
 
-    $ echo "2M max    90 max    100ms max    hugepage" > my_thp_scheme
-    $ ./damo schemes --schemes my_thp_scheme $(pidof foo)
+    $ sudo ./damo schemes --damos_sz_region 2M max \
+                          --damos_access_rate 90% 100% \
+                          --damos_age 100ms max \
+                          --damos_action hugepage \
+                          $(pidof foo)
+
+The scheme can also specified in json format and passed to the subcommand via
+``--schemes`` command line option.  You can pass the json string, or path to a
+file containing the json-format scheme specification.  For the json format of
+the schemes, you can execute ``damo fmt_json`` with ``--damos_*`` options and
+refer to the ``schemes`` part of the output.  This can be useful for more
+detailed tuning of the scheme, or for multiple schemes.
+
+NOTE: DAMO used to support one-line scheme specification format before.  The
+format is now DEPRECATED, and the support will be removed by 2023-Q2.  Please
+report your usage of it to sj@kernel.org, damon@lists.linux.dev, and
+linux-mm@kvack.org if you depend on it.
