@@ -256,8 +256,8 @@ def set_argparser(parser, add_record_options):
     set_damos_argparser(parser)
     parser.add_argument('-c', '--schemes', metavar='<json string or file>',
 	    help='data access monitoring-based operation schemes')
-    parser.add_argument('--kdamonds', metavar='<string or file>',
-            help='key-value pairs format kdamonds config')
+    parser.add_argument('--kdamonds', metavar='<json string or file>',
+            help='json format kdamonds specification to run DAMON for')
     parser.add_argument('deducible_target', type=str,
             metavar='<deducible target>', nargs='?',
             help='the target (command, pid, or special keywords) to monitor')
