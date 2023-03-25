@@ -32,9 +32,6 @@ def main(args=None):
     if err:
         print('parsing damon result file (%s) failed (%s)' %
                 (file_path, err))
-
-    if not result:
-        print('monitoring result file (%s) parsing failed' % file_path)
         exit(1)
 
     if not result:
