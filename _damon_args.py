@@ -116,7 +116,7 @@ def kdamonds_from_json_arg(arg):
     except Exception as e:
         return None, e
 
-def deduce_target(args):
+def deduce_target_update_args(args):
     args.self_started_target = False
     if args.deducible_target == 'paddr':
         args.ops = 'paddr'
@@ -150,7 +150,7 @@ def kdamonds_for(args):
         kdamonds, e = kdamonds_from_json_arg(args.deducible_target)
         if e == None:
             return kdamonds, e
-        err = deduce_target(args)
+        err = deduce_target_update_args(args)
         if err:
             return None, err
 
