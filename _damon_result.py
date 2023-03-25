@@ -207,8 +207,9 @@ def set_perf_path(perf_path):
     try:
         subprocess.check_output(['which', PERF])
         try:
-            subprocess.check_output([PERF, 'record', '-e', PERF_EVENT, '--', 'sleep', '0'],
-                                    stderr=subprocess.PIPE)
+            subprocess.check_output(
+                    [PERF, 'record', '-e', PERF_EVENT, '--', 'sleep', '0'],
+                    stderr=subprocess.PIPE)
         except:
             err = 'perf record not working with "%s"' % PERF
     except:
