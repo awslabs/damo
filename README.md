@@ -128,6 +128,15 @@ for >=60 seconds in your workload to be swapped out.  By doing this, you can
 make your workload more memory efficient with only a modest performance
 overhead.
 
+    $ sudo damo schemes --damos_access_rate 0 0 --damos_sz_region 4K max \
+                        --damos_age 60s max --damos_action pageout \
+                        <pid of your workload>
+
+Note: Previously, one-line scheme specification format like below was used.  It
+is now deprecated, and the support will be removed by 2023 Q2.  Please report
+your usecase to sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if
+you depend on those.
+
     $ echo "#min-size max-size min-acc max-acc min-age max-age action" > my_scheme
     $ echo "4K        max      0       0       60s     max     pageout" >> my_scheme
     $ sudo damo schemes -c my_scheme <pid of your workload>
