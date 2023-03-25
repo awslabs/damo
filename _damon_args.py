@@ -120,7 +120,6 @@ def deduce_target(args):
     if args.deducible_target == None:
         return None
 
-    args.kdamonds = None
     args.self_started_target = False
     if args.deducible_target == 'paddr':
         args.ops = 'paddr'
