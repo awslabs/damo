@@ -137,7 +137,17 @@ def deduce_target(args):
 def kdamonds_for(args):
     err = deduce_target(args)
     if err:
-        return None, err
+        try:
+            if os.path.isfile(args.deducible_target):
+                with open(args.deducible_target, 'r') as f:
+                    kdamonds_str = f.read()
+            else:
+                kdamonds_str = args.deducible_target
+            kdamonds_kvpairs = json.loads(kdamonds_str)
+            return [kdamond.from_kvpairs(kvpair)
+                    for kvpair in kdamonds_kvpairs], None
+        except Exception as e:
+            return None, 'not deducible (%s), not json (%s)' % (err, e)
 
     if args.kdamonds:
         if os.path.isfile(args.kdamonds):
