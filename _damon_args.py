@@ -147,15 +147,15 @@ def deduce_target(args):
         args.ops = 'fvaddr'
 
 def kdamonds_for(args):
+    if args.kdamonds:
+        return kdamonds_from_json_arg(args.kdamonds)
+
     err = deduce_target(args)
     if err:
         kdamonds, e = kdamonds_from_json_arg(args.deducible_target)
         if e != None:
             return None, 'not deducible (%s), not json (%s)' % (err, e)
         return kdamonds, e
-
-    if args.kdamonds:
-        return kdamonds_from_json_arg(args.kdamonds)
 
     ctx, err = damon_ctx_for(args)
     if err:
