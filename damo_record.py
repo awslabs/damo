@@ -138,12 +138,9 @@ def main(args=None):
 
     if not damon_record_supported or is_ongoing:
         # Record the monitoring results using perf
-        data_for_cleanup.perf_pipe, err = _damon_result.start_monitoring_record(
+        data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
                 data_for_cleanup.rfile_path, data_for_cleanup.rfile_format,
                 data_for_cleanup.rfile_permission)
-        if err != None:
-            print('could not start recording (%s)' % err)
-            cleanup_exit(-3)
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
