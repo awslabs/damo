@@ -15,7 +15,6 @@ import _damon_result
 
 class DataForCleanup:
     kdamonds_names = None
-    target_is_ongoing = False
     orig_kdamonds = None
     rfile_path = None
     rfile_format = None
@@ -54,7 +53,6 @@ def sighandler(signum, frame):
     cleanup_exit(signum)
 
 def set_data_for_cleanup(data_for_cleanup, args, output_permission):
-    data_for_cleanup.target_is_ongoing = _damon_args.is_ongoing_target(args)
     data_for_cleanup.rfile_format = args.output_type
     data_for_cleanup.rfile_path = args.out
     data_for_cleanup.rfile_permission = output_permission
