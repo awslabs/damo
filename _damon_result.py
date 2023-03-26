@@ -286,7 +286,7 @@ def write_damon_perf_script(result, file_path):
 file_type_record = 'record'             # damo defined binary format
 file_type_perf_script = 'perf_script'   # perf script output
 
-def write_damon_result(result, file_path, file_type):
+def write_damon_result(result, file_path, file_type, file_permission=None):
     for record in result.records:
         snapshots = record.snapshots
         if len(snapshots) == 1:
@@ -305,6 +305,8 @@ def write_damon_result(result, file_path, file_type):
         write_damon_perf_script(result, file_path)
     else:
         print('write unsupported file type: %s' % file_type)
+    if file_permission != None:
+        os.chmod(file_path, file_permission)
 
 def update_result_file(file_path, file_format):
     result, err = parse_damon_result(file_path)
