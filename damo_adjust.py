@@ -46,6 +46,10 @@ def main(args=None):
         args = parser.parse_args()
 
     file_path = args.input
+    output_permission = int(args.output_permission, 8)
+    if output_permission < 0o0 or output_permission > 0o777:
+        print('wrong --output_permission (%s)' % args.output_permission)
+        exit(1)
 
     result, err = _damon_result.parse_damon_result(file_path)
     if err:
@@ -56,10 +60,6 @@ def main(args=None):
     if args.aggregate_interval != None:
         adjust_result(result, args.aggregate_interval, args.skip)
     _damon_result.write_damon_result(result, args.output, args.output_type)
-    output_permission = int(args.output_permission, 8)
-    if output_permission < 0o0 or output_permission > 0o777:
-        print('wrong --output_permission (%s)' % args.output_permission)
-        exit(1)
     os.chmod(args.output, output_permission)
 
 if __name__ == '__main__':
