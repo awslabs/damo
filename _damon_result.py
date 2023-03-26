@@ -357,10 +357,9 @@ def aggregate_snapshots(snapshots):
 record_requests = {}
 def start_monitoring_record(file_path, file_format, file_permission):
     pipe = subprocess.Popen(
-            [PERF, 'record', '-a', '-e', PERF_EVENT, '-o',
-                file_path])
+            [PERF, 'record', '-a', '-e', PERF_EVENT, '-o', file_path])
     record_requests[pipe] = [file_path, file_format, file_permission]
-    return pipe, None
+    return pipe
 
 def stop_monitoring_record(perf_pipe):
     file_path, file_format, file_permission = record_requests[perf_pipe]
