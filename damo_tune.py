@@ -18,10 +18,6 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    if _damon.damon_interface() == 'debugfs':
-        print('tune does not support debugfs interface')
-        exit(1)
-
     if _damon.every_kdamond_turned_off():
         print('DAMON is not turned on')
         exit(1)
