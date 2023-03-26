@@ -1,0 +1,16 @@
+DAMO: Data Access Monitoring Operator
+=====================================
+
+`damo` is a user space tool for [DAMON](https://damonitor.github.io).  Using
+this, you can monitor the data access patterns of your system or workloads and
+make data access-aware memory management optimizations.
+
+
+Getting Started
+===============
+
+    $ sudo damo start
+    $ sudo damo record
+    $ sudo damo stat
+    $ sudo damo tune
+    $ sudo damo stop
