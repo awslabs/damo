@@ -355,6 +355,12 @@ def aggregate_snapshots(snapshots):
     return new_snapshot
 
 record_requests = {}
+'''
+Start recording DAMON's monitoring results using perf.
+
+Returns pipe for the perf.  The pipe should be passed to
+stop_monitoring_record() later.
+'''
 def start_monitoring_record(file_path, file_format, file_permission):
     pipe = subprocess.Popen(
             [PERF, 'record', '-a', '-e', PERF_EVENT, '-o', file_path])
