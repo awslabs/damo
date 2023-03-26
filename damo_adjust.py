@@ -4,8 +4,6 @@
 "Adjust a damon monitoring result with new attributes"
 
 import argparse
-import os
-import struct
 
 import _damon_result
 
