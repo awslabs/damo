@@ -25,6 +25,7 @@ def main(args=None):
     kdamonds, err = _damon_args.commit_kdamonds(args)
     if err:
         print('tuning failed (%s)' % err)
+        exit(1)
 
 if __name__ == '__main__':
     main()
