@@ -26,6 +26,7 @@ def main(args=None):
     err = _damon.turn_damon_off(running_kdamond_names)
     if err:
         print('DAMON turn off failed (%s)' % err)
+        exit(1)
 
 if __name__ == '__main__':
     main()
