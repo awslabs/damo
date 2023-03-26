@@ -84,8 +84,6 @@ def main():
     for subcmd in subcmds:
         subcmd.add_parser(subparser)
 
-    subparser.add_parser('version', help='print the version number')
-
     args = parser.parse_args()
 
     for subcmd in subcmds:
