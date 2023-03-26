@@ -59,8 +59,8 @@ def main(args=None):
 
     if args.aggregate_interval != None:
         adjust_result(result, args.aggregate_interval, args.skip)
-    _damon_result.write_damon_result(result, args.output, args.output_type)
-    os.chmod(args.output, output_permission)
+    _damon_result.write_damon_result(result, args.output, args.output_type,
+            output_permission)
 
 if __name__ == '__main__':
     main()
