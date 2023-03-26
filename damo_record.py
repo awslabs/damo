@@ -113,7 +113,6 @@ def main(args=None):
     output_permission = chk_handle_output_permission(args.output_permission)
     backup_duplicate_output_file(args.out)
 
-    # Set perf path and check its sanity
     err = _damon_result.set_perf_path(args.perf_path)
     if err != None:
         print(err)
@@ -127,7 +126,6 @@ def main(args=None):
     # Now the real works
     is_ongoing = _damon_args.is_ongoing_target(args)
     if not is_ongoing:
-        # Turn DAMON on
         err, kdamonds = _damon_args.turn_damon_on(args)
         if err:
             print('could not turn DAMON on (%s)' % err)
@@ -135,7 +133,6 @@ def main(args=None):
         data_for_cleanup.kdamonds_names = [k.name for k in kdamonds]
 
     if not damon_record_supported or is_ongoing:
-        # Record the monitoring results using perf
         data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
                 data_for_cleanup.rfile_path, data_for_cleanup.rfile_format,
                 data_for_cleanup.rfile_permission)
