@@ -109,6 +109,8 @@ def main(args=None):
     _damon.ensure_root_and_initialized(args)
 
     # Check/handle the arguments and options
+    if _damon.any_kdamond_running() and not args.deducible_target:
+        args.deducible_target = 'ongoing'
     damon_record_supported = chk_handle_record_feature_support(args)
     output_permission = chk_handle_output_permission(args.output_permission)
     backup_duplicate_output_file(args.out)
