@@ -308,11 +308,11 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
     if file_permission != None:
         os.chmod(file_path, file_permission)
 
-def update_result_file(file_path, file_format):
+def update_result_file(file_path, file_format, file_permission=None):
     result, err = parse_damon_result(file_path)
     if err:
         return err
-    write_damon_result(result, file_path, file_format)
+    write_damon_result(result, file_path, file_format, file_permission)
     return None
 
 def regions_intersect(r1, r2):
