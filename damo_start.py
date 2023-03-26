@@ -21,6 +21,7 @@ def main(args=None):
     err, kdamonds = _damon_args.turn_damon_on(args)
     if err:
         print('could not turn on damon (%s)' % err)
+        exit(1)
 
 if __name__ == '__main__':
     main()
