@@ -12,12 +12,8 @@ import _damon
 import _damon_args
 
 def cleanup_exit(exit_code):
-    kdamonds_names_to_turn_off = []
-    if kdamonds_names != None:
-        for kdamond_name in kdamonds_names:
-            if _damon.is_kdamond_running(kdamond_name):
-                kdamonds_names_to_turn_off.append(kdamond_name)
-    err = _damon.turn_damon_off(kdamonds_names_to_turn_off)
+    err = _damon.turn_damon_off([kname for kname in kdamonds_names
+        if _damon.is_kdamond_running(kname)])
     if err:
         print('failed to turn damon off (%s)' % err)
     err = _damon.stage_kdamonds(orig_kdamonds)
@@ -43,7 +39,7 @@ def main(args=None):
     _damon.ensure_root_and_initialized(args)
 
     orig_kdamonds = _damon.current_kdamonds()
-    kdamonds_names = None
+    kdamonds_names = []
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
