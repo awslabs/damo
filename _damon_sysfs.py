@@ -335,9 +335,9 @@ def files_content_to_quotas(files_content):
             int(files_content['ms']),
             int(files_content['bytes']),
             int(files_content['reset_interval_ms']),
-            int(files_content['weights']['sz_permil']),
-            int(files_content['weights']['nr_accesses_permil']),
-            int(files_content['weights']['age_permil']))
+            [int(files_content['weights']['sz_permil']),
+                int(files_content['weights']['nr_accesses_permil']),
+                int(files_content['weights']['age_permil'])])
 
 def files_content_to_watermarks(files_content):
     return _damon.DamosWatermarks(

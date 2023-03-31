@@ -38,8 +38,7 @@ class TestDamonDbgfs(unittest.TestCase):
                         action='stat',
                         quotas=_damon.DamosQuotas(time_ms=0,
                             sz_bytes=584792941, reset_interval_ms=1000,
-                            weight_sz_permil=0, weight_nr_accesses_permil=0,
-                            weight_age_permil=0),
+                            weights=[0,0,0]),
                         watermarks=_damon.DamosWatermarks('none',0,0,0,0),
                         filters=[], stats=None)})
 

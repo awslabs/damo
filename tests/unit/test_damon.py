@@ -26,7 +26,7 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosAccessPattern([0, 10], [5, 8], _damon.unit_percent,
                     [54, 88], _damon.unit_usec),
                 'pageout',
-                _damon.DamosQuotas(100, 1024, 1000, 80, 76, 24),
+                _damon.DamosQuotas(100, 1024, 1000, [80, 76, 24]),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
                     200),
                 [], None, None)
@@ -70,8 +70,7 @@ class TestDamon(unittest.TestCase):
                     [1000000, 4294900000], _damon.unit_usec),
                 action='stat',
                 quotas=_damon.DamosQuotas(time_ms=0, sz_bytes=584792941,
-                    reset_interval_ms=1000, weight_sz_permil=0,
-                    weight_nr_accesses_permil=0, weight_age_permil=0),
+                    reset_interval_ms=1000, weights=[0,0,0]),
                 watermarks=_damon.DamosWatermarks(0,0,0,0,0),
                 filters=[], stats=None)
         damos2 = copy.deepcopy(damos)
@@ -290,7 +289,7 @@ class TestDamon(unittest.TestCase):
 
     def test_damos_quotas(self):
         self.assertEqual(_damon.DamosQuotas(),
-                _damon.DamosQuotas(0, 0, 'max', 0, 0, 0))
+                _damon.DamosQuotas(0, 0, 'max', [0, 0, 0]))
 
     def test_damos_watermarks(self):
         self.assertEqual(_damon.DamosWatermarks(),
