@@ -34,16 +34,16 @@ def __read_files(root, max_depth, current_depth):
 def read_files_recursive(root):
     return __read_files(root, None, 1)
 
-def __read_files_of(root, files_to_read):
+def read_files_of(root, files_to_read, root=''):
     if isinstance(files_to_read, list):
         for filenames in files_to_read:
-            err = __read_files_of(root, filenames)
+            err = read_files_of(filenames, root)
             if err != None:
                 return err
         return None
 
     if not isinstance(files_to_read, dict):
-        return ('__read_files_of() received non-list, non-dict: %s' %
+        return ('read_files_of() received non-list, non-dict: %s' %
                 files_to_read)
 
     for filename in files_to_read:
@@ -53,16 +53,13 @@ def __read_files_of(root, files_to_read):
             if err != None:
                 return 'reading %s failed (%s)' % (filepath, e)
         elif os.path.isdir(filepath):
-            err = __read_files_of(filepath, files_to_read[filename])
+            err = read_files_of(files_to_read[filename], filepath)
             if err != None:
                 return err
         else:
-            return ('__read_files_of: filepath (%s) is neither dir nor files' %
+            return ('read_files_of: filepath (%s) is neither dir nor files' %
                     (filepath))
     return None
-
-def read_files_of(files_to_read):
-    return __read_files_of('', files_to_read)
 
 '''
 Returns None if success error string otherwise
