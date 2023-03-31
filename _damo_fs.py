@@ -16,23 +16,20 @@ def read_file(filepath):
         print('read \'%s\': \'%s\'' % (filepath, content.strip()))
     return content, None
 
-def __read_files(root, max_depth, current_depth):
+def read_files(root, max_depth=None, current_depth=1):
     contents = {}
     for filename in os.listdir(root):
         filepath = os.path.join(root, filename)
         if os.path.isdir(filepath):
             if max_depth != None and current_depth + 1 > max_depth:
                 continue
-            contents[filename] = __read_files(filepath, max_depth,
+            contents[filename] = read_files(filepath, max_depth,
                     current_depth + 1)
         else:
             contents[filename], err = read_file(filepath)
             if err != None:
                 contents[filename] = 'read failed (%s)' % err
     return contents
-
-def read_files_recursive(root):
-    return __read_files(root, None, 1)
 
 '''
 Returns None if success error string otherwise
