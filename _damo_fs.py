@@ -84,33 +84,6 @@ def write_file_ensure(filepath, content):
         print('writing %s to %s ensure failed (%s)' % (content, filepath, e))
         raise e
 
-def __write_files(root, operations):
-    if isinstance(operations, list):
-        for o in operations:
-            err = __write_files(root, o)
-            if err != None:
-                return err
-        return None
-
-    if not isinstance(operations, dict):
-        return ('__write_files() received none-list, none-dict content: %s' %
-                operations)
-
-    for filename in operations:
-        filepath = os.path.join(root, filename)
-        content = operations[filename]
-        if os.path.isfile(filepath):
-            err = write_file(filepath, content)
-            if err != None:
-                return err
-        elif os.path.isdir(filepath):
-            err = __write_files(filepath, content)
-            if err != None:
-                return err
-        else:
-            return 'filepath (%s) is neither dir nor file' % (filepath)
-    return None
-
 '''
 operations can be either {path: content}, or [operations].  In the former case,
 this function writes content to path, for all path/content pairs in the
@@ -122,5 +95,29 @@ operations paths.
 
 Return an error string if fails any write, or None otherwise.
 '''
-def write_files(operations):
-    return __write_files('', operations)
+def write_files(operations, root=''):
+    if isinstance(operations, list):
+        for o in operations:
+            err = write_files(o, root)
+            if err != None:
+                return err
+        return None
+
+    if not isinstance(operations, dict):
+        return ('write_files() received none-list, none-dict content: %s' %
+                operations)
+
+    for filename in operations:
+        filepath = os.path.join(root, filename)
+        content = operations[filename]
+        if os.path.isfile(filepath):
+            err = write_file(filepath, content)
+            if err != None:
+                return err
+        elif os.path.isdir(filepath):
+            err = write_files(content, filepath)
+            if err != None:
+                return err
+        else:
+            return 'filepath (%s) is neither dir nor file' % (filepath)
+    return None
