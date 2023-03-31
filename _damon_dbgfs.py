@@ -314,7 +314,7 @@ def files_content_to_kdamonds(files_content):
 
 def current_kdamonds():
     return files_content_to_kdamonds(
-            _damo_fs.read_files_recursive(debugfs_damon))
+            _damo_fs.read_files(debugfs_damon))
 
 def current_kdamond_names():
     # TODO: Support created kdamonds
