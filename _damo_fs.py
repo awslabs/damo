@@ -16,15 +16,12 @@ def read_file(filepath):
         print('read \'%s\': \'%s\'' % (filepath, content.strip()))
     return content, None
 
-def read_files(root, max_depth=None, current_depth=1):
+def read_files(root):
     contents = {}
     for filename in os.listdir(root):
         filepath = os.path.join(root, filename)
         if os.path.isdir(filepath):
-            if max_depth != None and current_depth + 1 > max_depth:
-                continue
-            contents[filename] = read_files(filepath, max_depth,
-                    current_depth + 1)
+            contents[filename] = read_files(filepath)
         else:
             contents[filename], err = read_file(filepath)
             if err != None:
