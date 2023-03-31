@@ -96,16 +96,16 @@ operations paths.
 Return an error string if fails any write, or None otherwise.
 '''
 def write_files(operations, root=''):
+    if not type(operations) in [list, dict]:
+        return ('write_files() received none-list, none-dict content: %s' %
+                operations)
+
     if isinstance(operations, list):
         for o in operations:
             err = write_files(o, root)
             if err != None:
                 return err
         return None
-
-    if not isinstance(operations, dict):
-        return ('write_files() received none-list, none-dict content: %s' %
-                operations)
 
     for filename in operations:
         filepath = os.path.join(root, filename)
