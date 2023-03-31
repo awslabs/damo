@@ -32,9 +32,10 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "time_ms": 0,
                         "sz_bytes": 0,
                         "reset_interval_ms": 0,
-                        "weight_sz_permil": 0,
-                        "weight_nr_accesses_permil": 0,
-                        "weight_age_permil": 0
+                        "weights": {
+                            "sz_permil": 0,
+                            "nr_accesses_permil": 0,
+                            "age_permil": 0},
                         },
                     "watermarks": {
                         "metric": "none",
@@ -62,9 +63,10 @@ class TestDamoSchemesInput(unittest.TestCase):
                         "time_ms": "0s",
                         "sz_bytes": "0B",
                         "reset_interval_ms": "0us",
-                        "weight_sz_permil": 0,
-                        "weight_nr_accesses_permil": 0,
-                        "weight_age_permil": 0
+                        "weights": {
+                            "sz_permil": 0,
+                            "nr_accesses_permil": 0,
+                            "age_permil": 0},
                         },
                     "watermarks": {
                         "metric": "none",

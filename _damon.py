@@ -354,8 +354,9 @@ class DamosQuotas:
     @classmethod
     def from_kvpairs(cls, kv):
         return DamosQuotas(kv['time_ms'], kv['sz_bytes'], kv['reset_interval_ms'],
-                [kv['weight_sz_permil'], kv['weight_nr_accesses_permil'],
-                    kv['weight_age_permil']])
+                [kv['weights']['sz_permil'],
+                    kv['weights']['nr_accesses_permil'],
+                    kv['weights']['age_permil'],])
 
     def to_str(self, raw):
         return '\n'.join([
@@ -376,13 +377,14 @@ class DamosQuotas:
             ('sz_bytes', _damo_fmt_str.format_sz(self.sz_bytes, raw)),
             ('reset_interval_ms', _damo_fmt_str.format_time_ms_exact(
                 self.reset_interval_ms, raw)),
-            ('weight_sz_permil',
-                _damo_fmt_str.format_permil(self.weight_sz_permil, raw)),
-            ('weight_nr_accesses_permil', _damo_fmt_str.format_permil(
-                self.weight_nr_accesses_permil, raw)),
-            ('weight_age_permil',
-                _damo_fmt_str.format_permil(self.weight_age_permil, raw)),
-            ])
+            ('weights', (collections.OrderedDict([
+                ('sz_permil',
+                    _damo_fmt_str.format_permil(self.weight_sz_permil, raw)),
+                ('nr_accesses_permil', _damo_fmt_str.format_permil(
+                    self.weight_nr_accesses_permil, raw)),
+                ('age_permil',
+                    _damo_fmt_str.format_permil(self.weight_age_permil, raw))])
+                ))])
 
 damos_wmarks_metric_none = 'none'
 damos_wmarks_metric_free_mem_rate = 'free_mem_rate'
