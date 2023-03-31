@@ -878,19 +878,6 @@ def damon_interface():
     print('something wrong')
     raise Exception
 
-# DAMON fs read/write
-
-def _damon_fs_root():
-    if _damon_fs == _damon_dbgfs:
-        return _damon_dbgfs.debugfs_damon
-    return _damon_sysfs.admin_dir
-
-def read_damon_fs():
-    return _damo_fs.read_files_recursive(_damon_fs_root())
-
-def write_damon_fs(contents):
-    return _damo_fs.write_files({_damon_fs_root(): contents})
-
 # DAMON status reading
 
 def is_kdamond_running(kdamond_name):
