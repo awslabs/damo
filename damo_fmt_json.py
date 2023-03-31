@@ -25,8 +25,7 @@ def main(args=None):
     if err:
         print('invalid arguments (%s)' % err)
         exit(1)
-    kdamonds = [k.to_kvpairs(args.raw) for k in kdamonds]
-    print(json.dumps(kdamonds, indent=4))
+    print(json.dumps([k.to_kvpairs(args.raw) for k in kdamonds], indent=4))
 
 if __name__ == '__main__':
     main()
