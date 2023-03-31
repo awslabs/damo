@@ -8,12 +8,9 @@ Contains core functions for DAMON control.
 import collections
 import copy
 import os
-import signal
-import subprocess
 import time
 
 import _damo_fmt_str
-import _damon_result
 
 # Core data structures
 
