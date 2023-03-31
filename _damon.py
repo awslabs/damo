@@ -49,8 +49,8 @@ class DamonIntervals:
         return collections.OrderedDict([
             ('sample_us', _damo_fmt_str.format_time_us(self.sample, raw)),
             ('aggr_us', _damo_fmt_str.format_time_us(self.aggr, raw)),
-            ('ops_update_us', _damo_fmt_str.format_time_us(self.ops_update,
-                raw)),
+            ('ops_update_us',
+                _damo_fmt_str.format_time_us(self.ops_update, raw)),
             ])
 
 class DamonNrRegionsRange:
@@ -78,10 +78,8 @@ class DamonNrRegionsRange:
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
-            ('min',
-                _damo_fmt_str.format_nr(self.minimum, raw)),
-            ('max',
-                _damo_fmt_str.format_nr(self.maximum, raw)),
+            ('min', _damo_fmt_str.format_nr(self.minimum, raw)),
+            ('max', _damo_fmt_str.format_nr(self.maximum, raw)),
             ])
 
 class DamonRegion:
@@ -188,10 +186,9 @@ class DamosAccessPattern:
             'sz: [%s, %s]' % (_damo_fmt_str.format_sz(self.sz_bytes[0], raw),
                 _damo_fmt_str.format_sz(self.sz_bytes[1], raw)),
             ]
-        if self.nr_accesses_unit == unit_percent:
+        unit = self.nr_accesses_unit
+        if unit == unit_percent:
             unit = '%'
-        else:
-            unit = self.nr_accesses_unit
         lines.append('nr_accesses: [%s %s, %s %s]' % (
                 _damo_fmt_str.format_nr(self.nr_accesses[0], raw), unit,
                 _damo_fmt_str.format_nr(self.nr_accesses[1], raw), unit))
@@ -353,7 +350,8 @@ class DamosQuotas:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        return DamosQuotas(kv['time_ms'], kv['sz_bytes'], kv['reset_interval_ms'],
+        return DamosQuotas(kv['time_ms'], kv['sz_bytes'],
+                kv['reset_interval_ms'],
                 [kv['weights']['sz_permil'],
                     kv['weights']['nr_accesses_permil'],
                     kv['weights']['age_permil'],])
@@ -421,8 +419,9 @@ class DamosWatermarks:
 
     def __eq__(self, other):
         return (type(self) == type(other) and self.metric == other.metric and
-                self.interval_us == other.interval_us and self.high_permil ==
-                other.high_permil and self.mid_permil == other.mid_permil and
+                self.interval_us == other.interval_us and
+                self.high_permil == other.high_permil and
+                self.mid_permil == other.mid_permil and
                 self.low_permil == other.low_permil)
 
     @classmethod
@@ -611,8 +610,8 @@ class Damos:
 
     def __eq__(self, other):
         return (type(self) == type(other) and self.name == other.name and
-                self.access_pattern == other.access_pattern and self.action ==
-                other.action and self.quotas == other.quotas and
+                self.access_pattern == other.access_pattern and
+                self.action == other.action and self.quotas == other.quotas and
                 self.watermarks == other.watermarks and
                 self.filters == other.filters)
 
