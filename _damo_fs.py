@@ -93,6 +93,25 @@ path is for a directory, the content should be yet another operations.  In the
 latter case, upper-level path is prefixed to paths of the lower-level
 operations paths.
 
+For example:
+    {
+        'foo': 'bar',
+        'dirA': {
+            'fileA': '123',
+            'fileB': '456',
+            },
+        [
+            {'fileA': '42'},
+            {'fileB': '4242'},
+        ]
+    }
+
+    writes 'bar' to 'foo',
+    writes '123' to 'dirA/fileA',
+    writes '456' to 'dirA/fileB', and
+    writes '42' to 'fileA' then writes '4242' to 'fileB',
+    in any order
+
 Return an error string if fails any write, or None otherwise.
 '''
 def write_files(operations, root=''):
