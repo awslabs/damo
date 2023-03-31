@@ -34,7 +34,7 @@ class DamonIntervals:
         return self.to_str(False)
 
     def __eq__(self, other):
-        return self.__str__() == other.__str__()
+        return type(self) == type(other) and '%s' % self == '%s' % other
 
     @classmethod
     def from_kvpairs(cls, kvpairs):
@@ -67,7 +67,7 @@ class DamonNrRegionsRange:
         return self.to_str(False)
 
     def __eq__(self, other):
-        return self.__str__() == other.__str__()
+        return type(self) == type(other) and '%s' % self == '%s' % other
 
     @classmethod
     def from_kvpairs(cls, kvpairs):
@@ -95,7 +95,7 @@ class DamonRegion:
         return self.to_str(False)
 
     def __eq__(self, other):
-        return self.__str__() == other.__str__()
+        return type(self) == type(other) and '%s' % self == '%s' % other
 
     @classmethod
     def from_kvpairs(cls, kvpairs):
@@ -126,7 +126,7 @@ class DamonTarget:
         return self.to_str(False)
 
     def __eq__(self, other):
-        return self.__str__() == other.__str__()
+        return type(self) == type(other) and '%s' % self == '%s' % other
 
     @classmethod
     def from_kvpairs(cls, kvpairs):
@@ -463,7 +463,7 @@ class DamosFilter:
         return self.to_str(False)
 
     def __eq__(self, other):
-        return '%s' % self == '%s' % other
+        return type(self) == type(other) and '%s' % self == '%s' % other
 
     @classmethod
     def from_kvpairs(cls, kv):
@@ -668,7 +668,7 @@ class DamonRecord:
         return self.to_str(False)
 
     def __eq__(self, other):
-        return self.__str__() == other.__str__()
+        return type(self) == type(other) and '%s' % self == '%s' % other
 
     @classmethod
     def from_kvpairs(cls, kv):
@@ -715,7 +715,7 @@ class DamonCtx:
         return self.to_str(False)
 
     def __eq__(self, other):
-        return self.__str__() == other.__str__()
+        return type(self) == type(other) and '%s' % self == '%s' % other
 
     def __hash__(self):
         return hash(self.__str__())
@@ -776,7 +776,7 @@ class Kdamond:
         return self.to_str(False)
 
     def __eq__(self, other):
-        return self.__str__() == other.__str__()
+        return type(self) == type(other) and '%s' % self == '%s' % other
 
     def __hash__(self):
         return hash(self.__str__())
