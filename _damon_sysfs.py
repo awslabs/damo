@@ -252,7 +252,7 @@ def wops_for_kdamond(kdamond):
 def wops_for_kdamonds(kdamonds):
     return {kdamond.name: wops_for_kdamond(kdamond) for kdamond in kdamonds}
 
-def ensure_dirs_populated_for(kdamonds):
+def __ensure_dirs_populated_for(kdamonds):
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
     if err != None:
         return err
@@ -304,6 +304,13 @@ def ensure_dirs_populated_for(kdamonds):
                         nr_filters_file_of(kdamond.name, ctx.name,
                             scheme.name),
                         '%d' % len(scheme.filters))
+
+def ensure_dirs_populated_for(kdamonds):
+    try:
+        __ensure_dirs_populated_for(kdamonds)
+    except Exception as e:
+        print('sysfs dirs population failed (%s)' % e)
+        exit(1)
 
 def stage_kdamonds(kdamonds):
     if len(kdamonds) > 1:
