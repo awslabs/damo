@@ -414,17 +414,6 @@ def test_init_regions_version(paddr_supported):
 
     return version
 
-def chk_essential_files():
-    'check essential DAMON debugfs files existence'
-    if not os.path.isdir(debugfs_damon):
-        return 'damon debugfs dir (%s) not found' % debugfs_damon
-
-    for f in [debugfs_attrs,
-            debugfs_target_ids, debugfs_monitor_on]:
-        if not os.path.isfile(f):
-            return 'damon debugfs file (%s) not found' % f
-    return None
-
 def warn_deprecated_kernel():
     sys.stderr.write('''
 WARNING: This kernel is running non-mainlined DAMOS implementation.  Support of
@@ -439,9 +428,8 @@ def update_supported_features():
         return None
     feature_supports = {x: False for x in _damon.features}
 
-    err = chk_essential_files()
-    if err != None:
-        return err
+    if not os.path.isdir(debugfs_damon):
+        return 'damon debugfs dir (%s) not found' % debugfs_damon
 
     if _damon.any_kdamond_running():
         return 'debugfs feature update cannot be done while DAMON running'
