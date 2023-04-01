@@ -254,31 +254,26 @@ def wops_for_kdamonds(kdamonds):
 
 def __ensure_scheme_dir_populated(kdamond, ctx, scheme):
     nr_filters, err = _damo_fs.read_file(
-            nr_filters_file_of(kdamond.name, ctx.name,
-                scheme.name))
+            nr_filters_file_of(kdamond.name, ctx.name, scheme.name))
     if err != None:
         raise Exception('nr_fileters read fail (%s)' % err)
     if int(nr_filters) != len(scheme.filters):
         _damo_fs.write_file(
-                nr_filters_file_of(kdamond.name, ctx.name,
-                    scheme.name),
+                nr_filters_file_of(kdamond.name, ctx.name, scheme.name),
                 '%d' % len(scheme.filters))
 
 def __ensure_target_dir_populated(kdamond, ctx, target):
     nr_regions, err = _damo_fs.read_file(
-            nr_regions_file_of(
-                kdamond.name, ctx.name, target.name))
+            nr_regions_file_of(kdamond.name, ctx.name, target.name))
     if err != None:
         raise Exception('nr_regions read fail (%s)' % err)
     if int(nr_regions) != len(target.regions):
         _damo_fs.write_file(
-                nr_regions_file_of(
-                    kdamond.name, ctx.name, target.name),
+                nr_regions_file_of(kdamond.name, ctx.name, target.name),
                 '%d' % len(target.regions))
 
 def __ensure_kdamond_dir_populated(kdamond):
-    nr_contexts, err = _damo_fs.read_file(
-            nr_contexts_file_of(kdamond.name))
+    nr_contexts, err = _damo_fs.read_file(nr_contexts_file_of(kdamond.name))
     if err != None:
         raise Exception('kdamond name read fail (%s)' % err)
     if int(nr_contexts) != len(kdamond.contexts):
@@ -300,8 +295,7 @@ def __ensure_kdamond_dir_populated(kdamond):
         if err != None:
             raise Exception('nr_schemes read fail (%s)' % err)
         if int(nr_schemes) != len(ctx.schemes):
-            _damo_fs.write_file(
-                    nr_schemes_file_of(kdamond.name, ctx.name),
+            _damo_fs.write_file(nr_schemes_file_of(kdamond.name, ctx.name),
                     '%d' % len(ctx.schemes))
         for scheme in ctx.schemes:
             __ensure_scheme_dir_populated(kdamond, ctx, scheme)
