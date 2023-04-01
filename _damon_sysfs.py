@@ -252,6 +252,18 @@ def wops_for_kdamond(kdamond):
 def wops_for_kdamonds(kdamonds):
     return {kdamond.name: wops_for_kdamond(kdamond) for kdamond in kdamonds}
 
+def __ensure_target_dir_populated(kdamond, ctx, target):
+    nr_regions, err = _damo_fs.read_file(
+            nr_regions_file_of(
+                kdamond.name, ctx.name, target.name))
+    if err != None:
+        raise Exception('nr_regions read fail (%s)' % err)
+    if int(nr_regions) != len(target.regions):
+        _damo_fs.write_file(
+                nr_regions_file_of(
+                    kdamond.name, ctx.name, target.name),
+                '%d' % len(target.regions))
+
 def __ensure_kdamond_dir_populated(kdamond):
     nr_contexts, err = _damo_fs.read_file(
             nr_contexts_file_of(kdamond.name))
@@ -270,16 +282,8 @@ def __ensure_kdamond_dir_populated(kdamond):
                     nr_targets_file_of(kdamond.name, ctx.name),
                     '%d' % len(ctx.targets))
         for target in ctx.targets:
-            nr_regions, err = _damo_fs.read_file(
-                    nr_regions_file_of(
-                        kdamond.name, ctx.name, target.name))
-            if err != None:
-                raise Exception('nr_regions read fail (%s)' % err)
-            if int(nr_regions) != len(target.regions):
-                _damo_fs.write_file(
-                        nr_regions_file_of(
-                            kdamond.name, ctx.name, target.name),
-                        '%d' % len(target.regions))
+            __ensure_target_dir_populated(kdamond, ctx, target)
+
         nr_schemes, err = _damo_fs.read_file(
                 nr_schemes_file_of(kdamond.name, ctx.name))
         if err != None:
