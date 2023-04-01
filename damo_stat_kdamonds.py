@@ -18,7 +18,7 @@ def update_pr_kdamonds_summary(json_format, raw_nr):
     print('\n'.join(summary))
 
 def update_pr_kdamonds(json_format, raw_nr):
-    kdamonds, err = _damon.schemes_updated_running_kdamonds()
+    kdamonds, err = _damon.schemes_updated_kdamonds()
     if err != None:
         print(err)
         return
