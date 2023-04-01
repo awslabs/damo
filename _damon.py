@@ -930,10 +930,14 @@ def commit(kdamonds):
         return 'commit staged updates filed (%s)' % err
     return None
 
-def update_schemes_stats(kdamond_names):
+def update_schemes_stats(kdamond_names=None):
+    if kdamond_names == None:
+        kdamond_names = running_kdamond_names()
     return _damon_fs.update_schemes_stats(kdamond_names)
 
-def update_schemes_tried_regions(kdamond_names):
+def update_schemes_tried_regions(kdamond_names=None):
+    if kdamond_names == None:
+        kdamond_names = running_kdamond_names()
     if _damon_fs == _damon_dbgfs:
         return 'DAMON debugfs doesn\'t support schemes tried regions'
     return _damon_fs.update_schemes_tried_regions(kdamond_names)
