@@ -14,3 +14,4 @@ Getting Started
     $ sudo damo stat
     $ sudo damo tune
     $ sudo damo stop
+    $ sudo damo report
