@@ -942,6 +942,15 @@ def update_schemes_tried_regions(kdamond_names=None):
         return 'DAMON debugfs doesn\'t support schemes tried regions'
     return _damon_fs.update_schemes_tried_regions(kdamond_names)
 
+def update_schemes_status():
+    names = running_kdamond_names()
+    if len(names) == 0:
+        return None
+    err = update_schemes_stats(names)
+    if err != None:
+        return err
+    return update_schemes_tried_regions(names)
+
 def schemes_updated_kdamonds(update_stat=True, update_tried_regions=True):
     '''Update schemes stat/tried_regions as requested and return updated
     kdamodns'''
