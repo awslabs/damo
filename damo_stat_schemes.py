@@ -21,20 +21,19 @@ def pr_schemes_tried_regions(kdamonds, raw_nr):
                     r.to_str(raw_nr) for r in scheme.tried_regions))
 
 def update_pr_schemes_tried_regions(raw_nr):
-    kdamonds, err = _damon.schemes_updated_kdamonds(update_stat=False,
-            update_tried_regions=True)
+    err = _damon.update_schemes_tried_regions()
     if err:
         print(err)
         return
-    pr_schemes_tried_regions(kdamonds, raw_nr)
+    pr_schemes_tried_regions(_damon.current_kdamonds(), raw_nr)
 
 def update_pr_schemes_stats(raw_nr):
-    kdamonds, err = _damon.schemes_updated_kdamonds(update_stat=True,
-            update_tried_regions=False)
+    err = _damon.update_schemes_stats()
     if err:
         print(err)
         return
-    
+    kdamonds = _damon.current_kdamonds()
+
     print('# <kdamond> <context> <scheme> <field> <value>')
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
