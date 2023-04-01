@@ -286,24 +286,25 @@ def __ensure_dirs_populated_for(kdamonds):
                             nr_regions_file_of(
                                 kdamond.name, ctx.name, target.name),
                             '%d' % len(target.regions))
-        nr_schemes, err = _damo_fs.read_file(
-                nr_schemes_file_of(kdamond.name, ctx.name))
-        if err != None:
-            raise Exception('nr_schemes read fail (%s)' % err)
-        if int(nr_schemes) != len(ctx.schemes):
-            _damo_fs.write_file(
-                    nr_schemes_file_of(kdamond.name, ctx.name),
-                    '%d' % len(ctx.schemes))
-        for scheme in ctx.schemes:
-            nr_filters, err = _damo_fs.read_file(
-                    nr_filters_file_of(kdamond.name, ctx.name, scheme.name))
+            nr_schemes, err = _damo_fs.read_file(
+                    nr_schemes_file_of(kdamond.name, ctx.name))
             if err != None:
-                raise Exception('nr_fileters read fail (%s)' % err)
-            if int(nr_filters) != len(scheme.filters):
+                raise Exception('nr_schemes read fail (%s)' % err)
+            if int(nr_schemes) != len(ctx.schemes):
                 _damo_fs.write_file(
+                        nr_schemes_file_of(kdamond.name, ctx.name),
+                        '%d' % len(ctx.schemes))
+            for scheme in ctx.schemes:
+                nr_filters, err = _damo_fs.read_file(
                         nr_filters_file_of(kdamond.name, ctx.name,
-                            scheme.name),
-                        '%d' % len(scheme.filters))
+                            scheme.name))
+                if err != None:
+                    raise Exception('nr_fileters read fail (%s)' % err)
+                if int(nr_filters) != len(scheme.filters):
+                    _damo_fs.write_file(
+                            nr_filters_file_of(kdamond.name, ctx.name,
+                                scheme.name),
+                            '%d' % len(scheme.filters))
 
 def ensure_dirs_populated_for(kdamonds):
     try:
