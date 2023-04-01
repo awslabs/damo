@@ -7,11 +7,9 @@ Contains core functions for DAMON sysfs control.
 
 import os
 import time
-import traceback
 
 import _damo_fs
 import _damon
-import _damon_result
 
 feature_supports = None
 
