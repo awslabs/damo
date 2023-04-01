@@ -474,6 +474,6 @@ def update_supported_features():
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
 
-    if get_scheme_version() < 4:
+    if 0 < get_scheme_version() and get_scheme_version() < 4:
         warn_deprecated_kernel()
     return None
