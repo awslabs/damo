@@ -6,7 +6,6 @@ Contains core functions for DAMON debugfs control.
 """
 
 import os
-import subprocess
 import sys
 
 import _damo_fs
