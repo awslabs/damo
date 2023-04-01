@@ -41,13 +41,6 @@ def write_file(filepath, content):
         return 'writing %s to %s failed (%s)' % (content.strip(), filepath, e)
     return None
 
-def write_file_ensure(filepath, content):
-    try:
-        write_file(filepath, content)
-    except Exception as e:
-        print('writing %s to %s ensure failed (%s)' % (content, filepath, e))
-        raise e
-
 '''
 operations can be either {path: content}, or [operations].  In the former case,
 this function writes content to path, for all path/content pairs in the
