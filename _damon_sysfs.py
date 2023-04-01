@@ -255,14 +255,14 @@ def wops_for_kdamonds(kdamonds):
 def __ensure_dirs_populated_for(kdamonds):
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
     if err != None:
-        return err
+        raise Exception('nr_kdamonds_file read fail (%s)' % err)
     if int(nr_kdamonds) != len(kdamonds):
         _damo_fs.write_file(nr_kdamonds_file, '%d' % len(kdamonds))
     for kdamond in kdamonds:
         nr_contexts, err = _damo_fs.read_file(
                 nr_contexts_file_of(kdamond.name))
         if err != None:
-            return err
+            raise Exception('kdamond name read fail (%s)' % err)
         if int(nr_contexts) != len(kdamond.contexts):
             _damo_fs.write_file(nr_contexts_file_of(kdamond.name),
                     '%d' % len(kdamond.contexts))
@@ -270,7 +270,7 @@ def __ensure_dirs_populated_for(kdamonds):
             nr_targets, err = _damo_fs.read_file(
                     nr_targets_file_of(kdamond.name, ctx.name))
             if err != None:
-                return err
+                raise Exception('nr_targets read fail (%s)' % err)
             if int(nr_targets) != len(ctx.targets):
                 _damo_fs.write_file(
                         nr_targets_file_of(kdamond.name, ctx.name),
@@ -280,7 +280,7 @@ def __ensure_dirs_populated_for(kdamonds):
                         nr_regions_file_of(
                             kdamond.name, ctx.name, target.name))
                 if err != None:
-                    return err
+                    raise Exception('nr_regions read fail (%s)' % err)
                 if int(nr_regions) != len(target.regions):
                     _damo_fs.write_file(
                             nr_regions_file_of(
@@ -289,7 +289,7 @@ def __ensure_dirs_populated_for(kdamonds):
         nr_schemes, err = _damo_fs.read_file(
                 nr_schemes_file_of(kdamond.name, ctx.name))
         if err != None:
-            return err
+            raise Exception('nr_schemes read fail (%s)' % err)
         if int(nr_schemes) != len(ctx.schemes):
             _damo_fs.write_file(
                     nr_schemes_file_of(kdamond.name, ctx.name),
@@ -298,7 +298,7 @@ def __ensure_dirs_populated_for(kdamonds):
             nr_filters, err = _damo_fs.read_file(
                     nr_filters_file_of(kdamond.name, ctx.name, scheme.name))
             if err != None:
-                return err
+                raise Exception('nr_fileters read fail (%s)' % err)
             if int(nr_filters) != len(scheme.filters):
                 _damo_fs.write_file(
                         nr_filters_file_of(kdamond.name, ctx.name,
