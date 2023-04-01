@@ -944,7 +944,7 @@ def schemes_updated_running_kdamonds(update_stat=True,
     kdamodns'''
     names = running_kdamond_names()
     if len(names) == 0:
-        return None, 'no kdamond running'
+        return [], None
     if update_stat:
         err = update_schemes_stats(names)
         if err != None:
