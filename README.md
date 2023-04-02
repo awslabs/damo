@@ -42,7 +42,8 @@ FAQs
 How can I install a kernel that is built with `CONFIG_DAMON_*=y`?
 -----------------------------------------------------------------
 
-Please refer to 'Install' section of https://damonitor.github.io/.
+Please refer to 'Install'
+[section](https://sjp38.github.io/post/damon/#install) of the project webpage.
 
 Where can I get more detailed usage?
 ------------------------------------
