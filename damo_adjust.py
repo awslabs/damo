@@ -28,9 +28,12 @@ def main(args=None):
         args = parser.parse_args()
 
     file_path = args.input
-    output_permission = int(args.output_permission, 8)
-    if output_permission < 0o0 or output_permission > 0o777:
-        print('wrong --output_permission (%s)' % args.output_permission)
+
+    output_permission, err = _damon_result.parse_file_permission_str(
+            args.output_permission)
+    if err != None:
+        print('wrong --output_permission (%s) (%s)' %
+                (args.output_permission, err))
         exit(1)
 
     result, err = _damon_result.parse_damon_result(file_path)
