@@ -871,8 +871,7 @@ def damon_interface():
         return 'sysfs'
     elif _damon_fs == _damon_dbgfs:
         return 'debugfs'
-    print('something wrong')
-    raise Exception
+    raise Exception('_damo_fs is neither _damon_sysfs nor _damon_dbgfs')
 
 # DAMON status reading
 
