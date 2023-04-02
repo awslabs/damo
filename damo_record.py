@@ -78,9 +78,11 @@ WARNING: --rbuf option and in-kernel record feature support is deprecated.
     return damon_record_supported
 
 def chk_handle_output_permission(output_permission_option):
-    output_permission = int(output_permission_option, 8)
-    if output_permission < 0o0 or output_permission > 0o777:
-        print('wrong --output_permission (%s)' % output_permission_option)
+    output_permission, err = _damon_result.parse_file_permission_str(
+            output_permission_option)
+    if err != None:
+        print('wrong --output_permission (%s) (%s)' %
+                (output_permission_option, err))
         exit(1)
     return output_permission
 
