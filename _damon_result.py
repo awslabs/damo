@@ -283,6 +283,12 @@ def write_damon_perf_script(result, file_path):
                         '%d-%d: %d %s' % (region.start, region.end,
                             region.nr_accesses, region.age)]) + '\n')
 
+def parse_file_permission_str(file_permission_str):
+    file_permission = int(file_permission_str, 8)
+    if file_permission < 0o0 or file_permission > 0o777:
+        return None, 'out of available permission range'
+    return file_permission, None
+
 file_type_record = 'record'             # damo defined binary format
 file_type_perf_script = 'perf_script'   # perf script output
 
