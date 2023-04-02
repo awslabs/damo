@@ -23,9 +23,9 @@ you could consider running DAMON tests suite
 (https://github.com/awslabs/damon-tests) on your system.  It might reveal some
 issues in DAMO or DAMON to you.
 
-If you have no interest in DAMON development but only DAMO, you could consider
-running DAMO tests on your system.  You can run the tests via below command
-from the root of DAMO.
+If you have more interest in development of DAMO itself than DAMON, you could
+consider running only DAMO tests on your system.  You can run the tests via
+below command from the root of DAMO.
 
     $ sudo ./tests/run.sh
 
