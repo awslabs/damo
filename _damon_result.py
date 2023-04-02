@@ -356,6 +356,22 @@ def aggregate_snapshots(snapshots):
     new_snapshot.regions = new_regions
     return new_snapshot
 
+def adjusted_snapshots(snapshots, aggregate_interval_us):
+    adjusted = []
+    to_aggregate = []
+    for snapshot in snapshots:
+        to_aggregate.append(snapshot)
+        interval_ns = to_aggregate[-1].end_time - to_aggregate[0].start_time
+        if interval_ns >= aggregate_interval_us * 1000:
+            adjusted.append(aggregate_snapshots(to_aggregate))
+            to_aggregate = []
+    return adjusted
+
+def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
+    for record in result.records:
+        record.snapshots = adjusted_snapshots(
+                record.snapshots[nr_snapshots_to_skip:], aggregate_interval)
+
 record_requests = {}
 '''
 Start recording DAMON's monitoring results using perf.

@@ -7,22 +7,6 @@ import argparse
 
 import _damon_result
 
-def adjusted_snapshots(snapshots, aggregate_interval_us):
-    adjusted = []
-    to_aggregate = []
-    for snapshot in snapshots:
-        to_aggregate.append(snapshot)
-        interval_ns = to_aggregate[-1].end_time - to_aggregate[0].start_time
-        if interval_ns >= aggregate_interval_us * 1000:
-            adjusted.append(_damon_result.aggregate_snapshots(to_aggregate))
-            to_aggregate = []
-    return adjusted
-
-def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
-    for record in result.records:
-        record.snapshots = adjusted_snapshots(
-                record.snapshots[nr_snapshots_to_skip:], aggregate_interval)
-
 def set_argparser(parser):
     parser.add_argument('--aggregate_interval', type=int, default=None,
             metavar='<microseconds>', help='new aggregation interval')
@@ -56,7 +40,7 @@ def main(args=None):
         exit(1)
 
     if args.aggregate_interval != None:
-        adjust_result(result, args.aggregate_interval, args.skip)
+        _damon_result.adjust_result(result, args.aggregate_interval, args.skip)
     _damon_result.write_damon_result(result, args.output, args.output_type,
             output_permission)
 
