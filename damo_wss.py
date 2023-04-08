@@ -34,6 +34,9 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
     print('# <percentile> <wss>')
     for tid, wss_dist in wss_dists.items():
         print('# target_id\t%s' % tid)
+        if len(wss_dist) == 0:
+            print('# no snapshot')
+            return
         print('# avr:\t%s' % _damo_fmt_str.format_sz(
             sum(wss_dist) / len(wss_dist), raw_number))
 
