@@ -263,8 +263,9 @@ def set_argparser(parser, add_record_options):
             metavar='<deducible target>', nargs='?',
             help='the target (command, pid, or special keywords) to monitor')
     if add_record_options:
-        parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-                help='length of record result buffer (!! DEPRECATED)')
+        # Uncomment if some dependant user found
+        # parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
+        #         help='length of record result buffer (!! DEPRECATED)')
         parser.add_argument('-o', '--out', metavar='<file path>', type=str,
                 default='damon.data', help='output file path')
     set_common_argparser(parser)

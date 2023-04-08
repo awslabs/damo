@@ -59,6 +59,9 @@ def set_data_for_cleanup(data_for_cleanup, args, output_permission):
     data_for_cleanup.orig_kdamonds = _damon.current_kdamonds()
 
 def chk_handle_record_feature_support(args):
+    # Comment below line if --rbuf dependent user found
+    return False
+
     damon_record_supported = _damon.feature_supported('record')
     if not damon_record_supported:
         if args.rbuf:
