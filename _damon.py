@@ -618,7 +618,7 @@ class Damos:
         if 'filters' in kv:
             for damos_filter_kv in kv['filters']:
                 filters.append(DamosFilter.from_kvpairs(damos_filter_kv))
-        return Damos(kv['name'],
+        return Damos(kv['name'] if 'name' in kv else '0',
                 DamosAccessPattern.from_kvpairs(kv['access_pattern'])
                     if 'access_pattern' in kv else DamosAccessPattern(),
                 kv['action'] if 'action' in kv else damos_action_stat,
