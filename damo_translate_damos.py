@@ -11,7 +11,7 @@ import json
 import _damon_args_schemes
 
 def set_argparser(parser):
-    parser.add_argument('--schemes', metavar='<file or string>',
+    parser.add_argument('schemes', metavar='<file or string>',
             help='schemes in old .damos format')
 
 def main(args=None):
