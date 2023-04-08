@@ -77,6 +77,12 @@ Please refer to
 [CONTRIBUTING](https://github.com/awslabs/damo/blob/next/CONTRIBUTING) file.
 
 
+I show --rbuf option from `damo record` is removed.  What happened?
+-------------------------------------------------------------------
+
+The option is deprecated.  Please report your usecase to sj@kernel.org,
+damon@lists.linux.dev and linux-mm@kvack.org if you depend on those.
+
 
 Recording Data Access Patterns
 ==============================
