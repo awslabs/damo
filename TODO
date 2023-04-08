@@ -22,3 +22,5 @@
 - Merge DamosTriedRegion and DAMONRegion
 - Deprecate scheme subcommand
   - Can be replaced by start or tune
+- Deprecate single line per-scheme
+- Deprecate v1-v3 schemes
