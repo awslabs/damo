@@ -23,6 +23,7 @@ import damo_stat
 import damo_stop
 import damo_tune
 import damo_validate
+import damo_translate_damos
 
 import _damo_subcmds
 
@@ -63,6 +64,9 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='version',
             module=_damo_subcmds.DamoSubCmdModule(None, pr_damo_version),
             msg='print the version number'),
+        _damo_subcmds.DamoSubCmd(name='translate_damos',
+            module=damo_translate_damos,
+            msg='translate old .damos to the new json format')
         ]
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
