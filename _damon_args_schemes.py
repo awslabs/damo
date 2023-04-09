@@ -171,7 +171,7 @@ def damo_schemes_lines_except_comments(txt):
     return [l for l in txt.strip().split('\n')
             if not l.strip().startswith('#')]
 
-def damo_schemes_to_damos(damo_schemes):
+def schemes_option_to_damos(damo_schemes):
     if os.path.isfile(damo_schemes):
         with open(damo_schemes, 'r') as f:
             damo_schemes = f.read()
@@ -219,7 +219,7 @@ def damos_for(args):
     if not 'schemes' in args or args.schemes == None:
         return [], None
 
-    schemes, err = damo_schemes_to_damos(args.schemes)
+    schemes, err = schemes_option_to_damos(args.schemes)
     if err:
         return None, 'failed damo schemes arguents parsing (%s)' % err
     return schemes, None

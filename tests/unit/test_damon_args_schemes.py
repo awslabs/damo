@@ -13,7 +13,7 @@ import _damon
 import _damon_args_schemes
 
 class TestDamoSchemesInput(unittest.TestCase):
-    def test_damo_schemes_to_damos(self):
+    def test_schemes_option_to_damos(self):
         base_damos_kv = [
                 {
                     "comments": "just for testing",
@@ -127,7 +127,7 @@ class TestDamoSchemesInput(unittest.TestCase):
                         '/all/latency-critical', False)], None, None)]
 
         def get_damos_from_damo_schemes(damo_schemes):
-            damos, err = _damon_args_schemes.damo_schemes_to_damos(
+            damos, err = _damon_args_schemes.schemes_option_to_damos(
                     damo_schemes)
             return damos
 
@@ -141,7 +141,7 @@ class TestDamoSchemesInput(unittest.TestCase):
                     expected_damos_w_filters})
 
     def test_conversion_from_singleline_to_json(self):
-        damos_list, err = _damon_args_schemes.damo_schemes_to_damos(
+        damos_list, err = _damon_args_schemes.schemes_option_to_damos(
 '''
 min max     5 max       min max     hugepage
 2M max      min min     7s max      nohugepage''')
