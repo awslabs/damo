@@ -14,11 +14,34 @@ import _damon_dbgfs
 class TestDamoSchemeDbgfsConversion(unittest.TestCase):
     def test_conversion(self):
         inputs = {
-                "darc1.damos": "# format is:\n# <min/max size> <min/max frequency (0-100)> <min/max age> <action> <limit_sz> <limit_ms>\n\n4K  max\t\tmin min\t\t5s max\t\tpageout\t\t500M 1s",
-                "darc2.damos": "# For scheme version 2 (refer to comment of debugfs_scheme() in damo)\n\n# format is:\n# <min/max size> <min/max frequency (0-100)> <min/max age> <action> \\\n# <limit_sz> <limit_ms> <weight_sz> <weight_nr_accesses> <weight_age>\n\n4K  max\t\tmin min\t\t5s max\t\tpageout\t\t500M 1s\t\t0 3 7",
-                "ethp.damos": "# format is: <min/max size> <min/max frequency (0-100)> <min/max age> <action>\n\nmin max\t\t5 max\t\tmin max\t\thugepage\n2M max\t\tmin min\t\t7s max\t\tnohugepage",
-                "pdarc1-1.damos": "# format is:\n# <min/max size> <min/max frequency (0-100)> <min/max age> <action> <limit_sz> <limit_ms>\n\n4K  max\t\tmin min\t\t5s max\t\tpageout\t\t1G 1s",
-                "pdarc1-2.damos": "# format is:\n# <min/max size> <min/max frequency (0-100)> <min/max age> <action> <limit_sz> <limit_ms>\n\n4K  max\t\tmin min\t\t5s max\t\tpageout\t\t5G 1s",
+                "darc1.damos": '''
+# format is:
+# <min/max size> <min/max frequency (0-100)> <min/max age> <action> <limit_sz> <limit_ms>
+
+4K  max     min min     5s max      pageout     500M 1s''',
+                "darc2.damos": '''
+# For scheme version 2 (refer to comment of debugfs_scheme() in damo)
+
+# format is:
+# <min/max size> <min/max frequency (0-100)> <min/max age> <action> \
+# <limit_sz> <limit_ms> <weight_sz> <weight_nr_accesses> <weight_age>
+
+4K  max     min min     5s max      pageout     500M 1s     0 3 7''',
+                "ethp.damos": '''
+# format is: <min/max size> <min/max frequency (0-100)> <min/max age> <action>
+
+min max     5 max       min max     hugepage
+2M max      min min     7s max      nohugepage''',
+                "pdarc1-1.damos": '''
+# format is:
+# <min/max size> <min/max frequency (0-100)> <min/max age> <action> <limit_sz> <limit_ms>
+
+4K  max     min min     5s max      pageout     1G 1s''',
+                "pdarc1-2.damos": '''
+# format is:
+# <min/max size> <min/max frequency (0-100)> <min/max age> <action> <limit_sz> <limit_ms>
+
+4K  max     min min     5s max      pageout     5G 1s''',
                 "pdarc1-3.damos": "# format is:\n# <min/max size> <min/max frequency (0-100)> <min/max age> <action> <limit_sz> <limit_ms>\n\n4K  max\t\tmin min\t\t5s max\t\tpageout\t\t10G 1s",
                 "pdarc2-1.damos": "# For scheme version 2 (refer to comment of debugfs_scheme() in damo)\n\n# format is:\n# <min/max size> <min/max frequency (0-100)> <min/max age> <action> \\\n# <limit_sz> <limit_ms> <weight_sz> <weight_nr_accesses> <weight_age>\n\n4K  max\t\tmin min\t\t5s max\t\tpageout\t\t1G 1s\t\t0 3 7",
                 "pdarc2-2.damos": "# For scheme version 2 (refer to comment of debugfs_scheme() in damo)\n\n# format is:\n# <min/max size> <min/max frequency (0-100)> <min/max age> <action> \\\n# <limit_sz> <limit_ms> <weight_sz> <weight_nr_accesses> <weight_age>\n\n4K  max\t\tmin min\t\t5s max\t\tpageout\t\t5G 1s\t\t0 3 7",
