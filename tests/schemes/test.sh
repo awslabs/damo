@@ -18,17 +18,23 @@ __test_stat() {
 	local use_scheme_file=$2
 	local damon_interface=$3
 
-	scheme="4K max    min min    1s max    stat"
+	scheme=$(cat cold_mem_stat_damos_template.json)
 	if [ ! "$speed_limit" = "" ]
 	then
-		speed_limit+="B"
-		scheme+=" $speed_limit 1s"
+		speed_limit+=" B"
+		scheme=$(echo "$scheme" | \
+			sed "s/quotas_sz_bytes_to_be_replaced/$speed_limit/" \
+			| sed 's/quotas_reset_interval_ms_to_be_replaced/1 s/')
+	else
+		scheme=$(echo "$scheme" | \
+			sed "s/quotas_sz_bytes_to_be_replaced/0 B/" \
+			| sed 's/quotas_reset_interval_ms_to_be_replaced/max/')
 	fi
 
 	if [ "$use_scheme_file" = "use_scheme_file" ]
 	then
-		echo "$scheme" > test_scheme.damos
-		scheme="./test_scheme.damos"
+		echo "$scheme" > test_scheme.json
+		scheme="./test_scheme.json"
 	fi
 
 	python ./stairs.py &
