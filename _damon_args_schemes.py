@@ -135,7 +135,7 @@ def fields_to_v4_scheme(fields):
     scheme.watermarks.low_permil = int(fields[17])
     return scheme
 
-def damo_single_line_scheme_to_damos(line, name):
+def damo_single_line_scheme_to_damos(line):
     '''Returns Damos object and err'''
 
     sys.stderr.write('''
@@ -190,7 +190,7 @@ def damo_schemes_to_damos(damo_schemes):
         line = line.strip()
         if line == '':
             continue
-        damos, err = damo_single_line_scheme_to_damos(line, '%d' % idx)
+        damos, err = damo_single_line_scheme_to_damos(line)
         if err != None:
             return None, ('invalid input: ' +
                     'neither json (%s), nor per-line scheme (%s)'
