@@ -140,5 +140,28 @@ class TestDamoSchemesInput(unittest.TestCase):
                     human_readable_damos_with_filters_str:
                     expected_damos_w_filters})
 
+    def test_conversion_from_singleline_to_json(self):
+        damos_list, err = _damon_args_schemes.damo_schemes_to_damos(
+'''
+min max     5 max       min max     hugepage
+2M max      min min     7s max      nohugepage''')
+        self.assertEqual(err, None)
+        self.assertEqual(damos_list,
+                [
+                    _damon.Damos(name='0',
+                        access_pattern=_damon.DamosAccessPattern(
+                            sz_bytes=['min', 'max'],
+                            nr_accesses=['5', 'max'],
+                            nr_accesses_unit=_damon.unit_percent,
+                            age=['min', 'max'], age_unit=_damon.unit_usec),
+                        action=_damon.damos_action_hugepage),
+                    _damon.Damos(name='0',
+                        access_pattern=_damon.DamosAccessPattern(
+                            sz_bytes=['2M', 'max'],
+                            nr_accesses=['min', 'min'],
+                            nr_accesses_unit=_damon.unit_percent,
+                            age=['7s', 'max'], age_unit=_damon.unit_usec),
+                        action=_damon.damos_action_nohugepage)])
+
 if __name__ == '__main__':
     unittest.main()
