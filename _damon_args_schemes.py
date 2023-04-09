@@ -135,6 +135,7 @@ def fields_to_v4_scheme(fields):
     scheme.watermarks.low_permil = int(fields[17])
     return scheme
 
+avoid_crashing_v1_v3_schemes_for_testing = False
 def damo_single_line_scheme_to_damos(line):
     '''Returns Damos object and err'''
 
@@ -149,6 +150,15 @@ and linux-mm@kvack.org if you depend on it.
 ''')
 
     fields = line.split()
+
+    # Remove below if someone depends on the v1-v3  DAMOS input is found.
+    if not avoid_crashing_v1_v3_schemes_for_testing:
+        if len(fields) in [9, 12, 17]:
+            sys.stderr.write('''
+You're using unsupported DAMOS format (%s)
+    ''' % ' '.join(fields))
+            exit(1)
+
     try:
         if len(fields) == 7:
             return fields_to_v0_scheme(fields), None
