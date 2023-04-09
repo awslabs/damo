@@ -155,7 +155,7 @@ min max     5 max       min max     hugepage
                             nr_accesses_unit=_damon.unit_percent,
                             age=['min', 'max'], age_unit=_damon.unit_usec),
                         action=_damon.damos_action_hugepage),
-                    _damon.Damos(name='0',
+                    _damon.Damos(name='1',
                         access_pattern=_damon.DamosAccessPattern(
                             sz_bytes=['2M', 'max'],
                             nr_accesses=['min', 'min'],

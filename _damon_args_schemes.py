@@ -195,6 +195,7 @@ def damo_schemes_to_damos(damo_schemes):
             return None, ('invalid input: ' +
                     'neither json (%s), nor per-line scheme (%s)'
                     % (json_err, err))
+        damos.name = '%d' % len(damos_list)
         damos_list.append(damos)
     return damos_list, None
 
