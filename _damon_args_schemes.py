@@ -167,20 +167,20 @@ and linux-mm@kvack.org if you depend on it.
         return None, 'wrong input field'
     return None, 'unsupported version of single line scheme'
 
-def schemes_option_to_damos(damo_schemes):
-    if os.path.isfile(damo_schemes):
-        with open(damo_schemes, 'r') as f:
-            damo_schemes = f.read()
+def schemes_option_to_damos(schemes):
+    if os.path.isfile(schemes):
+        with open(schemes, 'r') as f:
+            schemes = f.read()
 
     try:
-        kvpairs = json.loads(damo_schemes)
+        kvpairs = json.loads(schemes)
         return [_damon.Damos.from_kvpairs(kv) for kv in kvpairs], None
     except Exception as json_err:
         # The input is not json file
         pass
 
     # remove comments, empty lines, and unnecessary white spaces
-    damo_schemes_lines = [l.strip() for l in damo_schemes.strip().split('\n')
+    damo_schemes_lines = [l.strip() for l in schemes.strip().split('\n')
             if not l.strip().startswith('#') and l.strip() != '']
 
     damos_list = []
