@@ -186,7 +186,7 @@ def damo_schemes_to_damos(damo_schemes):
     damo_schemes_lines = damo_schemes_lines_except_comments(damo_schemes)
 
     damos_list = []
-    for idx, line in enumerate(damo_schemes_lines):
+    for line in damo_schemes_lines:
         line = line.strip()
         if line == '':
             continue
