@@ -179,15 +179,13 @@ def schemes_option_to_damos(damo_schemes):
         # The input is not json file
         pass
 
-    # remove comments
+    # remove comments and empty lines
     damo_schemes_lines = [l for l in damo_schemes.strip().split('\n')
-            if not l.strip().startswith('#')]
+            if not l.strip().startswith('#') and l.strip() != '']
 
     damos_list = []
     for line in damo_schemes_lines:
         line = line.strip()
-        if line == '':
-            continue
         damos, err = damo_single_line_scheme_to_damos(line)
         if err != None:
             return None, ('invalid input: ' +
