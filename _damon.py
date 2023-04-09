@@ -605,6 +605,9 @@ class Damos:
     def __str__(self):
         return self.to_str(False)
 
+    def __repr__(self):
+        return self.__str__()
+
     def __eq__(self, other):
         return (type(self) == type(other) and self.name == other.name and
                 self.access_pattern == other.access_pattern and
