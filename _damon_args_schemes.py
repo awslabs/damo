@@ -167,10 +167,6 @@ and linux-mm@kvack.org if you depend on it.
         return None, 'wrong input field'
     return None, 'unsupported version of single line scheme'
 
-def damo_schemes_lines_except_comments(txt):
-    return [l for l in txt.strip().split('\n')
-            if not l.strip().startswith('#')]
-
 def schemes_option_to_damos(damo_schemes):
     if os.path.isfile(damo_schemes):
         with open(damo_schemes, 'r') as f:
@@ -183,7 +179,9 @@ def schemes_option_to_damos(damo_schemes):
         # The input is not json file
         pass
 
-    damo_schemes_lines = damo_schemes_lines_except_comments(damo_schemes)
+    # remove comments
+    damo_schemes_lines = [l for l in damo_schemes.strip().split('\n')
+            if not l.strip().startswith('#')]
 
     damos_list = []
     for line in damo_schemes_lines:
