@@ -225,9 +225,7 @@ test_wmarks() {
 		return
 	fi
 
-	scheme_prefix="4K max  min min  1s max  stat"
-	scheme_prefix+="  5G 1s 0 3 7"
-	scheme_prefix+="  free_mem_rate 1s"
+	scheme_template=$(cat "cold_mem_stat_damos_template_for_wmarks.json")
 
 	# Test high watermark-based deactivation
 	ensure_free_mem_ratio 990 100
@@ -236,7 +234,13 @@ test_wmarks() {
 		return
 	fi
 	applied=42
-	measure_scheme_applied "$scheme_prefix 50 40 30" "paddr" 3 \
+
+	scheme=$(echo "$scheme_template" | \
+		sed "s/wmarks_high_to_be_replaced/50/" | \
+		sed "s/wmarks_mid_to_be_replaced/40/" | \
+		sed "s/wmarks_low_to_be_replaced/30/")
+
+	measure_scheme_applied "$scheme" "paddr" 3 \
 		"$damon_interface"
 	if [ "$applied" -ne 0 ]
 	then
@@ -251,7 +255,13 @@ test_wmarks() {
 		return
 	fi
 	applied=0
-	measure_scheme_applied "$scheme_prefix 999 995 100" "paddr" 3 \
+
+	scheme=$(echo "$scheme_template" | \
+		sed "s/wmarks_high_to_be_replaced/999/" | \
+		sed "s/wmarks_mid_to_be_replaced/995/" | \
+		sed "s/wmarks_low_to_be_replaced/100/")
+
+	measure_scheme_applied "$scheme" "paddr" 3 \
 		"$damon_interface"
 	if [ "$applied" -le 0 ]
 	then
@@ -266,7 +276,13 @@ test_wmarks() {
 		return
 	fi
 	applied=42
-	measure_scheme_applied "$scheme_prefix 999 998 995" "paddr" 3 \
+
+	scheme=$(echo "$scheme_template" | \
+		sed "s/wmarks_high_to_be_replaced/999/" | \
+		sed "s/wmarks_mid_to_be_replaced/998/" | \
+		sed "s/wmarks_low_to_be_replaced/995/")
+
+	measure_scheme_applied "$scheme" "paddr" 3 \
 		"$damon_interface"
 	if [ "$applied" -ne 0 ]
 	then
