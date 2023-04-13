@@ -1,0 +1,28 @@
+[
+    {
+        "action": "stat", 
+        "access_pattern": {
+	    "sz_bytes": {"min": "4.000 KiB", "max": "max"}, 
+	    "nr_accesses": {"min": "0 %", "max": "0 %"}, 
+	    "age": {"min": "1 s", "max": "max"}
+        }, 
+        "quotas": {
+            "time_ms": "0 ns", 
+            "sz_bytes": "5 GB", 
+            "reset_interval_ms": "1 s", 
+            "weights": {
+                "sz_permil": "0 %", 
+                "nr_accesses_permil": "30 %", 
+                "age_permil": "70 %"
+            }
+        }, 
+        "watermarks": {
+            "metric": "free_mem_rate", 
+            "interval_us": "1 s", 
+            "high_permil": "wmarks_high_to_be_replaced", 
+            "mid_permil": "wmarks_mid_to_be_replaced", 
+            "low_permil": "wmarks_low_to_be_replaced"
+        }, 
+        "filters": []
+    }
+]
