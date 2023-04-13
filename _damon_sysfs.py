@@ -251,6 +251,9 @@ def wops_for_kdamonds(kdamonds):
     return {kdamond.name: wops_for_kdamond(kdamond) for kdamond in kdamonds}
 
 def __ensure_scheme_dir_populated(kdamond, ctx, scheme):
+    if not feature_supported('schemes_filters'):
+        return
+
     nr_filters, err = _damo_fs.read_file(
             nr_filters_file_of(kdamond.name, ctx.name, scheme.name))
     if err != None:
