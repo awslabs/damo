@@ -1,6 +1,5 @@
 [
     {
-        "name": "0", 
         "action": "stat", 
         "access_pattern": {
             "sz_bytes": {

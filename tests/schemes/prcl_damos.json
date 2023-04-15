@@ -1,6 +1,5 @@
 [
 	{
-		"name": "0",
 		"access_pattern": {
 			"sz_bytes": {"min": "min", "max": "max"},
 			"nr_accesses_unit": "percent",
