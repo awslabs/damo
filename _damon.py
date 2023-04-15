@@ -621,7 +621,7 @@ class Damos:
         if 'filters' in kv:
             for damos_filter_kv in kv['filters']:
                 filters.append(DamosFilter.from_kvpairs(damos_filter_kv))
-        return Damos(kv['name'] if 'name' in kv else '0',
+        return Damos('0',
                 DamosAccessPattern.from_kvpairs(kv['access_pattern'])
                     if 'access_pattern' in kv else DamosAccessPattern(),
                 kv['action'] if 'action' in kv else damos_action_stat,
@@ -633,8 +633,8 @@ class Damos:
                 None, None)
 
     def to_kvpairs(self, raw=False):
-        kv = collections.OrderedDict(
-                [(attr, getattr(self, attr)) for attr in ['name', 'action']])
+        kv = collections.OrderedDict()
+        kv['action'] = self.action
         kv['access_pattern'] = self.access_pattern.to_kvpairs(raw)
         kv['quotas'] = self.quotas.to_kvpairs(raw)
         kv['watermarks'] = self.watermarks.to_kvpairs(raw)

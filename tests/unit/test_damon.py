@@ -22,7 +22,7 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(target,
                 _damon.DamonTarget.from_kvpairs(target_kvpairs))
 
-        damos = _damon.Damos('foo',
+        damos = _damon.Damos('0',
                 _damon.DamosAccessPattern([0, 10], [5, 8], _damon.unit_percent,
                     [54, 88], _damon.unit_usec),
                 'pageout',
@@ -33,7 +33,7 @@ class TestDamon(unittest.TestCase):
         damos_kvpairs = damos.to_kvpairs()
         self.assertEqual(type(damos_kvpairs), collections.OrderedDict)
         self.assertEqual(list(damos_kvpairs.keys()),
-                ['name', 'action', 'access_pattern', 'quotas', 'watermarks',
+                ['action', 'access_pattern', 'quotas', 'watermarks',
                     'filters'])
         self.assertEqual(damos, _damon.Damos.from_kvpairs(damos_kvpairs))
 
