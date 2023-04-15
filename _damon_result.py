@@ -439,14 +439,18 @@ def tried_regions_to_snapshot(tried_regions, aggr_interval_us):
     return snapshot
 
 def tried_regions_to_snapshots(monitor_scheme):
-    snapshots = {} # {kdamond: {ctx: Snapshot}}
-    for kdamond in _damon.running_kdamonds():
+    snapshots = {} # {kdamond idx: {ctx: Snapshot}}
+    for kdamond_idx, kdamond in enumerate(_damon.current_kdamonds()):
+        if kdamond.state != 'on':
+            continue
+        # TODO: Make a cleaner way for passing the index
+        kdamond.idx = kdamond_idx
         for ctx in kdamond.contexts:
             for scheme in ctx.schemes:
                 if scheme.effectively_equal(monitor_scheme, ctx.intervals):
                     snapshot = tried_regions_to_snapshot(scheme.tried_regions,
                             ctx.intervals.aggr)
-                    snapshots[kdamond] = {ctx: snapshot}
+                    snapshots[kdamond_idx] = {ctx: snapshot}
                     break
     return snapshots
 
