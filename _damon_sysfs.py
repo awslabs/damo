@@ -138,8 +138,8 @@ def wops_for_scheme_filter(damos_filter):
 
 def wops_for_scheme_filters(filters):
     wops = {}
-    for damos_filter in filters:
-        wops[damos_filter.name] = wops_for_scheme_filter(damos_filter)
+    for idx, damos_filter in enumerate(filters):
+        wops['%d' % idx] = wops_for_scheme_filter(damos_filter)
     return wops
 
 def wops_for_scheme_watermarks(wmarks):
@@ -366,13 +366,12 @@ def files_content_to_watermarks(files_content):
 
 def files_content_to_damos_filters(files_content):
     filters = []
-    for filter_name in files_content:
-        if filter_name == 'nr_filters':
+    for filter_dir_name in files_content:
+        if filter_dir_name == 'nr_filters':
             continue
-        filter_kv = files_content[filter_name]
-        filters.append(_damon.DamosFilter(filter_name,
-            filter_kv['type'].strip(), filter_kv['memcg_path'].strip(),
-            filter_kv['matching'].strip()))
+        filter_kv = files_content[filter_dir_name]
+        filters.append(_damon.DamosFilter(filter_kv['type'].strip(),
+            filter_kv['memcg_path'].strip(), filter_kv['matching'].strip()))
     return filters
 
 def files_content_to_damos_stats(files_content):

@@ -29,8 +29,8 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosQuotas(100, 1024, 1000, [80, 76, 24]),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
                     200),
-                [_damon.DamosFilter('0', 'memcg', '/foo/bar', True),
-                    _damon.DamosFilter('1', 'anon', None, False)],
+                [_damon.DamosFilter('memcg', '/foo/bar', True),
+                    _damon.DamosFilter('anon', None, False)],
                     None, None)
         damos_kvpairs = damos.to_kvpairs()
         self.assertEqual(type(damos_kvpairs), collections.OrderedDict)
@@ -78,7 +78,7 @@ class TestDamon(unittest.TestCase):
         damos2 = copy.deepcopy(damos)
         self.assertEqual(damos, damos2)
 
-        damos2.filters = [_damon.DamosFilter(name='foo', filter_type='memcg',
+        damos2.filters = [_damon.DamosFilter(filter_type='memcg',
                     memcg_path='/foo/bar/', matching=True)]
         self.assertNotEqual(damos, damos2)
 
@@ -95,7 +95,6 @@ class TestDamon(unittest.TestCase):
         damos2.access_pattern = pattern_machine
         self.assertNotEqual(damos, damos2)
         self.assertTrue(damos.effectively_equal(damos2, intervals))
-        damos2.name = 'foo'
         self.assertTrue(damos.effectively_equal(damos2, intervals))
 
     def test_is_monitoring_scheme(self):

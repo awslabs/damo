@@ -439,13 +439,11 @@ class DamosWatermarks:
                 ])
 
 class DamosFilter:
-    name = None
     filter_type = None  # anon or memcg
     memcg_path = None
     matching = None
 
-    def __init__(self, name, filter_type, memcg_path, matching):
-        self.name = name
+    def __init__(self, filter_type, memcg_path, matching):
         self.filter_type = filter_type
         self.memcg_path = memcg_path
         self.matching = _damo_fmt_str.text_to_bool(matching)
@@ -465,7 +463,7 @@ class DamosFilter:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        return DamosFilter('0', kv['filter_type'],
+        return DamosFilter(kv['filter_type'],
                 kv['memcg_path'] if kv['filter_type'] == 'memcg' else '',
                 kv['matching'])
 
