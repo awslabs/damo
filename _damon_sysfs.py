@@ -19,27 +19,11 @@ admin_dir = os.path.join(root_dir, 'admin')
 kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
 nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 
-def kdamond_dir_name(all_kdamonds, kdamond):
-    return all_kdamonds.index(kdamond)
-
-def ctx_dir_name(kdamonds, context):
-    return kdamonds.contexts.index(context)
-
-def target_dir_name(context, target):
-    return context.targets.index(target)
-
-def scheme_dir_name(context, scheme):
-    return context.schemes.index(scheme)
-
 def kdamond_dir_of(kdamond_name):
     return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_name)
 
 def state_file_of(kdamond_name):
     return os.path.join(kdamond_dir_of(kdamond_name), 'state')
-
-def nr_contexts_file_of(kdamond_name):
-    return os.path.join(
-            kdamond_dir_of(kdamond_name), 'contexts', 'nr_contexts')
 
 def ctx_dir_of(kdamond_name, context_name):
     return os.path.join(
@@ -47,10 +31,6 @@ def ctx_dir_of(kdamond_name, context_name):
 
 def schemes_dir_of(kdamond_name, context_name):
     return os.path.join(ctx_dir_of(kdamond_name, context_name), 'schemes')
-
-def nr_schemes_file_of(kdamond_name, context_name):
-    return os.path.join(
-            schemes_dir_of(kdamond_name, context_name), 'nr_schemes')
 
 def scheme_dir_of(kdamond_name, context_name, scheme_name):
     return os.path.join(
@@ -60,35 +40,6 @@ def scheme_tried_regions_dir_of(kdamond_name, context_name, scheme_name):
     return os.path.join(
             scheme_dir_of(kdamond_name, context_name, scheme_name),
             'tried_regions')
-
-def filters_dir_of(kdamond_name, context_name, scheme_name):
-    return os.path.join(
-            scheme_dir_of(kdamond_name, context_name, scheme_name), 'filters')
-
-def nr_filters_file_of(kdamond_name, context_name, scheme_name):
-    return os.path.join(
-            filters_dir_of(kdamond_name, context_name, scheme_name),
-            'nr_filters')
-
-def targets_dir_of(kdamond_name, context_name):
-    return os.path.join(ctx_dir_of(kdamond_name, context_name), 'targets')
-
-def nr_targets_file_of(kdamond_name, context_name):
-    return os.path.join(
-            targets_dir_of(kdamond_name, context_name), 'nr_targets')
-
-def target_dir_of(kdamond_name, context_name, target_name):
-    return os.path.join(ctx_dir_of(kdamond_name, context_name), 'targets',
-            '%s' % target_name)
-
-def regions_dir_of(kdamond_name, context_name, target_name):
-    return os.path.join(
-            target_dir_of(kdamond_name, context_name, target_name), 'regions')
-
-def nr_regions_file_of(kdamond_name, context_name, target_name):
-    return os.path.join(
-            regions_dir_of(kdamond_name, context_name, target_name),
-            'nr_regions')
 
 def supported():
     return os.path.isdir(kdamonds_dir)
