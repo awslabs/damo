@@ -19,6 +19,9 @@ admin_dir = os.path.join(root_dir, 'admin')
 kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
 nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 
+def ctx_dir_name(kdamonds, context):
+    return kdamonds.contexts.index(context)
+
 def target_dir_name(context, target):
     return context.targets.index(target)
 
@@ -249,7 +252,7 @@ def wops_for_ctx(ctx):
     ]
 
 def wops_for_ctxs(ctxs):
-    return {ctx.name: wops_for_ctx(ctx) for ctx in ctxs}
+    return {'%d' % idx: wops_for_ctx(ctx) for idx, ctx in enumerate(ctxs)}
 
 def wops_for_kdamond(kdamond):
     return {'contexts': wops_for_ctxs(kdamond.contexts)}
@@ -262,25 +265,25 @@ def __ensure_scheme_dir_populated(kdamond, ctx, scheme):
         return
 
     nr_filters, err = _damo_fs.read_file(
-            nr_filters_file_of(kdamond.name, ctx.name,
+            nr_filters_file_of(kdamond.name, ctx_dir_name(kdamond, ctx),
                 scheme_dir_name(ctx, scheme)))
     if err != None:
         raise Exception('nr_fileters read fail (%s)' % err)
     if int(nr_filters) != len(scheme.filters):
         _damo_fs.write_file(
-                nr_filters_file_of(kdamond.name, ctx.name,
+                nr_filters_file_of(kdamond.name, ctx_dir_name(kdamond, ctx),
                     scheme_dir_name(ctx, scheme)),
                 '%d' % len(scheme.filters))
 
 def __ensure_target_dir_populated(kdamond, ctx, target):
     nr_regions, err = _damo_fs.read_file(
-            nr_regions_file_of(kdamond.name, ctx.name,
+            nr_regions_file_of(kdamond.name, ctx_dir_name(kdamond, ctx),
                 target_dir_name(ctx, target)))
     if err != None:
         raise Exception('nr_regions read fail (%s)' % err)
     if int(nr_regions) != len(target.regions):
         _damo_fs.write_file(
-                nr_regions_file_of(kdamond.name, ctx.name,
+                nr_regions_file_of(kdamond.name, ctx_dir_name(kdamond, ctx),
                     target_dir_name(ctx, target)),
                 '%d' % len(target.regions))
 
@@ -291,23 +294,24 @@ def __ensure_kdamond_dir_populated(kdamond):
     if int(nr_contexts) != len(kdamond.contexts):
         _damo_fs.write_file(nr_contexts_file_of(kdamond.name),
                 '%d' % len(kdamond.contexts))
-    for ctx in kdamond.contexts:
+    for idx, ctx in enumerate(kdamond.contexts):
+        ctx_dir_name = '%d' % idx
         nr_targets, err = _damo_fs.read_file(
-                nr_targets_file_of(kdamond.name, ctx.name))
+                nr_targets_file_of(kdamond.name, ctx_dir_name))
         if err != None:
             raise Exception('nr_targets read fail (%s)' % err)
         if int(nr_targets) != len(ctx.targets):
             _damo_fs.write_file(
-                    nr_targets_file_of(kdamond.name, ctx.name),
+                    nr_targets_file_of(kdamond.name, ctx_dir_name),
                     '%d' % len(ctx.targets))
         for target in ctx.targets:
             __ensure_target_dir_populated(kdamond, ctx, target)
         nr_schemes, err = _damo_fs.read_file(
-                nr_schemes_file_of(kdamond.name, ctx.name))
+                nr_schemes_file_of(kdamond.name, ctx_dir_name))
         if err != None:
             raise Exception('nr_schemes read fail (%s)' % err)
         if int(nr_schemes) != len(ctx.schemes):
-            _damo_fs.write_file(nr_schemes_file_of(kdamond.name, ctx.name),
+            _damo_fs.write_file(nr_schemes_file_of(kdamond.name, ctx_dir_name),
                     '%d' % len(ctx.schemes))
         for scheme in ctx.schemes:
             __ensure_scheme_dir_populated(kdamond, ctx, scheme)
