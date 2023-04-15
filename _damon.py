@@ -786,14 +786,13 @@ class Kdamond:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        return Kdamond(kv['name'],
+        return Kdamond('0',
                 kv['state'] if 'state' in kv else 'off',
                 kv['pid'] if 'pid' in kv else None,
                 [DamonCtx.from_kvpairs(c) for c in kv['contexts']])
 
     def to_kvpairs(self, raw=False):
         kv = collections.OrderedDict()
-        kv['name'] = self.name
         kv['state'] = self.state
         kv['pid'] = self.pid
         kv['contexts'] = [c.to_kvpairs(raw) for c in self.contexts]
