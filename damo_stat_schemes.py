@@ -15,8 +15,8 @@ def pr_schemes_tried_regions(kdamonds, raw_nr):
     print('# ...')
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
-            for scheme in ctx.schemes:
-                print('%s %s %s' % (kdamond.name, ctx.name, scheme.name))
+            for scheme_idx, scheme in enumerate(ctx.schemes):
+                print('%s %s %s' % (kdamond.name, ctx.name, scheme_idx))
                 print('\n'.join(
                     r.to_str(raw_nr) for r in scheme.tried_regions))
 
@@ -37,20 +37,20 @@ def update_pr_schemes_stats(raw_nr):
     print('# <kdamond> <context> <scheme> <field> <value>')
     for kdamond in kdamonds:
         for ctx in kdamond.contexts:
-            for scheme in ctx.schemes:
-                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
+            for scheme_idx, scheme in enumerate(ctx.schemes):
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme_idx,
                     'nr_tried', _damo_fmt_str.format_nr(
                         scheme.stats.nr_tried, raw_nr)))
-                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme_idx,
                     'sz_tried', _damo_fmt_str.format_sz(
                         scheme.stats.sz_tried, raw_nr)))
-                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme_idx,
                     'nr_applied', _damo_fmt_str.format_nr(
                         scheme.stats.nr_applied, raw_nr)))
-                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme_idx,
                     'sz_applied', _damo_fmt_str.format_sz(
                         scheme.stats.sz_applied, raw_nr)))
-                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme.name,
+                print('%s %s %s %s %s' % (kdamond.name, ctx.name, scheme_idx,
                     'qt_exceeds', _damo_fmt_str.format_nr(
                         scheme.stats.qt_exceeds, raw_nr)))
 
