@@ -419,13 +419,14 @@ def files_content_to_regions(files_content):
             int(files_content[region_name]['end'])))
     return regions
 
+# TODO: Remove target_name argument
 def files_content_to_target(target_name, files_content):
     try:
         pid = int(files_content['pid_target'])
     except:
         pid = None
     regions = files_content_to_regions(files_content['regions'])
-    return _damon.DamonTarget(target_name, pid, regions)
+    return _damon.DamonTarget(pid, regions)
 
 def files_content_to_context(context_name, files_content):
     mon_attrs_content = files_content['monitoring_attrs']

@@ -81,7 +81,7 @@ def damon_ctx_for(args):
         return None, err
 
     try:
-        target = _damon.DamonTarget('0', args.target_pid
+        target = _damon.DamonTarget(args.target_pid
                 if _damon.target_has_pid(ops) else None, init_regions)
     except Exception as e:
         return 'Wrong \'--target_pid\' argument (%s)' % e

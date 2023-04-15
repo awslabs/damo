@@ -288,7 +288,7 @@ def files_content_to_kdamonds(files_content):
         ops = 'paddr'
     targets = []
     for idx, target_id in enumerate(target_ids):
-        targets.append(_damon.DamonTarget(name='%d' % idx,
+        targets.append(_damon.DamonTarget(
             pid=target_id if not is_paddr else None,
             regions=regions_dict[idx
                 if feature_supported('init_regions_target_idx')

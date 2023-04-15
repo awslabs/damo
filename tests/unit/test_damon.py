@@ -14,7 +14,7 @@ import _damon
 
 class TestDamon(unittest.TestCase):
     def test_kvpairs_transition(self):
-        target = _damon.DamonTarget('0', 1234, [_damon.DamonRegion(10, 20)])
+        target = _damon.DamonTarget(1234, [_damon.DamonRegion(10, 20)])
         target_kvpairs = target.to_kvpairs()
         self.assertEqual(type(target_kvpairs), collections.OrderedDict)
         self.assertEqual(list(target_kvpairs.keys()),

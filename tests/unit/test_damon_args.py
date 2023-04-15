@@ -37,14 +37,14 @@ class TestDamonArgs(unittest.TestCase):
             _damon.DamonCtx('0',
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000), 'paddr',
-                [_damon.DamonTarget('0', None,
+                [_damon.DamonTarget(None,
                     [_damon.DamonRegion(123, 456)])], []))
 
         self.assertEqual(ctx,
             _damon.DamonCtx('0',
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000), 'paddr',
-                [_damon.DamonTarget('0', None,
+                [_damon.DamonTarget(None,
                     [_damon.DamonRegion(123, 456)])], []))
 
         args = parser.parse_args(
@@ -58,7 +58,7 @@ class TestDamonArgs(unittest.TestCase):
             _damon.DamonCtx('0',
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000), 'paddr',
-                [_damon.DamonTarget('0', None,
+                [_damon.DamonTarget(None,
                     [_damon.DamonRegion(1024, 4096)])],
                 []))
 
@@ -75,7 +75,7 @@ class TestDamonArgs(unittest.TestCase):
             _damon.DamonCtx('0',
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000), 'paddr',
-                [_damon.DamonTarget('0', None,
+                [_damon.DamonTarget(None,
                     [_damon.DamonRegion(1024, 4096)])],
                 []))
 
