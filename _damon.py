@@ -549,7 +549,6 @@ damos_action_lru_deprio = damos_actions[6]
 damos_action_stat = damos_actions[7]
 
 class Damos:
-    name = None
     access_pattern = None
     action = None
     quotas = None
@@ -559,10 +558,9 @@ class Damos:
     tried_regions = None
 
     # for monitoring only by default
-    def __init__(self, name='0', access_pattern=None, action=damos_action_stat,
+    def __init__(self, access_pattern=None, action=damos_action_stat,
             quotas=None, watermarks=None, filters=None, stats=None,
             tried_regions=None):
-        self.name = name
         self.access_pattern = (access_pattern
                 if access_pattern != None else DamosAccessPattern())
         if not action in damos_actions:
@@ -576,7 +574,7 @@ class Damos:
         self.tried_regions = tried_regions
 
     def to_str(self, raw):
-        lines = ['%s (action: %s)' % (self.name, self.action)]
+        lines = ['action: %s' % self.action]
         lines.append('target access pattern')
         lines.append(_damo_fmt_str.indent_lines(
             self.access_pattern.to_str(raw), 4))
@@ -605,7 +603,7 @@ class Damos:
         return self.__str__()
 
     def __eq__(self, other):
-        return (type(self) == type(other) and self.name == other.name and
+        return (type(self) == type(other) and
                 self.access_pattern == other.access_pattern and
                 self.action == other.action and self.quotas == other.quotas and
                 self.watermarks == other.watermarks and
@@ -617,8 +615,7 @@ class Damos:
         if 'filters' in kv:
             for damos_filter_kv in kv['filters']:
                 filters.append(DamosFilter.from_kvpairs(damos_filter_kv))
-        return Damos('0',
-                DamosAccessPattern.from_kvpairs(kv['access_pattern'])
+        return Damos(DamosAccessPattern.from_kvpairs(kv['access_pattern'])
                     if 'access_pattern' in kv else DamosAccessPattern(),
                 kv['action'] if 'action' in kv else damos_action_stat,
                 DamosQuotas.from_kvpairs(kv['quotas'])

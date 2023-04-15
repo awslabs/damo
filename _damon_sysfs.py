@@ -402,8 +402,8 @@ def files_content_to_damos_tried_regions(files_content):
             ))
     return regions
 
-def files_content_to_scheme(scheme_name, files_content):
-    return _damon.Damos(scheme_name,
+def files_content_to_scheme(files_content):
+    return _damon.Damos(
             files_content_to_access_pattern(files_content['access_pattern']),
             files_content['action'].strip(),
             files_content_to_quotas(files_content['quotas']),
@@ -454,11 +454,10 @@ def files_content_to_context(context_name, files_content):
 
     schemes_content = files_content['schemes']
     schemes = []
-    for scheme_name in schemes_content:
+    for scheme_name, scheme_content in schemes_content.items():
         if scheme_name == 'nr_schemes':
             continue
-        schemes.append(files_content_to_scheme(scheme_name,
-            schemes_content[scheme_name]))
+        schemes.append(files_content_to_scheme(scheme_content))
 
     return _damon.DamonCtx(context_name, intervals, nr_regions, ops, targets,
             schemes)
@@ -559,7 +558,7 @@ def update_supported_features():
         kdamonds_for_feature_check = [_damon.Kdamond(name='0', state=None,
             pid=None, contexts=[_damon.DamonCtx(name='0', intervals=None,
                 nr_regions=None, ops=None, targets=[],
-                schemes=[_damon.Damos(name='0', access_pattern=None,
+                schemes=[_damon.Damos(access_pattern=None,
                     action='stat', quotas=None, watermarks=None, filters=[],
                     stats=None)])])]
         ensure_dirs_populated_for(kdamonds_for_feature_check)

@@ -108,14 +108,14 @@ class TestDamoSchemesInput(unittest.TestCase):
         human_readable_damos_with_filters_str = json.dumps(
                 human_readable_damos_kv_with_filters, indent=4)
 
-        expected_damos_wo_filters = [_damon.Damos('0',
+        expected_damos_wo_filters = [_damon.Damos(
                 _damon.DamosAccessPattern([0, 0],
                     [0, 0], _damon.unit_sample_intervals,
                     [0, 0], _damon.unit_aggr_intervals),
                 'stat',
                 _damon.DamosQuotas(0, 0, 0, [0, 0, 0]),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None, None)]
-        expected_damos_w_filters = [_damon.Damos('0',
+        expected_damos_w_filters = [_damon.Damos(
                 _damon.DamosAccessPattern([0, 0],
                     [0, 0], _damon.unit_sample_intervals,
                     [0, 0], _damon.unit_aggr_intervals),
@@ -148,14 +148,14 @@ min max     5 max       min max     hugepage
         self.assertEqual(err, None)
         self.assertEqual(damos_list,
                 [
-                    _damon.Damos(name='0',
+                    _damon.Damos(
                         access_pattern=_damon.DamosAccessPattern(
                             sz_bytes=['min', 'max'],
                             nr_accesses=['5', 'max'],
                             nr_accesses_unit=_damon.unit_percent,
                             age=['min', 'max'], age_unit=_damon.unit_usec),
                         action=_damon.damos_action_hugepage),
-                    _damon.Damos(name='1',
+                    _damon.Damos(
                         access_pattern=_damon.DamosAccessPattern(
                             sz_bytes=['2M', 'max'],
                             nr_accesses=['min', 'min'],

@@ -30,7 +30,7 @@ class TestDamonDbgfs(unittest.TestCase):
                 lambda x: _damon_dbgfs.debugfs_output_to_damos(
                     x, _damon.DamonIntervals(5000, 100000, 1000000)),
                 {"4096 18446744073709551615 0 0 10 42949 5 0 584792941 1000 0 0 0 0 0 0 0 0 0 0 0 0 0\n":
-                    _damon.Damos('0',
+                    _damon.Damos(
                         access_pattern=_damon.DamosAccessPattern(
                             [4096, 18446744073709551615],
                             [0.0, 0.0], _damon.unit_percent,
