@@ -191,7 +191,7 @@ def turn_damon_on(args):
     if err:
         return err, None
     return _damon.turn_damon_on(
-            [k.name for k in kdamonds]), kdamonds
+            ['%s' % kidx for kidx, k in enumerate(kdamonds)]), kdamonds
 
 # Commandline options setup helpers
 
