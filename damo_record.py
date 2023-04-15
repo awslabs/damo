@@ -137,7 +137,8 @@ def main(args=None):
         if err:
             print('could not turn DAMON on (%s)' % err)
             cleanup_exit(-2)
-        data_for_cleanup.kdamonds_names = [k.name for k in kdamonds]
+        data_for_cleanup.kdamonds_names = ['%d' % idx
+                for idx, k in enumerate(kdamonds)]
 
     if not damon_record_supported or is_ongoing:
         data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
