@@ -309,7 +309,7 @@ def files_content_to_kdamonds(files_content):
         ctx.record_request = record_request
     state = files_content['monitor_on'].strip()
     pid = files_content['kdamond_pid'].strip()
-    return [_damon.Kdamond('0', state, pid, [ctx])]
+    return [_damon.Kdamond(state, pid, [ctx])]
 
 def current_kdamonds():
     return files_content_to_kdamonds(

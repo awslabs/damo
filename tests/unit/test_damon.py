@@ -50,7 +50,7 @@ class TestDamon(unittest.TestCase):
                     'schemes'])
         self.assertEqual(ctx, _damon.DamonCtx.from_kvpairs(ctx_kvpairs))
 
-        kdamond = _damon.Kdamond('0', 'off', 123, [ctx])
+        kdamond = _damon.Kdamond('off', 123, [ctx])
         kdamond_kvpairs = kdamond.to_kvpairs()
         self.assertEqual(type(kdamond_kvpairs), collections.OrderedDict)
         self.assertEqual(list(kdamond_kvpairs.keys()),

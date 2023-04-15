@@ -157,8 +157,7 @@ def kdamonds_for(args):
     ctx, err = damon_ctx_for(args)
     if err:
         return None, err
-    return [_damon.Kdamond(name='0', state=None, pid=None,
-        contexts=[ctx])], None
+    return [_damon.Kdamond(state=None, pid=None, contexts=[ctx])], None
 
 def self_started_target(args):
     return 'self_started_target' in args and args.self_started_target

@@ -280,7 +280,7 @@ def __ensure_scheme_dir_populated(kdamonds, kdamond, ctx, scheme):
                     scheme_dir_name(ctx, scheme)),
                 '%d' % len(scheme.filters))
 
-def __ensure_target_dir_populated(kdmonds, kdamond, ctx, target):
+def __ensure_target_dir_populated(kdamonds, kdamond, ctx, target):
     kdamond_name = kdamond_dir_name(kdamonds, kdamond)
     nr_regions, err = _damo_fs.read_file(
             nr_regions_file_of(kdamond_name, ctx_dir_name(kdamond, ctx),
@@ -472,7 +472,7 @@ def files_content_to_context(context_name, files_content):
 
     return _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
 
-def files_content_to_kdamond(kdamond_name, files_content):
+def files_content_to_kdamond(files_content):
     contexts_content = files_content['contexts']
     contexts = []
     for ctx_name in contexts_content:
@@ -482,15 +482,14 @@ def files_content_to_kdamond(kdamond_name, files_content):
             contexts_content[ctx_name]))
     state = files_content['state'].strip()
     pid = files_content['pid'].strip()
-    return _damon.Kdamond(kdamond_name, state, pid, contexts)
+    return _damon.Kdamond(state, pid, contexts)
 
 def files_content_to_kdamonds(files_contents):
     kdamonds = []
     for kdamond_name in files_contents:
         if kdamond_name == 'nr_kdamonds':
             continue
-        kdamonds.append(files_content_to_kdamond(
-            kdamond_name, files_contents[kdamond_name]))
+        kdamonds.append(files_content_to_kdamond(files_contents[kdamond_name]))
     return kdamonds
 
 def current_kdamonds():
@@ -565,7 +564,7 @@ def update_supported_features():
     orig_kdamonds = None
     if not os.path.isdir(scheme_dir_of(0, 0, 0)):
         orig_kdamonds = current_kdamonds()
-        kdamonds_for_feature_check = [_damon.Kdamond(name='0', state=None,
+        kdamonds_for_feature_check = [_damon.Kdamond(state=None,
             pid=None, contexts=[_damon.DamonCtx(intervals=None,
                 nr_regions=None, ops=None, targets=[],
                 schemes=[_damon.Damos(access_pattern=None,

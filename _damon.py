@@ -745,19 +745,17 @@ def target_has_pid(ops):
     return ops in ['vaddr', 'fvaddr']
 
 class Kdamond:
-    name = None
     state = None
     pid = None
     contexts = None
 
-    def __init__(self, name, state, pid, contexts):
-        self.name = name
+    def __init__(self, state, pid, contexts):
         self.state = state
         self.pid = pid
         self.contexts = contexts
 
     def summary_str(self):
-        return '%s (state: %s, pid: %s)' % (self.name, self.state, self.pid)
+        return 'state: %s, pid: %s' % (self.state, self.pid)
 
     def to_str(self, raw):
         lines = [self.summary_str()]
@@ -777,7 +775,7 @@ class Kdamond:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        return Kdamond('0',
+        return Kdamond(
                 kv['state'] if 'state' in kv else 'off',
                 kv['pid'] if 'pid' in kv else None,
                 [DamonCtx.from_kvpairs(c) for c in kv['contexts']])
@@ -917,7 +915,7 @@ def commit(kdamonds):
     err = stage_kdamonds(kdamonds)
     if err:
         return 'staging updates failed (%s)' % err
-    err = commit_staged([k.name for k in kdamonds])
+    err = commit_staged(['%s' % idx for idx, k in enumerate(kdamonds)])
     if err:
         return 'commit staged updates filed (%s)' % err
     return None
