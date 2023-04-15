@@ -211,11 +211,11 @@ def wops_for_regions(regions):
 
 def wops_for_targets(ctx):
     return {
-            target.name: {
+            '%d' % idx: {
                 'pid_target': '%s' %
                 target.pid if _damon.target_has_pid(ctx.ops) else '',
                 'regions': wops_for_regions(target.regions)
-                } for target in ctx.targets}
+                } for idx, target in enumerate(ctx.targets)}
 
 def wops_for_monitoring_attrs(ctx):
     return {
