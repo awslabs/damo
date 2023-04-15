@@ -419,8 +419,7 @@ def files_content_to_regions(files_content):
             int(files_content[region_name]['end'])))
     return regions
 
-# TODO: Remove target_name argument
-def files_content_to_target(target_name, files_content):
+def files_content_to_target(files_content):
     try:
         pid = int(files_content['pid_target'])
     except:
@@ -443,11 +442,10 @@ def files_content_to_context(context_name, files_content):
 
     targets_content = files_content['targets']
     targets = []
-    for target_name in targets_content:
-        if target_name == 'nr_targets':
+    for target_dir_name, target_content in targets_content.items():
+        if target_dir_name == 'nr_targets':
             continue
-        targets.append(files_content_to_target(target_name,
-            targets_content[target_name]))
+        targets.append(files_content_to_target(target_content))
 
     schemes_content = files_content['schemes']
     schemes = []
