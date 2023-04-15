@@ -29,7 +29,9 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosQuotas(100, 1024, 1000, [80, 76, 24]),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
                     200),
-                [], None, None)
+                [_damon.DamosFilter('0', 'memcg', '/foo/bar', True),
+                    _damon.DamosFilter('1', 'anon', None, False)],
+                    None, None)
         damos_kvpairs = damos.to_kvpairs()
         self.assertEqual(type(damos_kvpairs), collections.OrderedDict)
         self.assertEqual(list(damos_kvpairs.keys()),
