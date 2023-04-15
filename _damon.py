@@ -467,14 +467,14 @@ class DamosFilter:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        return DamosFilter(kv['name'], kv['filter_type'],
+        return DamosFilter('0', kv['filter_type'],
                 kv['memcg_path'] if kv['filter_type'] == 'memcg' else '',
                 kv['matching'])
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict(
                 [(attr, getattr(self, attr)) for attr in [
-                    'name', 'filter_type', 'memcg_path', 'matching']])
+                    'filter_type', 'memcg_path', 'matching']])
 
 class DamosStats:
     nr_tried = None
