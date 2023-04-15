@@ -131,11 +131,11 @@ class DamonTarget:
     @classmethod
     def from_kvpairs(cls, kvpairs):
         regions = [DamonRegion.from_kvpairs(kvp) for kvp in kvpairs['regions']]
-        return DamonTarget(kvpairs['name'], kvpairs['pid'], regions)
+        return DamonTarget('0', kvpairs['pid'], regions)
 
     def to_kvpairs(self, raw=False):
-        kvp = collections.OrderedDict(
-                [(attr, getattr(self, attr)) for attr in ['name', 'pid']])
+        kvp = collections.OrderedDict()
+        kvp['pid'] = self.pid
         kvp['regions'] = [r.to_kvpairs(raw) for r in self.regions]
         return kvp
 
