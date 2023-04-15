@@ -19,6 +19,9 @@ admin_dir = os.path.join(root_dir, 'admin')
 kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
 nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 
+def target_dir_name(context, target):
+    return context.targets.index(target)
+
 def kdamond_dir_of(kdamond_name):
     return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_name)
 
@@ -265,12 +268,14 @@ def __ensure_scheme_dir_populated(kdamond, ctx, scheme):
 
 def __ensure_target_dir_populated(kdamond, ctx, target):
     nr_regions, err = _damo_fs.read_file(
-            nr_regions_file_of(kdamond.name, ctx.name, target.name))
+            nr_regions_file_of(kdamond.name, ctx.name,
+                target_dir_name(ctx, target)))
     if err != None:
         raise Exception('nr_regions read fail (%s)' % err)
     if int(nr_regions) != len(target.regions):
         _damo_fs.write_file(
-                nr_regions_file_of(kdamond.name, ctx.name, target.name),
+                nr_regions_file_of(kdamond.name, ctx.name,
+                    target_dir_name(ctx, target)),
                 '%d' % len(target.regions))
 
 def __ensure_kdamond_dir_populated(kdamond):
