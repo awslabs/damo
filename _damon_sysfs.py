@@ -22,6 +22,9 @@ nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 def target_dir_name(context, target):
     return context.targets.index(target)
 
+def scheme_dir_name(context, scheme):
+    return context.schemes.index(scheme)
+
 def kdamond_dir_of(kdamond_name):
     return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_name)
 
@@ -193,8 +196,9 @@ def wops_for_schemes(ctx):
     schemes = ctx.schemes
 
     schemes_wops = {}
-    for scheme in schemes:
-        schemes_wops[scheme.name] = {
+    for idx, scheme in enumerate(schemes):
+        scheme_dir_name = '%d' % idx
+        schemes_wops[scheme_dir_name] = {
             'access_pattern': wops_for_scheme_access_pattern(
                 scheme.access_pattern, ctx),
             'action': scheme.action,
@@ -202,7 +206,7 @@ def wops_for_schemes(ctx):
             'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
         }
         if feature_supported('schemes_filters'):
-            schemes_wops[scheme.name]['filters'] = wops_for_scheme_filters(
+            schemes_wops[scheme_dir_name]['filters'] = wops_for_scheme_filters(
                     scheme.filters)
     return schemes_wops
 
@@ -258,12 +262,14 @@ def __ensure_scheme_dir_populated(kdamond, ctx, scheme):
         return
 
     nr_filters, err = _damo_fs.read_file(
-            nr_filters_file_of(kdamond.name, ctx.name, scheme.name))
+            nr_filters_file_of(kdamond.name, ctx.name,
+                scheme_dir_name(ctx, scheme)))
     if err != None:
         raise Exception('nr_fileters read fail (%s)' % err)
     if int(nr_filters) != len(scheme.filters):
         _damo_fs.write_file(
-                nr_filters_file_of(kdamond.name, ctx.name, scheme.name),
+                nr_filters_file_of(kdamond.name, ctx.name,
+                    scheme_dir_name(ctx, scheme)),
                 '%d' % len(scheme.filters))
 
 def __ensure_target_dir_populated(kdamond, ctx, target):
