@@ -725,7 +725,7 @@ class DamonCtx:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        ctx = DamonCtx(kv['name'],
+        ctx = DamonCtx('0',
                 DamonIntervals.from_kvpairs(kv['intervals'])
                     if 'intervals' in kv else DamonIntervals(),
                 DamonNrRegionsRange.from_kvpairs(kv['nr_regions'])
@@ -740,7 +740,6 @@ class DamonCtx:
 
     def to_kvpairs(self, raw=False):
         kv = collections.OrderedDict({})
-        kv['name'] = self.name
         kv['intervals'] = self.intervals.to_kvpairs(raw)
         kv['nr_regions'] = self.nr_regions.to_kvpairs(raw)
         kv['ops'] = self.ops
