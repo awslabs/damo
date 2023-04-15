@@ -39,7 +39,7 @@ class TestDamon(unittest.TestCase):
                     'filters'])
         self.assertEqual(damos, _damon.Damos.from_kvpairs(damos_kvpairs))
 
-        ctx = _damon.DamonCtx('0',
+        ctx = _damon.DamonCtx(
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000),
                 'paddr', [target], [damos])

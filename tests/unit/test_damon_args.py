@@ -34,14 +34,14 @@ class TestDamonArgs(unittest.TestCase):
         ctx, err = _damon_args.damon_ctx_for(args)
         self.assertEqual(err, None)
         self.assertEqual(ctx,
-            _damon.DamonCtx('0',
+            _damon.DamonCtx(
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000), 'paddr',
                 [_damon.DamonTarget(None,
                     [_damon.DamonRegion(123, 456)])], []))
 
         self.assertEqual(ctx,
-            _damon.DamonCtx('0',
+            _damon.DamonCtx(
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000), 'paddr',
                 [_damon.DamonTarget(None,
@@ -55,7 +55,7 @@ class TestDamonArgs(unittest.TestCase):
         ctx, err = _damon_args.damon_ctx_for(args)
         self.assertEqual(err, None)
         self.assertEqual(ctx,
-            _damon.DamonCtx('0',
+            _damon.DamonCtx(
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000), 'paddr',
                 [_damon.DamonTarget(None,
@@ -72,7 +72,7 @@ class TestDamonArgs(unittest.TestCase):
         ctx, err = _damon_args.damon_ctx_for(args)
         self.assertEqual(err, None)
         self.assertEqual(ctx,
-            _damon.DamonCtx('0',
+            _damon.DamonCtx(
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000), 'paddr',
                 [_damon.DamonTarget(None,

@@ -304,7 +304,7 @@ def files_content_to_kdamonds(files_content):
             continue
         schemes.append(debugfs_output_to_damos(line, intervals))
 
-    ctx = _damon.DamonCtx('0', intervals, nr_regions, ops, targets, schemes)
+    ctx = _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
     if feature_supported('record'):
         ctx.record_request = record_request
     state = files_content['monitor_on'].strip()

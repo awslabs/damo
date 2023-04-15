@@ -463,8 +463,7 @@ def files_content_to_context(context_name, files_content):
             continue
         schemes.append(files_content_to_scheme(scheme_content))
 
-    return _damon.DamonCtx(context_name, intervals, nr_regions, ops, targets,
-            schemes)
+    return _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
 
 def files_content_to_kdamond(kdamond_name, files_content):
     contexts_content = files_content['contexts']
@@ -560,7 +559,7 @@ def update_supported_features():
     if not os.path.isdir(scheme_dir_of(0, 0, 0)):
         orig_kdamonds = current_kdamonds()
         kdamonds_for_feature_check = [_damon.Kdamond(name='0', state=None,
-            pid=None, contexts=[_damon.DamonCtx(name='0', intervals=None,
+            pid=None, contexts=[_damon.DamonCtx(intervals=None,
                 nr_regions=None, ops=None, targets=[],
                 schemes=[_damon.Damos(access_pattern=None,
                     action='stat', quotas=None, watermarks=None, filters=[],

@@ -676,7 +676,6 @@ class DamonRecord:
                     ['rfile_buf', 'rfile_path']])
 
 class DamonCtx:
-    name = None
     intervals = None
     nr_regions = None
     ops = None
@@ -685,9 +684,8 @@ class DamonCtx:
     # For old downstream kernels that supports record feature
     record_request = None
 
-    def __init__(self, name, intervals, nr_regions, ops, targets, schemes,
+    def __init__(self, intervals, nr_regions, ops, targets, schemes,
             record_request=None):
-        self.name = name
         self.intervals = intervals
         self.nr_regions = nr_regions
         self.ops = ops
@@ -696,7 +694,7 @@ class DamonCtx:
         self.record_request = record_request
 
     def to_str(self, raw):
-        lines = ['%s (ops: %s)' % (self.name, self.ops)]
+        lines = ['ops: %s' % self.ops]
         lines.append('intervals: %s' % self.intervals.to_str(raw))
         lines.append('nr_regions: %s' % self.nr_regions.to_str(raw))
         lines.append('targets')
@@ -719,7 +717,7 @@ class DamonCtx:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        ctx = DamonCtx('0',
+        ctx = DamonCtx(
                 DamonIntervals.from_kvpairs(kv['intervals'])
                     if 'intervals' in kv else DamonIntervals(),
                 DamonNrRegionsRange.from_kvpairs(kv['nr_regions'])
