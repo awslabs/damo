@@ -142,6 +142,32 @@ unit_sample_intervals = 'sample_intervals'
 unit_usec = 'usec'
 unit_aggr_intervals = 'aggr_intervals'
 
+class DamonIntervalBasedValUnit:
+    value = None
+    unit = None # percent, sample_intervals, usec, aggr_intervals
+
+    def __init__(self, value, unit):
+        self.value = value
+        self.unit = unit
+
+    def convert_unit(self, new_unit, intervals):
+        if self.unit == new_unit:
+            return
+        if self.unit == unit_sample_intervals and new_unit == unit_percent:
+            max_val = intervals.aggr / intervals.sample
+            self.value = int(self.value * 100.0 / max_val)
+        elif self.unit == unit_percent and new_unit == unit_sample_intervals:
+            max_val = intervals.aggr / intervals.sample
+            self.value = int(self.value * max_val / 100)
+        elif self.unit == unit_aggr_intervals and new_unit == unit_usec:
+            self.value = self.value * intervals.aggr
+        elif self.unit == unit_usec and new_unit == unit_aggr_intervals:
+            self.value = int(self.value / intervals.aggr)
+        else:
+            raise Exception('unsupported unit change')
+        self.unit = new_unit
+        return
+
 class DamosAccessPattern:
     sz_bytes = None
     nr_accesses = None
