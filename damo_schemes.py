@@ -49,7 +49,7 @@ def main(args=None):
         print('could not turn DAMON on (%s)' % err)
         cleanup_exit(-3)
 
-    kdamonds_names = [k.name for k in kdamonds]
+    kdamonds_names = ['%d' % idx for idx, k in enumerate(kdamonds)]
 
     print('Press Ctrl+C to stop')
     if _damon_args.self_started_target(args):
