@@ -503,12 +503,14 @@ class DamosTriedRegion:
     end = None
     nr_accesses = None
     age = None
+    age_unit = None
 
-    def __init__(self, start, end, nr_accesses, age):
+    def __init__(self, start, end, nr_accesses, age, age_unit):
         self.start = start
         self.end = end
         self.nr_accesses = nr_accesses
         self.age = age
+        self.age_unit = age_unit
 
     def to_str(self, raw, intervals=None):
         age = self.age
@@ -519,7 +521,7 @@ class DamosTriedRegion:
             age = _damo_fmt_str.format_time_us(age * intervals.aggr, raw)
         else:
             nr_accesses = '%s' % _damo_fmt_str.format_nr(self.nr_accesses, raw)
-            age = _damo_fmt_str.format_nr(age, raw)
+            age = '%s %s' % (_damo_fmt_str.format_nr(age, raw), self.age_unit)
         return '%s: nr_accesses: %s, age: %s' % (
                 _damo_fmt_str.format_addr_range(self.start, self.end, raw),
                 nr_accesses, age)
