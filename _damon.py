@@ -142,7 +142,7 @@ unit_sample_intervals = 'sample_intervals'
 unit_usec = 'usec'
 unit_aggr_intervals = 'aggr_intervals'
 
-class DamonIntervalBasedValUnit:
+class DamonIntervalsBasedValUnit:
     value = None
     unit = None # percent, sample_intervals, usec, aggr_intervals
 
