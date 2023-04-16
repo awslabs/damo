@@ -330,5 +330,16 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(valunit.value, 15)
         self.assertEqual(valunit.unit, _damon.unit_aggr_intervals)
 
+        self.assertEqual(
+                _damon.DamonIntervalsBasedValUnit(42, _damon.unit_usec),
+                _damon.DamonIntervalsBasedValUnit(42, _damon.unit_usec))
+        self.assertNotEqual(
+                _damon.DamonIntervalsBasedValUnit(42, _damon.unit_usec),
+                _damon.DamonIntervalsBasedValUnit(43, _damon.unit_usec))
+        self.assertNotEqual(
+                _damon.DamonIntervalsBasedValUnit(42, _damon.unit_usec),
+                _damon.DamonIntervalsBasedValUnit(42,
+                    _damon.unit_aggr_intervals))
+
 if __name__ == '__main__':
     unittest.main()
