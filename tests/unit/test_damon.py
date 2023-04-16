@@ -297,5 +297,38 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosWatermarks(_damon.damos_wmarks_metric_none,
                     0, 0, 0, 0))
 
+    def test_damon_intervals_based_val_unit(self):
+        intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
+
+        # for nr_accesses
+        valunit = _damon.DamonIntervalsBasedValUnit(4,
+                _damon.unit_sample_intervals)
+        self.assertEqual(valunit.to_str(False),
+                '%s %s' % (valunit.value, valunit.unit))
+
+        valunit.convert_unit(_damon.unit_percent, intervals)
+        self.assertEqual(valunit.value, 20)
+        self.assertEqual(valunit.unit, _damon.unit_percent)
+        self.assertEqual(valunit.to_str(False), '20 %')
+
+        valunit.convert_unit(_damon.unit_sample_intervals, intervals)
+        self.assertEqual(valunit.value, 4)
+        self.assertEqual(valunit.unit, _damon.unit_sample_intervals)
+
+        # for age
+        valunit = _damon.DamonIntervalsBasedValUnit(15,
+                _damon.unit_aggr_intervals)
+        self.assertEqual(valunit.to_str(False),
+                '%s %s' % (valunit.value, valunit.unit))
+
+        valunit.convert_unit(_damon.unit_usec, intervals)
+        self.assertEqual(valunit.value, 1500000)
+        self.assertEqual(valunit.unit, _damon.unit_usec)
+        self.assertEqual(valunit.to_str(False), '1 s 500 ms')
+
+        valunit.convert_unit(_damon.unit_aggr_intervals, intervals)
+        self.assertEqual(valunit.value, 15)
+        self.assertEqual(valunit.unit, _damon.unit_aggr_intervals)
+
 if __name__ == '__main__':
     unittest.main()
