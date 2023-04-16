@@ -583,10 +583,10 @@ class Damos:
         lines.append('watermarks')
         lines.append(_damo_fmt_str.indent_lines(
             self.watermarks.to_str(raw), 4))
-        lines.append('filters')
-        for damos_filter in self.filters:
+        for idx, damos_filter in enumerate(self.filters):
+            lines.append('filter %d' % idx)
             lines.append(_damo_fmt_str.indent_lines(
-                damos_filter.to_str(raw), 8))
+                damos_filter.to_str(raw), 4))
         if self.stats != None:
             lines.append('statistics')
             lines.append(_damo_fmt_str.indent_lines(self.stats.to_str(raw), 4))
