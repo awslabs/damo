@@ -697,10 +697,9 @@ class DamonCtx:
         lines = ['ops: %s' % self.ops]
         lines.append('intervals: %s' % self.intervals.to_str(raw))
         lines.append('nr_regions: %s' % self.nr_regions.to_str(raw))
-        lines.append('targets')
         for idx, target in enumerate(self.targets):
-            lines.append(_damo_fmt_str.indent_lines('%d' % idx, 4))
-            lines.append(_damo_fmt_str.indent_lines(target.to_str(raw), 8))
+            lines.append('target %d' % idx)
+            lines.append(_damo_fmt_str.indent_lines(target.to_str(raw), 4))
         lines.append('schemes')
         for scheme in self.schemes:
             lines.append(_damo_fmt_str.indent_lines(scheme.to_str(raw), 4))
