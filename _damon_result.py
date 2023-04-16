@@ -450,7 +450,7 @@ def tried_regions_to_snapshots(monitor_scheme):
                 if scheme.effectively_equal(monitor_scheme, ctx.intervals):
                     snapshot = tried_regions_to_snapshot(scheme.tried_regions,
                             ctx.intervals.aggr)
-                    snapshots[kdamond_idx] = {ctx: snapshot}
+                    snapshots[kdamond] = {ctx: snapshot}
                     break
     return snapshots
 
