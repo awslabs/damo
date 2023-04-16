@@ -150,6 +150,9 @@ class DamonIntervalsBasedValUnit:
         self.value = value
         self.unit = unit
 
+    def __eq__(self, other):
+        return self.value == other.value and self.unit == other.unit
+
     def convert_unit(self, new_unit, intervals):
         if self.unit == new_unit:
             return
