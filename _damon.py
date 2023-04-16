@@ -759,8 +759,8 @@ class Kdamond:
 
     def to_str(self, raw):
         lines = [self.summary_str()]
-        for ctx in self.contexts:
-            lines.append('contexts')
+        for idx, ctx in enumerate(self.contexts):
+            lines.append('context %d' % idx)
             lines.append(_damo_fmt_str.indent_lines(ctx.to_str(raw), 4))
         return '\n'.join(lines)
 

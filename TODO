@@ -23,6 +23,6 @@
 - Deprecate scheme subcommand
   - Can be replaced by start or tune
 - Deprecate single line per-scheme
-- Deprecate v1-v3 schemes
+- Deprecate v1-v3 schemes (done but code remain)
 - Deprecate old scheme usages in tests
 - Make clean definition of 'name'.  It might better to use 'index' again.
