@@ -168,6 +168,16 @@ class DamonIntervalBasedValUnit:
         self.unit = new_unit
         return
 
+    def to_str(self, raw):
+        unit = self.unit
+
+        if unit == unit_usec:
+            return _damo_fmt_str.format_time_us_exact(self.value, raw)
+
+        if unit == unit_percent:
+            unit = '%'
+        return '%s %s' % (_damo_fmt_str.format_nr(self.value, raw), unit)
+
 class DamosAccessPattern:
     sz_bytes = None
     nr_accesses = None
