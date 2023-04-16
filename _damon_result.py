@@ -17,7 +17,7 @@ class DAMONRegion:
     end = None
     nr_accesses = None
     age = None
-    age_unit = None
+    age_unit = None # _damon.unit_aggr_intervals or _damon.unit_usec
 
     def __init__(self, start, end, nr_accesses, age, age_unit):
         self.start = start
@@ -442,8 +442,9 @@ def tried_regions_to_snapshot(tried_regions, aggr_interval_us):
 
     for tried_region in tried_regions:
         snapshot.regions.append(DAMONRegion(tried_region.start,
-            tried_region.end, tried_region.nr_accesses, tried_region.age,
-            _damon.unit_aggr_intervals))
+            tried_region.end, tried_region.nr_accesses,
+            tried_region.age * aggr_interval_us,
+            _damon.unit_usec))
     return snapshot
 
 def tried_regions_to_snapshots(monitor_scheme):
