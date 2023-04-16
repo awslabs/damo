@@ -153,23 +153,24 @@ class DamonIntervalsBasedValUnit:
     def __eq__(self, other):
         return self.value == other.value and self.unit == other.unit
 
-    def convert_unit(self, new_unit, intervals):
+    def value_for(self, new_unit, intervals):
         if self.unit == new_unit:
-            return
+            return self.value
         if self.unit == unit_sample_intervals and new_unit == unit_percent:
             max_val = intervals.aggr / intervals.sample
-            self.value = int(self.value * 100.0 / max_val)
+            return int(self.value * 100.0 / max_val)
         elif self.unit == unit_percent and new_unit == unit_sample_intervals:
             max_val = intervals.aggr / intervals.sample
-            self.value = int(self.value * max_val / 100)
+            return int(self.value * max_val / 100)
         elif self.unit == unit_aggr_intervals and new_unit == unit_usec:
-            self.value = self.value * intervals.aggr
+            return self.value * intervals.aggr
         elif self.unit == unit_usec and new_unit == unit_aggr_intervals:
-            self.value = int(self.value / intervals.aggr)
-        else:
-            raise Exception('unsupported unit change')
+            return int(self.value / intervals.aggr)
+        raise Exception('unsupported unit change')
+
+    def convert_unit(self, new_unit, intervals):
+        self.value = self.value_for(new_unit, intervals)
         self.unit = new_unit
-        return
 
     def to_str(self, raw):
         unit = self.unit
