@@ -271,9 +271,8 @@ class TestDamon(unittest.TestCase):
                     _damon.unit_percent, _damon.unit_usec, intervals)]:
             self.assertEqual(type(converted.nr_accesses[0].value), int)
             self.assertEqual(type(converted.nr_accesses[1].value), int)
-            if converted.age_unit != _damon.unit_usec:
-                self.assertEqual(type(converted.age[0]), int)
-                self.assertEqual(type(converted.age[1]), int)
+            self.assertEqual(type(converted.age[0].value), int)
+            self.assertEqual(type(converted.age[1].value), int)
 
         exception_raised = False
         try:
