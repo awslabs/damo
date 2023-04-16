@@ -200,29 +200,29 @@ class DamosAccessPattern:
         self.sz_bytes = [_damo_fmt_str.text_to_bytes(sz_bytes[0]),
                 _damo_fmt_str.text_to_bytes(sz_bytes[1])]
 
-        if nr_accesses_unit == unit_percent:
-            fn = _damo_fmt_str.text_to_percent
-        elif nr_accesses_unit == unit_sample_intervals:
-            fn = _damo_fmt_str.text_to_nr
-        else:
+        parsers_for_unit = {
+                unit_percent: _damo_fmt_str.text_to_percent,
+                unit_sample_intervals: _damo_fmt_str.text_to_nr,
+                unit_usec: _damo_fmt_str.text_to_us,
+                unit_aggr_intervals: _damo_fmt_str.text_to_nr}
+
+        if not nr_accesses_unit in parsers_for_unit:
             raise Exception('invalid access pattern nr_accesses_unit \'%s\'' %
                     nr_accesses_unit)
-        self.nr_accesses = [
-                DamonIntervalsBasedValUnit(
-                    fn(nr_accesses[0]), nr_accesses_unit),
-                DamonIntervalsBasedValUnit(
-                    fn(nr_accesses[1]), nr_accesses_unit)]
-
-        if age_unit == unit_usec:
-            fn = _damo_fmt_str.text_to_us
-        elif age_unit == unit_aggr_intervals:
-            fn = _damo_fmt_str.text_to_nr
-        else:
+        if not age_unit in parsers_for_unit:
             raise Exception('invalid access pattern age_unit \'%s\'' %
                     age_unit)
+
+        unit = nr_accesses_unit
+        fn = parsers_for_unit[unit]
+        self.nr_accesses = [
+                DamonIntervalsBasedValUnit(fn(nr_accesses[0]), unit),
+                DamonIntervalsBasedValUnit(fn(nr_accesses[1]), unit)]
+
+        fn = parsers_for_unit[age_unit]
         self.age = [
-                DamonIntervalsBasedValUnit( fn(age[0]), age_unit),
-                DamonIntervalsBasedValUnit( fn(age[1]), age_unit)]
+                DamonIntervalsBasedValUnit(fn(age[0]), age_unit),
+                DamonIntervalsBasedValUnit(fn(age[1]), age_unit)]
 
     def to_str(self, raw):
         lines = [
