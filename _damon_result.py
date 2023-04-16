@@ -467,8 +467,8 @@ def get_snapshots(access_pattern):
     if err:
         return None, 'monitoring scheme install failed: %s' % err
 
-    err = _damon.update_schemes_tried_regions([k.name for k in
-        running_kdamonds])
+    err = _damon.update_schemes_tried_regions(['%d' % idx for idx, k in
+        enumerate(running_kdamonds)])
     if err != None:
         if installed:
             err = _damon.commit(orig_kdamonds)
