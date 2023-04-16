@@ -190,8 +190,7 @@ class DamonIntervalsBasedValUnit:
 
 class DamosAccessPattern:
     sz_bytes = None
-    nr_accesses = None
-    nr_accesses_unit = None # unit_{percent,sample_intervals}
+    nr_accesses = None # [min/max DamonIntervalsBasedValUnit]
     age = None
     age_unit = None #  unit_{usec,aggr_intervals}
 
@@ -209,8 +208,11 @@ class DamosAccessPattern:
         else:
             raise Exception('invalid access pattern nr_accesses_unit \'%s\'' %
                     nr_accesses_unit)
-        self.nr_accesses = [fn(nr_accesses[0]), fn(nr_accesses[1])]
-        self.nr_accesses_unit = nr_accesses_unit
+        self.nr_accesses = [
+                DamonIntervalsBasedValUnit(
+                    fn(nr_accesses[0]), nr_accesses_unit),
+                DamonIntervalsBasedValUnit(
+                    fn(nr_accesses[1]), nr_accesses_unit)]
 
         if age_unit == unit_usec:
             fn = _damo_fmt_str.text_to_us
@@ -227,12 +229,9 @@ class DamosAccessPattern:
             'sz: [%s, %s]' % (_damo_fmt_str.format_sz(self.sz_bytes[0], raw),
                 _damo_fmt_str.format_sz(self.sz_bytes[1], raw)),
             ]
-        unit = self.nr_accesses_unit
-        if unit == unit_percent:
-            unit = '%'
-        lines.append('nr_accesses: [%s %s, %s %s]' % (
-                _damo_fmt_str.format_nr(self.nr_accesses[0], raw), unit,
-                _damo_fmt_str.format_nr(self.nr_accesses[1], raw), unit))
+        lines.append('nr_accesses: [%s, %s]' % (
+            self.nr_accesses[0].to_str(raw), self.nr_accesses[1].to_str(raw)))
+
         if self.age_unit == unit_usec:
             min_age = _damo_fmt_str.format_time_us_exact(self.age[0], raw)
             max_age = _damo_fmt_str.format_time_us_exact(self.age[1], raw)
@@ -251,7 +250,6 @@ class DamosAccessPattern:
         return (type(self) == type(other) and
                 self.sz_bytes == other.sz_bytes and
                 self.nr_accesses == other.nr_accesses and
-                self.nr_accesses_unit == other.nr_accesses_unit and
                 self.age == other.age and self.age_unit == other.age_unit)
 
     @classmethod
@@ -287,13 +285,8 @@ class DamosAccessPattern:
                 age_unit)
 
     def to_kvpairs(self, raw=False):
-        unit = self.nr_accesses_unit
-        if unit == unit_percent:
-            unit = '%'
-        min_nr_accesses = '%s %s' % (
-                _damo_fmt_str.format_nr(self.nr_accesses[0], raw), unit)
-        max_nr_accesses = '%s %s' % (
-                _damo_fmt_str.format_nr(self.nr_accesses[1], raw), unit)
+        min_nr_accesses = self.nr_accesses[0].to_str(raw)
+        max_nr_accesses = self.nr_accesses[1].to_str(raw)
         if self.age_unit == unit_usec:
             min_age = _damo_fmt_str.format_time_us_exact(self.age[0], raw)
             max_age = _damo_fmt_str.format_time_us_exact(self.age[1], raw)
@@ -314,22 +307,8 @@ class DamosAccessPattern:
             ])
 
     def convert_nr_accesses_unit(self, nr_accesses_unit, intervals):
-        if self.nr_accesses_unit == nr_accesses_unit:
-            return
-        max_nr_accesses_sample_intervals = intervals.aggr / intervals.sample
-        # percent to sample_intervals
-        if nr_accesses_unit == unit_sample_intervals:
-            self.nr_accesses[0] = int(self.nr_accesses[0] *
-                    max_nr_accesses_sample_intervals / 100)
-            self.nr_accesses[1] = int(self.nr_accesses[1] *
-                    max_nr_accesses_sample_intervals / 100)
-        # sample_intervals to percent
-        else:
-            self.nr_accesses[0] = int(self.nr_accesses[0] * 100.0 /
-                    max_nr_accesses_sample_intervals)
-            self.nr_accesses[1] = int(self.nr_accesses[1] * 100.0 /
-                    max_nr_accesses_sample_intervals)
-        self.nr_accesses_unit = nr_accesses_unit
+        self.nr_accesses[0].convert_unit(nr_accesses_unit, intervals)
+        self.nr_accesses[1].convert_unit(nr_accesses_unit, intervals)
 
     def convert_age_unit(self, age_unit, intervals):
         if self.age_unit == age_unit:
