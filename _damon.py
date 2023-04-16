@@ -292,17 +292,11 @@ class DamosAccessPattern:
                 ('min', min_age), ('max', max_age)]))),
             ])
 
-    def convert_nr_accesses_unit(self, nr_accesses_unit, intervals):
+    def convert_for_units(self, nr_accesses_unit, age_unit, intervals):
         self.nr_accesses[0].convert_unit(nr_accesses_unit, intervals)
         self.nr_accesses[1].convert_unit(nr_accesses_unit, intervals)
-
-    def convert_age_unit(self, age_unit, intervals):
         self.age[0].convert_unit(age_unit, intervals)
         self.age[1].convert_unit(age_unit, intervals)
-
-    def convert_for_units(self, nr_accesses_unit, age_unit, intervals):
-        self.convert_nr_accesses_unit(nr_accesses_unit, intervals)
-        self.convert_age_unit(age_unit, intervals)
 
     def converted_for_units(self, nr_accesses_unit, age_unit, intervals):
         copied = copy.deepcopy(self)
