@@ -306,10 +306,17 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(valunit.to_str(False),
                 '%s %s' % (valunit.value, valunit.unit))
 
+        self.assertEqual(valunit.value_for(_damon.unit_percent, intervals), 20)
+        self.assertEqual(valunit.value, 4)
+
         valunit.convert_unit(_damon.unit_percent, intervals)
         self.assertEqual(valunit.value, 20)
         self.assertEqual(valunit.unit, _damon.unit_percent)
         self.assertEqual(valunit.to_str(False), '20 %')
+
+        self.assertEqual(
+                valunit.value_for(_damon.unit_sample_intervals, intervals), 4)
+        self.assertEqual(valunit.value, 20)
 
         valunit.convert_unit(_damon.unit_sample_intervals, intervals)
         self.assertEqual(valunit.value, 4)
