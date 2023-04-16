@@ -17,12 +17,14 @@ class DAMONRegion:
     end = None
     nr_accesses = None
     age = None
+    age_unit = None
 
-    def __init__(self, start, end, nr_accesses, age):
+    def __init__(self, start, end, nr_accesses, age, age_unit):
         self.start = start
         self.end = end
         self.nr_accesses = nr_accesses
         self.age = age
+        self.age_unit = age_unit
 
 class DAMONSnapshot:
     start_time = None
@@ -81,7 +83,8 @@ def read_snapshot_from_record_file(f, start_time, end_time):
         start_addr = struct.unpack('L', f.read(8))[0]
         end_addr = struct.unpack('L', f.read(8))[0]
         nr_accesses = struct.unpack('I', f.read(4))[0]
-        region = DAMONRegion(start_addr, end_addr, nr_accesses, None)
+        region = DAMONRegion(start_addr, end_addr, nr_accesses, None,
+                _damon.unit_aggr_intervals)
         snapshot.regions.append(region)
     return snapshot
 
@@ -165,7 +168,8 @@ def parse_perf_script_line(line):
             age = int(fields[9])
         else:
             age = None
-        region = DAMONRegion(start_addr, end_addr, nr_accesses, age)
+        region = DAMONRegion(start_addr, end_addr, nr_accesses, age,
+                _damon.unit_aggr_intervals)
 
         return region, end_time, target_id, nr_regions
 
@@ -306,7 +310,8 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
             fake_snapshot = DAMONSnapshot(snapshot.end_time,
                     snapshot.end_time + snap_duration)
             # -1 nr_accesses/ -1 age means fake
-            fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1)]
+            fake_snapshot.regions = [DAMONRegion(0, 0, -1, -1,
+                _damon.unit_aggr_intervals)]
             snapshots.append(fake_snapshot)
     if file_type == file_type_record:
         write_damon_record(result, file_path, 2)
@@ -337,10 +342,12 @@ def add_region(regions, region, nr_acc_to_add):
             new_regions = []
             if region.start < r.start:
                 new_regions.append(DAMONRegion(
-                    region.start, r.start, region.nr_accesses, region.age))
+                    region.start, r.start, region.nr_accesses, region.age,
+                    _damon.unit_aggr_intervals))
             if r.end < region.end:
                 new_regions.append(DAMONRegion(
-                        r.end, region.end, region.nr_accesses, region.age))
+                        r.end, region.end, region.nr_accesses, region.age,
+                        _damon.unit_aggr_intervals))
 
             for new_r in new_regions:
                 add_region(regions, new_r, nr_acc_to_add)
@@ -435,7 +442,8 @@ def tried_regions_to_snapshot(tried_regions, aggr_interval_us):
 
     for tried_region in tried_regions:
         snapshot.regions.append(DAMONRegion(tried_region.start,
-            tried_region.end, tried_region.nr_accesses, tried_region.age))
+            tried_region.end, tried_region.nr_accesses, tried_region.age,
+            _damon.unit_aggr_intervals))
     return snapshot
 
 def tried_regions_to_snapshots(monitor_scheme):
