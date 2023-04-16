@@ -348,5 +348,26 @@ class TestDamon(unittest.TestCase):
                 _damon.DamonIntervalsBasedValUnit(42,
                     _damon.unit_aggr_intervals))
 
+        self.assertTrue(
+                _damon.DamonIntervalsBasedValUnit(
+                    4, _damon.unit_sample_intervals).eq(
+                        _damon.DamonIntervalsBasedValUnit(
+                            20, _damon.unit_percent), intervals))
+        self.assertFalse(
+                _damon.DamonIntervalsBasedValUnit(
+                    4, _damon.unit_sample_intervals).eq(
+                        _damon.DamonIntervalsBasedValUnit(
+                            25, _damon.unit_percent), intervals))
+        self.assertTrue(
+                _damon.DamonIntervalsBasedValUnit(
+                    15, _damon.unit_aggr_intervals).eq(
+                        _damon.DamonIntervalsBasedValUnit(
+                            1500000, _damon.unit_usec), intervals))
+        self.assertFalse(
+                _damon.DamonIntervalsBasedValUnit(
+                    15, _damon.unit_aggr_intervals).eq(
+                        _damon.DamonIntervalsBasedValUnit(
+                            160000, _damon.unit_usec), intervals))
+
 if __name__ == '__main__':
     unittest.main()
