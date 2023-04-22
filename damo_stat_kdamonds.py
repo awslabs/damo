@@ -26,9 +26,9 @@ def update_pr_kdamonds(json_format, raw_nr):
     if json_format:
         print(json.dumps([k.to_kvpairs(raw_nr) for k in kdamonds], indent=4))
     else:
-        print('kdamonds')
-        print(_damo_fmt_str.indent_lines(
-            '\n\n'.join([k.to_str(raw_nr) for k in kdamonds]), 4))
+        for idx, k in enumerate(kdamonds):
+            print('kdamond %d' % idx)
+            print(_damo_fmt_str.indent_lines( k.to_str(raw_nr), 4))
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
