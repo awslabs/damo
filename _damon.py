@@ -178,6 +178,10 @@ class DamonIntervalsBasedValUnit:
         self.value = self.value_for(new_unit, intervals)
         self.unit = new_unit
 
+    def converted_for_unit(self, new_unit, intervals):
+        return DamonIntervalsBasedValUnit(
+                self.value_for(new_unit, intervals), new_unit)
+
     def to_str(self, raw):
         unit = self.unit
 
