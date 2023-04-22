@@ -502,9 +502,7 @@ class DamosTriedRegion:
     start = None
     end = None
     nr_accesses = None
-    nr_accesses_unit = None
     age = None
-    age_unit = None
 
     def __init__(self, start, end, nr_accesses, nr_accesses_unit,
             age, age_unit):
