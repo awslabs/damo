@@ -97,23 +97,6 @@ class TestDamon(unittest.TestCase):
         self.assertTrue(damos.effectively_equal(damos2, intervals))
         self.assertTrue(damos.effectively_equal(damos2, intervals))
 
-    def test_is_monitoring_scheme(self):
-        default_damon_intervals = _damon.DamonIntervals()
-        default_scheme = _damon.Damos()
-        self.assertTrue(_damon.is_monitoring_scheme(default_scheme,
-            default_damon_intervals))
-
-        copied = copy.deepcopy(default_scheme)
-        copied.name = 'foo'
-        self.assertTrue(_damon.is_monitoring_scheme(copied,
-            default_damon_intervals))
-
-        copied.access_pattern.convert_for_units(
-                _damon.unit_sample_intervals, _damon.unit_usec,
-                default_damon_intervals)
-        self.assertTrue(_damon.is_monitoring_scheme(copied,
-            default_damon_intervals))
-
     def test_damos_action_validity(self):
         exception_raised = False
         try:

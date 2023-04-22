@@ -647,9 +647,6 @@ class Damos:
                 self.watermarks == other.watermarks and
                 self.filters == other.filters)
 
-def is_monitoring_scheme(scheme, intervals):
-    return Damos().effectively_equal(scheme, intervals)
-
 class DamonRecord:
     rfile_buf = None
     rfile_path = None
