@@ -92,6 +92,14 @@ usecase to sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if you
 depend on those.
 
 
+damo suddenly exit with `You're using deprecated single line DAMOS format` message. Why?
+----------------------------------------------------------------------------------------
+
+Because the single line DAMOS scheme format is no more supported.  Please
+report your usecase to sj@kernel.org, damon@lists.linux.dev and
+linux-mm@kvack.org if you depend on those.
+
+
 Recording Data Access Patterns
 ==============================
 
