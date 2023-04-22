@@ -435,15 +435,17 @@ def ensure_scheme_installed(kdamonds, scheme_to_install):
                     'committing scheme installed kdamonds failed: %s' % err)
     return installed, None
 
-def tried_regions_to_snapshot(tried_regions, aggr_interval_us):
+def tried_regions_to_snapshot(tried_regions, intervals):
     snapshot_end_time_ns = time.time() * 1000000000
-    snapshot_start_time_ns = snapshot_end_time_ns - aggr_interval_us * 1000
+    snapshot_start_time_ns = snapshot_end_time_ns - intervals.aggr * 1000
     snapshot = DAMONSnapshot(snapshot_start_time_ns, snapshot_end_time_ns)
 
     for tried_region in tried_regions:
         snapshot.regions.append(DAMONRegion(tried_region.start,
-            tried_region.end, tried_region.nr_accesses,
-            tried_region.age * aggr_interval_us,
+            tried_region.end,
+            tried_region.nr_accesses.value_for(_damon.unit_sample_intervals,
+                intervals),
+            tried_region.age.value_for(_damon.unit_usec, intervals),
             _damon.unit_usec))
     return snapshot
 
@@ -458,7 +460,7 @@ def tried_regions_to_snapshots(monitor_scheme):
             for scheme in ctx.schemes:
                 if scheme.effectively_equal(monitor_scheme, ctx.intervals):
                     snapshot = tried_regions_to_snapshot(scheme.tried_regions,
-                            ctx.intervals.aggr)
+                            ctx.intervals)
                     snapshots[kdamond] = {ctx: snapshot}
                     break
     return snapshots

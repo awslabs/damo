@@ -357,6 +357,7 @@ def files_content_to_damos_tried_regions(files_content):
             int(files_content['%d' % i]['start']),
             int(files_content['%d' % i]['end']),
             int(files_content['%d' % i]['nr_accesses']),
+            _damon.unit_sample_intervals,
             int(files_content['%d' % i]['age']),
             _damon.unit_aggr_intervals
             ))
