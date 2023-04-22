@@ -274,14 +274,15 @@ def files_content_to_kdamonds(files_content):
     nr_regions = _damon.DamonNrRegionsRange(attrs[3], attrs[4])
 
     target_ids = [int(x) for x in files_content['target_ids'].strip().split()]
-    fields = [int(x) for x in files_content['init_regions'].strip().split()]
     regions_dict = {}
-    for i in range(0, len(fields), 3):
-        id_or_index = fields[i]
-        if not id_or_index in regions_dict:
-            regions_dict[id_or_index] = []
-        regions_dict[id_or_index].append(_damon.DamonRegion(
-                fields[i + 1], fields[i + 2]))
+    if feature_supported('init_regions'):
+        fields = [int(x) for x in files_content['init_regions'].strip().split()]
+        for i in range(0, len(fields), 3):
+            id_or_index = fields[i]
+            if not id_or_index in regions_dict:
+                regions_dict[id_or_index] = []
+            regions_dict[id_or_index].append(_damon.DamonRegion(
+                    fields[i + 1], fields[i + 2]))
     ops = 'vaddr'
     is_paddr = False
     if 42 in target_ids:
@@ -299,10 +300,11 @@ def files_content_to_kdamonds(files_content):
         record_request = _damon.DamonRecord(int(fields[0]), fields[1].strip())
 
     schemes = []
-    for line in files_content['schemes'].split('\n'):
-        if line.strip() == '':
-            continue
-        schemes.append(debugfs_output_to_damos(line, intervals))
+    if feature_supported('schemes'):
+        for line in files_content['schemes'].split('\n'):
+            if line.strip() == '':
+                continue
+            schemes.append(debugfs_output_to_damos(line, intervals))
 
     ctx = _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
     if feature_supported('record'):
