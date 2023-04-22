@@ -10,8 +10,8 @@ Getting Started
 ===============
 
     $ sudo damo start
-    $ sudo damo record
     $ sudo damo stat
+    $ sudo damo record
+    $ sudo damo report
     $ sudo damo tune
     $ sudo damo stop
-    $ sudo damo report
