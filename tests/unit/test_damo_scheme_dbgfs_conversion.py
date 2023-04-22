@@ -13,6 +13,7 @@ import _damon_dbgfs
 
 class TestDamoSchemeDbgfsConversion(unittest.TestCase):
     def test_conversion(self):
+        _damon_args_schemes.avoid_crashing_single_line_scheme_for_testing = True
         _damon_args_schemes.avoid_crashing_v1_v3_schemes_for_testing = True
         inputs = {
                 "darc1.damos": '''

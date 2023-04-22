@@ -135,9 +135,17 @@ def fields_to_v4_scheme(fields):
     scheme.watermarks.low_permil = int(fields[17])
     return scheme
 
+avoid_crashing_single_line_scheme_for_testing = False
 avoid_crashing_v1_v3_schemes_for_testing = False
 def damo_single_line_scheme_to_damos(line):
     '''Returns Damos object and err'''
+
+    # Remove below if someone depends on single scheme is found.
+    if not avoid_crashing_single_line_scheme_for_testing:
+        sys.stderr.write('''
+You're using deprecated single line DAMOS format (%s)
+''' % line)
+        exit(1)
 
     sys.stderr.write('''
 WARNING: single line per-scheme scheme input is deprecated.  The support will
