@@ -22,8 +22,8 @@ class TestDamoSchemesInput(unittest.TestCase):
                     "access_pattern": {
                         "sz_bytes": {"min": 0, "max": 0},
                         "nr_accesses": {
-                            "min": "0 sample_intervals",
-                            "max": "0 sample_intervals"},
+                            "min": "0 samples",
+                            "max": "0 samples"},
                         "age": {
                             "min": "0 aggr_intervals",
                             "max": "0 aggr_intervals"},
@@ -53,8 +53,8 @@ class TestDamoSchemesInput(unittest.TestCase):
                     "access_pattern": {
                         "sz_bytes": {"min": "min", "max": "min"},
                         "nr_accesses": {
-                            "min": "0 sample_intervals",
-                            "max": "0 sample_intervals"},
+                            "min": "0 samples",
+                            "max": "0 samples"},
                         "age": {
                             "min": "0 aggr_intervals",
                             "max": "0 aggr_intervals"},
@@ -110,14 +110,14 @@ class TestDamoSchemesInput(unittest.TestCase):
 
         expected_damos_wo_filters = [_damon.Damos(
                 _damon.DamosAccessPattern([0, 0],
-                    [0, 0], _damon.unit_sample_intervals,
+                    [0, 0], _damon.unit_samples,
                     [0, 0], _damon.unit_aggr_intervals),
                 'stat',
                 _damon.DamosQuotas(0, 0, 0, [0, 0, 0]),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None, None)]
         expected_damos_w_filters = [_damon.Damos(
                 _damon.DamosAccessPattern([0, 0],
-                    [0, 0], _damon.unit_sample_intervals,
+                    [0, 0], _damon.unit_samples,
                     [0, 0], _damon.unit_aggr_intervals),
                 'stat',
                 _damon.DamosQuotas(0, 0, 0, [0, 0, 0]),

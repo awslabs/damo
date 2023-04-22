@@ -443,7 +443,7 @@ def tried_regions_to_snapshot(tried_regions, intervals):
     for tried_region in tried_regions:
         snapshot.regions.append(DAMONRegion(tried_region.start,
             tried_region.end,
-            tried_region.nr_accesses.value_for(_damon.unit_sample_intervals,
+            tried_region.nr_accesses.value_for(_damon.unit_samples,
                 intervals),
             tried_region.age.value_for(_damon.unit_usec, intervals),
             _damon.unit_usec))

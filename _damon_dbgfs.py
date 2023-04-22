@@ -90,7 +90,7 @@ def file_content_to_damos_wmarks_metric(metric_file_content):
 
 def damos_to_debugfs_input(damos, intervals, scheme_version):
     pattern = damos.access_pattern.converted_for_units(
-            _damon.unit_sample_intervals, _damon.unit_aggr_intervals,
+            _damon.unit_samples, _damon.unit_aggr_intervals,
             intervals)
     quotas = damos.quotas
     watermarks = damos.watermarks

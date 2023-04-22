@@ -138,13 +138,13 @@ class DamonTarget:
         return kvp
 
 unit_percent = 'percent'
-unit_sample_intervals = 'sample_intervals'
+unit_samples = 'samples'
 unit_usec = 'usec'
 unit_aggr_intervals = 'aggr_intervals'
 
 class DamonIntervalsBasedValUnit:
     value = None
-    unit = None # percent, sample_intervals, usec, aggr_intervals
+    unit = None # percent, samples, usec, aggr_intervals
 
     def __init__(self, value, unit):
         self.value = value
@@ -162,10 +162,10 @@ class DamonIntervalsBasedValUnit:
     def value_for(self, new_unit, intervals):
         if self.unit == new_unit:
             return self.value
-        if self.unit == unit_sample_intervals and new_unit == unit_percent:
+        if self.unit == unit_samples and new_unit == unit_percent:
             max_val = intervals.aggr / intervals.sample
             return int(self.value * 100.0 / max_val)
-        elif self.unit == unit_percent and new_unit == unit_sample_intervals:
+        elif self.unit == unit_percent and new_unit == unit_samples:
             max_val = intervals.aggr / intervals.sample
             return int(self.value * max_val / 100)
         elif self.unit == unit_aggr_intervals and new_unit == unit_usec:
@@ -206,7 +206,7 @@ class DamosAccessPattern:
 
         parsers_for_unit = {
                 unit_percent: _damo_fmt_str.text_to_percent,
-                unit_sample_intervals: _damo_fmt_str.text_to_nr,
+                unit_samples: _damo_fmt_str.text_to_nr,
                 unit_usec: _damo_fmt_str.text_to_us,
                 unit_aggr_intervals: _damo_fmt_str.text_to_nr}
 
@@ -310,9 +310,9 @@ class DamosAccessPattern:
     def effectively_equal(self, other, intervals):
         return (
                 self.converted_for_units(
-                    unit_sample_intervals, unit_aggr_intervals, intervals) ==
+                    unit_samples, unit_aggr_intervals, intervals) ==
                 other.converted_for_units(
-                    unit_sample_intervals, unit_aggr_intervals, intervals))
+                    unit_samples, unit_aggr_intervals, intervals))
 
 class DamosQuotas:
     time_ms = None

@@ -87,7 +87,7 @@ class TestDamon(unittest.TestCase):
                 [15, 35], _damon.unit_percent,
                 [5000000, 19000000], _damon.unit_usec)
         pattern_machine = _damon.DamosAccessPattern([123, 456],
-                [3, 7], _damon.unit_sample_intervals,
+                [3, 7], _damon.unit_samples,
                 [50, 190], _damon.unit_aggr_intervals)
 
         damos.access_pattern = pattern_human
@@ -231,12 +231,12 @@ class TestDamon(unittest.TestCase):
                 [15, '10,000'], _damon.unit_percent,
                 ['5,000,000', '190,000,000'], _damon.unit_usec)
         pattern_machine = _damon.DamosAccessPattern([123, 4567],
-                [3, '2,000'], _damon.unit_sample_intervals,
+                [3, '2,000'], _damon.unit_samples,
                 [50, '1,900'], _damon.unit_aggr_intervals)
 
         self.assertEqual(
                 pattern_human.converted_for_units(
-                    _damon.unit_sample_intervals,
+                    _damon.unit_samples,
                     _damon.unit_aggr_intervals, intervals),
                 pattern_machine)
         self.assertEqual(
@@ -248,7 +248,7 @@ class TestDamon(unittest.TestCase):
                 pattern_human.effectively_equal(pattern_machine, intervals))
 
         for converted in [
-                pattern_human.converted_for_units(_damon.unit_sample_intervals,
+                pattern_human.converted_for_units(_damon.unit_samples,
                     _damon.unit_aggr_intervals, intervals),
                 pattern_machine.converted_for_units(
                     _damon.unit_percent, _damon.unit_usec, intervals)]:
@@ -284,7 +284,7 @@ class TestDamon(unittest.TestCase):
 
         # for nr_accesses
         valunit = _damon.DamonIntervalsBasedValUnit(4,
-                _damon.unit_sample_intervals)
+                _damon.unit_samples)
         self.assertEqual(valunit.to_str(False),
                 '%s %s' % (valunit.value, valunit.unit))
 
@@ -297,12 +297,12 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(valunit.to_str(False), '20 %')
 
         self.assertEqual(
-                valunit.value_for(_damon.unit_sample_intervals, intervals), 4)
+                valunit.value_for(_damon.unit_samples, intervals), 4)
         self.assertEqual(valunit.value, 20)
 
-        valunit.convert_unit(_damon.unit_sample_intervals, intervals)
+        valunit.convert_unit(_damon.unit_samples, intervals)
         self.assertEqual(valunit.value, 4)
-        self.assertEqual(valunit.unit, _damon.unit_sample_intervals)
+        self.assertEqual(valunit.unit, _damon.unit_samples)
 
         # for age
         valunit = _damon.DamonIntervalsBasedValUnit(15,
@@ -332,12 +332,12 @@ class TestDamon(unittest.TestCase):
 
         self.assertTrue(
                 _damon.DamonIntervalsBasedValUnit(
-                    4, _damon.unit_sample_intervals).eq(
+                    4, _damon.unit_samples).eq(
                         _damon.DamonIntervalsBasedValUnit(
                             20, _damon.unit_percent), intervals))
         self.assertFalse(
                 _damon.DamonIntervalsBasedValUnit(
-                    4, _damon.unit_sample_intervals).eq(
+                    4, _damon.unit_samples).eq(
                         _damon.DamonIntervalsBasedValUnit(
                             25, _damon.unit_percent), intervals))
         self.assertTrue(

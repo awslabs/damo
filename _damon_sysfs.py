@@ -131,7 +131,7 @@ def wops_for_scheme_access_pattern(pattern, ctx):
     if pattern == None:
         return {}
     pattern = pattern.converted_for_units(
-            _damon.unit_sample_intervals, _damon.unit_aggr_intervals,
+            _damon.unit_samples, _damon.unit_aggr_intervals,
             ctx.intervals)
 
     return {
@@ -307,7 +307,7 @@ def files_content_to_access_pattern(files_content):
                 int(files_content['sz']['max'])],
             [int(files_content['nr_accesses']['min']),
                 int(files_content['nr_accesses']['max'])],
-            _damon.unit_sample_intervals, # nr_accesses_unit
+            _damon.unit_samples, # nr_accesses_unit
             [int(files_content['age']['min']),
                 int(files_content['age']['max'])],
             _damon.unit_aggr_intervals) # age_unit
@@ -357,7 +357,7 @@ def files_content_to_damos_tried_regions(files_content):
             int(files_content['%d' % i]['start']),
             int(files_content['%d' % i]['end']),
             int(files_content['%d' % i]['nr_accesses']),
-            _damon.unit_sample_intervals,
+            _damon.unit_samples,
             int(files_content['%d' % i]['age']),
             _damon.unit_aggr_intervals
             ))
