@@ -869,7 +869,7 @@ def current_kdamonds():
     return _damon_fs.current_kdamonds()
 
 def current_kdamond_idxs():
-    return _damon_fs.current_kdamond_names()
+    return _damon_fs.current_kdamond_idxs()
 
 def running_kdamonds():
     return [k for k in current_kdamonds() if k.state == 'on']
