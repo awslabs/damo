@@ -417,6 +417,11 @@ def stop_monitoring_record(perf_pipe):
     os.chmod(file_path, file_permission)
 
 def install_scheme(scheme_to_install):
+    '''Install given scheme to all contexts if effectively same scheme is not
+    installed.
+    Returns whether it found a context doesn't having the scheme, and an error
+    if something wrong.
+    '''
     installed = False
     kdamonds = _damon.current_kdamonds()
     for kdamond in kdamonds:
@@ -426,9 +431,10 @@ def install_scheme(scheme_to_install):
                 if scheme.effectively_equal(scheme_to_install, ctx.intervals):
                     ctx_has_the_scheme = True
                     break
-            if not ctx_has_the_scheme:
-                ctx.schemes.append(scheme_to_install)
-                installed = True
+            if ctx_has_the_scheme:
+                continue
+            ctx.schemes.append(scheme_to_install)
+            installed = True
     if installed:
         err = _damon.commit(kdamonds)
         if err != None:
