@@ -384,11 +384,8 @@ def files_content_to_scheme(files_content):
 
 def files_content_to_regions(files_content):
     regions = []
-    for region_idx in range(int(files_content['nr_regions'])):
-        dirname = '%d' % region_idx
-        regions.append(_damon.DamonRegion(
-            int(files_content[dirname]['start']),
-            int(files_content[dirname]['end'])))
+    for kv in number_sorted_dirs(files_content):
+        regions.append(_damon.DamonRegion(int(kv['start']), int(kv['end'])))
     return regions
 
 def files_content_to_target(files_content):
