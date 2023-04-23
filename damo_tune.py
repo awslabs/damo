@@ -18,7 +18,7 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    if not any_kdamond_running():
+    if not _damon.any_kdamond_running():
         print('DAMON is not turned on')
         exit(1)
 
