@@ -416,7 +416,7 @@ def stop_monitoring_record(perf_pipe):
                     (file_format, err))
     os.chmod(file_path, file_permission)
 
-def ensure_scheme_installed(scheme_to_install):
+def install_scheme(scheme_to_install):
     installed = False
     kdamonds = _damon.current_kdamonds()
     for kdamond in kdamonds:
@@ -475,7 +475,7 @@ def get_snapshots(access_pattern):
     orig_kdamonds = _damon.current_kdamonds()
 
     monitor_scheme = _damon.Damos(access_pattern=access_pattern)
-    installed, err = ensure_scheme_installed(monitor_scheme)
+    installed, err = install_scheme(monitor_scheme)
     if err:
         return None, 'monitoring scheme install failed: %s' % err
 
