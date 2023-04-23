@@ -317,6 +317,10 @@ def current_kdamonds():
     return files_content_to_kdamonds(
             _damo_fs.read_files(debugfs_damon))
 
+def nr_current_kdamonds():
+    # TODO: Support manually created kdamonds
+    return 1
+
 # features
 
 feature_supports = None

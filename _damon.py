@@ -869,7 +869,7 @@ def current_kdamonds():
     return _damon_fs.current_kdamonds()
 
 def nr_current_kdamonds():
-    return len(current_kdamonds())
+    return _damon_fs.nr_current_kdamonds()
 
 def running_kdamond_idxs():
     return [idx for idx in range(nr_current_kdamonds())
