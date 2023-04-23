@@ -27,8 +27,8 @@ class TestDamonSysfs(unittest.TestCase):
                 'vaddr': True}
 
         sysfs_dict = {
+                "nr_kdamonds": "1\n",
                 "0": {
-                    "nr_kdamonds": "1\n",
                     "state": "off\n",
                     "pid": "-1\n",
                     "avail_state_inputs": '\n'.join(['on', 'off', 'commit',
