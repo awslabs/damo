@@ -37,7 +37,8 @@ def update_schemes_stats(kdamond_idxs):
     # DAMON debugfs updates stats always
     return None
 
-# update_schemes_tried_regions are not supported
+def update_schemes_tried_regions(kdamond_idxs):
+    return 'DAMON debugfs doesn\'t support schemes tried regions'
 
 # for stage_kdamonds
 

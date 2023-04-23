@@ -918,8 +918,6 @@ def update_schemes_stats(kdamond_idxs=None):
 def update_schemes_tried_regions(kdamond_idxs=None):
     if kdamond_idxs == None:
         kdamond_idxs = running_kdamond_idxs()
-    if _damon_fs == _damon_dbgfs:
-        return 'DAMON debugfs doesn\'t support schemes tried regions'
     return _damon_fs.update_schemes_tried_regions(kdamond_idxs)
 
 def update_schemes_status():
