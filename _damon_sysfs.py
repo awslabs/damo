@@ -446,11 +446,6 @@ def current_kdamonds():
     return files_content_to_kdamonds(
             _damo_fs.read_files(kdamonds_dir))
 
-def current_kdamond_idxs():
-    # TODO: Do not read recursive but just one depth
-    return [x for x in _damo_fs.read_files(kdamonds_dir).keys()
-            if x != 'nr_kdamonds']
-
 def commit_staged(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
         err = _damo_fs.write_file(state_file_of(kdamond_idx), 'commit')

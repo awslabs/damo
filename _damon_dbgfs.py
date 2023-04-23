@@ -317,10 +317,6 @@ def current_kdamonds():
     return files_content_to_kdamonds(
             _damo_fs.read_files(debugfs_damon))
 
-def current_kdamond_idxs():
-    # TODO: Support created kdamonds
-    return ['0']
-
 # features
 
 feature_supports = None
