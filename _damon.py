@@ -874,7 +874,7 @@ def current_kdamond_idxs():
 def running_kdamonds():
     return [k for k in current_kdamonds() if k.state == 'on']
 
-def running_kdamond_names():
+def running_kdamond_idxs():
     return [idx for idx in current_kdamond_idxs()
             if is_kdamond_running(idx)]
 
@@ -918,18 +918,18 @@ def commit(kdamonds):
 
 def update_schemes_stats(kdamond_idxs=None):
     if kdamond_idxs == None:
-        kdamond_idxs = running_kdamond_names()
+        kdamond_idxs = running_kdamond_idxs()
     return _damon_fs.update_schemes_stats(kdamond_idxs)
 
 def update_schemes_tried_regions(kdamond_idxs=None):
     if kdamond_idxs == None:
-        kdamond_idxs = running_kdamond_names()
+        kdamond_idxs = running_kdamond_idxs()
     if _damon_fs == _damon_dbgfs:
         return 'DAMON debugfs doesn\'t support schemes tried regions'
     return _damon_fs.update_schemes_tried_regions(kdamond_idxs)
 
 def update_schemes_status():
-    idxs = running_kdamond_names()
+    idxs = running_kdamond_idxs()
     if len(idxs) == 0:
         return None
     err = update_schemes_stats(idxs)

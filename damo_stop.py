@@ -18,12 +18,12 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    running_kdamond_names = _damon.running_kdamond_names()
-    if len(running_kdamond_names) == 0:
+    running_kdamond_idxs = _damon.running_kdamond_idxs()
+    if len(running_kdamond_idxs) == 0:
         print('DAMON is not turned on')
         exit(1)
 
-    err = _damon.turn_damon_off(running_kdamond_names)
+    err = _damon.turn_damon_off(running_kdamond_idxs)
     if err:
         print('DAMON turn off failed (%s)' % err)
         exit(1)
