@@ -408,37 +408,33 @@ def files_content_to_context(files_content):
 
     targets_content = files_content['targets']
     targets = []
-    for target_dir_name, target_content in targets_content.items():
-        if target_dir_name == 'nr_targets':
-            continue
-        targets.append(files_content_to_target(target_content))
+    for target_idx in range(int(targets_content['nr_targets'])):
+        targets.append(files_content_to_target(
+            targets_content['%d' % target_idx]))
 
     schemes_content = files_content['schemes']
     schemes = []
-    for scheme_dir_name, scheme_content in schemes_content.items():
-        if scheme_dir_name == 'nr_schemes':
-            continue
-        schemes.append(files_content_to_scheme(scheme_content))
+    for scheme_idx in range(int(schemes_content['nr_schemes'])):
+        schemes.append(files_content_to_scheme(
+            schemes_content['%d' % scheme_idx]))
 
     return _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
 
 def files_content_to_kdamond(files_content):
     contexts_content = files_content['contexts']
     contexts = []
-    for dirname in contexts_content:
-        if dirname == 'nr_contexts':
-            continue
-        contexts.append(files_content_to_context(contexts_content[dirname]))
+    for ctx_idx in range(int(contexts_content['nr_contexts'])):
+        contexts.append(files_content_to_context(
+            contexts_content['%d' % ctx_idx]))
     state = files_content['state'].strip()
     pid = files_content['pid'].strip()
     return _damon.Kdamond(state, pid, contexts)
 
 def files_content_to_kdamonds(files_contents):
     kdamonds = []
-    for dirname in files_contents:
-        if dirname == 'nr_kdamonds':
-            continue
-        kdamonds.append(files_content_to_kdamond(files_contents[dirname]))
+    for kd_idx in range(int(files_contents['nr_kdamonds'])):
+        kdamonds.append(files_content_to_kdamond(
+            files_contents['%d' % kd_idx]))
     return kdamonds
 
 def current_kdamonds():
