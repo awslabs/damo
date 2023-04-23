@@ -862,8 +862,8 @@ def damon_interface():
 
 # DAMON status reading
 
-def is_kdamond_running(kdamond_name):
-    return _damon_fs.is_kdamond_running(kdamond_name)
+def is_kdamond_running(kdamond_idx):
+    return _damon_fs.is_kdamond_running(kdamond_idx)
 
 def current_kdamonds():
     return _damon_fs.current_kdamonds()
@@ -902,10 +902,10 @@ def wait_current_kdamonds_turned_off():
 def stage_kdamonds(kdamonds):
     return _damon_fs.stage_kdamonds(kdamonds)
 
-def commit_staged(kdamond_names):
+def commit_staged(kdamond_idxs):
     if _damon_fs == _damon_dbgfs:
         return 'debugfs interface unsupport commit_staged()'
-    return _damon_fs.commit_staged(kdamond_names)
+    return _damon_fs.commit_staged(kdamond_idxs)
 
 def commit(kdamonds):
     err = stage_kdamonds(kdamonds)
@@ -916,35 +916,35 @@ def commit(kdamonds):
         return 'commit staged updates filed (%s)' % err
     return None
 
-def update_schemes_stats(kdamond_names=None):
-    if kdamond_names == None:
-        kdamond_names = running_kdamond_names()
-    return _damon_fs.update_schemes_stats(kdamond_names)
+def update_schemes_stats(kdamond_idxs=None):
+    if kdamond_idxs == None:
+        kdamond_idxs = running_kdamond_names()
+    return _damon_fs.update_schemes_stats(kdamond_idxs)
 
-def update_schemes_tried_regions(kdamond_names=None):
-    if kdamond_names == None:
-        kdamond_names = running_kdamond_names()
+def update_schemes_tried_regions(kdamond_idxs=None):
+    if kdamond_idxs == None:
+        kdamond_idxs = running_kdamond_names()
     if _damon_fs == _damon_dbgfs:
         return 'DAMON debugfs doesn\'t support schemes tried regions'
-    return _damon_fs.update_schemes_tried_regions(kdamond_names)
+    return _damon_fs.update_schemes_tried_regions(kdamond_idxs)
 
 def update_schemes_status():
-    names = running_kdamond_names()
-    if len(names) == 0:
+    idxs = running_kdamond_names()
+    if len(idxs) == 0:
         return None
-    err = update_schemes_stats(names)
+    err = update_schemes_stats(idxs)
     if err != None:
         return err
-    return update_schemes_tried_regions(names)
+    return update_schemes_tried_regions(idxs)
 
-def turn_damon_on(kdamonds_names):
-    err = _damon_fs.turn_damon_on(kdamonds_names)
+def turn_damon_on(kdamonds_idxs):
+    err = _damon_fs.turn_damon_on(kdamonds_idxs)
     if err:
         return err
     wait_current_kdamonds_turned_on()
 
-def turn_damon_off(kdamonds_names):
-    err = _damon_fs.turn_damon_off(kdamonds_names)
+def turn_damon_off(kdamonds_idxs):
+    err = _damon_fs.turn_damon_off(kdamonds_idxs)
     if err:
         return err
     wait_current_kdamonds_turned_off()
