@@ -468,13 +468,13 @@ def tried_regions_to_snapshots(monitor_scheme):
 
 def get_snapshots(access_pattern):
     'return DAMONSnapshots and an error'
-    orig_kdamonds = _damon.current_kdamonds()
     running_kdamond_idxs = _damon.running_kdamond_idxs()
     if len(running_kdamond_idxs) == 0:
         return None, 'no kdamond running'
 
-    monitor_scheme = _damon.Damos(access_pattern=access_pattern)
+    orig_kdamonds = _damon.current_kdamonds()
 
+    monitor_scheme = _damon.Damos(access_pattern=access_pattern)
     installed, err = ensure_scheme_installed(monitor_scheme)
     if err:
         return None, 'monitoring scheme install failed: %s' % err
