@@ -393,7 +393,7 @@ def files_content_to_target(files_content):
     regions = files_content_to_regions(files_content['regions'])
     return _damon.DamonTarget(pid, regions)
 
-def files_content_to_context(context_name, files_content):
+def files_content_to_context(files_content):
     mon_attrs_content = files_content['monitoring_attrs']
     intervals_content = mon_attrs_content['intervals']
     intervals = _damon.DamonIntervals(
@@ -428,8 +428,7 @@ def files_content_to_kdamond(files_content):
     for ctx_name in contexts_content:
         if ctx_name == 'nr_contexts':
             continue
-        contexts.append(files_content_to_context(ctx_name,
-            contexts_content[ctx_name]))
+        contexts.append(files_content_to_context(contexts_content[ctx_name]))
     state = files_content['state'].strip()
     pid = files_content['pid'].strip()
     return _damon.Kdamond(state, pid, contexts)
