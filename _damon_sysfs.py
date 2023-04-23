@@ -343,14 +343,9 @@ def files_content_to_watermarks(files_content):
             int(files_content['low']))
 
 def files_content_to_damos_filters(files_content):
-    filters = []
-    for dirname in files_content:
-        if dirname == 'nr_filters':
-            continue
-        filter_kv = files_content[dirname]
-        filters.append(_damon.DamosFilter(filter_kv['type'].strip(),
-            filter_kv['memcg_path'].strip(), filter_kv['matching'].strip()))
-    return filters
+    return [_damon.DamosFilter(filter_kv['type'].strip(),
+            filter_kv['memcg_path'].strip(), filter_kv['matching'].strip())
+            for filter_kv in number_sorted_dirs(files_content)]
 
 def files_content_to_damos_stats(files_content):
     return _damon.DamosStats(
