@@ -20,20 +20,20 @@ debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
 debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
 debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
 
-def turn_damon_on(kdamonds_names):
+def turn_damon_on(kdamonds_idxs):
     return _damo_fs.write_files({debugfs_monitor_on: 'on'})
 
-def turn_damon_off(kdamonds_names):
+def turn_damon_off(kdamonds_idxs):
     return _damo_fs.write_files({debugfs_monitor_on: 'off'})
 
-def is_kdamond_running(kdamond_name):
+def is_kdamond_running(kdamond_idx):
     content, err = _damo_fs.read_file(debugfs_monitor_on)
     if err != None:
         raise Exception('monitor_on file read failed: err')
     return content.strip() == 'on'
 
 'Return error'
-def update_schemes_stats(kdamond_names):
+def update_schemes_stats(kdamond_idxs):
     # DAMON debugfs updates stats always
     return None
 
