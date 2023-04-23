@@ -19,69 +19,69 @@ admin_dir = os.path.join(root_dir, 'admin')
 kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
 nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 
-def kdamond_dir_of(kdamond_name):
-    return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_name)
+def kdamond_dir_of(kdamond_idx):
+    return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx)
 
-def state_file_of(kdamond_name):
-    return os.path.join(kdamond_dir_of(kdamond_name), 'state')
+def state_file_of(kdamond_idx):
+    return os.path.join(kdamond_dir_of(kdamond_idx), 'state')
 
-def ctx_dir_of(kdamond_name, context_name):
+def ctx_dir_of(kdamond_idx, context_idx):
     return os.path.join(
-            kdamond_dir_of(kdamond_name), 'contexts', '%s' % context_name)
+            kdamond_dir_of(kdamond_idx), 'contexts', '%s' % context_idx)
 
-def schemes_dir_of(kdamond_name, context_name):
-    return os.path.join(ctx_dir_of(kdamond_name, context_name), 'schemes')
+def schemes_dir_of(kdamond_idx, context_idx):
+    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
 
-def scheme_dir_of(kdamond_name, context_name, scheme_name):
+def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(
-            schemes_dir_of(kdamond_name, context_name), '%s' % scheme_name)
+            schemes_dir_of(kdamond_idx, context_idx), '%s' % scheme_idx)
 
-def scheme_tried_regions_dir_of(kdamond_name, context_name, scheme_name):
+def scheme_tried_regions_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(
-            scheme_dir_of(kdamond_name, context_name, scheme_name),
+            scheme_dir_of(kdamond_idx, context_idx, scheme_idx),
             'tried_regions')
 
 def supported():
     return os.path.isdir(kdamonds_dir)
 
-def turn_damon_on(kdamonds_names):
+def turn_damon_on(kdamonds_idxs):
     # In case of vaddr, too early monitoring shows unstable mapping changes.
     # Give the process a time to have stable memory mapping.
     time.sleep(0.5)
-    for kdamond_name in kdamonds_names:
-        err = _damo_fs.write_file(state_file_of(kdamond_name), 'on')
+    for kdamond_idx in kdamonds_idxs:
+        err = _damo_fs.write_file(state_file_of(kdamond_idx), 'on')
         if err != None:
             return err
     return None
 
-def turn_damon_off(kdamonds_names):
-    for kdamond_name in kdamonds_names:
-        err = _damo_fs.write_file(state_file_of(kdamond_name), 'off')
+def turn_damon_off(kdamonds_idxs):
+    for kdamond_idx in kdamonds_idxs:
+        err = _damo_fs.write_file(state_file_of(kdamond_idx), 'off')
         if err != None:
             return err
     return None
 
-def is_kdamond_running(kdamond_name):
-    content, err = _damo_fs.read_file(state_file_of(kdamond_name))
+def is_kdamond_running(kdamond_idx):
+    content, err = _damo_fs.read_file(state_file_of(kdamond_idx))
     if err != None:
         print(err)
         return False
     return content.strip() == 'on'
 
 'Return error'
-def update_schemes_stats(kdamond_names):
-    for kdamond_name in kdamond_names:
+def update_schemes_stats(kdamond_idxs):
+    for kdamond_idx in kdamond_idxs:
         err = _damo_fs.write_file(
-                state_file_of(kdamond_name), 'update_schemes_stats')
+                state_file_of(kdamond_idx), 'update_schemes_stats')
         if err != None:
             return err
     return None
 
 'Return error'
-def update_schemes_tried_regions(kdamond_names):
-    for kdamond_name in kdamond_names:
+def update_schemes_tried_regions(kdamond_idxs):
+    for kdamond_idx in kdamond_idxs:
         err = _damo_fs.write_file(
-                state_file_of(kdamond_name), 'update_schemes_tried_regions')
+                state_file_of(kdamond_idx), 'update_schemes_tried_regions')
         if err != None:
             return err
     return None
@@ -451,9 +451,9 @@ def current_kdamond_names():
     return [x for x in _damo_fs.read_files(kdamonds_dir).keys()
             if x != 'nr_kdamonds']
 
-def commit_staged(kdamond_names):
-    for kdamond_name in kdamond_names:
-        err = _damo_fs.write_file(state_file_of(kdamond_name), 'commit')
+def commit_staged(kdamond_idxs):
+    for kdamond_idx in kdamond_idxs:
+        err = _damo_fs.write_file(state_file_of(kdamond_idx), 'commit')
         if err != None:
             return err
     return None
