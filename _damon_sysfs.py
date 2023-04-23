@@ -362,18 +362,11 @@ def files_content_to_damos_stats(files_content):
 
 def files_content_to_damos_tried_regions(files_content):
     regions = []
-    nr_region_dirs = len(files_content)
-    if 'sz_regions_sum' in files_content:
-        nr_region_dirs -= 1
-    for i in range(nr_region_dirs):
+    for kv in number_sorted_dirs(files_content):
         regions.append(_damon.DamosTriedRegion(
-            int(files_content['%d' % i]['start']),
-            int(files_content['%d' % i]['end']),
-            int(files_content['%d' % i]['nr_accesses']),
-            _damon.unit_samples,
-            int(files_content['%d' % i]['age']),
-            _damon.unit_aggr_intervals
-            ))
+            int(kv['start']), int(kv['end']),
+            int(kv['nr_accesses']), _damon.unit_samples,
+            int(kv['age']), _damon.unit_aggr_intervals))
     return regions
 
 def files_content_to_scheme(files_content):
