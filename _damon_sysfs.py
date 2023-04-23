@@ -424,18 +424,16 @@ def files_content_to_context(files_content):
 def files_content_to_kdamond(files_content):
     contexts_content = files_content['contexts']
     contexts = []
-    for ctx_idx in range(int(contexts_content['nr_contexts'])):
-        contexts.append(files_content_to_context(
-            contexts_content['%d' % ctx_idx]))
+    for ctx_content in number_sorted_dirs(contexts_content):
+        contexts.append(files_content_to_context(ctx_content))
     state = files_content['state'].strip()
     pid = files_content['pid'].strip()
     return _damon.Kdamond(state, pid, contexts)
 
 def files_content_to_kdamonds(files_contents):
     kdamonds = []
-    for kd_idx in range(int(files_contents['nr_kdamonds'])):
-        kdamonds.append(files_content_to_kdamond(
-            files_contents['%d' % kd_idx]))
+    for kd_content in number_sorted_dirs(files_contents):
+        kdamonds.append(files_content_to_kdamond(kd_content))
     return kdamonds
 
 def current_kdamonds():
