@@ -881,9 +881,6 @@ def any_kdamond_running():
             return True
     return False
 
-def every_kdamond_turned_off():
-    return not any_kdamond_running()
-
 def wait_current_kdamonds_turned_on():
     for idx in range(nr_current_kdamonds()):
         while not is_kdamond_running(idx):
