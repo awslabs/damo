@@ -240,7 +240,7 @@ def __ensure_kdamond_dir_populated(kdamond_dir, kdamond):
     nr_contexts_path = os.path.join(kdamond_dir, 'contexts', 'nr_contexts')
     nr_contexts, err = _damo_fs.read_file(nr_contexts_path)
     if err != None:
-        raise Exception('kdamond name read fail (%s)' % err)
+        raise Exception('nr_contexts read fail (%s)' % err)
     if int(nr_contexts) != len(kdamond.contexts):
         _damo_fs.write_file(nr_contexts_path, '%d' % len(kdamond.contexts))
 
