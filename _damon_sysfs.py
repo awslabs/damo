@@ -154,8 +154,8 @@ def wops_for_schemes(ctx):
 
     schemes_wops = {}
     for idx, scheme in enumerate(schemes):
-        scheme_dir_name = '%d' % idx
-        schemes_wops[scheme_dir_name] = {
+        dirname = '%d' % idx
+        schemes_wops[dirname] = {
             'access_pattern': wops_for_scheme_access_pattern(
                 scheme.access_pattern, ctx),
             'action': scheme.action,
@@ -163,7 +163,7 @@ def wops_for_schemes(ctx):
             'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
         }
         if feature_supported('schemes_filters'):
-            schemes_wops[scheme_dir_name]['filters'] = wops_for_scheme_filters(
+            schemes_wops[dirname]['filters'] = wops_for_scheme_filters(
                     scheme.filters)
     return schemes_wops
 
@@ -331,10 +331,10 @@ def files_content_to_watermarks(files_content):
 
 def files_content_to_damos_filters(files_content):
     filters = []
-    for filter_dir_name in files_content:
-        if filter_dir_name == 'nr_filters':
+    for dirname in files_content:
+        if dirname == 'nr_filters':
             continue
-        filter_kv = files_content[filter_dir_name]
+        filter_kv = files_content[dirname]
         filters.append(_damon.DamosFilter(filter_kv['type'].strip(),
             filter_kv['memcg_path'].strip(), filter_kv['matching'].strip()))
     return filters
@@ -379,10 +379,10 @@ def files_content_to_scheme(files_content):
 def files_content_to_regions(files_content):
     regions = []
     for region_idx in range(int(files_content['nr_regions'])):
-        region_name = '%d' % region_idx
+        dirname = '%d' % region_idx
         regions.append(_damon.DamonRegion(
-            int(files_content[region_name]['start']),
-            int(files_content[region_name]['end'])))
+            int(files_content[dirname]['start']),
+            int(files_content[dirname]['end'])))
     return regions
 
 def files_content_to_target(files_content):
@@ -415,8 +415,8 @@ def files_content_to_context(files_content):
 
     schemes_content = files_content['schemes']
     schemes = []
-    for scheme_name, scheme_content in schemes_content.items():
-        if scheme_name == 'nr_schemes':
+    for scheme_dir_name, scheme_content in schemes_content.items():
+        if scheme_dir_name == 'nr_schemes':
             continue
         schemes.append(files_content_to_scheme(scheme_content))
 
@@ -425,20 +425,20 @@ def files_content_to_context(files_content):
 def files_content_to_kdamond(files_content):
     contexts_content = files_content['contexts']
     contexts = []
-    for ctx_name in contexts_content:
-        if ctx_name == 'nr_contexts':
+    for dirname in contexts_content:
+        if dirname == 'nr_contexts':
             continue
-        contexts.append(files_content_to_context(contexts_content[ctx_name]))
+        contexts.append(files_content_to_context(contexts_content[dirname]))
     state = files_content['state'].strip()
     pid = files_content['pid'].strip()
     return _damon.Kdamond(state, pid, contexts)
 
 def files_content_to_kdamonds(files_contents):
     kdamonds = []
-    for kdamond_name in files_contents:
-        if kdamond_name == 'nr_kdamonds':
+    for dirname in files_contents:
+        if dirname == 'nr_kdamonds':
             continue
-        kdamonds.append(files_content_to_kdamond(files_contents[kdamond_name]))
+        kdamonds.append(files_content_to_kdamond(files_contents[dirname]))
     return kdamonds
 
 def current_kdamonds():
