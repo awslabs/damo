@@ -868,15 +868,15 @@ def is_kdamond_running(kdamond_idx):
 def current_kdamonds():
     return _damon_fs.current_kdamonds()
 
-def current_kdamond_idxs():
-    return _damon_fs.current_kdamond_idxs()
+def nr_current_kdamonds():
+    return len(current_kdamonds())
 
 def running_kdamond_idxs():
-    return [idx for idx in current_kdamond_idxs()
+    return [idx for idx in range(nr_current_kdamonds())
             if is_kdamond_running(idx)]
 
 def any_kdamond_running():
-    for idx in current_kdamond_idxs():
+    for idx in range(nr_current_kdamonds()):
         if is_kdamond_running(idx):
             return True
     return False
@@ -885,12 +885,12 @@ def every_kdamond_turned_off():
     return not any_kdamond_running()
 
 def wait_current_kdamonds_turned_on():
-    for idx in current_kdamond_idxs():
+    for idx in range(nr_current_kdamonds()):
         while not is_kdamond_running(idx):
             time.sleep(1)
 
 def wait_current_kdamonds_turned_off():
-    for idx in current_kdamond_idxs():
+    for idx in range(nr_current_kdamonds()):
         while is_kdamond_running(idx):
             time.sleep(1)
 
