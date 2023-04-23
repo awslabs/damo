@@ -301,6 +301,19 @@ def stage_kdamonds(kdamonds):
 
 # for current_kdamonds()
 
+def number_sorted_dirs(files_content):
+    number_dirs = {}
+    for filename, content in files_content.items():
+        try:
+            nr = int(filename)
+        except:
+            continue
+        if type(content) != dict:
+            continue
+        number_dirs[nr] = content
+    sorted_numbers = sorted(number_dirs.keys())
+    return [number_dirs[nr] for nr in sorted_numbers]
+
 def files_content_to_access_pattern(files_content):
     return _damon.DamosAccessPattern(
             [int(files_content['sz']['min']),
