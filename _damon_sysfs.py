@@ -411,15 +411,13 @@ def files_content_to_context(files_content):
 
     targets_content = files_content['targets']
     targets = []
-    for target_idx in range(int(targets_content['nr_targets'])):
-        targets.append(files_content_to_target(
-            targets_content['%d' % target_idx]))
+    for target_content in number_sorted_dirs(targets_content):
+        targets.append(files_content_to_target(target_content))
 
     schemes_content = files_content['schemes']
     schemes = []
-    for scheme_idx in range(int(schemes_content['nr_schemes'])):
-        schemes.append(files_content_to_scheme(
-            schemes_content['%d' % scheme_idx]))
+    for scheme_content in number_sorted_dirs(schemes_content):
+        schemes.append(files_content_to_scheme(scheme_content))
 
     return _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
 
