@@ -361,13 +361,11 @@ def files_content_to_damos_stats(files_content):
             int(files_content['qt_exceeds']))
 
 def files_content_to_damos_tried_regions(files_content):
-    regions = []
-    for kv in number_sorted_dirs(files_content):
-        regions.append(_damon.DamosTriedRegion(
+    return [_damon.DamosTriedRegion(
             int(kv['start']), int(kv['end']),
             int(kv['nr_accesses']), _damon.unit_samples,
-            int(kv['age']), _damon.unit_aggr_intervals))
-    return regions
+            int(kv['age']), _damon.unit_aggr_intervals)
+            for kv in number_sorted_dirs(files_content)]
 
 def files_content_to_scheme(files_content):
     return _damon.Damos(
@@ -383,10 +381,9 @@ def files_content_to_scheme(files_content):
                 if 'tried_regions' in files_content else [])
 
 def files_content_to_regions(files_content):
-    regions = []
-    for kv in number_sorted_dirs(files_content):
-        regions.append(_damon.DamonRegion(int(kv['start']), int(kv['end'])))
-    return regions
+    return [_damon.DamonRegion(
+            int(kv['start']), int(kv['end']))
+            for kv in number_sorted_dirs(files_content)]
 
 def files_content_to_target(files_content):
     try:
@@ -410,31 +407,26 @@ def files_content_to_context(files_content):
     ops = files_content['operations'].strip()
 
     targets_content = files_content['targets']
-    targets = []
-    for target_content in number_sorted_dirs(targets_content):
-        targets.append(files_content_to_target(target_content))
+    targets = [files_content_to_target(content)
+            for content in number_sorted_dirs(targets_content)]
 
     schemes_content = files_content['schemes']
-    schemes = []
-    for scheme_content in number_sorted_dirs(schemes_content):
-        schemes.append(files_content_to_scheme(scheme_content))
+    schemes = [files_content_to_scheme(content)
+            for content in number_sorted_dirs(schemes_content)]
 
     return _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
 
 def files_content_to_kdamond(files_content):
     contexts_content = files_content['contexts']
-    contexts = []
-    for ctx_content in number_sorted_dirs(contexts_content):
-        contexts.append(files_content_to_context(ctx_content))
+    contexts = [files_content_to_context(content)
+            for content in number_sorted_dirs(contexts_content)]
     state = files_content['state'].strip()
     pid = files_content['pid'].strip()
     return _damon.Kdamond(state, pid, contexts)
 
 def files_content_to_kdamonds(files_contents):
-    kdamonds = []
-    for kd_content in number_sorted_dirs(files_contents):
-        kdamonds.append(files_content_to_kdamond(kd_content))
-    return kdamonds
+    return [files_content_to_kdamond(content)
+            for content in number_sorted_dirs(files_contents)]
 
 def current_kdamonds():
     return files_content_to_kdamonds(
