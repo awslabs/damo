@@ -17,7 +17,6 @@ class TestDamoSchemesInput(unittest.TestCase):
         base_damos_kv = [
                 {
                     "comments": "just for testing",
-                    "name": "0",
                     "action": "stat",
                     "access_pattern": {
                         "sz_bytes": {"min": 0, "max": 0},
@@ -48,7 +47,6 @@ class TestDamoSchemesInput(unittest.TestCase):
                 ]
         human_readable_damos_kv = [
                 {
-                    "name": "0",
                     "action": "stat",
                     "access_pattern": {
                         "sz_bytes": {"min": "min", "max": "min"},
@@ -79,13 +77,11 @@ class TestDamoSchemesInput(unittest.TestCase):
                 ]
         base_filters_kv = [
                 {
-                    "name": "0",
                     "filter_type": "anon",
                     "memcg_path": "",
                     "matching": "yes",
                     },
                 {
-                    "name": "1",
                     "filter_type": "memcg",
                     "memcg_path": "/all/latency-critical",
                     "matching": False,
