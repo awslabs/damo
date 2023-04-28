@@ -301,6 +301,13 @@ def stage_kdamonds(kdamonds):
 
 # for current_kdamonds()
 
+def numbered_dirs_content(files_content, nr_filename):
+    nr_dirs = int(files_content[nr_filename])
+    number_dirs = []
+    for i in range(nr_dirs):
+        number_dirs.append(files_content['%d' % i])
+    return number_dirs
+
 def number_sorted_dirs(files_content):
     number_dirs = {}
     for filename, content in files_content.items():
