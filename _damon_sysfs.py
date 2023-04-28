@@ -352,7 +352,8 @@ def files_content_to_watermarks(files_content):
 def files_content_to_damos_filters(files_content):
     return [_damon.DamosFilter(filter_kv['type'].strip(),
             filter_kv['memcg_path'].strip(), filter_kv['matching'].strip())
-            for filter_kv in number_sorted_dirs(files_content)]
+            for filter_kv in numbered_dirs_content(
+                files_content, 'nr_filters')]
 
 def files_content_to_damos_stats(files_content):
     return _damon.DamosStats(
@@ -385,7 +386,7 @@ def files_content_to_scheme(files_content):
 def files_content_to_regions(files_content):
     return [_damon.DamonRegion(
             int(kv['start']), int(kv['end']))
-            for kv in number_sorted_dirs(files_content)]
+            for kv in numbered_dirs_content(files_content, 'nr_regions')]
 
 def files_content_to_target(files_content):
     try:
@@ -410,25 +411,29 @@ def files_content_to_context(files_content):
 
     targets_content = files_content['targets']
     targets = [files_content_to_target(content)
-            for content in number_sorted_dirs(targets_content)]
+            for content in numbered_dirs_content(
+                targets_content, 'nr_targets')]
 
     schemes_content = files_content['schemes']
     schemes = [files_content_to_scheme(content)
-            for content in number_sorted_dirs(schemes_content)]
+            for content in numbered_dirs_content(
+                schemes_content, 'nr_schemes')]
 
     return _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
 
 def files_content_to_kdamond(files_content):
     contexts_content = files_content['contexts']
     contexts = [files_content_to_context(content)
-            for content in number_sorted_dirs(contexts_content)]
+            for content in numbered_dirs_content(
+                contexts_content, 'nr_contexts')]
     state = files_content['state'].strip()
     pid = files_content['pid'].strip()
     return _damon.Kdamond(state, pid, contexts)
 
 def files_content_to_kdamonds(files_contents):
     return [files_content_to_kdamond(content)
-            for content in number_sorted_dirs(files_contents)]
+            for content in numbered_dirs_content(
+                files_contents, 'nr_kdamonds')]
 
 def current_kdamonds():
     return files_content_to_kdamonds(
