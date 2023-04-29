@@ -102,8 +102,8 @@ def main(args=None):
                 if regions_boundary:
                     check_boundary(region, regions_boundary)
 
-                assert_value_in_range(region.nr_accesses, args.nr_accesses,
-                        'nr_accesses', False)
+                assert_value_in_range(region.nr_accesses_samples,
+                        args.nr_accesses, 'nr_accesses', False)
 
 if __name__ == '__main__':
     main()

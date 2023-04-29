@@ -48,7 +48,7 @@ def add_heats(snapshot, duration, pixels, time_unit, space_unit, addr_range):
         while fraction_start < end:
             fraction_end = min((addr_idx + 1) * space_unit + addr_range[0],
                     end)
-            heat = region.nr_accesses * duration * (
+            heat = region.nr_accesses_samples * duration * (
                     fraction_end - fraction_start)
 
             pixel = pixels[addr_idx]
