@@ -183,6 +183,8 @@ class DamonIntervalsBasedValUnit:
         self.unit = unit
 
     def eq(self, other, intervals=None):
+        if type(other) != type(self):
+            return False
         if intervals == None:
             return self.value == other.value and self.unit == other.unit
 
