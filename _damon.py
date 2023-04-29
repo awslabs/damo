@@ -129,6 +129,11 @@ class DamonRegion:
         if self.nr_accesses == None:
             return type(self) == type(other) and '%s' % self == '%s' % other
 
+    # For aggregate_snapshots() support
+    def __hash__(self):
+        identification = '%s-%s' % (self.start, self.end)
+        return hash(identification)
+
     @classmethod
     def from_kvpairs(cls, kvpairs):
         return DamonRegion(kvpairs['start'], kvpairs['end'])
