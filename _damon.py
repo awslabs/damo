@@ -80,22 +80,46 @@ class DamonNrRegionsRange:
             ])
 
 class DamonRegion:
-    # [star, end)
+    # [start, end)
     start = None
     end = None
+    # nr_accesses and age could be None
+    nr_accesses = None
+    age = None
 
-    def __init__(self, start, end):
+    def __init__(self, start, end, nr_accesses=None, nr_accesses_unit=None,
+            age=None, age_unit=None):
         self.start = _damo_fmt_str.text_to_bytes(start)
         self.end = _damo_fmt_str.text_to_bytes(end)
 
-    def to_str(self, raw):
-        return _damo_fmt_str.format_addr_range(self.start, self.end, raw)
+        if nr_accesses == None:
+            return
+
+        self.nr_accesses = DamonIntervalsBasedValUnit(nr_accesses,
+                nr_accesses_unit)
+        self.age = DamonIntervalsBasedValUnit(age, age_unit)
+
+    def to_str(self, raw, intervals=None):
+        if self.nr_accesses == None:
+            return _damo_fmt_str.format_addr_range(self.start, self.end, raw)
+
+        if raw == False and intervals != None:
+            nr_accesses = self.nr_accesses.converted_for_unit(unit_percent,
+                    intervals)
+            age = self.age.converted_for_unit(unit_usec, intervals)
+        else:
+            nr_accesses = self.nr_accesses
+            age = self.age
+        return '%s: nr_accesses: %s, age: %s' % (
+                _damo_fmt_str.format_addr_range(self.start, self.end, raw),
+                nr_accesses.to_str(raw), age.to_str(raw))
 
     def __str__(self):
         return self.to_str(False)
 
     def __eq__(self, other):
-        return type(self) == type(other) and '%s' % self == '%s' % other
+        if self.nr_accesses == None:
+            return type(self) == type(other) and '%s' % self == '%s' % other
 
     @classmethod
     def from_kvpairs(cls, kvpairs):
