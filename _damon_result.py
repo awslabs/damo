@@ -447,7 +447,7 @@ def tried_regions_to_snapshot(tried_regions, intervals):
     return snapshot
 
 def tried_regions_to_snapshots(monitor_scheme):
-    snapshots = {} # {kdamond idx: {ctx: Snapshot}}
+    snapshots = {} # {kdamond: {ctx: Snapshot}}
     for kdamond_idx, kdamond in enumerate(_damon.current_kdamonds()):
         if kdamond.state != 'on':
             continue
