@@ -24,10 +24,6 @@ def __pr_schemes_tried_regions(regions, intervals, size_only, sortby,
 
     total_sz = 0
     for region in regions:
-        # region is DamonRegion.  Convert to DamonRegion
-        region = _damon.DamonRegion(region.start, region.end,
-                region.nr_accesses_samples, _damon.unit_samples,
-                region.age / intervals.aggr, _damon.unit_aggr_intervals)
         if not size_only:
             print(region.to_str(raw_nr, intervals))
         else:
