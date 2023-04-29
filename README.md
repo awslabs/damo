@@ -100,6 +100,14 @@ report your usecase to sj@kernel.org, damon@lists.linux.dev and
 linux-mm@kvack.org if you depend on those.
 
 
+damo suddenly prints `Python2 support of damo is deprecated` message. Why?
+--------------------------------------------------------------------------
+
+Because Python2 is no more supported.  Please report your usecase to
+sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if you depend on
+those.
+
+
 Recording Data Access Patterns
 ==============================
 
