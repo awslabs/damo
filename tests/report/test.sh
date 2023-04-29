@@ -13,7 +13,7 @@ test_report() {
 	expected="expects/report-$test_name"
 	result="results/report-$test_name"
 
-	eval "$cmd" > "$result" 2> /dev/null
+	eval "python3 $cmd" > "$result" 2> /dev/null
 	if ! diff -q "$expected" "$result"
 	then
 		echo "FAIL report-$test_name"
