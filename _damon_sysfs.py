@@ -364,7 +364,7 @@ def files_content_to_damos_stats(files_content):
             int(files_content['qt_exceeds']))
 
 def files_content_to_damos_tried_regions(files_content):
-    return [_damon.DamosTriedRegion(
+    return [_damon.DamonRegion(
             int(kv['start']), int(kv['end']),
             int(kv['nr_accesses']), _damon.unit_samples,
             int(kv['age']), _damon.unit_aggr_intervals)

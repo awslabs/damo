@@ -522,35 +522,6 @@ class DamosStats:
     def __str__(self):
         return self.to_str(False)
 
-class DamosTriedRegion:
-    start = None
-    end = None
-    nr_accesses = None
-    age = None
-
-    def __init__(self, start, end, nr_accesses, nr_accesses_unit,
-            age, age_unit):
-        self.start = start
-        self.end = end
-        self.nr_accesses = DamonIntervalsBasedValUnit(nr_accesses,
-                nr_accesses_unit)
-        self.age = DamonIntervalsBasedValUnit(age, age_unit)
-
-    def to_str(self, raw, intervals=None):
-        if raw == False and intervals != None:
-            nr_accesses = self.nr_accesses.converted_for_unit(unit_percent,
-                    intervals)
-            age = self.age.converted_for_unit(unit_usec, intervals)
-        else:
-            nr_accesses = self.nr_accesses
-            age = self.age
-        return '%s: nr_accesses: %s, age: %s' % (
-                _damo_fmt_str.format_addr_range(self.start, self.end, raw),
-                nr_accesses.to_str(raw), age.to_str(raw))
-
-    def __str__(self):
-        return self.to_str(False)
-
 # TODO: check support of pageout and lru_(de)prio
 damos_actions = [
         'willneed',
