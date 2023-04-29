@@ -38,12 +38,12 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, sortby,
         print(err)
         return
 
-    for kdamond, ctx_snapshots in snapshots.items():
-        for ctx, snapshot in ctx_snapshots.items():
-            ctx_idx = kdamond.contexts.index(ctx)
-            print('kdamond %s ctx %s' % (kdamond.idx, ctx_idx))
-            __pr_schemes_tried_regions(snapshot.regions, ctx.intervals,
-                    size_only, sortby, prio_weights, raw_nr)
+    for kdamond_idx, ctx_snapshot in snapshots.items():
+        for ctx_idx, snapshot_intervals in ctx_snapshot.items():
+            snapshot, intervals = snapshot_intervals
+            print('kdamond %s ctx %s' % (kdamond_idx, ctx_idx))
+            __pr_schemes_tried_regions(snapshot.regions, intervals, size_only,
+                    sortby, prio_weights, raw_nr)
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
