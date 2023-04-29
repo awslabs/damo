@@ -87,6 +87,10 @@ class DamonRegion:
     nr_accesses = None
     age = None
 
+    # For legacy code to easily migrate
+    nr_accesses_samples = None
+    age_aggr_intervals = None
+
     def __init__(self, start, end, nr_accesses=None, nr_accesses_unit=None,
             age=None, age_unit=None):
         self.start = _damo_fmt_str.text_to_bytes(start)
@@ -98,6 +102,10 @@ class DamonRegion:
         self.nr_accesses = DamonIntervalsBasedValUnit(nr_accesses,
                 nr_accesses_unit)
         self.age = DamonIntervalsBasedValUnit(age, age_unit)
+        if nr_accesses_unit == unit_samples:
+            self.nr_accesses_samples = nr_accesses
+        if age_unit == unit_aggr_intervals:
+            self.age_aggr_intervals = age
 
     def to_str(self, raw, intervals=None):
         if self.nr_accesses == None:
