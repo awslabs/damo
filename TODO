@@ -17,14 +17,13 @@
   - No check at all
   - Or, goes from option 1 to option 4 incrementally
 - Implement histogram stat regions output
-- Merge DamosTriedRegion and DAMONRegion
-- Make clean definition of 'name'.  It might better to use 'index' again.
 - Support DAMOS quotas/watermarks/filters with command line options
 - Deprecate old features
   - Deprecate --rbuf and in-kernel record feature support (done but code remain)
   - Deprecate single line per-scheme (done but code remain)
   - Deprecate v1-v3 schemes (done but code remain)
-  - Deprecate python2 support (by 2023-q2)
+  - Deprecate python2 support (announced as deprecated but code remain)
   - Deprecate scheme subcommand
     - Can be replaced by start or tune
   - Deprecate old scheme usages in tests
+- Merge into Linux mainline
