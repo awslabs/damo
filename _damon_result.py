@@ -443,12 +443,7 @@ def tried_regions_to_snapshot(tried_regions, intervals):
     snapshot = DAMONSnapshot(snapshot_start_time_ns, snapshot_end_time_ns)
 
     for tried_region in tried_regions:
-        snapshot.regions.append(_damon.DamonRegion(tried_region.start,
-            tried_region.end,
-            tried_region.nr_accesses_samples,
-            _damon.unit_samples,
-            tried_region.age_aggr_intervals,
-            _damon.unit_aggr_intervals))
+        snapshot.regions.append(tried_region)
     return snapshot
 
 def tried_regions_to_snapshots(monitor_scheme):
