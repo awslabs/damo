@@ -300,6 +300,19 @@ class TestDamon(unittest.TestCase):
         self.assertEqual('%s' % nr_acc.to_str(_damon.unit_percent, raw=False),
                 '20 %')
 
+    def test_damon_age(self):
+        intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
+
+        age = _damon.DamonAge(15, _damon.unit_aggr_intervals)
+        age.add_unset_unit(intervals)
+        self.assertEqual(age.aggr_intervals, 15)
+        self.assertEqual(age.usec, 1500000)
+        self.assertEqual(
+                '%s' % age.to_str(_damon.unit_aggr_intervals, raw=False),
+                '15 %s' % _damon.unit_aggr_intervals)
+        self.assertEqual('%s' % age.to_str(_damon.unit_usec, raw=False),
+                '1 s 500 ms')
+
     def test_damon_unit_val(self):
         intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
 
