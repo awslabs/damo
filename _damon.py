@@ -236,51 +236,6 @@ class DamonTarget:
         kvp['regions'] = [r.to_kvpairs(raw) for r in self.regions]
         return kvp
 
-class DamonUnitVal:
-    # {unit: value}.  units could be percent/sample,s or usec/aggr_intervals
-    unit_val = None
-
-    def __init__(self, unit, value):
-        self.unit_val = {unit: value}
-
-    def __eq__(self, other):
-        return self.unit_val == other.unit_val
-
-    def to_str(self, unit, raw):
-        if not unit in self.unit_val:
-            return None, 'no value for unit %s' % unit
-        val = self.unit_val[unit]
-        if unit == unit_usec:
-            return _damo_fmt_str.format_time_us_exact(val, raw)
-
-        if unit == unit_percent:
-            unit = '%'
-        return '%s %s' % (_damo_fmt_str.format_nr(val, raw), unit)
-
-    def add_unit(self, intervals):
-        if len(self.unit_val) == 2:
-            return
-        if len(self.unit_val) != 1:
-            raise Exception('add_unit() is called for %s' % self.unit_val)
-        current_unit = list(self.unit_val.keys())[0]
-        current_unit_val = self.unit_val[current_unit]
-        new_unit = {
-                unit_percent: unit_samples,
-                unit_samples: unit_percent,
-                unit_usec: unit_aggr_intervals,
-                unit_aggr_intervals: unit_usec}[current_unit]
-
-        if current_unit == unit_samples and new_unit == unit_percent:
-            max_val = intervals.aggr / intervals.sample
-            self.unit_val[new_unit] = int(current_unit_val * 100.0 / max_val)
-        elif current_unit == unit_percent and new_unit == unit_samples:
-            max_val = intervals.aggr / intervals.sample
-            self.unit_val[new_unit] = int(current_unit_val * max_val / 100)
-        elif current_unit == unit_aggr_intervals and new_unit == unit_usec:
-            self.unit_val[new_unit] = current_unit_val * intervals.aggr
-        elif current_unit == unit_usec and new_unit == unit_aggr_intervals:
-            self.unit_val[new_unit] = int(current_unit_val / intervals.aggr)
-
 class DamonIntervalsBasedValUnit:
     value = None
     unit = None # percent, samples, usec, aggr_intervals
