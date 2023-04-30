@@ -11,8 +11,8 @@ import _damon
 import _damon_result
 
 def priority(region, weights):
-    if region.nr_accesses_2.samples > 0:
-        return (region.nr_accesses_2.samples * weights[0] +
+    if region.nr_accesses.samples > 0:
+        return (region.nr_accesses.samples * weights[0] +
                 region.age * weights[1])
     return region.age * weights[1] * -1
 

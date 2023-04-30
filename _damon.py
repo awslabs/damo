@@ -87,8 +87,8 @@ class DamonRegion:
     nr_accesses_uv = None
     age_uv = None
 
-    nr_accesses_2 = None
-    age_2 = None
+    nr_accesses = None
+    age = None
 
     def __init__(self, start, end, nr_accesses=None, nr_accesses_unit=None,
             age=None, age_unit=None):
@@ -101,16 +101,16 @@ class DamonRegion:
         self.nr_accesses_uv = DamonUnitVal(nr_accesses_unit, nr_accesses)
         self.age_uv = DamonUnitVal(age_unit, age)
 
-        self.nr_accesses_2 = DamonNrAccesses(nr_accesses, nr_accesses_unit)
-        self.age_2 = DamonAge(age, age_unit)
+        self.nr_accesses = DamonNrAccesses(nr_accesses, nr_accesses_unit)
+        self.age = DamonAge(age, age_unit)
 
     def to_str(self, raw, intervals=None):
-        if self.nr_accesses_2 == None:
+        if self.nr_accesses == None:
             return _damo_fmt_str.format_addr_range(self.start, self.end, raw)
 
         if intervals != None:
-            self.nr_accesses_2.add_unset_unit(intervals)
-            self.age_2.add_unset_unit(intervals)
+            self.nr_accesses.add_unset_unit(intervals)
+            self.age.add_unset_unit(intervals)
 
         if raw == False and intervals != None:
             nr_accesses_unit = unit_percent
@@ -120,14 +120,14 @@ class DamonRegion:
             age_unit = unit_aggr_intervals
         return '%s: nr_accesses: %s, age: %s' % (
                 _damo_fmt_str.format_addr_range(self.start, self.end, raw),
-                self.nr_accesses_2.to_str(nr_accesses_unit, raw),
-                self.age_2.to_str(age_unit, raw))
+                self.nr_accesses.to_str(nr_accesses_unit, raw),
+                self.age.to_str(age_unit, raw))
 
     def __str__(self):
         return self.to_str(False)
 
     def __eq__(self, other):
-        if self.nr_accesses_2 == None:
+        if self.nr_accesses == None:
             return type(self) == type(other) and '%s' % self == '%s' % other
 
     # For aggregate_snapshots() support

@@ -82,7 +82,7 @@ def is_fake_snapshot(snapshot):
         return False
     r = snapshot.regions[0]
     return (r.start == 0 and r.end == 0 and
-            r.nr_accesses_2.samples == -1 and r.age_2.aggr_intervals == -1)
+            r.nr_accesses.samples == -1 and r.age.aggr_intervals == -1)
 
 def set_first_snapshot_start_time(result):
     for record in result.records:
@@ -252,7 +252,7 @@ def write_damon_record(result, file_path, format_version):
                 for region in snapshot.regions:
                     f.write(struct.pack('L', region.start))
                     f.write(struct.pack('L', region.end))
-                    f.write(struct.pack('I', region.nr_accesses_2.samples))
+                    f.write(struct.pack('I', region.nr_accesses.samples))
 
 def write_damon_perf_script(result, file_path):
     '''
@@ -274,8 +274,8 @@ def write_damon_perf_script(result, file_path):
                         'target_id=%s' % record.target_id,
                         'nr_regions=%d' % len(snapshot.regions),
                         '%d-%d: %d %s' % (region.start, region.end,
-                            region.nr_accesses_2.samples,
-                            region.age_2.aggr_intervals)]) + '\n')
+                            region.nr_accesses.samples,
+                            region.age.aggr_intervals)]) + '\n')
 
 def parse_file_permission_str(file_permission_str):
     try:
@@ -299,7 +299,7 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
             snap_duration = snapshot.end_time - snapshot.start_time
             fake_snapshot = DAMONSnapshot(snapshot.end_time,
                     snapshot.end_time + snap_duration)
-            # -1 nr_accesses_2.samples / -1 age_2.aggr_intervals means fake
+            # -1 nr_accesses.samples / -1 age.aggr_intervals means fake
             fake_snapshot.regions = [_damon.DamonRegion(0, 0,
                 -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
             snapshots.append(fake_snapshot)
@@ -328,19 +328,19 @@ def add_region(regions, region, nr_acc_to_add):
             if not r in nr_acc_to_add:
                 nr_acc_to_add[r] = 0
             nr_acc_to_add[r] = max(nr_acc_to_add[r],
-                    region.nr_accesses_2.samples)
+                    region.nr_accesses.samples)
 
             new_regions = []
             if region.start < r.start:
                 new_regions.append(_damon.DamonRegion(
                     region.start, r.start,
-                    region.nr_accesses_2.samples, _damon.unit_samepls,
-                    region.age_2.aggr_intervals, _damon.unit_aggr_intervals))
+                    region.nr_accesses.samples, _damon.unit_samepls,
+                    region.age.aggr_intervals, _damon.unit_aggr_intervals))
             if r.end < region.end:
                 new_regions.append(_damon.DamonRegion(
                         r.end, region.end,
-                        region.nr_accesses_2.samples, _damon.unit_samples,
-                        region.age_2.aggr_intervals,
+                        region.nr_accesses.samples, _damon.unit_samples,
+                        region.age.aggr_intervals,
                         _damon.unit_aggr_intervals))
 
             for new_r in new_regions:
@@ -359,8 +359,8 @@ def aggregate_snapshots(snapshots):
         for region in snapshot.regions:
             add_region(new_regions, region, nr_acc_to_add)
         for region in nr_acc_to_add:
-            region.nr_accesses_2.samples += nr_acc_to_add[region]
-            region.nr_accesses.val = region.nr_accesses_2.samples
+            region.nr_accesses.samples += nr_acc_to_add[region]
+            region.nr_accesses.val = region.nr_accesses.samples
             region.nr_accesses.unit = _damon.unit_samples
 
     new_snapshot = DAMONSnapshot(snapshots[0].start_time,
