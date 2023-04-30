@@ -279,6 +279,37 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosWatermarks(_damon.damos_wmarks_metric_none,
                     0, 0, 0, 0))
 
+    def test_damon_unit_val(self):
+        intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
+
+        unitval = _damon.DamonUnitVal(_damon.unit_samples, 4)
+        unitval.add_unit(intervals)
+        self.assertEqual(unitval.unit_val[_damon.unit_samples], 4)
+        self.assertEqual(unitval.unit_val[_damon.unit_percent], 20)
+        self.assertEqual('%s' % unitval.to_str(_damon.unit_samples, raw=False),
+                '4 %s' % _damon.unit_samples)
+        self.assertEqual('%s' % unitval.to_str(_damon.unit_percent, raw=False),
+                '20 %')
+
+        unitval = _damon.DamonUnitVal(_damon.unit_percent, 20)
+        unitval.add_unit(intervals)
+        self.assertEqual(unitval.unit_val[_damon.unit_samples], 4)
+        self.assertEqual(unitval.unit_val[_damon.unit_percent], 20)
+        self.assertEqual('%s' % unitval.to_str(_damon.unit_samples, raw=False),
+                '4 %s' % _damon.unit_samples)
+        self.assertEqual('%s' % unitval.to_str(_damon.unit_percent, raw=False),
+                '20 %')
+
+        unitval = _damon.DamonUnitVal(_damon.unit_aggr_intervals, 15)
+        unitval.add_unit(intervals)
+        self.assertEqual(unitval.unit_val[_damon.unit_aggr_intervals], 15)
+        self.assertEqual(unitval.unit_val[_damon.unit_usec], 1500000)
+        self.assertEqual(
+                '%s' % unitval.to_str(_damon.unit_aggr_intervals, raw=False),
+                '15 %s' % _damon.unit_aggr_intervals)
+        self.assertEqual('%s' % unitval.to_str(_damon.unit_usec, raw=False),
+                '1 s 500 ms')
+
     def test_damon_intervals_based_val_unit(self):
         intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
 
