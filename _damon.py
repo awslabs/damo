@@ -345,9 +345,11 @@ class DamosAccessPattern:
                 _damo_fmt_str.format_sz(self.sz_bytes[1], raw)),
             ]
         lines.append('nr_accesses: [%s, %s]' % (
-            self.nr_accesses[0].to_str(raw), self.nr_accesses[1].to_str(raw)))
-        lines.append('age: [%s, %s]' %
-                (self.age[0].to_str(raw), self.age[1].to_str(raw)))
+            self.nr_accesses_2[0].to_str(self.nr_accesses_unit, raw),
+            self.nr_accesses_2[1].to_str(self.nr_accesses_unit, raw)))
+        lines.append('age: [%s, %s]' % (
+            self.age_2[0].to_str(self.age_unit, raw),
+            self.age_2[1].to_str(self.age_unit, raw)))
         return '\n'.join(lines)
 
     def __str__(self):
