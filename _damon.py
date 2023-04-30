@@ -122,16 +122,20 @@ class DamonRegion:
         if self.nr_accesses == None:
             return _damo_fmt_str.format_addr_range(self.start, self.end, raw)
 
+        if intervals != None:
+            self.nr_accesses_2.add_unset_unit(intervals)
+            self.age_2.add_unset_unit(intervals)
+
         if raw == False and intervals != None:
-            nr_accesses = self.nr_accesses.converted_for_unit(unit_percent,
-                    intervals)
-            age = self.age.converted_for_unit(unit_usec, intervals)
+            nr_accesses_unit = unit_percent
+            age_unit = unit_usec
         else:
-            nr_accesses = self.nr_accesses
-            age = self.age
+            nr_accesses_unit = unit_samples
+            age_unit = unit_aggr_intervals
         return '%s: nr_accesses: %s, age: %s' % (
                 _damo_fmt_str.format_addr_range(self.start, self.end, raw),
-                nr_accesses.to_str(raw), age.to_str(raw))
+                self.nr_accesses_2.to_str(nr_accesses_unit, raw),
+                self.age_2.to_str(age_unit, raw))
 
     def __str__(self):
         return self.to_str(False)
