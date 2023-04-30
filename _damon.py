@@ -86,6 +86,8 @@ class DamonRegion:
     # nr_accesses and age could be None
     nr_accesses = None
     age = None
+    nr_accesses_uv = None
+    age_uv = None
 
     # For legacy code to easily migrate
     nr_accesses_samples = None
@@ -106,6 +108,9 @@ class DamonRegion:
             self.nr_accesses_samples = nr_accesses
         if age_unit == unit_aggr_intervals:
             self.age_aggr_intervals = age
+
+        self.nr_accesses_uv = DamonUnitVal(nr_accesses_unit, nr_accesses)
+        self.age_uv = DamonUnitVal(age_unit, age)
 
     def to_str(self, raw, intervals=None):
         if self.nr_accesses == None:
