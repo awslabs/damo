@@ -279,6 +279,27 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosWatermarks(_damon.damos_wmarks_metric_none,
                     0, 0, 0, 0))
 
+    def test_damon_nr_accesses(self):
+        intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
+
+        nr_acc = _damon.DamonNrAccesses(4, _damon.unit_samples)
+        nr_acc.add_unset_unit(intervals)
+        self.assertEqual(nr_acc.samples, 4)
+        self.assertEqual(nr_acc.percent, 20)
+        self.assertEqual('%s' % nr_acc.to_str(_damon.unit_samples, raw=False),
+                '4 %s' % _damon.unit_samples)
+        self.assertEqual('%s' % nr_acc.to_str(_damon.unit_percent, raw=False),
+                '20 %')
+
+        nr_acc = _damon.DamonNrAccesses(20, _damon.unit_percent)
+        nr_acc.add_unset_unit(intervals)
+        self.assertEqual(nr_acc.samples, 4)
+        self.assertEqual(nr_acc.percent, 20)
+        self.assertEqual('%s' % nr_acc.to_str(_damon.unit_samples, raw=False),
+                '4 %s' % _damon.unit_samples)
+        self.assertEqual('%s' % nr_acc.to_str(_damon.unit_percent, raw=False),
+                '20 %')
+
     def test_damon_unit_val(self):
         intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
 
