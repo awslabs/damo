@@ -290,8 +290,6 @@ class DamonIntervalsBasedValUnit:
 
 class DamosAccessPattern:
     sz_bytes = None
-    nr_accesses = None # [min/max DamonIntervalsBasedValUnit]
-    age = None  # [min/max DamonIntervalsBasedValUnit]
     nr_accesses_2 = None # [min/max DamonNrAccesses]
     nr_accesses_unit = None
     age_2 = None # [min/max DamonAge]
@@ -316,17 +314,6 @@ class DamosAccessPattern:
         if not age_unit in parsers_for_unit:
             raise Exception('invalid access pattern age_unit \'%s\'' %
                     age_unit)
-
-        unit = nr_accesses_unit
-        fn = parsers_for_unit[unit]
-        self.nr_accesses = [
-                DamonIntervalsBasedValUnit(fn(nr_accesses[0]), unit),
-                DamonIntervalsBasedValUnit(fn(nr_accesses[1]), unit)]
-
-        fn = parsers_for_unit[age_unit]
-        self.age = [
-                DamonIntervalsBasedValUnit(fn(age[0]), age_unit),
-                DamonIntervalsBasedValUnit(fn(age[1]), age_unit)]
 
         fn = parsers_for_unit[nr_accesses_unit]
         self.nr_accesses_2 = [
@@ -358,8 +345,6 @@ class DamosAccessPattern:
     def __eq__(self, other):
         return (type(self) == type(other) and
                 self.sz_bytes == other.sz_bytes and
-                self.nr_accesses == other.nr_accesses and
-                self.age == other.age and
                 self.nr_accesses_2 == other.nr_accesses_2 and
                 self.age_2 == other.age_2)
 
@@ -414,11 +399,6 @@ class DamosAccessPattern:
             ])
 
     def convert_for_units(self, nr_accesses_unit, age_unit, intervals):
-        self.nr_accesses[0].convert_unit(nr_accesses_unit, intervals)
-        self.nr_accesses[1].convert_unit(nr_accesses_unit, intervals)
-        self.age[0].convert_unit(age_unit, intervals)
-        self.age[1].convert_unit(age_unit, intervals)
-
         self.nr_accesses_2[0].add_unset_unit(intervals)
         self.nr_accesses_2[1].add_unset_unit(intervals)
         self.age_2[0].add_unset_unit(intervals)
