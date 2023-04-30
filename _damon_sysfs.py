@@ -140,12 +140,12 @@ def wops_for_scheme_access_pattern(pattern, ctx):
             'max': '%d' % pattern.sz_bytes[1],
         },
         'nr_accesses': {
-            'min': '%d' % pattern.nr_accesses_2[0].samples,
-            'max': '%d' % pattern.nr_accesses_2[1].samples,
+            'min': '%d' % pattern.nr_acc_min_max[0].samples,
+            'max': '%d' % pattern.nr_acc_min_max[1].samples,
         },
         'age': {
-            'min': '%d' % pattern.age_2[0].aggr_intervals,
-            'max': '%d' % pattern.age_2[1].aggr_intervals,
+            'min': '%d' % pattern.age_min_max[0].aggr_intervals,
+            'max': '%d' % pattern.age_min_max[1].aggr_intervals,
         },
     }
 

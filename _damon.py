@@ -290,9 +290,9 @@ class DamonIntervalsBasedValUnit:
 
 class DamosAccessPattern:
     sz_bytes = None
-    nr_accesses_2 = None # [min/max DamonNrAccesses]
+    nr_acc_min_max = None # [min/max DamonNrAccesses]
     nr_accesses_unit = None
-    age_2 = None # [min/max DamonAge]
+    age_min_max = None # [min/max DamonAge]
     age_unit = None
 
     # every region by default, so that it can be used for monitoring
@@ -316,12 +316,12 @@ class DamosAccessPattern:
                     age_unit)
 
         fn = parsers_for_unit[nr_accesses_unit]
-        self.nr_accesses_2 = [
+        self.nr_acc_min_max = [
                 DamonNrAccesses(fn(nr_accesses[0]), nr_accesses_unit),
                 DamonNrAccesses(fn(nr_accesses[1]), nr_accesses_unit)]
         self.nr_accesses_unit = nr_accesses_unit
         fn = parsers_for_unit[age_unit]
-        self.age_2 = [
+        self.age_min_max = [
                 DamonAge(fn(age[0]), age_unit),
                 DamonAge(fn(age[1]), age_unit)]
         self.age_unit = age_unit
@@ -332,11 +332,11 @@ class DamosAccessPattern:
                 _damo_fmt_str.format_sz(self.sz_bytes[1], raw)),
             ]
         lines.append('nr_accesses: [%s, %s]' % (
-            self.nr_accesses_2[0].to_str(self.nr_accesses_unit, raw),
-            self.nr_accesses_2[1].to_str(self.nr_accesses_unit, raw)))
+            self.nr_acc_min_max[0].to_str(self.nr_accesses_unit, raw),
+            self.nr_acc_min_max[1].to_str(self.nr_accesses_unit, raw)))
         lines.append('age: [%s, %s]' % (
-            self.age_2[0].to_str(self.age_unit, raw),
-            self.age_2[1].to_str(self.age_unit, raw)))
+            self.age_min_max[0].to_str(self.age_unit, raw),
+            self.age_min_max[1].to_str(self.age_unit, raw)))
         return '\n'.join(lines)
 
     def __str__(self):
@@ -345,8 +345,8 @@ class DamosAccessPattern:
     def __eq__(self, other):
         return (type(self) == type(other) and
                 self.sz_bytes == other.sz_bytes and
-                self.nr_accesses_2 == other.nr_accesses_2 and
-                self.age_2 == other.age_2)
+                self.nr_acc_min_max == other.nr_acc_min_max and
+                self.age_min_max == other.age_min_max)
 
     @classmethod
     def from_kvpairs(cls, kv):
@@ -381,12 +381,12 @@ class DamosAccessPattern:
                 age_unit)
 
     def to_kvpairs(self, raw=False):
-        min_nr_accesses = self.nr_accesses_2[0].to_str(
+        min_nr_accesses = self.nr_acc_min_max[0].to_str(
                 self.nr_accesses_unit, raw)
-        max_nr_accesses = self.nr_accesses_2[1].to_str(
+        max_nr_accesses = self.nr_acc_min_max[1].to_str(
                 self.nr_accesses_unit, raw)
-        min_age = self.age_2[0].to_str(self.age_unit, raw)
-        max_age = self.age_2[1].to_str(self.age_unit, raw)
+        min_age = self.age_min_max[0].to_str(self.age_unit, raw)
+        max_age = self.age_min_max[1].to_str(self.age_unit, raw)
 
         return collections.OrderedDict([
             ('sz_bytes', (collections.OrderedDict([
@@ -399,10 +399,10 @@ class DamosAccessPattern:
             ])
 
     def convert_for_units(self, nr_accesses_unit, age_unit, intervals):
-        self.nr_accesses_2[0].add_unset_unit(intervals)
-        self.nr_accesses_2[1].add_unset_unit(intervals)
-        self.age_2[0].add_unset_unit(intervals)
-        self.age_2[1].add_unset_unit(intervals)
+        self.nr_acc_min_max[0].add_unset_unit(intervals)
+        self.nr_acc_min_max[1].add_unset_unit(intervals)
+        self.age_min_max[0].add_unset_unit(intervals)
+        self.age_min_max[1].add_unset_unit(intervals)
         self.nr_accesses_unit = nr_accesses_unit
         self.age_unit = age_unit
 

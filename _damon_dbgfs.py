@@ -99,8 +99,8 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     max_nr_accesses = intervals.aggr / intervals.sample
     v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%s' % (
             pattern.sz_bytes[0], pattern.sz_bytes[1],
-            pattern.nr_accesses_2[0].samples, pattern.nr_accesses_2[1].samples,
-            pattern.age_2[0].aggr_intervals, pattern.age_2[1].aggr_intervals,
+            pattern.nr_acc_min_max[0].samples, pattern.nr_acc_min_max[1].samples,
+            pattern.age_min_max[0].aggr_intervals, pattern.age_min_max[1].aggr_intervals,
             damos_action_to_file_input(damos.action))
     if scheme_version == 0:
         return v0_scheme
