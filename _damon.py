@@ -359,7 +359,9 @@ class DamosAccessPattern:
         return (type(self) == type(other) and
                 self.sz_bytes == other.sz_bytes and
                 self.nr_accesses == other.nr_accesses and
-                self.age == other.age)
+                self.age == other.age and
+                self.nr_accesses_2 == other.nr_accesses_2 and
+                self.age_2 == other.age_2)
 
     @classmethod
     def from_kvpairs(cls, kv):
