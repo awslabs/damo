@@ -152,9 +152,6 @@ class DamonRegion:
     start = None
     end = None
     # nr_accesses and age could be None
-    nr_accesses_uv = None
-    age_uv = None
-
     nr_accesses = None
     age = None
 
@@ -165,10 +162,6 @@ class DamonRegion:
 
         if nr_accesses == None:
             return
-
-        self.nr_accesses_uv = DamonUnitVal(nr_accesses_unit, nr_accesses)
-        self.age_uv = DamonUnitVal(age_unit, age)
-
         self.nr_accesses = DamonNrAccesses(nr_accesses, nr_accesses_unit)
         self.age = DamonAge(age, age_unit)
 
