@@ -84,8 +84,6 @@ class DamonRegion:
     start = None
     end = None
     # nr_accesses and age could be None
-    nr_accesses = None
-    age = None
     nr_accesses_uv = None
     age_uv = None
 
@@ -100,10 +98,6 @@ class DamonRegion:
         if nr_accesses == None:
             return
 
-        self.nr_accesses = DamonIntervalsBasedValUnit(nr_accesses,
-                nr_accesses_unit)
-        self.age = DamonIntervalsBasedValUnit(age, age_unit)
-
         self.nr_accesses_uv = DamonUnitVal(nr_accesses_unit, nr_accesses)
         self.age_uv = DamonUnitVal(age_unit, age)
 
@@ -111,7 +105,7 @@ class DamonRegion:
         self.age_2 = DamonAge(age, age_unit)
 
     def to_str(self, raw, intervals=None):
-        if self.nr_accesses == None:
+        if self.nr_accesses_2 == None:
             return _damo_fmt_str.format_addr_range(self.start, self.end, raw)
 
         if intervals != None:
@@ -133,7 +127,7 @@ class DamonRegion:
         return self.to_str(False)
 
     def __eq__(self, other):
-        if self.nr_accesses == None:
+        if self.nr_accesses_2 == None:
             return type(self) == type(other) and '%s' % self == '%s' % other
 
     # For aggregate_snapshots() support
@@ -197,7 +191,9 @@ class DamonNrAccesses:
             self.percent = val
 
     def __eq__(self, other):
-        return self.samples == other.samples or self.percent == other.percent
+        return (type(self) == type(other) and
+                (self.samples == other.samples or
+                    self.percent == other.percent))
 
     def add_unset_unit(self, intervals):
         if self.samples != None and self.percent != None:
@@ -229,8 +225,9 @@ class DamonAge:
             raise Exception('DamonAge unsupported unit (%s)' % unit)
 
     def __eq__(self, other):
-        return (self.usec == other.usec or
-                self.aggr_intervals == other.aggr_intervals)
+        return (type(self) == type(other) and
+                (self.usec == other.usec or
+                    self.aggr_intervals == other.aggr_intervals))
 
     def add_unset_unit(self, intervals):
         if self.usec != None and self.aggr_intervals != None:
