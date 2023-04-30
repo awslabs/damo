@@ -19,7 +19,7 @@ def get_wss_dists(result, acc_thres, sz_thres, do_sort):
             wss = 0
             for r in snapshot.regions:
                 # Ignore regions not fulfill working set conditions
-                if r.nr_accesses_samples < acc_thres:
+                if r.nr_accesses_2.samples < acc_thres:
                     continue
                 if r.end - r.start < sz_thres:
                     continue
