@@ -413,6 +413,10 @@ class DamosAccessPattern:
         self.age[0].convert_unit(age_unit, intervals)
         self.age[1].convert_unit(age_unit, intervals)
 
+        self.nr_accesses_2[0].add_unset_unit(intervals)
+        self.nr_accesses_2[1].add_unset_unit(intervals)
+        self.age_2[0].add_unset_unit(intervals)
+        self.age_2[1].add_unset_unit(intervals)
         self.nr_accesses_unit = nr_accesses_unit
         self.age_unit = age_unit
 
