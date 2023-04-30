@@ -396,10 +396,12 @@ class DamosAccessPattern:
                 age_unit)
 
     def to_kvpairs(self, raw=False):
-        min_nr_accesses = self.nr_accesses[0].to_str(raw)
-        max_nr_accesses = self.nr_accesses[1].to_str(raw)
-        min_age = self.age[0].to_str(raw)
-        max_age = self.age[1].to_str(raw)
+        min_nr_accesses = self.nr_accesses_2[0].to_str(
+                self.nr_accesses_unit, raw)
+        max_nr_accesses = self.nr_accesses_2[1].to_str(
+                self.nr_accesses_unit, raw)
+        min_age = self.age_2[0].to_str(self.age_unit, raw)
+        max_age = self.age_2[1].to_str(self.age_unit, raw)
 
         return collections.OrderedDict([
             ('sz_bytes', (collections.OrderedDict([
