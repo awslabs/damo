@@ -252,10 +252,14 @@ class TestDamon(unittest.TestCase):
                     _damon.unit_aggr_intervals, intervals),
                 pattern_machine.converted_for_units(
                     _damon.unit_percent, _damon.unit_usec, intervals)]:
-            self.assertEqual(type(converted.nr_accesses[0].value), int)
-            self.assertEqual(type(converted.nr_accesses[1].value), int)
-            self.assertEqual(type(converted.age[0].value), int)
-            self.assertEqual(type(converted.age[1].value), int)
+            self.assertEqual(type(converted.nr_accesses_2[0].samples), int)
+            self.assertEqual(type(converted.nr_accesses_2[1].samples), int)
+            self.assertEqual(type(converted.nr_accesses_2[0].percent), int)
+            self.assertEqual(type(converted.nr_accesses_2[1].percent), int)
+            self.assertEqual(type(converted.age_2[0].aggr_intervals), int)
+            self.assertEqual(type(converted.age_2[1].aggr_intervals), int)
+            self.assertEqual(type(converted.age_2[0].usec), int)
+            self.assertEqual(type(converted.age_2[1].usec), int)
 
         exception_raised = False
         try:
