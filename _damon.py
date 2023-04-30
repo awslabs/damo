@@ -184,6 +184,36 @@ unit_samples = 'samples'
 unit_usec = 'usec'
 unit_aggr_intervals = 'aggr_intervals'
 
+class DamonNrAccesses:
+    samples = None
+    percent = None
+
+    def __init__(self, val, unit):
+        if unit == unit_samples:
+            self.samples = val
+        elif unit == unit_percent:
+            self.percent = val
+
+    def __eq__(self, other):
+        return self.samples == other.samples or self.percent == other.percent
+
+    def add_unset_unit(self, intervals):
+        if self.samples != None and self.percent != None:
+            return
+        max_val = intervals.aggr / intervals.sample
+        if self.samples == None:
+            self.samples = int(self.percent * max_val / 100)
+        elif self.percent == None:
+            self.percent = int(self.samples * 100.0 / max_val)
+
+    def to_str(self, unit, raw):
+        if unit == unit_percent:
+            return '%s %%' % (_damo_fmt_str.format_nr(self.percent, raw))
+        elif unit == unit_samples:
+            return '%s %s' % (_damo_fmt_str.format_nr(self.samples, raw),
+                    unit_samples)
+        raise Exception('unsupported unit for NrAccesses (%s)' % unit)
+
 class DamonUnitVal:
     # {unit: value}.  units could be percent/sample,s or usec/aggr_intervals
     unit_val = None
