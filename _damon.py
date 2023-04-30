@@ -292,6 +292,8 @@ class DamosAccessPattern:
     sz_bytes = None
     nr_accesses = None # [min/max DamonIntervalsBasedValUnit]
     age = None  # [min/max DamonIntervalsBasedValUnit]
+    nr_accesses_2 = None # [min/max DamonNrAccesses]
+    age_2 = None # [min/max DamonAge]
 
     # every region by default, so that it can be used for monitoring
     def __init__(self, sz_bytes=['min', 'max'],
@@ -323,6 +325,15 @@ class DamosAccessPattern:
         self.age = [
                 DamonIntervalsBasedValUnit(fn(age[0]), age_unit),
                 DamonIntervalsBasedValUnit(fn(age[1]), age_unit)]
+
+        fn = parsers_for_unit[nr_accesses_unit]
+        self.nr_accesses_2 = [
+                DamonNrAccesses(fn(nr_accesses[0]), nr_accesses_unit),
+                DamonNrAccesses(fn(nr_accesses[1]), nr_accesses_unit)]
+        fn = parsers_for_unit[age_unit]
+        self.age_2 = [
+                DamonAge(fn(age[0]), age_unit),
+                DamonAge(fn(age[1]), age_unit)]
 
     def to_str(self, raw):
         lines = [
