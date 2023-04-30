@@ -214,6 +214,36 @@ class DamonNrAccesses:
                     unit_samples)
         raise Exception('unsupported unit for NrAccesses (%s)' % unit)
 
+class DamonAge:
+    usec = None
+    aggr_intervals = None
+
+    def __init__(self, val, unit):
+        if unit == unit_usec:
+            self.usec = val
+        elif unit == unit_aggr_intervals:
+            self.aggr_intervals = val
+        else:
+            raise Exception('DamonAge unsupported unit (%s)' % unit)
+
+    def __eq__(self, other):
+        return (self.usec == other.usec or
+                self.aggr_intervals == other.aggr_intervals)
+
+    def add_unset_unit(self, intervals):
+        if self.usec != None and self.aggr_intervals != None:
+            return
+        if self.usec == None:
+            self.usec = self.aggr_intervals * intervals.aggr
+        elif self.aggr_intervals == None:
+            self.aggr_intervals = int(self.usec / intervals.aggr)
+
+    def to_str(self, unit, raw):
+        if unit == unit_usec:
+            return _damo_fmt_str.format_time_us_exact(self.usec, raw)
+        return '%s %s' % (_damo_fmt_str.format_nr(self.aggr_intervals, raw),
+                unit_aggr_intervals)
+
 class DamonUnitVal:
     # {unit: value}.  units could be percent/sample,s or usec/aggr_intervals
     unit_val = None
