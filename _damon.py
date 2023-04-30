@@ -79,6 +79,74 @@ class DamonNrRegionsRange:
             ('max', _damo_fmt_str.format_nr(self.maximum, raw)),
             ])
 
+unit_percent = 'percent'
+unit_samples = 'samples'
+unit_usec = 'usec'
+unit_aggr_intervals = 'aggr_intervals'
+
+class DamonNrAccesses:
+    samples = None
+    percent = None
+
+    def __init__(self, val, unit):
+        if unit == unit_samples:
+            self.samples = val
+        elif unit == unit_percent:
+            self.percent = val
+
+    def __eq__(self, other):
+        return (type(self) == type(other) and
+                (self.samples == other.samples or
+                    self.percent == other.percent))
+
+    def add_unset_unit(self, intervals):
+        if self.samples != None and self.percent != None:
+            return
+        max_val = intervals.aggr / intervals.sample
+        if self.samples == None:
+            self.samples = int(self.percent * max_val / 100)
+        elif self.percent == None:
+            self.percent = int(self.samples * 100.0 / max_val)
+
+    def to_str(self, unit, raw):
+        if unit == unit_percent:
+            return '%s %%' % (_damo_fmt_str.format_nr(self.percent, raw))
+        elif unit == unit_samples:
+            return '%s %s' % (_damo_fmt_str.format_nr(self.samples, raw),
+                    unit_samples)
+        raise Exception('unsupported unit for NrAccesses (%s)' % unit)
+
+class DamonAge:
+    usec = None
+    aggr_intervals = None
+
+    def __init__(self, val, unit):
+        if unit == unit_usec:
+            self.usec = val
+        elif unit == unit_aggr_intervals:
+            self.aggr_intervals = val
+        else:
+            raise Exception('DamonAge unsupported unit (%s)' % unit)
+
+    def __eq__(self, other):
+        return (type(self) == type(other) and
+                (self.usec == other.usec or
+                    self.aggr_intervals == other.aggr_intervals))
+
+    def add_unset_unit(self, intervals):
+        if self.usec != None and self.aggr_intervals != None:
+            return
+        if self.usec == None:
+            self.usec = self.aggr_intervals * intervals.aggr
+        elif self.aggr_intervals == None:
+            self.aggr_intervals = int(self.usec / intervals.aggr)
+
+    def to_str(self, unit, raw):
+        if unit == unit_usec:
+            return _damo_fmt_str.format_time_us_exact(self.usec, raw)
+        return '%s %s' % (_damo_fmt_str.format_nr(self.aggr_intervals, raw),
+                unit_aggr_intervals)
+
 class DamonRegion:
     # [start, end)
     start = None
@@ -174,74 +242,6 @@ class DamonTarget:
         kvp['pid'] = self.pid
         kvp['regions'] = [r.to_kvpairs(raw) for r in self.regions]
         return kvp
-
-unit_percent = 'percent'
-unit_samples = 'samples'
-unit_usec = 'usec'
-unit_aggr_intervals = 'aggr_intervals'
-
-class DamonNrAccesses:
-    samples = None
-    percent = None
-
-    def __init__(self, val, unit):
-        if unit == unit_samples:
-            self.samples = val
-        elif unit == unit_percent:
-            self.percent = val
-
-    def __eq__(self, other):
-        return (type(self) == type(other) and
-                (self.samples == other.samples or
-                    self.percent == other.percent))
-
-    def add_unset_unit(self, intervals):
-        if self.samples != None and self.percent != None:
-            return
-        max_val = intervals.aggr / intervals.sample
-        if self.samples == None:
-            self.samples = int(self.percent * max_val / 100)
-        elif self.percent == None:
-            self.percent = int(self.samples * 100.0 / max_val)
-
-    def to_str(self, unit, raw):
-        if unit == unit_percent:
-            return '%s %%' % (_damo_fmt_str.format_nr(self.percent, raw))
-        elif unit == unit_samples:
-            return '%s %s' % (_damo_fmt_str.format_nr(self.samples, raw),
-                    unit_samples)
-        raise Exception('unsupported unit for NrAccesses (%s)' % unit)
-
-class DamonAge:
-    usec = None
-    aggr_intervals = None
-
-    def __init__(self, val, unit):
-        if unit == unit_usec:
-            self.usec = val
-        elif unit == unit_aggr_intervals:
-            self.aggr_intervals = val
-        else:
-            raise Exception('DamonAge unsupported unit (%s)' % unit)
-
-    def __eq__(self, other):
-        return (type(self) == type(other) and
-                (self.usec == other.usec or
-                    self.aggr_intervals == other.aggr_intervals))
-
-    def add_unset_unit(self, intervals):
-        if self.usec != None and self.aggr_intervals != None:
-            return
-        if self.usec == None:
-            self.usec = self.aggr_intervals * intervals.aggr
-        elif self.aggr_intervals == None:
-            self.aggr_intervals = int(self.usec / intervals.aggr)
-
-    def to_str(self, unit, raw):
-        if unit == unit_usec:
-            return _damo_fmt_str.format_time_us_exact(self.usec, raw)
-        return '%s %s' % (_damo_fmt_str.format_nr(self.aggr_intervals, raw),
-                unit_aggr_intervals)
 
 class DamonUnitVal:
     # {unit: value}.  units could be percent/sample,s or usec/aggr_intervals
