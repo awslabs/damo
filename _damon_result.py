@@ -360,7 +360,6 @@ def aggregate_snapshots(snapshots):
             add_region(new_regions, region, nr_acc_to_add)
         for region in nr_acc_to_add:
             region.nr_accesses_2.samples += nr_acc_to_add[region]
-            region.nr_accesses_samples += nr_acc_to_add[region]
             region.nr_accesses.val = region.nr_accesses_2.samples
             region.nr_accesses.unit = _damon.unit_samples
 
