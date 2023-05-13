@@ -1,13 +1,17 @@
 # SPDX-License-Identifier: GPL-2.0
 
+import os
 import setuptools
+os.sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
+
+from damo import damo_version
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="damo",
-    version="<<replace_me_with_the_version_number>>",
+    version=damo_version.__version__,
     author="SeongJae Park",
     author_email="sj@kernel.org",
     description="DAMON user-space tool",

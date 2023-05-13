@@ -23,14 +23,13 @@ import damo_stat
 import damo_stop
 import damo_tune
 import damo_validate
+import damo_version
 import damo_translate_damos
 
 import _damo_subcmds
 
 def pr_damo_version(args_not_use):
-    bindir = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(bindir, 'damo_version.py'), 'r') as f:
-        print(f.read().strip())
+    print(damo_version.__version__)
 
 subcmds = [
         _damo_subcmds.DamoSubCmd(name='record', module=damo_record,
