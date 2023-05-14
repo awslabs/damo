@@ -121,8 +121,11 @@ def record_to_damon_result(file_path):
                     start_time = record.snapshots[-1].end_time
                     if end_time < start_time:
                         return None, 'snapshot is not sorted by time'
-                snapshot = read_snapshot_from_record_file(f,
-                        start_time, end_time)
+                try:
+                    snapshot = read_snapshot_from_record_file(f,
+                            start_time, end_time)
+                except Exception as e:
+                    return None, 'snapshot reading failead: %s' % e
                 record.snapshots.append(snapshot)
 
     set_first_snapshot_start_time(result)
