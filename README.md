@@ -164,9 +164,8 @@ overhead.
                         <pid of your workload>
 
 Note: Previously, one-line scheme specification format like below was used.  It
-is now DEPRECATED, and the support will be removed by 2023 Q2.  Please report
-your usecase to sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if
-you depend on those.
+is now DEPRECATED.  Please report your usecase to sj@kernel.org,
+damon@lists.linux.dev and linux-mm@kvack.org if you depend on those.
 
     $ # !!! BELOW IS NO MORE SUPPORTED
     $ echo "#min-size max-size min-acc max-acc min-age max-age action" > my_scheme
