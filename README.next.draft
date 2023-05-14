@@ -13,5 +13,9 @@ Getting Started
     $ sudo damo stat
     $ sudo damo record
     $ sudo damo report
+    $ sudo damo snap save
+    $ sudo damo snap raw
+    $ sudo damo snap wss
+    $ sudo damo snap heats
     $ sudo damo tune
     $ sudo damo stop
