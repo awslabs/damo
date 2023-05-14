@@ -365,6 +365,7 @@ def main(args=None):
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (args.input, err))
+        exit(1)
 
     # Use 80x40 resolution as default for ascii plot
     if args.heatmap == 'stdout' and args.resol == [500, 500]:
