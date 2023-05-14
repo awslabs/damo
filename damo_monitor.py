@@ -13,7 +13,7 @@ import _damon
 import _damon_args
 
 def cleanup():
-    if target_is_cmd and cmd_pipe.poll() == None:
+    if target_type == _damon_args.target_type_cmd and cmd_pipe.poll() == None:
         cmd_pipe.kill()
 
 def sighandler(signum, frame):
@@ -38,7 +38,7 @@ def main(args=None):
 
     _damon.ensure_root_permission()
 
-    global target_is_cmd
+    global target_type
     global cmd_pipe
 
     signal.signal(signal.SIGINT, sighandler)
@@ -47,7 +47,6 @@ def main(args=None):
     target = args.target
     target_fields = target.split()
     target_type = _damon_args.deduced_target_type(target)
-    target_is_cmd = target_type == 'cmd'
     if target_type == None:
         print('invalid target \'%s\'' % target)
         exit(1)
