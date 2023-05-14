@@ -133,25 +133,20 @@ def deduced_target_type(target):
 
 def deduce_target_update_args(args):
     args.self_started_target = False
-    if args.deducible_target == 'paddr':
+    target_type = deduced_target_type(args.deducible_target)
+    if target_type == None:
+        return 'target \'%s\' is not supported' % args.deducible_target
+    if target_type == 'explicit' and args.deducible_target == 'paddr':
         args.ops = 'paddr'
         args.target_pid = None
         return None
-    try:
-        subprocess.check_output(['which', args.deducible_target.split()[0]])
-        is_cmd = True
-    except:
-        is_cmd = False
-    if is_cmd:
+    if target_type == 'cmd':
         p = subprocess.Popen(args.deducible_target, shell=True,
                 executable='/bin/bash')
         pid = p.pid
         args.self_started_target = True
-    else:
-        try:
-            pid = int(args.deducible_target)
-        except:
-            return 'target \'%s\' is not supported' % args.deducible_target
+    elif target_type == 'pid':
+        pid = int(args.deducible_target)
     args.target_pid = pid
     args.ops = 'vaddr'
     if args.regions:
