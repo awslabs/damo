@@ -209,9 +209,15 @@ class DamonRegion:
         return DamonRegion(kvpairs['start'], kvpairs['end'])
 
     def to_kvpairs(self, raw=False):
+        if self.nr_accesses == None:
+            return collections.OrderedDict([
+                ('start', _damo_fmt_str.format_nr(self.start, raw)),
+                ('end', _damo_fmt_str.format_nr(self.end, raw))])
         return collections.OrderedDict([
             ('start', _damo_fmt_str.format_nr(self.start, raw)),
-            ('end', _damo_fmt_str.format_nr(self.end, raw))])
+            ('end', _damo_fmt_str.format_nr(self.end, raw)),
+            ('nr_accesses', self.nr_accesses.to_kvpairs(raw)),
+            ('age', self.age.to_kvpairs(raw))])
 
 class DamonTarget:
     pid = None
