@@ -116,20 +116,25 @@ def kdamonds_from_json_arg(arg):
     except Exception as e:
         return None, e
 
+target_type_explict = 'explict'
+target_type_cmd = 'cmd'
+target_type_pid = 'pid'
+target_type_unknown = None
+
 def deduced_target_type(target):
     if target in ['vaddr', 'paddr', 'fvaddr']:
-        return 'explicit'
+        return target_type_explict
     try:
         subprocess.check_output(['which', target.split()[0]])
-        return 'cmd'
+        return target_type_cmd
     except:
         pass
     try:
         pid = int(target)
-        return 'pid'
+        return target_type_pid
     except:
         pass
-    return None
+    return target_type_unknown
 
 def deduce_target_update_args(args):
     args.self_started_target = False
