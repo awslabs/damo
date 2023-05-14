@@ -10,7 +10,6 @@
 		"action": "pageout",
 		"filters": [
 			{
-				"name": "0",
 				"filter_type": "memcg",
 				"memcg_path": "/damos_filtered",
 				"matching": true

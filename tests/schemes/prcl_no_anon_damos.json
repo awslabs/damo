@@ -10,7 +10,6 @@
 		"action": "pageout",
 		"filters": [
 			{
-				"name": "0",
 				"filter_type": "anon",
 				"matching": true
 			}
