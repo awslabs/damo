@@ -11,6 +11,7 @@ import sys
 import time
 
 import _damon
+import _damon_args
 
 def cleanup():
     if target_is_cmd and cmd_pipe.poll() == None:
@@ -44,23 +45,21 @@ def main(args=None):
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
-    target_is_cmd = False
     target = args.target
     target_fields = target.split()
-    if target == 'paddr':
+    target_type = _damon_args.deduced_target_type(target)
+    target_is_cmd = target_type == 'cmd'
+    if target_type == None:
+        print('invalid target \'%s\'' % target)
+        exit(1)
+    if target_type == 'explicit' and target == 'paddr':
         pass
-    elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
-            shell=True, executable='/bin/bash'):
-        target_is_cmd = True
+    elif target_type == 'cmd':
         cmd_pipe = subprocess.Popen(target, shell=True, executable='/bin/bash',
                 stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         target = cmd_pipe.pid
     else:
-        try:
-            pid = int(target)
-        except:
-            print('invalid target \'%s\'' % target)
-            exit(1)
+        pid = int(target)
 
     bindir = os.path.dirname(sys.argv[0])
     damo = os.path.join(bindir, 'damo')
@@ -75,7 +74,7 @@ def main(args=None):
 
     nr_reports = 0
     while not args.count or nr_reports < args.count:
-        if target_is_cmd and cmd_pipe.poll() != None:
+        if target_type == 'cmd' and cmd_pipe.poll() != None:
             break
         try:
             subprocess.check_output(record_cmd, shell=True,
