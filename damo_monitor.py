@@ -8,7 +8,6 @@ import os
 import signal
 import subprocess
 import sys
-import time
 
 import _damon
 import _damon_args
