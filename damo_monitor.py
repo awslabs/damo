@@ -12,25 +12,6 @@ import time
 
 import _damon
 
-# For supporting python 2.6
-try:
-    subprocess.DEVNULL = subprocess.DEVNULL
-except AttributeError:
-    subprocess.DEVNULL = open(os.devnull, 'wb')
-
-try:
-    subprocess.check_output = subprocess.check_output
-except AttributeError:
-    def check_output(*popenargs, **kwargs):
-        process = subprocess.Popen(stdout=subprocess.PIPE, *popenargs, **kwargs)
-        output, err = process.communicate()
-        rc = process.poll()
-        if rc:
-            raise subprocess.CalledProcessError(rc, popenargs[0])
-        return output
-
-    subprocess.check_output = check_output
-
 def cleanup():
     if target_is_cmd and cmd_pipe.poll() == None:
         cmd_pipe.kill()
