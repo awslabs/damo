@@ -52,9 +52,9 @@ def main(args=None):
     if target_type == None:
         print('invalid target \'%s\'' % target)
         exit(1)
-    if target_type == 'explicit' and target == 'paddr':
+    if target_type == _damon_args.target_type_explict and target == 'paddr':
         pass
-    elif target_type == 'cmd':
+    elif target_type == _damon_args.target_type_cmd:
         cmd_pipe = subprocess.Popen(target, shell=True, executable='/bin/bash',
                 stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         target = cmd_pipe.pid
@@ -74,7 +74,8 @@ def main(args=None):
 
     nr_reports = 0
     while not args.count or nr_reports < args.count:
-        if target_type == 'cmd' and cmd_pipe.poll() != None:
+        if (target_type == _damon_args.target_type_cmd and
+                cmd_pipe.poll() != None):
             break
         try:
             subprocess.check_output(record_cmd, shell=True,
