@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
+import collections
 import os
 import signal
 import struct
@@ -22,6 +23,11 @@ class DAMONSnapshot:
         self.end_time = end_time
         self.regions = []
 
+    def to_kvpairs(self):
+        return collections.OrderedDict([
+            ('start_time', self.start_time), ('end_time', self.end_time),
+            ('regions', [r.to_kvpairs() for r in self.regions])])
+
 class DAMONRecord:
     target_id = None
     snapshots = None
@@ -29,6 +35,11 @@ class DAMONRecord:
     def __init__(self, target_id):
         self.target_id = target_id
         self.snapshots = []
+
+    def to_kvpairs(self):
+        return collections.OrderedDict([
+            ('target_id', self.target_id),
+            ('snapshots', [s.to_kvpairs() for s in self.snapshots])])
 
 class DAMONResult:
     records = None
