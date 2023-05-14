@@ -116,6 +116,10 @@ class DamonNrAccesses:
                     unit_samples)
         raise Exception('unsupported unit for NrAccesses (%s)' % unit)
 
+    def to_kvpairs(self, raw=False):
+        return collections.OrderedDict(
+                [('samples', self.samples), ('percent', self.percent)])
+
 class DamonAge:
     usec = None
     aggr_intervals = None
@@ -146,6 +150,10 @@ class DamonAge:
             return _damo_fmt_str.format_time_us_exact(self.usec, raw)
         return '%s %s' % (_damo_fmt_str.format_nr(self.aggr_intervals, raw),
                 unit_aggr_intervals)
+
+    def to_kvpairs(self, raw=False):
+        return collections.OrderedDict(
+                [('usec', self.usec), ('aggr_intervals', self.aggr_intervals)])
 
 class DamonRegion:
     # [start, end)
