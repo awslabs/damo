@@ -90,7 +90,7 @@ def main(args=None):
             else:
                 print(output)
         except subprocess.CalledProcessError as e:
-            break
+            pass
         nr_reports += 1
 
     cleanup()
