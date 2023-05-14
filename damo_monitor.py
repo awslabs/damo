@@ -86,10 +86,11 @@ def main(args=None):
 
     record_cmd = 'timeout %s %s record \"%s\"' % (args.delay, damo, target)
 
+    report_cmd = [damo]
     if args.report_type == 'heats':
-        report_cmd = '%s report heats --heatmap stdout --resol 10 80' % damo
+        report_cmd += 'report heats --heatmap stdout --resol 10 80'.split()
     else:
-        report_cmd = '%s report wss' % damo
+        report_cmd += ['report', 'wss']
 
     nr_reports = 0
     while not args.count or nr_reports < args.count:
@@ -101,8 +102,7 @@ def main(args=None):
         except subprocess.CalledProcessError as e:
             pass
         try:
-            output = subprocess.check_output(report_cmd, shell=True,
-                    executable='/bin/bash').decode()
+            output = subprocess.check_output(report_cmd).decode()
             if args.report_type == 'heats':
                 for line in output.strip().split('\n'):
                     if not line.startswith('#'):
