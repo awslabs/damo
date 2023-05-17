@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 
 "Adjust a damon monitoring result with new attributes"
