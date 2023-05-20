@@ -328,6 +328,7 @@ def parse_file_permission_str(file_permission_str):
 
 file_type_record = 'record'             # damo defined binary format
 file_type_perf_script = 'perf_script'   # perf script output
+file_type_json_compressed = 'json_compressed'
 
 def write_damon_result(result, file_path, file_type, file_permission=None):
     for record in result.records:
@@ -347,6 +348,8 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
         write_damon_record(result, file_path, 2)
     elif file_type == file_type_perf_script:
         write_damon_perf_script(result, file_path)
+    elif file_type == file_type_json_compressed:
+        write_damon_record_json_compressed(result, file_path)
     else:
         print('write unsupported file type: %s' % file_type)
     if file_permission != None:
