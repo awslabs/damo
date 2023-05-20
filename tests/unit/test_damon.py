@@ -322,5 +322,9 @@ class TestDamon(unittest.TestCase):
         self.assertEqual('%s' % age.to_str(_damon.unit_usec, raw=False),
                 '1 s 500 ms')
 
+        age = _damon.DamonAge.from_kvpairs({'usec': 12, 'aggr_intervals': 456})
+        self.assertEqual(age.usec, 12)
+        self.assertEqual(age.aggr_intervals, 456)
+
 if __name__ == '__main__':
     unittest.main()
