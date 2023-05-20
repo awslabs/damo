@@ -245,8 +245,9 @@ def set_perf_path(perf_path):
 
 def parse_damon_result(result_file):
     script_output = None
-    if subprocess.check_output(
-            ['file', '-b', result_file]).decode().strip() == 'ASCII text':
+    file_type = subprocess.check_output(
+            ['file', '-b', result_file]).decode().strip()
+    if file_type == 'ASCII text':
         with open(result_file, 'r') as f:
             script_output = f.read()
     else:
