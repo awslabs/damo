@@ -1,11 +1,13 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import collections
+import json
 import os
 import signal
 import struct
 import subprocess
 import time
+import zlib
 
 import _damo_fmt_str
 import _damon
@@ -261,6 +263,12 @@ def parse_damon_result(result_file):
         result, err = record_to_damon_result(result_file)
 
     return result, err
+
+def write_damon_record_json_compressed(result, file_path):
+    json_str = json.dumps([r.to_kvpairs(r) for r in result.records], indent=4)
+    compressed = zlib.compress(json_str.encode())
+    with open(file_path, 'wb') as f:
+        f.write(compressed)
 
 def write_damon_record(result, file_path, format_version):
     with open(file_path, 'wb') as f:
