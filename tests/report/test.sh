@@ -26,6 +26,8 @@ mkdir -p results
 
 test_report "$damo report raw" "raw"
 
+test_report "$damo report raw -i damon.data.json_compressed" "raw"
+
 test_report \
 	"$damo report raw -i perf.data.script" \
 	"raw_perf_script"
