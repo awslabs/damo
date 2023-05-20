@@ -87,9 +87,11 @@ damon@lists.linux.dev and linux-mm@kvack.org if you depend on those.
 damo suddenly exit with `You're using deprecated single line DAMOS format` message. Why?
 ----------------------------------------------------------------------------------------
 
-Because the single line DAMOS scheme format is no more supported.  Please
-report your usecase to sj@kernel.org, damon@lists.linux.dev and
-linux-mm@kvack.org if you depend on those.
+Because the single line DAMOS scheme format is no more supported.  You can
+convert your old DAMOS schemes to supported format by checking v1.8.1 of damo
+and using `damo translate_damos` command.  Please report your usecase to
+sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if you depend on
+the old format.
 
 
 damo suddenly prints `Python2 support of damo is deprecated` message. Why?
