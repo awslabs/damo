@@ -160,13 +160,17 @@ class DamonAge:
     @classmethod
     def from_kvpairs(cls, kv):
         ret = DamonAge(None, unit_usec)
-        ret.usec = kv['usec']
-        ret.aggr_intervals = kv['aggr_intervals']
+        if kv['usec'] != None:
+            ret.usec = _damo_fmt_str.text_to_us(kv['usec'])
+        if kv['aggr_intervals'] != None:
+            ret.aggr_intervals = _damo_fmt_str.text_to_nr(kv['aggr_intervals'])
         return ret
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict(
-                [('usec', self.usec), ('aggr_intervals', self.aggr_intervals)])
+                [('usec', _damo_fmt_str.format_time_us_exact(self.usec, raw)),
+                    ('aggr_intervals',
+                        _damo_fmt_str.format_nr(self.aggr_intervals, raw))])
 
 class DamonRegion:
     # [start, end)
