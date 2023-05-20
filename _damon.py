@@ -168,9 +168,11 @@ class DamonAge:
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict(
-                [('usec', _damo_fmt_str.format_time_us_exact(self.usec, raw)),
+                [('usec', _damo_fmt_str.format_time_us_exact(self.usec, raw)
+                    if self.usec != None else None),
                     ('aggr_intervals',
-                        _damo_fmt_str.format_nr(self.aggr_intervals, raw))])
+                        _damo_fmt_str.format_nr(self.aggr_intervals, raw)
+                        if self.aggr_intervals != None else None)])
 
 class DamonRegion:
     # [start, end)
