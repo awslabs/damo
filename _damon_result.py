@@ -256,11 +256,14 @@ def parse_damon_result(result_file):
     script_output = None
     file_type = subprocess.check_output(
             ['file', '-b', result_file]).decode().strip()
-    if file_type == 'ASCII text':
+    if file_type == 'zlib compressed data':
+        try:
+            return parse_damon_record_json_compressed(result_file), None
+        except Exception as e:
+            return None, 'failed parsing json compressed file (%s)' % e
+    elif file_type == 'ASCII text':
         with open(result_file, 'r') as f:
             script_output = f.read()
-    elif file_type == 'zlib compressed data':
-        return parse_damon_record_json_compressed(result_file), None
     else:
         try:
             with open(os.devnull, 'w') as fnull:
