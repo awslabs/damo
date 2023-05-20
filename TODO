@@ -27,4 +27,4 @@
     - Can be replaced by start or tune
   - Deprecate old scheme usages in tests
 - Merge into Linux mainline
-- Use yet-another monitoring results file format: compressed json
+- Deprecate DAMON results record binary format
