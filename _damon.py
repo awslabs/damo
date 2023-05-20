@@ -115,6 +115,13 @@ class DamonNrAccesses:
                     unit_samples)
         raise Exception('unsupported unit for NrAccesses (%s)' % unit)
 
+    @classmethod
+    def from_kvpairs(cls, kv):
+        ret = DamonNrAccesses(None, None)
+        ret.samples = kv['samples']
+        ret.percent = kv['percent']
+        return ret
+
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict(
                 [('samples', self.samples), ('percent', self.percent)])
