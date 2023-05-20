@@ -304,6 +304,11 @@ class TestDamon(unittest.TestCase):
         self.assertEqual('%s' % nr_acc.to_str(_damon.unit_percent, raw=False),
                 '20 %')
 
+        nr_acc = _damon.DamonNrAccesses.from_kvpairs(
+                {'samples': 12, 'percent': 45})
+        self.assertEqual(nr_acc.samples, 12)
+        self.assertEqual(nr_acc.percent, 45)
+
     def test_damon_age(self):
         intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
 
