@@ -5,9 +5,9 @@ import os
 import _damon_result
 
 def set_argparser(parser):
-    parser.add_argument('--input', '-i', metavar='<file>',
+    parser.add_argument('--record_file', metavar='<file>',
             default='damon.data', help='the record file')
-    parser.add_argument('--new_format',
+    parser.add_argument('--format',
             choices=['record', 'perf_script', 'json_compressed'],
             default='json_compressed',
             help='new file format')
@@ -18,11 +18,11 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    if not os.path.isfile(args.input):
-        print('input file (%s) is not exist' % args.input)
+    if not os.path.isfile(args.record_file):
+        print('record file (%s) is not exist' % args.record_file)
         exit(1)
 
-    err = _damon_result.update_result_file(args.input, args.new_format)
+    err = _damon_result.update_result_file(args.record_file, args.format)
     if err != None:
         print('converting format failed (%s)' % err)
         exit(1)
