@@ -84,14 +84,6 @@ The option is deprecated.  Please report your usecase to sj@kernel.org,
 damon@lists.linux.dev and linux-mm@kvack.org if you depend on those.
 
 
-damo suddenly exit with `You're using unsupported DAMOS format` message.  Why?
------------------------------------------------------------------------------
-
-Because the DAMOS input you're using is no more supported.  Please report your
-usecase to sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if you
-depend on those.
-
-
 damo suddenly exit with `You're using deprecated single line DAMOS format` message. Why?
 ----------------------------------------------------------------------------------------
 
