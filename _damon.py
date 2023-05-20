@@ -225,7 +225,13 @@ class DamonRegion:
 
     @classmethod
     def from_kvpairs(cls, kvpairs):
-        return DamonRegion(kvpairs['start'], kvpairs['end'])
+        if not 'nr_accesses' in kvpairs:
+            return DamonRegion(kvpairs['start'], kvpairs['end'])
+        region = DamonRegion(kvpairs['start'], kvpairs['end'])
+        region.nr_accesses = DamonNrAccesses.from_kvpairs(
+                kvpairs['nr_accesses'])
+        region.age = DamonAge.from_kvpairs(kvpairs['age'])
+        return region
 
     def to_kvpairs(self, raw=False):
         if self.nr_accesses == None:
