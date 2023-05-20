@@ -157,6 +157,13 @@ class DamonAge:
         return '%s %s' % (_damo_fmt_str.format_nr(self.aggr_intervals, raw),
                 unit_aggr_intervals)
 
+    @classmethod
+    def from_kvpairs(cls, kv):
+        ret = DamonAge(None, unit_usec)
+        ret.usec = kv['usec']
+        ret.aggr_intervals = kv['aggr_intervals']
+        return ret
+
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict(
                 [('usec', self.usec), ('aggr_intervals', self.aggr_intervals)])
