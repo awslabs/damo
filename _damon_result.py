@@ -7,6 +7,7 @@ import struct
 import subprocess
 import time
 
+import _damo_fmt_str
 import _damon
 
 PERF = 'perf'
@@ -22,9 +23,12 @@ class DAMONSnapshot:
         self.end_time = end_time
         self.regions = []
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
-            ('start_time', self.start_time), ('end_time', self.end_time),
+            ('start_time', _damo_fmt_str.format_time_ns_exact(
+                self.start_time, raw)),
+            ('end_time', _damo_fmt_str.format_time_ns_exact(
+                self.end_time, raw)),
             ('regions', [r.to_kvpairs() for r in self.regions])])
 
 class DAMONRecord:
