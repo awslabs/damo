@@ -22,10 +22,10 @@ import damo_schemes
 import damo_start
 import damo_stat
 import damo_stop
+import damo_translate_damos
 import damo_tune
 import damo_validate
 import damo_version
-import damo_translate_damos
 
 import _damo_subcmds
 
