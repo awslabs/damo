@@ -39,10 +39,10 @@ class DAMONRecord:
         self.target_id = target_id
         self.snapshots = []
 
-    def to_kvpairs(self):
+    def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
             ('target_id', self.target_id),
-            ('snapshots', [s.to_kvpairs() for s in self.snapshots])])
+            ('snapshots', [s.to_kvpairs(raw) for s in self.snapshots])])
 
 class DAMONResult:
     records = None
