@@ -47,6 +47,13 @@ class DAMONRecord:
         self.target_id = target_id
         self.snapshots = []
 
+    @classmethod
+    def from_kvpairs(cls, kv):
+        record = DAMONRecord(kv['target_id'])
+        record.snapshots = [DAMONSnapshot.from_kvpairs(s)
+                for s in kv['snapshots']]
+        return record
+
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
             ('target_id', self.target_id),
