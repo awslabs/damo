@@ -96,7 +96,7 @@ def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type',
             choices=['record', 'perf_data', 'perf_script', 'json_compressed'],
-            default='record', help='output file\'s type')
+            default='json_compressed', help='output file\'s type')
     parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')
     parser.add_argument('--perf_path', type=str, default='perf',
