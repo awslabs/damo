@@ -10,6 +10,7 @@ import sys
 import _damo_python2_support
 
 import damo_adjust
+import damo_convert_record_format
 import damo_features
 import damo_fmt_json
 import damo_lru_sort
@@ -65,7 +66,10 @@ subcmds = [
             msg='print the version number'),
         _damo_subcmds.DamoSubCmd(name='translate_damos',
             module=damo_translate_damos,
-            msg='translate old .damos to the new json format')
+            msg='translate old .damos to the new json format'),
+        _damo_subcmds.DamoSubCmd(name='convert_record_format',
+            module=damo_convert_record_format,
+            msg='convert DAMON result record file\'s format')
         ]
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
