@@ -36,7 +36,8 @@ def main(args=None):
         print('no monitoring result in the file')
         exit(1)
 
-    print(json.dumps([r.to_kvpairs() for r in result.records], indent=4))
+    print(json.dumps([r.to_kvpairs(args.raw_number) for r in result.records],
+        indent=4))
 
 if __name__ == '__main__':
     main()
