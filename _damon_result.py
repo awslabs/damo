@@ -23,6 +23,14 @@ class DAMONSnapshot:
         self.end_time = end_time
         self.regions = []
 
+    @classmethod
+    def from_kvpairs(cls, kv):
+        snapshot = DAMONSnapshot(_damo_fmt_str.text_to_ns(kv['start_time']),
+                _damo_fmt_str.text_to_ns(kv['end_time']))
+        snapshot.regions = [_damon.DamonRegion.from_kvpairs(r)
+                for r in kv['regions']]
+        return snapshot
+
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
             ('start_time', _damo_fmt_str.format_time_ns_exact(
