@@ -142,21 +142,19 @@ def damo_single_line_scheme_to_damos(line):
     _damo_deprecation_notice.deprecated(
             feature='single line scheme input',
             deadline='2023-Q2',
+            do_exit=not avoid_crashing_single_line_scheme_for_testing,
+            exit_code=1,
             additional_notice='Please use json format or --damo_* options')
-
-    # Remove below if someone depends on single scheme is found.
-    if not avoid_crashing_single_line_scheme_for_testing:
-        exit(1)
 
     fields = line.split()
 
     # Remove below if someone depends on the v1-v3  DAMOS input is found.
-    if not avoid_crashing_v1_v3_schemes_for_testing:
-        if len(fields) in [9, 12, 17]:
-            _damo_deprecation_notice.deprecated(
-                    feature='9, 12, or 17 fields single line scheme input',
-                    deadline='2023-Q2')
-            exit(1)
+    if len(fields) in [9, 12, 17]:
+        _damo_deprecation_notice.deprecated(
+                feature='9, 12, or 17 fields single line scheme input',
+                do_exit=not avoid_crashing_v1_v3_schemes_for_testing,
+                exit_code=1,
+                deadline='2023-Q2')
 
     try:
         if len(fields) == 7:
