@@ -73,10 +73,10 @@ Below is an exaple of the json string format.
 
 import json
 import os
-import sys
 
 import _damon
 
+import _damo_deprecation_notice
 import _damo_fmt_str
 
 def fields_to_v0_scheme(fields):
@@ -139,15 +139,10 @@ avoid_crashing_v1_v3_schemes_for_testing = False
 def damo_single_line_scheme_to_damos(line):
     '''Returns Damos object and err'''
 
-    sys.stderr.write('''
-WARNING: single line per-scheme scheme input is deprecated.  The support will
-be removed by 2023-Q2.  Please use json format or --damos_* commandline options
-instead.
-
-Please report your usecase to sj@kernel.org, damon@liss.linux.dev
-and linux-mm@kvack.org if you depend on it.
-
-''')
+    _damo_deprecation_notice.deprecated(
+            feature='single line scheme input',
+            deadline='2023-Q2',
+            additional_notice='Please use json format or --damo_* options')
 
     # Remove below if someone depends on single scheme is found.
     if not avoid_crashing_single_line_scheme_for_testing:
@@ -158,9 +153,9 @@ and linux-mm@kvack.org if you depend on it.
     # Remove below if someone depends on the v1-v3  DAMOS input is found.
     if not avoid_crashing_v1_v3_schemes_for_testing:
         if len(fields) in [9, 12, 17]:
-            sys.stderr.write('''
-You're using unsupported DAMOS format (%s)
-    ''' % ' '.join(fields))
+            _damo_deprecation_notice.deprecated(
+                    feature='9, 12, or 17 fields single line scheme input',
+                    deadline='2023-Q2')
             exit(1)
 
     try:
