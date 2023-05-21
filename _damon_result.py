@@ -346,6 +346,11 @@ file_type_perf_script = 'perf_script'   # perf script output
 file_type_perf_data = 'perf_data'       # perf record result file
 file_type_json_compressed = 'json_compressed'
 
+file_types = [file_type_json_compressed, file_type_perf_script,
+        file_type_perf_data, file_type_record]
+self_write_supported_file_types = [file_type_json_compressed,
+        file_type_perf_script, file_type_record]
+
 def write_damon_result(result, file_path, file_type, file_permission=None):
     for record in result.records:
         snapshots = record.snapshots
