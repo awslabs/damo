@@ -5,8 +5,8 @@ Contains core functions for DAMON debugfs control.
 """
 
 import os
-import sys
 
+import _damo_deprecation_notice
 import _damo_fs
 import _damon
 
@@ -416,14 +416,6 @@ def test_init_regions_version(paddr_supported):
 
     return version
 
-def warn_deprecated_kernel():
-    sys.stderr.write('''
-WARNING: This kernel is running non-mainlined DAMOS implementation.  Support of
-    it from DAMO is deprecated.  The support will be removed by 2023-Q2.
-    Please report your usecase to sj@kernel.org, damon@lists.linux.dev and
-    linux-mm@kvack.org if you depend on those.
-''')
-
 def update_supported_features():
     global feature_supports
     if feature_supports != None:
@@ -477,5 +469,8 @@ def update_supported_features():
             feature_supports['schemes_stat_qt_exceed'] = True
 
     if 0 < get_scheme_version() and get_scheme_version() < 4:
-        warn_deprecated_kernel()
+        _damo_deprecation_notice.deprecated(
+                feature='support of non-mainlined DAMOS implementation',
+                deadline='2023-Q2')
+
     return None
