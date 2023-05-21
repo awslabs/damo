@@ -343,6 +343,7 @@ def parse_file_permission_str(file_permission_str):
 
 file_type_record = 'record'             # damo defined binary format
 file_type_perf_script = 'perf_script'   # perf script output
+file_type_perf_data = 'perf_data'       # perf record result file
 file_type_json_compressed = 'json_compressed'
 
 def write_damon_result(result, file_path, file_type, file_permission=None):
@@ -463,7 +464,7 @@ def stop_monitoring_record(perf_pipe):
     except:
         # perf might already finished
         pass
-    if file_format != 'perf_data':
+    if file_format != file_type_perf_data:
         err = update_result_file(file_path, file_format)
         if err != None:
             print('converting format from perf_data to %s failed (%s)' %
