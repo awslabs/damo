@@ -43,8 +43,11 @@ def main(args=None):
 
     if args.aggregate_interval != None:
         _damon_result.adjust_result(result, args.aggregate_interval, args.skip)
-    _damon_result.write_damon_result(result, args.output, args.output_type,
+    err = _damon_result.write_damon_result(result, args.output, args.output_type,
             output_permission)
+    if err != None:
+        print('writing adjusted result failed (%s)' % err)
+        exit(1)
 
 if __name__ == '__main__':
     main()
