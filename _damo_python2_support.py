@@ -4,14 +4,11 @@ import os
 import subprocess
 import sys
 
+import _damo_deprecation_notice
+
 if sys.version.startswith('2.'):
-    sys.stderr.write('''
-Python2 support of damo is deprecated.  This will not work suddenly.
-
-Please report your usecase to sj@kernel.org, damon@lists.linux.dev and
-linux-mm@kvack.org if you depend on those.
-
-''')
+    _damo_deprecation_notice.deprecated(feature='Python2 support of damo',
+            deadline='2023-Q2')
 
 # For supporting python 2.6
 try:

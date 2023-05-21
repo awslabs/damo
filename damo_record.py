@@ -6,8 +6,8 @@ Record monitored data access patterns.
 
 import os
 import signal
-import sys
 
+import _damo_deprecation_notice
 import _damon
 import _damon_args
 import _damon_result
@@ -67,12 +67,9 @@ def chk_handle_record_feature_support(args):
             print('# \'--rbuf\' will be ignored')
 
     if damon_record_supported or args.rbuf:
-        sys.stderr.write('''
-WARNING: --rbuf option and in-kernel record feature support is deprecated.
-    The support will be removed by 2023-Q2.
-    Please report your usecase to sj@kernel.org, damon@lists.linux.dev and
-    linux-mm@kvack.org if you depend on those.
-''')
+        _damo_deprecation_notice.deprecated(
+                feature='--rbuf option and in-kernel record feature support',
+                deadline='2023-Q2')
 
     if not args.rbuf:
         args.rbuf = 1024 * 1024
