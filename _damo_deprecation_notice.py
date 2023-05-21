@@ -11,6 +11,8 @@ def deprecated(feature, deadline, do_exit=False, exit_code=1,
 '    Please report your usecase to Github issues[1], sj@kernel.org,',
 '    damon@lists.linux.dev and/or linux-mm@kvack.org if you depend on those.',
 '',
-'    [1] https://github.com/awslabs/damo/issues']))
+'    [1] https://github.com/awslabs/damo/issues',
+'',
+'']))
     if do_exit:
         exit(exit_code)
