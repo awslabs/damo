@@ -139,13 +139,6 @@ avoid_crashing_v1_v3_schemes_for_testing = False
 def damo_single_line_scheme_to_damos(line):
     '''Returns Damos object and err'''
 
-    # Remove below if someone depends on single scheme is found.
-    if not avoid_crashing_single_line_scheme_for_testing:
-        sys.stderr.write('''
-You're using deprecated single line DAMOS format (%s)
-''' % line)
-        exit(1)
-
     sys.stderr.write('''
 WARNING: single line per-scheme scheme input is deprecated.  The support will
 be removed by 2023-Q2.  Please use json format or --damos_* commandline options
@@ -155,6 +148,10 @@ Please report your usecase to sj@kernel.org, damon@liss.linux.dev
 and linux-mm@kvack.org if you depend on it.
 
 ''')
+
+    # Remove below if someone depends on single scheme is found.
+    if not avoid_crashing_single_line_scheme_for_testing:
+        exit(1)
 
     fields = line.split()
 
