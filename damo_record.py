@@ -37,7 +37,7 @@ def cleanup_exit(exit_code):
         _damon_result.stop_monitoring_record(data_for_cleanup.perf_pipe)
         exit(exit_code)
 
-    if data_for_cleanup.rfile_format != 'record':
+    if data_for_cleanup.rfile_format != _damon_result.file_type_record:
         err = _damon_result.update_result_file(data_for_cleanup.rfile_path,
                 data_for_cleanup.rfile_format)
         if err != None:
@@ -95,8 +95,9 @@ def backup_duplicate_output_file(output_file):
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type',
-            choices=['record', 'perf_data', 'perf_script', 'json_compressed'],
-            default='json_compressed', help='output file\'s type')
+            choices=_damon_result.file_types,
+            default=_damon_result.file_type_json_compressed,
+            help='output file\'s type')
     parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')
     parser.add_argument('--perf_path', type=str, default='perf',
