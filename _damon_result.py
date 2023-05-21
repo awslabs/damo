@@ -9,6 +9,7 @@ import subprocess
 import time
 import zlib
 
+import _damo_deprecation_notice
 import _damo_fmt_str
 import _damon
 
@@ -243,6 +244,12 @@ def set_perf_path(perf_path):
         err = 'perf not found at "%s"' % PERF
     return err
 
+def warn_record_type_deprecation():
+    _damo_deprecation_notice.will_be_deprecated(
+            feature='\'record\' file type support',
+            deadline='2023-Q3',
+            additional_notice='use json_compressed type instead.')
+
 def parse_damon_record_json_compressed(result_file):
     with open(result_file, 'rb') as f:
         compressed = f.read()
@@ -275,6 +282,7 @@ def parse_damon_result(result_file):
     if script_output:
         result, err = perf_script_to_damon_result(script_output)
     else:
+        warn_record_type_deprecation()
         result, err = record_to_damon_result(result_file)
 
     return result, err
@@ -370,6 +378,7 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
                 -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
             snapshots.append(fake_snapshot)
     if file_type == file_type_record:
+        warn_record_type_deprecation()
         write_damon_record(result, file_path, 2)
     elif file_type == file_type_perf_script:
         write_damon_perf_script(result, file_path)
