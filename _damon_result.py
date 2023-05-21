@@ -352,6 +352,7 @@ self_write_supported_file_types = [file_type_json_compressed,
         file_type_perf_script, file_type_record]
 
 def write_damon_result(result, file_path, file_type, file_permission=None):
+    '''Returns None if success, an error string otherwise'''
     for record in result.records:
         snapshots = record.snapshots
         if len(snapshots) == 1:
@@ -372,9 +373,10 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
     elif file_type == file_type_json_compressed:
         write_damon_record_json_compressed(result, file_path)
     else:
-        print('write unsupported file type: %s' % file_type)
+        return 'write unsupported file type: %s' % file_type
     if file_permission != None:
         os.chmod(file_path, file_permission)
+    return None
 
 def update_result_file(file_path, file_format, file_permission=None):
     result, err = parse_damon_result(file_path)
