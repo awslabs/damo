@@ -12,7 +12,7 @@ import _damon_args
 
 def cleanup_exit(exit_code):
     # ignore returning error, as kdamonds may already finished
-    _damon.turn_damon_off(kdamonds_names)
+    _damon.turn_damon_off(kdamonds_idxs)
     if err:
         print('failed to turn damon off (%s)' % err)
     err = _damon.stage_kdamonds(orig_kdamonds)
@@ -29,7 +29,7 @@ def set_argparser(parser):
 
 def main(args=None):
     global orig_kdamonds
-    global kdamonds_names
+    global kdamonds_idxs
 
     if not args:
         parser = set_argparser(None)
@@ -38,7 +38,7 @@ def main(args=None):
     _damon.ensure_root_and_initialized(args)
 
     orig_kdamonds = _damon.current_kdamonds()
-    kdamonds_names = []
+    kdamonds_idxs = []
 
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
@@ -48,7 +48,7 @@ def main(args=None):
         print('could not turn DAMON on (%s)' % err)
         cleanup_exit(-3)
 
-    kdamonds_names = ['%d' % idx for idx, k in enumerate(kdamonds)]
+    kdamonds_idxs = ['%d' % idx for idx, k in enumerate(kdamonds)]
 
     print('Press Ctrl+C to stop')
     if _damon_args.self_started_target(args):
