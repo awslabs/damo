@@ -107,8 +107,8 @@ def read_snapshot_from_record_file(f, start_time, end_time):
         snapshot.regions.append(region)
     return snapshot
 
-# if number of snapshots is one, write_damon_record() adds a fake snapshot for
-# snapshot start time deduction.
+# if number of snapshots is one and the file type is record or perf script,
+# write_damon_result() adds a fake snapshot for snapshot start time deduction.
 def is_fake_snapshot(snapshot):
     if len(snapshot.regions) != 1:
         return False
