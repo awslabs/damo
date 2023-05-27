@@ -35,25 +35,20 @@ def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
     cleanup_exit(signum)
 
-def chk_handle_output_permission(output_permission_option):
-    output_permission, err = _damon_result.parse_file_permission_str(
-            output_permission_option)
-    if err != None:
-        print('wrong --output_permission (%s) (%s)' %
-                (output_permission_option, err))
-        exit(1)
-    return output_permission
-
-def backup_duplicate_output_file(output_file):
-    if os.path.isfile(output_file):
-        os.rename(output_file, output_file + '.old')
-
 def handle_args(args):
     if _damon.any_kdamond_running() and not args.deducible_target:
         args.deducible_target = 'ongoing'
-    args.output_permission = chk_handle_output_permission(
+
+    args.output_permission, err = _damon_result.parse_file_permission_str(
             args.output_permission)
-    backup_duplicate_output_file(args.out)
+    if err != None:
+        print('wrong --output permission (%s) (%s)' %
+                (args.output_permission, err))
+        exit(1)
+
+    # backup duplicate output file
+    if os.path.isfile(args.out):
+        os.rename(args.out, args.out + '.old')
 
     err = _damon_result.set_perf_path(args.perf_path)
     if err != None:
