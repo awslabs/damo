@@ -87,31 +87,6 @@ notice and grace priods.  The documented features could also be deprecated, but
 those will provide some notification and grace periods.
 
 
-I show --rbuf option from `damo record` is removed.  What happened?
--------------------------------------------------------------------
-
-The option is deprecated.  Please report your usecase to sj@kernel.org,
-damon@lists.linux.dev and linux-mm@kvack.org if you depend on those.
-
-
-damo suddenly exit with `You're using deprecated single line DAMOS format` message. Why?
-----------------------------------------------------------------------------------------
-
-Because the single line DAMOS scheme format is no more supported.  You can
-convert your old DAMOS schemes to supported format by checking v1.8.1 of damo
-and using `damo translate_damos` command.  Please report your usecase to
-sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if you depend on
-the old format.
-
-
-damo suddenly prints `Python2 support of damo is deprecated` message. Why?
---------------------------------------------------------------------------
-
-Because Python2 is no more supported.  Please report your usecase to
-sj@kernel.org, damon@lists.linux.dev and linux-mm@kvack.org if you depend on
-those.
-
-
 Recording Data Access Patterns
 ==============================
 
@@ -167,11 +142,58 @@ overhead.
                         --damos_age 60s max --damos_action pageout \
                         <pid of your workload>
 
-Note: Previously, one-line scheme specification format like below was used.  It
-is now DEPRECATED.  Please report your usecase to sj@kernel.org,
-damon@lists.linux.dev and linux-mm@kvack.org if you depend on those.
 
-    $ # !!! BELOW IS NO MORE SUPPORTED
-    $ echo "#min-size max-size min-acc max-acc min-age max-age action" > my_scheme
-    $ echo "4K        max      0       0       60s     max     pageout" >> my_scheme
-    $ sudo damo schemes -c my_scheme <pid of your workload>
+Deprecated Features
+===================
+
+Below are features that deprecated, or will be deprecated.  If you depend on
+any of those, please report your usecase to the community via github issue,
+sj@kernel.org, damon@lists.linux.dev, and/or linux-mm@kvack.org.
+
+--rbuf option of `damo record`
+------------------------------
+
+Deprecated.
+
+Early versions of DAMON supported in-kernel direct monitoring results record
+file generation.  To control the overhead of it, DAMO allowed user to specify
+the size of buffer for the work.  The feature has not merged into the mainline,
+and discarded.  Hence the option was available for only few kernels that ported
+the feature.  For most of kernels, tracepoint based record file generation is
+being used, and the overhead of the approach is subtle.  Hence, the option has
+deprecated.
+
+
+DAMOS singline format
+---------------------
+
+Deprecated.  Use `--damos_*` command line options or json format.
+
+One-line scheme specification format like below was initially supported.
+Because it is not flexible for extension of features, it has deprecated now.
+You may use `--damos_*` command line options or json format instead.  You may
+use `damo translate_damos` to convert your old single line DAMOS schemes
+specification to the new json format.
+
+
+`Python2 support
+----------------
+
+Deprecated.  Use Python3.
+
+For some old distros, DAMO was initially supported Python2.  Because Python2 is
+really old, the support has deprecated.  Please use Python3 or newer.
+
+
+DAMON record binary format
+--------------------------
+
+Will be deprecated by 2023 Q3.
+
+At the beginning, DAMO used its special binary format, namely `record`.  It is
+designed for lightweight saving of the monitoring results.  It is difficult to
+read, and not that efficient compared to fancy compression techniques.  `json`
+based monitoring results can be easier to read, and more efficient when
+compression technique is used.  Hence, the format will be deprecated.  You may
+use `damo convert_record_format` to convert your old record binary format
+monitoring results files to the new format.
