@@ -707,33 +707,6 @@ class Damos:
                 self.watermarks == other.watermarks and
                 self.filters == other.filters)
 
-class DamonRecord:
-    rfile_buf = None
-    rfile_path = None
-
-    def __init__(self, rfile_buf, rfile_path):
-        self.rfile_buf = _damo_fmt_str.text_to_bytes(rfile_buf)
-        self.rfile_path = rfile_path
-
-    def to_str(self, raw):
-        return 'path: %s, buffer sz: %s' % (self.rfile_path,
-                _damo_fmt_str.format_sz(self.rfile_buf, raw))
-
-    def __str__(self):
-        return self.to_str(False)
-
-    def __eq__(self, other):
-        return type(self) == type(other) and '%s' % self == '%s' % other
-
-    @classmethod
-    def from_kvpairs(cls, kv):
-        return DamonRecord(kv['rfile_buf'], kv['rfile_path'])
-
-    def to_kvpairs(self, raw=False):
-        return collections.OrderedDict(
-                [(attr, getattr(self, attr)) for attr in
-                    ['rfile_buf', 'rfile_path']])
-
 class DamonCtx:
     intervals = None
     nr_regions = None
