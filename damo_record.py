@@ -53,7 +53,7 @@ def handle_args(args):
     err = _damon_result.set_perf_path(args.perf_path)
     if err != None:
         print(err)
-        cleanup_exit(-3)
+        exit(-3)
 
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
