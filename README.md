@@ -77,6 +77,16 @@ Please refer to
 [CONTRIBUTING](https://github.com/awslabs/damo/blob/next/CONTRIBUTING) file.
 
 
+Why some subcommands are not documented on [USAGE.md](USAGE.md) file?
+---------------------------------------------------------------------
+
+Only sufficiently stabilized features are documented there.  In other words,
+any feature that not documented on [USAGE.md](USAGE.md) are in experimental
+stage.  Such experimental features could be deprecated and removed without any
+notice and grace priods.  The documented features could also be deprecated, but
+those will provide some notification and grace periods.
+
+
 I show --rbuf option from `damo record` is removed.  What happened?
 -------------------------------------------------------------------
 
