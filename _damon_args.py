@@ -85,20 +85,12 @@ def damon_ctx_for(args):
     except Exception as e:
         return 'Wrong \'--target_pid\' argument (%s)' % e
 
-    record_request = None
-    if 'rbuf' in args and args.rbuf != None:
-        try:
-            record_request = _damon.DamonRecord(args.rbuf, args.out)
-        except Exception as e:
-            return None, 'Wrong record arguments (%s)' % e
-
     schemes, err = _damon_args_schemes.damos_for(args)
     if err:
         return None, err
 
     try:
-        ctx = _damon.DamonCtx(intervals, nr_regions, ops, [target], schemes,
-                record_request)
+        ctx = _damon.DamonCtx(intervals, nr_regions, ops, [target], schemes)
         return ctx, None
     except Exception as e:
         return None, 'Creating context from arguments failed (%s)' % e
