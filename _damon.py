@@ -740,17 +740,13 @@ class DamonCtx:
     ops = None
     targets = None
     schemes = None
-    # For old downstream kernels that supports record feature
-    record_request = None
 
-    def __init__(self, intervals, nr_regions, ops, targets, schemes,
-            record_request=None):
+    def __init__(self, intervals, nr_regions, ops, targets, schemes):
         self.intervals = intervals
         self.nr_regions = nr_regions
         self.ops = ops
         self.targets = targets
         self.schemes = schemes
-        self.record_request = record_request
 
     def to_str(self, raw):
         lines = ['ops: %s' % self.ops]
@@ -784,8 +780,6 @@ class DamonCtx:
                 [DamonTarget.from_kvpairs(t) for t in kv['targets']],
                 [Damos.from_kvpairs(s) for s in kv['schemes']]
                     if 'schemes' in kv else [])
-        if 'record_request' in kv:
-            ctx.record_request = DamonRecord.from_kvpairs(kv['record_request'])
         return ctx
 
     def to_kvpairs(self, raw=False):
@@ -795,8 +789,6 @@ class DamonCtx:
         kv['ops'] = self.ops
         kv['targets'] = [t.to_kvpairs(raw) for t in self.targets]
         kv['schemes'] = [s.to_kvpairs(raw) for s in self.schemes]
-        if self.record_request:
-            kv['record_request'] = self.record_request.to_kvpairs(raw)
         return kv
 
 def target_has_pid(ops):
