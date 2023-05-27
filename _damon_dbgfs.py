@@ -13,7 +13,6 @@ import _damon
 debugfs = '/sys/kernel/debug'
 debugfs_damon = os.path.join(debugfs, 'damon')
 debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
-debugfs_record = os.path.join(debugfs_damon, 'record')
 debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
 debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
 debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
@@ -417,8 +416,6 @@ def update_supported_features():
     if _damon.any_kdamond_running():
         return 'debugfs feature update cannot be done while DAMON running'
 
-    if os.path.isfile(debugfs_record):
-        feature_supports['record'] = True
     if os.path.isfile(debugfs_schemes):
         feature_supports['schemes'] = True
 
