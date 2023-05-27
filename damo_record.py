@@ -106,8 +106,7 @@ def main(args=None):
                 for idx, k in enumerate(kdamonds)]
 
     data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
-            data_for_cleanup.rfile_path, data_for_cleanup.rfile_format,
-            data_for_cleanup.rfile_permission)
+            args.out, args.output_type, output_permission)
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
