@@ -72,7 +72,8 @@ def main(args=None):
     # Check/handle the arguments and options
     if _damon.any_kdamond_running() and not args.deducible_target:
         args.deducible_target = 'ongoing'
-    output_permission = chk_handle_output_permission(args.output_permission)
+    args.output_permission = chk_handle_output_permission(
+            args.output_permission)
     backup_duplicate_output_file(args.out)
 
     err = _damon_result.set_perf_path(args.perf_path)
@@ -96,7 +97,7 @@ def main(args=None):
                 for idx, k in enumerate(kdamonds)]
 
     data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
-            args.out, args.output_type, output_permission)
+            args.out, args.output_type, args.output_permission)
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
