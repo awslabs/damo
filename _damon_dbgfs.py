@@ -178,11 +178,6 @@ def wops_for_kdamonds(kdamonds):
         write_contents += wops_for_target(ctx.targets[0],
                 _damon.target_has_pid(ctx.ops))
 
-    if feature_supported('record') and ctx.record_request != None:
-        record_file_input = '%s %s' % (ctx.record_request.rfile_buf,
-                ctx.record_request.rfile_path)
-        write_contents.append({debugfs_record: record_file_input})
-
     if not feature_supported('schemes'):
         return write_contents
 
@@ -295,10 +290,6 @@ def files_content_to_kdamonds(files_content):
                 if feature_supported('init_regions_target_idx')
                 else target_id] if len(regions_dict) > 0 else []))
 
-    if feature_supported('record'):
-        fields = files_content['record'].strip().split()
-        record_request = _damon.DamonRecord(int(fields[0]), fields[1].strip())
-
     schemes = []
     if feature_supported('schemes'):
         for line in files_content['schemes'].split('\n'):
@@ -307,8 +298,6 @@ def files_content_to_kdamonds(files_content):
             schemes.append(debugfs_output_to_damos(line, intervals))
 
     ctx = _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
-    if feature_supported('record'):
-        ctx.record_request = record_request
     state = files_content['monitor_on'].strip()
     pid = files_content['kdamond_pid'].strip()
     return [_damon.Kdamond(state, pid, [ctx])]
