@@ -15,9 +15,6 @@ import _damon_result
 class DataForCleanup:
     kdamonds_idxs = None
     orig_kdamonds = None
-    rfile_path = None
-    rfile_format = None
-    rfile_permission = None
     perf_pipe = None
 
 data_for_cleanup = DataForCleanup()
@@ -40,9 +37,6 @@ def sighandler(signum, frame):
     cleanup_exit(signum)
 
 def set_data_for_cleanup(data_for_cleanup, args, output_permission):
-    data_for_cleanup.rfile_format = args.output_type
-    data_for_cleanup.rfile_path = args.out
-    data_for_cleanup.rfile_permission = output_permission
     data_for_cleanup.orig_kdamonds = _damon.current_kdamonds()
 
 def chk_handle_output_permission(output_permission_option):
