@@ -57,25 +57,6 @@ def set_data_for_cleanup(data_for_cleanup, args, output_permission):
     data_for_cleanup.rfile_permission = output_permission
     data_for_cleanup.orig_kdamonds = _damon.current_kdamonds()
 
-def chk_handle_record_feature_support(args):
-    # Comment below line if --rbuf dependent user found
-    return False
-
-    damon_record_supported = _damon.feature_supported('record')
-    if not damon_record_supported:
-        if args.rbuf:
-            print('# \'--rbuf\' will be ignored')
-
-    if damon_record_supported or args.rbuf:
-        _damo_deprecation_notice.deprecated(
-                feature='--rbuf option and in-kernel record feature support',
-                deadline='2023-Q2')
-
-    if not args.rbuf:
-        args.rbuf = 1024 * 1024
-
-    return damon_record_supported
-
 def chk_handle_output_permission(output_permission_option):
     output_permission, err = _damon_result.parse_file_permission_str(
             output_permission_option)
@@ -113,7 +94,6 @@ def main(args=None):
     # Check/handle the arguments and options
     if _damon.any_kdamond_running() and not args.deducible_target:
         args.deducible_target = 'ongoing'
-    damon_record_supported = chk_handle_record_feature_support(args)
     output_permission = chk_handle_output_permission(args.output_permission)
     backup_duplicate_output_file(args.out)
 
@@ -137,10 +117,9 @@ def main(args=None):
         data_for_cleanup.kdamonds_names = ['%d' % idx
                 for idx, k in enumerate(kdamonds)]
 
-    if not damon_record_supported or is_ongoing:
-        data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
-                data_for_cleanup.rfile_path, data_for_cleanup.rfile_format,
-                data_for_cleanup.rfile_permission)
+    data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
+            data_for_cleanup.rfile_path, data_for_cleanup.rfile_format,
+            data_for_cleanup.rfile_permission)
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
