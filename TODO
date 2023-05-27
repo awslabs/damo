@@ -26,7 +26,7 @@
   - Deprecate scheme subcommand
     - Can be replaced by start or tune
   - Deprecate old scheme usages in tests
+  - Deprecate DAMON results record binary format (noticing for Q3 deprecation)
 - Merge into Linux mainline
-- Deprecate DAMON results record binary format
 - Let record to track child processes
 - Refactor heats code
