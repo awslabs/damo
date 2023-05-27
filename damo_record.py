@@ -13,7 +13,7 @@ import _damon_args
 import _damon_result
 
 class DataForCleanup:
-    kdamonds_names = None
+    kdamonds_idxs = None
     orig_kdamonds = None
     rfile_path = None
     rfile_format = None
@@ -23,9 +23,9 @@ class DataForCleanup:
 data_for_cleanup = DataForCleanup()
 
 def cleanup_exit(exit_code):
-    if data_for_cleanup.kdamonds_names != None:
+    if data_for_cleanup.kdamonds_idxs != None:
         # ignore returning error, as kdamonds may already finished
-        _damon.turn_damon_off(data_for_cleanup.kdamonds_names)
+        _damon.turn_damon_off(data_for_cleanup.kdamonds_idxs)
         err = _damon.stage_kdamonds(data_for_cleanup.orig_kdamonds)
         if err:
             print('failed restoring previous kdamonds setup (%s)' % err)
@@ -114,7 +114,7 @@ def main(args=None):
         if err:
             print('could not turn DAMON on (%s)' % err)
             cleanup_exit(-2)
-        data_for_cleanup.kdamonds_names = ['%d' % idx
+        data_for_cleanup.kdamonds_idxs = ['%d' % idx
                 for idx, k in enumerate(kdamonds)]
 
     data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
