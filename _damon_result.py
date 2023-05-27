@@ -366,7 +366,8 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
 
     for record in result.records:
         snapshots = record.snapshots
-        if len(snapshots) == 1:
+        if len(snapshots) == 1 and file_type in [file_type_record,
+                file_type_perf_script]:
             # we cannot know start/end time of single snapshot from the file
             # to allow it with later read, write a fake snapshot
             snapshot = snapshots[0]
