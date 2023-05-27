@@ -48,6 +48,18 @@ def backup_duplicate_output_file(output_file):
     if os.path.isfile(output_file):
         os.rename(output_file, output_file + '.old')
 
+def handle_args(args):
+    if _damon.any_kdamond_running() and not args.deducible_target:
+        args.deducible_target = 'ongoing'
+    args.output_permission = chk_handle_output_permission(
+            args.output_permission)
+    backup_duplicate_output_file(args.out)
+
+    err = _damon_result.set_perf_path(args.perf_path)
+    if err != None:
+        print(err)
+        cleanup_exit(-3)
+
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type',
@@ -69,17 +81,7 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    # Check/handle the arguments and options
-    if _damon.any_kdamond_running() and not args.deducible_target:
-        args.deducible_target = 'ongoing'
-    args.output_permission = chk_handle_output_permission(
-            args.output_permission)
-    backup_duplicate_output_file(args.out)
-
-    err = _damon_result.set_perf_path(args.perf_path)
-    if err != None:
-        print(err)
-        cleanup_exit(-3)
+    handle_args(args)
 
     # Setup for cleanup
     data_for_cleanup.orig_kdamonds = _damon.current_kdamonds()
