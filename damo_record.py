@@ -35,9 +35,6 @@ def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
     cleanup_exit(signum)
 
-def set_data_for_cleanup(data_for_cleanup, args, output_permission):
-    data_for_cleanup.orig_kdamonds = _damon.current_kdamonds()
-
 def chk_handle_output_permission(output_permission_option):
     output_permission, err = _damon_result.parse_file_permission_str(
             output_permission_option)
@@ -84,7 +81,7 @@ def main(args=None):
         cleanup_exit(-3)
 
     # Setup for cleanup
-    set_data_for_cleanup(data_for_cleanup, args, output_permission)
+    data_for_cleanup.orig_kdamonds = _damon.current_kdamonds()
     signal.signal(signal.SIGINT, sighandler)
     signal.signal(signal.SIGTERM, sighandler)
 
