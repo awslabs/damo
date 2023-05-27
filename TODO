@@ -28,3 +28,5 @@
   - Deprecate old scheme usages in tests
 - Merge into Linux mainline
 - Deprecate DAMON results record binary format
+- Let record to track child processes
+- Refactor heats code
