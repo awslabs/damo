@@ -37,14 +37,6 @@ def cleanup_exit(exit_code):
         _damon_result.stop_monitoring_record(data_for_cleanup.perf_pipe)
         exit(exit_code)
 
-    if data_for_cleanup.rfile_format != _damon_result.file_type_record:
-        err = _damon_result.update_result_file(data_for_cleanup.rfile_path,
-                data_for_cleanup.rfile_format)
-        if err != None:
-            print('converting format from record to %s failed (%s)' %
-                    (data_for_cleanup.rfile_format, err))
-    os.chmod(data_for_cleanup.rfile_path, data_for_cleanup.rfile_permission)
-
     exit(exit_code)
 
 def sighandler(signum, frame):
