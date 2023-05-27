@@ -7,7 +7,6 @@ Record monitored data access patterns.
 import os
 import signal
 
-import _damo_deprecation_notice
 import _damon
 import _damon_args
 import _damon_result
