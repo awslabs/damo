@@ -19,7 +19,7 @@
 - Implement histogram stat regions output
 - Support DAMOS quotas/watermarks/filters with command line options
 - Deprecate old features
-  - Deprecate --rbuf and in-kernel record feature support (done but code remain)
+  - Deprecate --rbuf and in-kernel record feature support (done.  code also removed)
   - Deprecate single line per-scheme (done but code remain)
   - Deprecate v1-v3 schemes (done but code remain)
   - Deprecate python2 support (announced as deprecated but code remain)
@@ -28,5 +28,4 @@
   - Deprecate old scheme usages in tests
   - Deprecate DAMON results record binary format (noticing for Q3 deprecation)
 - Merge into Linux mainline
-- Let record to track child processes
 - Refactor heats code
