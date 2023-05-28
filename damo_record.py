@@ -84,9 +84,19 @@ def poll_add_childs(kdamonds):
             for child_pid in childs_pids:
                 if child_pid in ['%s' % t.pid for t in targets]:
                     continue
-                targets.append(_damon.DamonTarget(pid=child_pid, regions=[]))
+                new_targets = []
+                for target in targets:
+                    try:
+                        subprocess.check_output(
+                                ['ps', '--pid', '%s' % target.pid])
+                        new_targets.append(target)
+                    except:
+                        pass
+                new_targets.append(
+                        _damon.DamonTarget(pid=child_pid, regions=[]))
                 need_commit = True
             if need_commit:
+                kdamonds[0].contexts[0].targets = new_targets
                 err = _damon.commit(kdamonds)
                 if err != None:
                     # this might be not a problem; some of processes might
