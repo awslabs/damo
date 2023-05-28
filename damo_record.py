@@ -57,6 +57,37 @@ def handle_args(args):
         print(err)
         exit(-3)
 
+def poll_add_childs(kdamonds):
+    while True:
+        pid = '%s' % kdamonds[0].contexts[0].targets[0].pid
+        try:
+            subprocess.check_output(['ps', '--pid', pid])
+            alive = True
+        except Exception as e:
+            print(e)
+            alive = False
+        if not alive:
+            break
+        try:
+            childs_pids = subprocess.check_output(
+                    ['ps', '--ppid', pid, '-o', 'pid=']).decode().split()
+        except:
+            childs_pids = []
+        if len(childs_pids) > 0:
+            targets = kdamonds[0].contexts[0].targets
+            need_commit = False
+            for child_pid in childs_pids:
+                if child_pid in ['%s' % t.pid for t in targets]:
+                    continue
+                targets.append(_damon.DamonTarget(pid=child_pid, regions=[]))
+                need_commit = True
+        if need_commit:
+            err = _damon.commit(kdamonds)
+            if err != None:
+                print('adding child as target failed (%s)' % err)
+                cleanup_exit(1)
+        time.sleep(1)
+
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type',
@@ -105,35 +136,7 @@ def main(args=None):
         if not args.include_childs:
             os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
         else:
-            while True:
-                pid = '%s' % kdamonds[0].contexts[0].targets[0].pid
-                try:
-                    subprocess.check_output(['ps', '--pid', pid])
-                    alive = True
-                except Exception as e:
-                    print(e)
-                    alive = False
-                if not alive:
-                    break
-                try:
-                    childs_pids = subprocess.check_output(
-                            ['ps', '--ppid', pid, '-o', 'pid=']).decode().split()
-                except:
-                    childs_pids = []
-                if len(childs_pids) > 0:
-                    targets = kdamonds[0].contexts[0].targets
-                    need_commit = False
-                    for child_pid in childs_pids:
-                        if child_pid in ['%s' % t.pid for t in targets]:
-                            continue
-                        targets.append(_damon.DamonTarget(pid=child_pid, regions=[]))
-                        need_commit = True
-                if need_commit:
-                    err = _damon.commit(kdamonds)
-                    if err != None:
-                        print('adding child as target failed (%s)' % err)
-                        cleanup_exit(1)
-                time.sleep(1)
+            poll_add_childs(kdamonds)
 
     _damon.wait_current_kdamonds_turned_off()
 
