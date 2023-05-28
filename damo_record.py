@@ -68,24 +68,30 @@ def poll_add_childs(kdamonds):
             alive = False
         if not alive:
             break
-        try:
-            childs_pids = subprocess.check_output(
-                    ['ps', '--ppid', pid, '-o', 'pid=']).decode().split()
-        except:
-            childs_pids = []
-        if len(childs_pids) > 0:
-            targets = kdamonds[0].contexts[0].targets
+
+        targets = kdamonds[0].contexts[0].targets
+        for target in targets:
+            if target.pid == None:
+                continue
+            pid = '%s' % target.pid
+            try:
+                childs_pids = subprocess.check_output(
+                        ['ps', '--ppid', pid, '-o', 'pid=']).decode().split()
+            except:
+                childs_pids = []
+            if len(childs_pids) == 0:
+                break
             need_commit = False
             for child_pid in childs_pids:
                 if child_pid in ['%s' % t.pid for t in targets]:
                     continue
                 targets.append(_damon.DamonTarget(pid=child_pid, regions=[]))
                 need_commit = True
-        if need_commit:
-            err = _damon.commit(kdamonds)
-            if err != None:
-                print('adding child as target failed (%s)' % err)
-                cleanup_exit(1)
+            if need_commit:
+                err = _damon.commit(kdamonds)
+                if err != None:
+                    print('adding child as target failed (%s)' % err)
+                    cleanup_exit(1)
         time.sleep(1)
 
 def set_argparser(parser):
