@@ -64,7 +64,6 @@ def poll_add_childs(kdamonds):
             subprocess.check_output(['ps', '--pid', pid])
             alive = True
         except Exception as e:
-            print(e)
             alive = False
         if not alive:
             break
