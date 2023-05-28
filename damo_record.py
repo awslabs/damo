@@ -71,8 +71,8 @@ def poll_add_childs(kdamonds):
         if not pid_running(pid):
             break
 
-        targets = kdamonds[0].contexts[0].targets
-        for target in targets:
+        current_targets = kdamonds[0].contexts[0].targets
+        for target in current_targets:
             if target.pid == None:
                 continue
             pid = '%s' % target.pid
@@ -83,18 +83,15 @@ def poll_add_childs(kdamonds):
                 childs_pids = []
             if len(childs_pids) == 0:
                 break
-            need_commit = False
+            new_targets = []
             for child_pid in childs_pids:
-                if child_pid in ['%s' % t.pid for t in targets]:
+                if child_pid in ['%s' % t.pid for t in current_targets]:
                     continue
-                new_targets = []
-                for target in targets:
-                    if pid_running('%s' % target.pid):
-                        new_targets.append(target)
+                new_targets = [target for target in current_targets
+                        if pid_running('%s' % target.pid)]
                 new_targets.append(
                         _damon.DamonTarget(pid=child_pid, regions=[]))
-                need_commit = True
-            if need_commit:
+            if new_targets != []:
                 kdamonds[0].contexts[0].targets = new_targets
                 err = _damon.commit(kdamonds)
                 if err != None:
