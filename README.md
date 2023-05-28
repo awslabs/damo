@@ -167,7 +167,7 @@ deprecated.
 DAMOS singline format
 ---------------------
 
-Deprecated.  Use `--damos_*` command line options or json format.
+Deprecated.  Use `--damos_*` command line options or json format input.
 
 One-line scheme specification format like below was initially supported.
 Because it is not flexible for extension of features, it has deprecated now.
@@ -181,8 +181,8 @@ specification to the new json format.
 
 Deprecated.  Use Python3.
 
-For some old distros, DAMO was initially supported Python2.  Because Python2 is
-really old, the support has deprecated.  Please use Python3 or newer.
+For some old distros, DAMO initially supported Python2.  Because Python2 is
+really old now, the support has deprecated.  Please use Python3 or newer.
 
 
 DAMON record binary format
