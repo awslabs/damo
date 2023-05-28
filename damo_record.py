@@ -57,15 +57,18 @@ def handle_args(args):
         print(err)
         exit(-3)
 
+def pid_running(pid):
+    '''pid should be string'''
+    try:
+        subprocess.check_output(['ps', '--pid', pid])
+        return True
+    except:
+        return False
+
 def poll_add_childs(kdamonds):
     while True:
         pid = '%s' % kdamonds[0].contexts[0].targets[0].pid
-        try:
-            subprocess.check_output(['ps', '--pid', pid])
-            alive = True
-        except Exception as e:
-            alive = False
-        if not alive:
+        if not pid_running(pid):
             break
 
         targets = kdamonds[0].contexts[0].targets
@@ -86,12 +89,8 @@ def poll_add_childs(kdamonds):
                     continue
                 new_targets = []
                 for target in targets:
-                    try:
-                        subprocess.check_output(
-                                ['ps', '--pid', '%s' % target.pid])
+                    if pid_running('%s' % target.pid):
                         new_targets.append(target)
-                    except:
-                        pass
                 new_targets.append(
                         _damon.DamonTarget(pid=child_pid, regions=[]))
                 need_commit = True
