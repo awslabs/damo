@@ -90,6 +90,8 @@ def poll_add_childs(kdamonds):
             if need_commit:
                 err = _damon.commit(kdamonds)
                 if err != None:
+                    # this might be not a problem; some of processes might
+                    # finished
                     print('adding child as target failed (%s)' % err)
                     cleanup_exit(1)
         time.sleep(1)
