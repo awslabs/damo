@@ -104,9 +104,8 @@ def set_argparser(parser):
             help='permission of the output file')
     parser.add_argument('--perf_path', type=str, default='perf',
             help='path of perf tool ')
-# TODO: Uncomment below after multiple targets are supported
-#    parser.add_argument('--include_childs', action='store_true',
-#            help='record accesses of child processes')
+    parser.add_argument('--include_childs', action='store_true',
+            help='record accesses of child processes')
     return parser
 
 def main(args=None):
