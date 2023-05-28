@@ -291,9 +291,6 @@ def stage_kdamonds(kdamonds):
         return 'currently only <=one kdamond is supported'
     if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
         return 'currently only <=one damon_ctx is supported'
-    if (len(kdamonds) == 1 and len(kdamonds[0].contexts) == 1 and
-            len(kdamonds[0].contexts[0].targets) > 1):
-        return 'currently only <=one target is supported'
     ensure_dirs_populated_for(kdamonds)
 
     return _damo_fs.write_files({kdamonds_dir: wops_for_kdamonds(kdamonds)})
