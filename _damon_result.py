@@ -279,7 +279,7 @@ def parse_damon_result(result_file):
                         stderr=fnull).decode()
         except:
             pass
-    if script_output:
+    if script_output != None:
         result, err = perf_script_to_damon_result(script_output)
     else:
         warn_record_type_deprecation()
