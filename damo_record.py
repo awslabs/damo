@@ -89,6 +89,7 @@ def poll_add_childs(kdamonds):
         if len(childs_pids) == 0:
             continue
 
+        # TODO: Commit all at once, out of this loop
         new_targets = []
         for child_pid in childs_pids:
             # skip the child if already in the targets
