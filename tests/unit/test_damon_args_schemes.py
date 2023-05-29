@@ -10,6 +10,7 @@ import _test_damo_common
 _test_damo_common.add_damo_dir_to_syspath()
 
 import _damon
+import _damon_args
 import _damon_args_schemes
 
 class TestDamoSchemesInput(unittest.TestCase):
@@ -123,7 +124,7 @@ class TestDamoSchemesInput(unittest.TestCase):
                         '/all/latency-critical', False)], None, None)]
 
         def get_damos_from_damo_schemes(damo_schemes):
-            damos, err = _damon_args_schemes.schemes_option_to_damos(
+            damos, err = _damon_args.schemes_option_to_damos(
                     damo_schemes)
             return damos
 

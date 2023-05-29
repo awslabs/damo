@@ -6,6 +6,7 @@ Command line arguments handling
 
 import argparse
 import json
+import os
 import subprocess
 
 import _damo_paddr_layout
@@ -64,6 +65,45 @@ def damon_nr_regions_range_for(args):
         return range2
     return default_range
 
+def schemes_option_to_damos(schemes):
+    if os.path.isfile(schemes):
+        with open(schemes, 'r') as f:
+            schemes = f.read()
+
+    try:
+        kvpairs = json.loads(schemes)
+        return [_damon.Damos.from_kvpairs(kv) for kv in kvpairs], None
+    except Exception as json_err:
+        # The input is not json file
+        pass
+
+    return _damon_args_schemes.damo_single_line_schemes_to_damos(schemes)
+
+def damos_options_to_scheme(args):
+    try:
+        return _damon.Damos(
+                access_pattern=_damon.DamosAccessPattern(
+                    args.damos_sz_region, args.damos_access_rate,
+                    _damon.unit_percent, args.damos_age, _damon.unit_usec),
+                action=args.damos_action), None
+    except Exception as e:
+        return None, 'Wrong \'--damos_*\' argument (%s)' % e
+
+def damos_for(args):
+    if args.damos_action:
+        damos, err = damos_options_to_scheme(args)
+        if err != None:
+            return None, err
+        return [damos], None
+
+    if not 'schemes' in args or args.schemes == None:
+        return [], None
+
+    schemes, err = schemes_option_to_damos(args.schemes)
+    if err:
+        return None, 'failed damo schemes arguents parsing (%s)' % err
+    return schemes, None
+
 def damon_ctx_for(args):
     try:
         intervals = damon_intervals_for(args)
@@ -85,7 +125,7 @@ def damon_ctx_for(args):
     except Exception as e:
         return 'Wrong \'--target_pid\' argument (%s)' % e
 
-    schemes, err = _damon_args_schemes.damos_for(args)
+    schemes, err = damos_for(args)
     if err:
         return None, err
 
