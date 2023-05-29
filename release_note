@@ -5,6 +5,8 @@ v1.8.3
 - Remove '--rbuf' and kernel-direct record file generation support code
 - More documentation of deprecated features
 - Implement '--include_childs' option for 'damo record'
+- Move single line DAMOS schemes input handling to a new module,
+  _damo_deprecated
 
 v1.8.2
 - Support zlib-compressed json format monitoring record file
