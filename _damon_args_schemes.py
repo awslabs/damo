@@ -174,6 +174,24 @@ def damo_single_line_scheme_to_damos(line):
         return None, 'wrong input field'
     return None, 'unsupported version of single line scheme'
 
+def damo_single_line_schemes_to_damos(schemes):
+    if os.path.isfile(schemes):
+        with open(schemes, 'r') as f:
+            schemes = f.read()
+
+    # remove comments, empty lines, and unnecessary white spaces
+    damo_schemes_lines = [l.strip() for l in schemes.strip().split('\n')
+            if not l.strip().startswith('#') and l.strip() != '']
+
+    damos_list = []
+    for line in damo_schemes_lines:
+        damos, err = damo_single_line_scheme_to_damos(line)
+        if err != None:
+            return None, 'invalid input: %s' % err
+        damos.name = '%d' % len(damos_list)
+        damos_list.append(damos)
+    return damos_list, None
+
 def schemes_option_to_damos(schemes):
     if os.path.isfile(schemes):
         with open(schemes, 'r') as f:
@@ -186,20 +204,7 @@ def schemes_option_to_damos(schemes):
         # The input is not json file
         pass
 
-    # remove comments, empty lines, and unnecessary white spaces
-    damo_schemes_lines = [l.strip() for l in schemes.strip().split('\n')
-            if not l.strip().startswith('#') and l.strip() != '']
-
-    damos_list = []
-    for line in damo_schemes_lines:
-        damos, err = damo_single_line_scheme_to_damos(line)
-        if err != None:
-            return None, ('invalid input: ' +
-                    'neither json (%s), nor per-line scheme (%s)'
-                    % (json_err, err))
-        damos.name = '%d' % len(damos_list)
-        damos_list.append(damos)
-    return damos_list, None
+    return damo_single_line_schemes_to_damos(schemes)
 
 def options_to_scheme(args):
     try:
