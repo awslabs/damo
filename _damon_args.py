@@ -10,7 +10,6 @@ import os
 import subprocess
 
 import _damo_paddr_layout
-import _damon_args_schemes
 import _damon
 
 # Kdamonds construction from command line arguments
@@ -74,10 +73,7 @@ def schemes_option_to_damos(schemes):
         kvpairs = json.loads(schemes)
         return [_damon.Damos.from_kvpairs(kv) for kv in kvpairs], None
     except Exception as json_err:
-        # The input is not json file
-        pass
-
-    return _damon_args_schemes.damo_single_line_schemes_to_damos(schemes)
+        return None, '%s' % json_err
 
 def damos_options_to_scheme(args):
     try:
