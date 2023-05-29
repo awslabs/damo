@@ -1,0 +1,11 @@
+This file records important changes that made in each release.  Those are
+picked by human sense, so could be incomplete and missing many things.
+
+v1.8.3
+- Remove '--rbuf' and kernel-direct record file generation support code
+- More documentation of deprecated features
+- Implement '--include_childs' option for 'damo record'
+
+v1.8.2
+- Support zlib-compressed json format monitoring record file
+- Use zlib-compressed json format monitoring record file format by default
