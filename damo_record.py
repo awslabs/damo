@@ -71,11 +71,13 @@ def all_targets_terminated(targets):
             return False
     return True
 
-def poll_add_childs(kdamonds):
+def poll_target_pids(kdamonds, add_childs):
     '''Return if polling should continued'''
     current_targets = kdamonds[0].contexts[0].targets
     if all_targets_terminated(current_targets):
         return False
+    if not add_childs:
+        return True
 
     for target in current_targets:
         if target.pid == None:
@@ -158,11 +160,8 @@ def main(args=None):
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
-        if not args.include_childs:
-            os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
-        else:
-            while poll_add_childs(kdamonds):
-                time.sleep(1)
+        while poll_target_pids(kdamonds, args.include_childs):
+            time.sleep(1)
 
     _damon.wait_current_kdamonds_turned_off()
 
