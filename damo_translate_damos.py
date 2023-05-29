@@ -19,6 +19,8 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
+    _damon_args_schemes.avoid_crashing_single_line_scheme_for_testing = True
+    _damon_args_schemes.avoid_crashing_v1_v3_schemes_for_testing = True
     schemes, err = _damon_args_schemes.damo_single_line_schemes_to_damos(
             args.schemes)
     if err:
