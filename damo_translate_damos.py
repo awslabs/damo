@@ -19,7 +19,8 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    schemes, err = _damon_args_schemes.schemes_option_to_damos(args.schemes)
+    schemes, err = _damon_args_schemes.damo_single_line_schemes_to_damos(
+            args.schemes)
     if err:
         print('failed --schemes parsing (%s)' % err)
         exit(1)
