@@ -138,7 +138,7 @@ class TestDamoSchemesInput(unittest.TestCase):
 
     def test_conversion_from_singleline_to_json(self):
         _damon_args_schemes.avoid_crashing_single_line_scheme_for_testing = True
-        damos_list, err = _damon_args_schemes.schemes_option_to_damos(
+        damos_list, err = _damon_args_schemes.damo_single_line_schemes_to_damos(
 '''
 min max     5 max       min max     hugepage
 2M max      min min     7s max      nohugepage''')
