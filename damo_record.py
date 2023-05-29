@@ -65,13 +65,18 @@ def pid_running(pid):
     except:
         return False
 
-def poll_add_childs(kdamonds):
-    should_continue_polling = False
-    pid = '%s' % kdamonds[0].contexts[0].targets[0].pid
-    if not pid_running(pid):
-        return should_continue_polling
-    should_continue_polling = True
+def all_targets_terminated(targets):
+    for target in targets:
+        if pid_running('%s' % target.pid):
+            return False
+    return True
 
+def poll_add_childs(kdamonds):
+    if all_targets_terminated(kdamonds[0].contexts[0].targets):
+        should_continue_polling = False
+        return should_continue_polling
+
+    should_continue_polling = True
     current_targets = kdamonds[0].contexts[0].targets
     for target in current_targets:
         if target.pid == None:
