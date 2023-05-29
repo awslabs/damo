@@ -29,3 +29,4 @@
   - Deprecate DAMON results record binary format (noticing for Q3 deprecation)
 - Merge into Linux mainline
 - Refactor heats code
+- Add test for translate_damos and convert_record_format
