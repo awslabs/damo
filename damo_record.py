@@ -113,7 +113,7 @@ def poll_target_pids(kdamonds, add_childs):
             # finished meanwhile
             print('adding child as target failed (%s)' % err)
             cleanup_exit(1)
-    return should_continue_polling
+    return True
 
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
