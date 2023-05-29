@@ -66,40 +66,40 @@ def pid_running(pid):
         return False
 
 def poll_add_childs(kdamonds):
-    while True:
-        pid = '%s' % kdamonds[0].contexts[0].targets[0].pid
-        if not pid_running(pid):
-            break
+    should_continue_polling = False
+    pid = '%s' % kdamonds[0].contexts[0].targets[0].pid
+    if not pid_running(pid):
+        return should_continue_polling
+    should_continue_polling = True
 
-        current_targets = kdamonds[0].contexts[0].targets
-        for target in current_targets:
-            if target.pid == None:
+    current_targets = kdamonds[0].contexts[0].targets
+    for target in current_targets:
+        if target.pid == None:
+            continue
+        pid = '%s' % target.pid
+        try:
+            childs_pids = subprocess.check_output(
+                    ['ps', '--ppid', pid, '-o', 'pid=']).decode().split()
+        except:
+            childs_pids = []
+        if len(childs_pids) == 0:
+            break
+        new_targets = []
+        for child_pid in childs_pids:
+            if child_pid in ['%s' % t.pid for t in current_targets]:
                 continue
-            pid = '%s' % target.pid
-            try:
-                childs_pids = subprocess.check_output(
-                        ['ps', '--ppid', pid, '-o', 'pid=']).decode().split()
-            except:
-                childs_pids = []
-            if len(childs_pids) == 0:
-                break
-            new_targets = []
-            for child_pid in childs_pids:
-                if child_pid in ['%s' % t.pid for t in current_targets]:
-                    continue
-                new_targets = [target for target in current_targets
-                        if pid_running('%s' % target.pid)]
-                new_targets.append(
-                        _damon.DamonTarget(pid=child_pid, regions=[]))
-            if new_targets != []:
-                kdamonds[0].contexts[0].targets = new_targets
-                err = _damon.commit(kdamonds)
-                if err != None:
-                    # this might be not a problem; some of processes might
-                    # finished
-                    print('adding child as target failed (%s)' % err)
-                    cleanup_exit(1)
-        time.sleep(1)
+            new_targets = [target for target in current_targets
+                    if pid_running('%s' % target.pid)]
+            new_targets.append(_damon.DamonTarget(pid=child_pid, regions=[]))
+        if new_targets != []:
+            kdamonds[0].contexts[0].targets = new_targets
+            err = _damon.commit(kdamonds)
+            if err != None:
+                # this might be not a problem; some of processes might
+                # finished
+                print('adding child as target failed (%s)' % err)
+                cleanup_exit(1)
+    return should_continue_polling
 
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
@@ -149,7 +149,8 @@ def main(args=None):
         if not args.include_childs:
             os.waitpid(kdamonds[0].contexts[0].targets[0].pid, 0)
         else:
-            poll_add_childs(kdamonds)
+            while poll_add_childs(kdamonds):
+                time.sleep(1)
 
     _damon.wait_current_kdamonds_turned_off()
 
