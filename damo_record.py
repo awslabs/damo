@@ -72,38 +72,44 @@ def all_targets_terminated(targets):
     return True
 
 def poll_add_childs(kdamonds):
-    if all_targets_terminated(kdamonds[0].contexts[0].targets):
-        should_continue_polling = False
-        return should_continue_polling
-
-    should_continue_polling = True
+    '''Return if polling should continued'''
     current_targets = kdamonds[0].contexts[0].targets
+    if all_targets_terminated(current_targets):
+        return False
+
     for target in current_targets:
         if target.pid == None:
             continue
-        pid = '%s' % target.pid
         try:
             childs_pids = subprocess.check_output(
-                    ['ps', '--ppid', pid, '-o', 'pid=']).decode().split()
+                    ['ps', '--ppid', '%s' % target.pid, '-o', 'pid=']
+                    ).decode().split()
         except:
             childs_pids = []
         if len(childs_pids) == 0:
-            break
+            continue
+
         new_targets = []
         for child_pid in childs_pids:
+            # skip the child if already in the targets
             if child_pid in ['%s' % t.pid for t in current_targets]:
                 continue
+            # remove already terminated targets, since committing already
+            # terminated targets to DAMON fails
             new_targets = [target for target in current_targets
                     if pid_running('%s' % target.pid)]
             new_targets.append(_damon.DamonTarget(pid=child_pid, regions=[]))
-        if new_targets != []:
-            kdamonds[0].contexts[0].targets = new_targets
-            err = _damon.commit(kdamonds)
-            if err != None:
-                # this might be not a problem; some of processes might
-                # finished
-                print('adding child as target failed (%s)' % err)
-                cleanup_exit(1)
+        if new_targets == []:
+            continue
+
+        # commit the new set of targets
+        kdamonds[0].contexts[0].targets = new_targets
+        err = _damon.commit(kdamonds)
+        if err != None:
+            # this might be not a problem; some of processes might
+            # finished meanwhile
+            print('adding child as target failed (%s)' % err)
+            cleanup_exit(1)
     return should_continue_polling
 
 def set_argparser(parser):
