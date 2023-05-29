@@ -11,7 +11,7 @@ _test_damo_common.add_damo_dir_to_syspath()
 
 import _damon
 import _damon_args
-import _damon_args_schemes
+import _damo_deprecated
 
 class TestDamoSchemesInput(unittest.TestCase):
     def test_schemes_option_to_damos(self):
@@ -138,8 +138,8 @@ class TestDamoSchemesInput(unittest.TestCase):
                     expected_damos_w_filters})
 
     def test_conversion_from_singleline_to_json(self):
-        _damon_args_schemes.avoid_crashing_single_line_scheme_for_testing = True
-        damos_list, err = _damon_args_schemes.damo_single_line_schemes_to_damos(
+        _damo_deprecated.avoid_crashing_single_line_scheme_for_testing = True
+        damos_list, err = _damo_deprecated.damo_single_line_schemes_to_damos(
 '''
 min max     5 max       min max     hugepage
 2M max      min min     7s max      nohugepage''')

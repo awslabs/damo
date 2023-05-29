@@ -8,13 +8,13 @@ import _test_damo_common
 _test_damo_common.add_damo_dir_to_syspath()
 
 import _damon
-import _damon_args_schemes
+import _damo_deprecated
 import _damon_dbgfs
 
 class TestDamoSchemeDbgfsConversion(unittest.TestCase):
     def test_conversion(self):
-        _damon_args_schemes.avoid_crashing_single_line_scheme_for_testing = True
-        _damon_args_schemes.avoid_crashing_v1_v3_schemes_for_testing = True
+        _damo_deprecated.avoid_crashing_single_line_scheme_for_testing = True
+        _damo_deprecated.avoid_crashing_v1_v3_schemes_for_testing = True
         inputs = {
                 "darc1.damos": '''
 # format is:
@@ -142,7 +142,7 @@ min max     5 max       min max     hugepage
         intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
         for input_name, input_scheme in inputs.items():
             for version in range(0, 5):
-                damos_list, err = _damon_args_schemes.damo_single_line_schemes_to_damos(
+                damos_list, err = _damo_deprecated.damo_single_line_schemes_to_damos(
                         input_scheme)
                 self.assertEqual(err, None)
                 lines = []
