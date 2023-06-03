@@ -45,6 +45,7 @@ class DAMONSnapshot:
 class DAMONRecord:
     target_id = None
     snapshots = None
+    intervals = None
 
     def __init__(self, target_id):
         self.target_id = target_id
