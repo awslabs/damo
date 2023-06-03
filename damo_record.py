@@ -154,9 +154,16 @@ def main(args=None):
             cleanup_exit(-2)
         data_for_cleanup.kdamonds_idxs = ['%d' % idx
                 for idx, k in enumerate(kdamonds)]
+        # TODO: Support multiple kdamonds, multiple contexts
+        monitoring_intervals = kdamonds[0].contexts[0].intervals
+    else:
+        # TODO: Support multiple kdamonds, multiple contexts
+        monitoring_intervals = data_for_cleanup.orig_kdamonds[
+                0].contexts[0].intervals
 
     data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
-            args.out, args.output_type, args.output_permission)
+            args.out, args.output_type, args.output_permission,
+            monitoring_intervals)
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
