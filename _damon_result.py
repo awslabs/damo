@@ -469,6 +469,8 @@ def adjusted_snapshots(snapshots, aggregate_interval_us):
 
 def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
     for record in result.records:
+        if record.intervals != None:
+            record.intervals.aggr = aggregate_interval
         record.snapshots = adjusted_snapshots(
                 record.snapshots[nr_snapshots_to_skip:], aggregate_interval)
 
