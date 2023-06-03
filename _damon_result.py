@@ -43,25 +43,34 @@ class DAMONSnapshot:
             ('regions', [r.to_kvpairs() for r in self.regions])])
 
 class DAMONRecord:
+    intervals = None
     target_id = None
     snapshots = None
-    intervals = None
 
-    def __init__(self, target_id):
+    def __init__(self, intervals, target_id):
+        self.intervals = intervals
         self.target_id = target_id
         self.snapshots = []
 
     @classmethod
     def from_kvpairs(cls, kv):
-        record = DAMONRecord(kv['target_id'])
+        intervals = None
+        if 'intervals' in kv:
+            intervals = _damon.DamonIntervals.from_kvpairs(kv['intervals'])
+
+        record = DAMONRecord(intervals, kv['target_id'])
         record.snapshots = [DAMONSnapshot.from_kvpairs(s)
                 for s in kv['snapshots']]
+
         return record
 
     def to_kvpairs(self, raw=False):
-        return collections.OrderedDict([
-            ('target_id', self.target_id),
-            ('snapshots', [s.to_kvpairs(raw) for s in self.snapshots])])
+        ordered_dict = collections.OrderedDict()
+        if self.intervals != None:
+            ordered_dict['intervals'] = self.intervals.to_kvpairs(raw)
+        ordered_dict['target_id'] = self.target_id
+        ordered_dict['snapshots'] = [s.to_kvpairs(raw) for s in self.snapshots]
+        return ordered_dict
 
 class DAMONResult:
     records = None
@@ -73,7 +82,7 @@ class DAMONResult:
         for record in self.records:
             if record.target_id == target_id:
                 return record
-        record = DAMONRecord(target_id)
+        record = DAMONRecord(None, target_id)
         self.records.append(record)
         return record
 
