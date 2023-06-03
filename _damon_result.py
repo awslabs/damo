@@ -400,8 +400,9 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
         os.chmod(file_path, file_permission)
     return None
 
-def update_result_file(file_path, file_format, file_permission=None):
-    result, err = parse_damon_result(file_path)
+def update_result_file(file_path, file_format, file_permission=None,
+        monitoring_intervals=None):
+    result, err = parse_damon_result(file_path, monitoring_intervals)
     if err:
         return err
     return write_damon_result(result, file_path, file_format, file_permission)
