@@ -269,7 +269,7 @@ def parse_damon_record_json_compressed(result_file):
     result.records = [DAMONRecord.from_kvpairs(kvp) for kvp in kvpairs]
     return result
 
-def parse_damon_result(result_file):
+def parse_damon_result(result_file, monitoring_intervals=None):
     script_output = None
     file_type = subprocess.check_output(
             ['file', '-b', result_file]).decode().strip()
@@ -290,10 +290,11 @@ def parse_damon_result(result_file):
         except:
             pass
     if script_output != None:
-        result, err = perf_script_to_damon_result(script_output, None)
+        result, err = perf_script_to_damon_result(script_output,
+                monitoring_intervals)
     else:
         warn_record_type_deprecation()
-        result, err = record_to_damon_result(result_file, None)
+        result, err = record_to_damon_result(result_file, monitoring_intervals)
 
     return result, err
 
