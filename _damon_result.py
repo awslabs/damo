@@ -479,14 +479,16 @@ Start recording DAMON's monitoring results using perf.
 Returns pipe for the perf.  The pipe should be passed to
 stop_monitoring_record() later.
 '''
-def start_monitoring_record(file_path, file_format, file_permission):
+def start_monitoring_record(file_path, file_format, file_permission,
+        monitoring_intervals):
     pipe = subprocess.Popen(
             [PERF, 'record', '-a', '-e', PERF_EVENT, '-o', file_path])
-    record_requests[pipe] = [file_path, file_format, file_permission]
+    record_requests[pipe] = [file_path, file_format, file_permission,
+            monitoring_intervals]
     return pipe
 
 def stop_monitoring_record(perf_pipe):
-    file_path, file_format, file_permission = record_requests[perf_pipe]
+    file_path, file_format, file_permission = record_requests[perf_pipe][:3]
     try:
         perf_pipe.send_signal(signal.SIGINT)
         perf_pipe.wait()
