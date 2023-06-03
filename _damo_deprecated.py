@@ -1,15 +1,29 @@
 # SPDX-License-Identifier: GPL-2.0
 
-"""
+'''
+Keep code for deprecated features, which still need to help old users migrate,
+e.g., 'translate_damos' and 'convert_record_format'.
+'''
+
+import json
+import os
+
+import _damon
+
+import _damo_deprecation_notice
+import _damo_fmt_str
+
+'''
+DAMOS single-line scheme specification input.
+
 Change human readable data access monitoring-based operation schemes input for
-'damo' to a '_damon.Damos' object.  Currently,
+'damo' to a '_damon.Damos' object.
+This format has inspired by DAMON debugfs 'schemes' file input/output.  It was
+enough to be used for the initial version, but later extending it made it to
+receive more than 15 fields, and became hard to understand and maintain.
+Hence, replaced by more intuitive command line options and json format.
 
-- simple human-readable single line per scheme text (will be deprecated) and
-- json string format
-
-are supported.  Below are the example of the input.
-
-Below are examples of simple human-readable single line per scheme text.
+Below are examples of the single-line scheme input.
 
     # format is:
     # <min/max size> <min/max frequency (0-100)> <min/max age> <action>
@@ -38,46 +52,7 @@ Below are examples of simple human-readable single line per scheme text.
     # If a regions of a size >=2MiB keeps small access frequency for >=100ms,
     # avoid the region using huge pages (call madvise() with MADV_NOHUGEPAGE).
     2M      max     0       25      100ms   max nohugepage
-
-Below is an exaple of the json string format.
-
-    [
-       {
-            "comment": "just for monitoring",
-            "name": "0",
-            "action": "stat",
-            "access_pattern": {
-                "sz_bytes": {"min": "0 B", "max": "max"},
-                "nr_accesses": {"min": "0 %", "max": "100 %"},
-                "age": {"min": "0 ns", "max": "max"}
-            },
-            "quotas": {
-                "time_ms": 0,
-                "sz_bytes": 0,
-                "reset_interval_ms": 0,
-                "weight_sz_permil": 0,
-                "weight_nr_accesses_permil": 0,
-                "weight_age_permil": 0
-            },
-            "watermarks": {
-                "metric": "none",
-                "interval_us": 0,
-                "high_permil": 0,
-                "mid_permil": 0,
-                "low_permil": 0
-            },
-            "filters": []
-        }
-    ]
-"""
-
-import json
-import os
-
-import _damon
-
-import _damo_deprecation_notice
-import _damo_fmt_str
+'''
 
 def fields_to_v0_scheme(fields):
     scheme = _damon.Damos()
