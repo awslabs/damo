@@ -5,7 +5,7 @@ bindir=$(dirname "$0")
 
 for test_file in "$bindir"/test_*.py
 do
-	for py in "python" "python3"
+	for py in "python3"
 	do
 		if "$py" "$test_file" &> /dev/null
 		then
