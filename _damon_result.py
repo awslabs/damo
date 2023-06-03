@@ -207,7 +207,7 @@ def parse_perf_script_line(line):
 
         return region, end_time, target_id, nr_regions
 
-def perf_script_to_damon_result(script_output):
+def perf_script_to_damon_result(script_output, monitoring_intervals):
     result = DAMONResult()
     snapshot = None
 
@@ -216,7 +216,7 @@ def perf_script_to_damon_result(script_output):
         if region == None:
             continue
 
-        record = result.record_of(target_id, None)
+        record = result.record_of(target_id, monitoring_intervals)
         if len(record.snapshots) == 0:
             start_time = None
         else:
@@ -290,7 +290,7 @@ def parse_damon_result(result_file):
         except:
             pass
     if script_output != None:
-        result, err = perf_script_to_damon_result(script_output)
+        result, err = perf_script_to_damon_result(script_output, None)
     else:
         warn_record_type_deprecation()
         result, err = record_to_damon_result(result_file)
