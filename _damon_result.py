@@ -389,13 +389,15 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
             fake_snapshot.regions = [_damon.DamonRegion(0, 0,
                 -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
             snapshots.append(fake_snapshot)
-    if file_type == file_type_record:
-        warn_record_type_deprecation()
-        write_damon_record(result, file_path, 2)
+
+    if file_type == file_type_json_compressed:
+        write_damon_record_json_compressed(result, file_path)
     elif file_type == file_type_perf_script:
         write_damon_perf_script(result, file_path)
-    elif file_type == file_type_json_compressed:
-        write_damon_record_json_compressed(result, file_path)
+    elif file_type == file_type_record:
+        warn_record_type_deprecation()
+        write_damon_record(result, file_path, 2)
+
     if file_permission != None:
         os.chmod(file_path, file_permission)
     return None
