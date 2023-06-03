@@ -140,7 +140,7 @@ def set_first_snapshot_start_time(result):
         if is_fake_snapshot(snapshots[-1]):
             del record.snapshots[-1]
 
-def record_to_damon_result(file_path):
+def record_to_damon_result(file_path, monitoring_intervals):
     with open(file_path, 'rb') as f:
         fmt_version = read_record_format_version(f)
         result = DAMONResult()
@@ -156,7 +156,7 @@ def record_to_damon_result(file_path):
                 else:
                     target_id = struct.unpack('L', f.read(8))[0]
 
-                record = result.record_of(target_id, None)
+                record = result.record_of(target_id, monitoring_intervals)
                 if len(record.snapshots) == 0:
                     start_time = None
                 else:
@@ -293,7 +293,7 @@ def parse_damon_result(result_file):
         result, err = perf_script_to_damon_result(script_output, None)
     else:
         warn_record_type_deprecation()
-        result, err = record_to_damon_result(result_file)
+        result, err = record_to_damon_result(result_file, None)
 
     return result, err
 
