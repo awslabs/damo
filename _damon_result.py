@@ -382,8 +382,7 @@ def add_fake_snapshot_if_needed(file_type, result):
 
     for record in result.records:
         snapshots = record.snapshots
-        if len(snapshots) == 1 and file_type in [file_type_record,
-                file_type_perf_script]:
+        if len(snapshots) == 1:
             snapshot = snapshots[0]
             snap_duration = snapshot.end_time - snapshot.start_time
             fake_snapshot = DAMONSnapshot(snapshot.end_time,
