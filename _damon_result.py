@@ -489,6 +489,7 @@ def start_monitoring_record(file_path, file_format, file_permission,
 
 def stop_monitoring_record(perf_pipe):
     file_path, file_format, file_permission = record_requests[perf_pipe][:3]
+    monitoring_intervals = record_requests[perf_pipe][3]
     try:
         perf_pipe.send_signal(signal.SIGINT)
         perf_pipe.wait()
@@ -496,7 +497,8 @@ def stop_monitoring_record(perf_pipe):
         # perf might already finished
         pass
     if file_format != file_type_perf_data:
-        err = update_result_file(file_path, file_format)
+        err = update_result_file(file_path, file_format, None,
+                monitoring_intervals)
         if err != None:
             print('converting format from perf_data to %s failed (%s)' %
                     (file_format, err))
