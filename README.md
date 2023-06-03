@@ -143,46 +143,12 @@ overhead.
                         <pid of your workload>
 
 
-Deprecated Features
-===================
+Deprecated, or Will be Deprecated Features
+==========================================
 
-Below are features that deprecated, or will be deprecated.  If you depend on
-any of those, please report your usecase to the community via github issue,
-sj@kernel.org, damon@lists.linux.dev, and/or linux-mm@kvack.org.
-
---rbuf option of `damo record`
-------------------------------
-
-Deprecated.
-
-Early versions of DAMON supported in-kernel direct monitoring results record
-file generation.  To control the overhead of it, DAMO allowed user to specify
-the size of buffer for the work.  The feature has not merged into the mainline,
-and discarded.  Hence the option was available for only few kernels that ported
-the feature.  For most of kernels, tracepoint based record file generation is
-being used, and the overhead of the approach is subtle.  Hence, the option has
-deprecated.
-
-
-DAMOS singline format
----------------------
-
-Deprecated.  Use `--damos_*` command line options or json format input.
-
-One-line scheme specification format like below was initially supported.
-Because it is not flexible for extension of features, it has deprecated now.
-You may use `--damos_*` command line options or json format instead.  You may
-use `damo translate_damos` to convert your old single line DAMOS schemes
-specification to the new json format.
-
-
-`Python2 support
-----------------
-
-Deprecated.  Use Python3.
-
-For some old distros, DAMO initially supported Python2.  Because Python2 is
-really old now, the support has deprecated.  Please use Python3 or newer.
+Below are features that recently deprecated, or will be deprecated.  If you
+depend on any of those, please report your usecase to the community via github
+issue, sj@kernel.org, damon@lists.linux.dev, and/or linux-mm@kvack.org.
 
 
 DAMON record binary format
@@ -197,3 +163,38 @@ based monitoring results can be easier to read, and more efficient when
 compression technique is used.  Hence, the format will be deprecated.  You may
 use `damo convert_record_format` to convert your old record binary format
 monitoring results files to the new format.
+
+
+`Python2 support
+----------------
+
+Deprecated.  Use Python3.
+
+For some old distros, DAMO initially supported Python2.  Because Python2 is
+really old now, the support has deprecated.  Please use Python3 or newer.
+
+
+DAMOS singline format
+---------------------
+
+Deprecated.  Use `--damos_*` command line options or json format input.
+
+One-line scheme specification format like below was initially supported.
+Because it is not flexible for extension of features, it has deprecated now.
+You may use `--damos_*` command line options or json format instead.  You may
+use `damo translate_damos` to convert your old single line DAMOS schemes
+specification to the new json format.
+
+
+--rbuf option of `damo record`
+------------------------------
+
+Deprecated.
+
+Early versions of DAMON supported in-kernel direct monitoring results record
+file generation.  To control the overhead of it, DAMO allowed user to specify
+the size of buffer for the work.  The feature has not merged into the mainline,
+and discarded.  Hence the option was available for only few kernels that ported
+the feature.  For most of kernels, tracepoint based record file generation is
+being used, and the overhead of the approach is subtle.  Hence, the option has
+deprecated.
