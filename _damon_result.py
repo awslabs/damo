@@ -78,11 +78,11 @@ class DAMONResult:
     def __init__(self):
         self.records = []
 
-    def record_of(self, target_id):
+    def record_of(self, target_id, intervals):
         for record in self.records:
             if record.target_id == target_id:
                 return record
-        record = DAMONRecord(None, target_id)
+        record = DAMONRecord(intervals, target_id)
         self.records.append(record)
         return record
 
@@ -156,7 +156,7 @@ def record_to_damon_result(file_path):
                 else:
                     target_id = struct.unpack('L', f.read(8))[0]
 
-                record = result.record_of(target_id)
+                record = result.record_of(target_id, None)
                 if len(record.snapshots) == 0:
                     start_time = None
                 else:
@@ -216,7 +216,7 @@ def perf_script_to_damon_result(script_output):
         if region == None:
             continue
 
-        record = result.record_of(target_id)
+        record = result.record_of(target_id, None)
         if len(record.snapshots) == 0:
             start_time = None
         else:

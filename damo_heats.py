@@ -150,7 +150,7 @@ def pr_heats(args, damon_result):
 
     # __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax)
 
-    snapshots = damon_result.record_of(tid).snapshots
+    snapshots = damon_result.record_of(tid, None).snapshots
     pixels = heat_pixels_from_snapshots(snapshots, [tmin, tmax], [amin, amax],
             [tres, ares])
 
