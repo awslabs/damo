@@ -382,16 +382,16 @@ def add_fake_snapshot_if_needed(file_type, result):
 
     for record in result.records:
         snapshots = record.snapshots
-        if len(snapshots) == 1:
-            snapshot = snapshots[0]
-            snap_duration = snapshot.end_time - snapshot.start_time
-            fake_snapshot = DAMONSnapshot(snapshot.end_time,
-                    snapshot.end_time + snap_duration)
-            # -1 nr_accesses.samples / -1 age.aggr_intervals means fake
-            fake_snapshot.regions = [_damon.DamonRegion(0, 0,
-                -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
-            snapshots.append(fake_snapshot)
-
+        if len(snapshots) != 1:
+            continue
+        snapshot = snapshots[0]
+        snap_duration = snapshot.end_time - snapshot.start_time
+        fake_snapshot = DAMONSnapshot(snapshot.end_time,
+                snapshot.end_time + snap_duration)
+        # -1 nr_accesses.samples / -1 age.aggr_intervals means fake
+        fake_snapshot.regions = [_damon.DamonRegion(0, 0,
+            -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
+        snapshots.append(fake_snapshot)
 
 def write_damon_result(result, file_path, file_type, file_permission=None):
     '''Returns None if success, an error string otherwise'''
