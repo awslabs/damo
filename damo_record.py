@@ -125,7 +125,7 @@ def set_argparser(parser):
             help='permission of the output file')
     parser.add_argument('--perf_path', type=str, default='perf',
             help='path of perf tool ')
-    parser.add_argument('--include_childs', action='store_true',
+    parser.add_argument('--include_child_tasks', action='store_true',
             help='record accesses of child processes')
     return parser
 
@@ -160,7 +160,7 @@ def main(args=None):
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
-        while poll_target_pids(kdamonds, args.include_childs):
+        while poll_target_pids(kdamonds, args.include_child_tasks):
             time.sleep(1)
 
     _damon.wait_current_kdamonds_turned_off()
