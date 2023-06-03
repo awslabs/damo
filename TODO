@@ -30,3 +30,5 @@
 - Merge into Linux mainline
 - Refactor heats code
 - Add test for translate_damos and convert_record_format
+- Fix 'damo stat regions' clearing monitoring results bug on dynamic virtual
+  address ranges monitoring (https://github.com/awslabs/damo/issues/46)
