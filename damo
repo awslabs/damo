@@ -7,8 +7,6 @@ import os
 os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sys
 
-import _damo_python2_support
-
 import damo_adjust
 import damo_convert_record_format
 import damo_features
