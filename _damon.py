@@ -916,14 +916,18 @@ def update_schemes_tried_regions(kdamond_idxs=None):
         kdamond_idxs = running_kdamond_idxs()
     return _damon_fs.update_schemes_tried_regions(kdamond_idxs)
 
-def update_schemes_status():
+def update_schemes_status(stats=True, tried_regions=True):
+    '''Returns error string or None'''
     idxs = running_kdamond_idxs()
     if len(idxs) == 0:
         return None
-    err = update_schemes_stats(idxs)
-    if err != None:
-        return err
-    return update_schemes_tried_regions(idxs)
+    if stats:
+        err = update_schemes_stats(idxs)
+        if err != None:
+            return err
+    if tried_regions:
+        return update_schemes_tried_regions(idxs)
+    return None
 
 def turn_damon_on(kdamonds_idxs):
     err = _damon_fs.turn_damon_on(kdamonds_idxs)
