@@ -585,13 +585,14 @@ def tried_regions_to_snapshots(monitor_scheme):
         # TODO: Make a cleaner way for passing the index
         for ctx_idx, ctx in enumerate(kdamond.contexts):
             for scheme in ctx.schemes:
-                if scheme.effectively_equal(monitor_scheme, ctx.intervals):
-                    snapshot = tried_regions_to_snapshot(scheme.tried_regions,
-                            ctx.intervals)
-                    if not kdamond_idx in snapshots:
-                        snapshots[kdamond_idx] = {}
-                    snapshots[kdamond_idx][ctx_idx] = [snapshot, ctx.intervals]
-                    break
+                if not scheme.effectively_equal(monitor_scheme, ctx.intervals):
+                    continue
+                snapshot = tried_regions_to_snapshot(scheme.tried_regions,
+                        ctx.intervals)
+                if not kdamond_idx in snapshots:
+                    snapshots[kdamond_idx] = {}
+                snapshots[kdamond_idx][ctx_idx] = [snapshot, ctx.intervals]
+                break
     return snapshots
 
 def get_snapshots(access_pattern):
