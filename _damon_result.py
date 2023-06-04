@@ -17,6 +17,9 @@ PERF = 'perf'
 PERF_EVENT = 'damon:damon_aggregated'
 
 class DamonSnapshot:
+    '''
+    Contains a snapshot of data access monitoring results
+    '''
     start_time = None
     end_time = None
     regions = None
@@ -43,6 +46,9 @@ class DamonSnapshot:
             ('regions', [r.to_kvpairs() for r in self.regions])])
 
 class DamonRecord:
+    '''
+    Contains data access monitoring results for single target
+    '''
     intervals = None
     target_id = None
     snapshots = None
@@ -73,6 +79,9 @@ class DamonRecord:
         return ordered_dict
 
 class DamonResult:
+    '''
+    Contains data access monitoring results.
+    '''
     records = None
 
     def __init__(self):
