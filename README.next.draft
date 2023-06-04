@@ -10,12 +10,21 @@ Getting Started
 ===============
 
     $ sudo damo start
-    $ sudo damo stat
+    $ sudo damo show
     $ sudo damo record
-    $ sudo damo report
-    $ sudo damo snap save
-    $ sudo damo snap raw
-    $ sudo damo snap wss
-    $ sudo damo snap heats
     $ sudo damo tune
     $ sudo damo stop
+
+
+damo show status kdamonds
+damo show status schemes
+damo show status schemes stats
+damo show status schemes tried_regions
+damo show status schemes tried_regions heatmap
+damo show snapshot raw
+damo show snapshot json
+damo show snapshot wss
+damo show snapshot wss_hist
+damo show snapshot heatmap
+damo show record raw
+damo show record json
