@@ -170,7 +170,7 @@ def main(args=None):
         while poll_target_pids(kdamonds, args.include_child_tasks):
             time.sleep(1)
 
-    _damon.wait_current_kdamonds_turned_off()
+    _damon.wait_kdamonds_turned_off()
 
     cleanup_exit(0)
 

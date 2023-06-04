@@ -933,13 +933,13 @@ def turn_damon_on(kdamonds_idxs):
     err = _damon_fs.turn_damon_on(kdamonds_idxs)
     if err:
         return err
-    wait_current_kdamonds_turned_on()
+    wait_kdamonds_turned_on()
 
 def turn_damon_off(kdamonds_idxs):
     err = _damon_fs.turn_damon_off(kdamonds_idxs)
     if err:
         return err
-    wait_current_kdamonds_turned_off()
+    wait_kdamonds_turned_off()
 
 # DAMON status reading
 
@@ -962,12 +962,12 @@ def any_kdamond_running():
             return True
     return False
 
-def wait_current_kdamonds_turned_on():
+def wait_kdamonds_turned_on():
     for idx in range(nr_current_kdamonds()):
         while not is_kdamond_running(idx):
             time.sleep(1)
 
-def wait_current_kdamonds_turned_off():
+def wait_kdamonds_turned_off():
     for idx in range(nr_current_kdamonds()):
         while is_kdamond_running(idx):
             time.sleep(1)
