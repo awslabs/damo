@@ -281,7 +281,10 @@ def parse_damon_record_json_compressed(result_file):
     return result
 
 def parse_damon_result(result_file, monitoring_intervals=None):
-    script_output = None
+    '''
+    Return monitoring results and error string
+    '''
+
     file_type = subprocess.check_output(
             ['file', '-b', result_file]).decode().strip()
     if file_type == 'zlib compressed data':
@@ -289,25 +292,27 @@ def parse_damon_result(result_file, monitoring_intervals=None):
             return parse_damon_record_json_compressed(result_file), None
         except Exception as e:
             return None, 'failed parsing json compressed file (%s)' % e
-    elif file_type == 'ASCII text':
+
+    perf_script_output = None
+    if file_type == 'ASCII text':
         with open(result_file, 'r') as f:
-            script_output = f.read()
+            perf_script_output = f.read()
     else:
+        # might be perf data
         try:
             with open(os.devnull, 'w') as fnull:
-                script_output = subprocess.check_output(
+                perf_script_output = subprocess.check_output(
                         [PERF, 'script', '-i', result_file],
                         stderr=fnull).decode()
         except:
+            # Should be record format file
             pass
-    if script_output != None:
-        result, err = perf_script_to_damon_result(script_output,
+    if perf_script_output != None:
+        return perf_script_to_damon_result(perf_script_output,
                 monitoring_intervals)
-    else:
-        warn_record_type_deprecation()
-        result, err = record_to_damon_result(result_file, monitoring_intervals)
 
-    return result, err
+    warn_record_type_deprecation()
+    return record_to_damon_result(result_file, monitoring_intervals)
 
 # for writing monitoring results to a file
 
