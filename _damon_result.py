@@ -151,7 +151,7 @@ def set_first_snapshot_start_time(result):
         if is_fake_snapshot(snapshots[-1]):
             del record.snapshots[-1]
 
-def record_to_damon_result(file_path, monitoring_intervals):
+def parse_binary_format_record(file_path, monitoring_intervals):
     with open(file_path, 'rb') as f:
         fmt_version = read_record_format_version(f)
         result = DamonResult()
@@ -218,7 +218,7 @@ def parse_perf_script_line(line):
 
         return region, end_time, target_id, nr_regions
 
-def perf_script_to_damon_result(script_output, monitoring_intervals):
+def parse_perf_script(script_output, monitoring_intervals):
     result = DamonResult()
     snapshot = None
 
@@ -308,11 +308,10 @@ def parse_damon_result(result_file, monitoring_intervals=None):
             # Should be record format file
             pass
     if perf_script_output != None:
-        return perf_script_to_damon_result(perf_script_output,
-                monitoring_intervals)
+        return parse_perf_script(perf_script_output, monitoring_intervals)
 
     warn_record_type_deprecation()
-    return record_to_damon_result(result_file, monitoring_intervals)
+    return parse_binary_format_record(result_file, monitoring_intervals)
 
 # for writing monitoring results to a file
 
