@@ -26,7 +26,7 @@ do
 	testname2="$testname $damon_interface"
 	sudo "$damo" start --ops paddr --damon_interface "$damon_interface" \
 		-c monitoring_damos.json 2> /dev/null
-	if ! pidof kdamond.0 > /dev/null
+	if ! pgrep kdamond.0 > /dev/null
 	then
 		echo "FAIL $testname2 (kdamond.0 pid not found after start)"
 		exit 1
@@ -85,7 +85,7 @@ do
 	echo "PASS $testname2 tune-record-ongoing-validate"
 
 	sudo "$damo" stop --damon_interface "$damon_interface" 2> /dev/null
-	if pidof kdamond.0 > /dev/null
+	if pgrep kdamond.0 > /dev/null
 	then
 		echo "FAIL $testname2 (kdamond.0 pid found after stop)"
 		exit 1
