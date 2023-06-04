@@ -220,7 +220,14 @@ def set_first_snapshot_start_time(result):
         if is_fake_snapshot(snapshots[-1]):
             del record.snapshots[-1]
 
+def warn_record_type_deprecation():
+    _damo_deprecation_notice.will_be_deprecated(
+            feature='\'record\' file type support',
+            deadline='2023-Q3',
+            additional_notice='use json_compressed type instead.')
+
 def parse_binary_format_record(file_path, monitoring_intervals):
+    warn_record_type_deprecation()
     with open(file_path, 'rb') as f:
         fmt_version = read_record_format_version(f)
         result = DamonResult()
@@ -334,12 +341,6 @@ def set_perf_path(perf_path):
         err = 'perf not found at "%s"' % PERF
     return err
 
-def warn_record_type_deprecation():
-    _damo_deprecation_notice.will_be_deprecated(
-            feature='\'record\' file type support',
-            deadline='2023-Q3',
-            additional_notice='use json_compressed type instead.')
-
 def parse_damon_record_json_compressed(result_file):
     with open(result_file, 'rb') as f:
         compressed = f.read()
@@ -379,7 +380,6 @@ def parse_damon_result(result_file, monitoring_intervals=None):
     if perf_script_output != None:
         return parse_perf_script(perf_script_output, monitoring_intervals)
 
-    warn_record_type_deprecation()
     return parse_binary_format_record(result_file, monitoring_intervals)
 
 # for writing monitoring results to a file
