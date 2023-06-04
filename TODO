@@ -22,7 +22,7 @@
   - Deprecate --rbuf and in-kernel record feature support (done.  code also removed)
   - Deprecate single line per-scheme (done but code remain)
   - Deprecate v1-v3 schemes (done but code remain)
-  - Deprecate python2 support (announced as deprecated but code remain)
+  - Deprecate python2 support (done but code remain)
   - Deprecate scheme subcommand
     - Can be replaced by start or tune
   - Deprecate old scheme usages in tests
