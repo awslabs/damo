@@ -4,7 +4,6 @@ import argparse
 
 import damo_heats
 import damo_nr_regions
-import damo_report_json
 import damo_report_raw
 import damo_wss
 
@@ -13,8 +12,6 @@ import _damo_subcmds
 subcmds = [
         _damo_subcmds.DamoSubCmd(name='raw', module=damo_report_raw,
             msg='human readable raw data'),
-        _damo_subcmds.DamoSubCmd(name='json', module=damo_report_json,
-            msg='raw data in json format'),
         _damo_subcmds.DamoSubCmd(name='heats', module=damo_heats,
             msg='heats of regions'),
         _damo_subcmds.DamoSubCmd(name='wss', module=damo_wss,
