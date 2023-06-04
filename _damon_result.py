@@ -95,6 +95,8 @@ class DamonResult:
         self.records.append(record)
         return record
 
+# For reading monitoring results from a file
+
 def read_record_format_version(f):
     # read record format version
     mark = f.read(16)
@@ -307,6 +309,8 @@ def parse_damon_result(result_file, monitoring_intervals=None):
 
     return result, err
 
+# for writing monitoring results to a file
+
 def write_damon_record_json_compressed(result, file_path):
     json_str = json.dumps([r.to_kvpairs(r) for r in result.records], indent=4)
     compressed = zlib.compress(json_str.encode())
@@ -428,6 +432,8 @@ def update_result_file(file_path, file_format, file_permission=None,
         return err
     return write_damon_result(result, file_path, file_format, file_permission)
 
+# for monitoring results manipulation
+
 def regions_intersect(r1, r2):
     return not (r1.end <= r2.start or r2.end <= r1.start)
 
@@ -495,6 +501,8 @@ def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
         record.snapshots = adjusted_snapshots(
                 record.snapshots[nr_snapshots_to_skip:], aggregate_interval)
 
+# for recording
+
 record_requests = {}
 '''
 Start recording DAMON's monitoring results using perf.
@@ -526,6 +534,8 @@ def stop_monitoring_record(perf_pipe):
             print('converting format from perf_data to %s failed (%s)' %
                     (file_format, err))
     os.chmod(file_path, file_permission)
+
+# for snapshot
 
 def install_scheme(scheme_to_install):
     '''Install given scheme to all contexts if effectively same scheme is not
