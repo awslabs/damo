@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
+import json
 import os
 import sys
 
@@ -14,6 +15,8 @@ def set_argparser(parser):
             help='start and end time offset for record to parse')
     parser.add_argument('--raw_number', action='store_true',
             help='use machine-friendly raw numbers')
+    parser.add_argument('--json', action='store_true',
+            help='print in json format')
 
 def main(args=None):
     if not args:
@@ -36,6 +39,11 @@ def main(args=None):
     if not result:
         print('no monitoring result in the file')
         exit(1)
+
+    if args.json:
+        print(json.dumps([r.to_kvpairs(args.raw_number)
+            for r in result.records], indent=4))
+        exit(0)
 
     for record in result.records:
         snapshots = record.snapshots
