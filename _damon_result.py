@@ -95,6 +95,75 @@ class DamonResult:
         self.records.append(record)
         return record
 
+# for monitoring results manipulation
+
+def regions_intersect(r1, r2):
+    return not (r1.end <= r2.start or r2.end <= r1.start)
+
+def add_region(regions, region, nr_acc_to_add):
+    for r in regions:
+        if regions_intersect(r, region):
+            if not r in nr_acc_to_add:
+                nr_acc_to_add[r] = 0
+            nr_acc_to_add[r] = max(nr_acc_to_add[r],
+                    region.nr_accesses.samples)
+
+            new_regions = []
+            if region.start < r.start:
+                new_regions.append(_damon.DamonRegion(
+                    region.start, r.start,
+                    region.nr_accesses.samples, _damon.unit_samepls,
+                    region.age.aggr_intervals, _damon.unit_aggr_intervals))
+            if r.end < region.end:
+                new_regions.append(_damon.DamonRegion(
+                        r.end, region.end,
+                        region.nr_accesses.samples, _damon.unit_samples,
+                        region.age.aggr_intervals,
+                        _damon.unit_aggr_intervals))
+
+            for new_r in new_regions:
+                add_region(regions, new_r, nr_acc_to_add)
+            return
+    regions.append(region)
+
+def aggregate_snapshots(snapshots):
+    new_regions = []
+    for snapshot in snapshots:
+        # Suppose the first snapshot has a region 1-10:5, and the second
+        # snapshot has two regions, 1-5:2, 5-10: 4.  Aggregated snapshot should
+        # be 1-10:9.  That is, we should add maximum nr_accesses of
+        # intersecting regions.  nr_acc_to_add contains the information.
+        nr_acc_to_add = {}
+        for region in snapshot.regions:
+            add_region(new_regions, region, nr_acc_to_add)
+        for region in nr_acc_to_add:
+            region.nr_accesses.samples += nr_acc_to_add[region]
+            region.nr_accesses.val = region.nr_accesses.samples
+            region.nr_accesses.unit = _damon.unit_samples
+
+    new_snapshot = DamonSnapshot(snapshots[0].start_time,
+            snapshots[-1].end_time)
+    new_snapshot.regions = new_regions
+    return new_snapshot
+
+def adjusted_snapshots(snapshots, aggregate_interval_us):
+    adjusted = []
+    to_aggregate = []
+    for snapshot in snapshots:
+        to_aggregate.append(snapshot)
+        interval_ns = to_aggregate[-1].end_time - to_aggregate[0].start_time
+        if interval_ns >= aggregate_interval_us * 1000:
+            adjusted.append(aggregate_snapshots(to_aggregate))
+            to_aggregate = []
+    return adjusted
+
+def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
+    for record in result.records:
+        if record.intervals != None:
+            record.intervals.aggr = aggregate_interval
+        record.snapshots = adjusted_snapshots(
+                record.snapshots[nr_snapshots_to_skip:], aggregate_interval)
+
 # For reading monitoring results from a file
 
 def read_record_format_version(f):
@@ -433,75 +502,6 @@ def update_result_file(file_path, file_format, file_permission=None,
     if err:
         return err
     return write_damon_result(result, file_path, file_format, file_permission)
-
-# for monitoring results manipulation
-
-def regions_intersect(r1, r2):
-    return not (r1.end <= r2.start or r2.end <= r1.start)
-
-def add_region(regions, region, nr_acc_to_add):
-    for r in regions:
-        if regions_intersect(r, region):
-            if not r in nr_acc_to_add:
-                nr_acc_to_add[r] = 0
-            nr_acc_to_add[r] = max(nr_acc_to_add[r],
-                    region.nr_accesses.samples)
-
-            new_regions = []
-            if region.start < r.start:
-                new_regions.append(_damon.DamonRegion(
-                    region.start, r.start,
-                    region.nr_accesses.samples, _damon.unit_samepls,
-                    region.age.aggr_intervals, _damon.unit_aggr_intervals))
-            if r.end < region.end:
-                new_regions.append(_damon.DamonRegion(
-                        r.end, region.end,
-                        region.nr_accesses.samples, _damon.unit_samples,
-                        region.age.aggr_intervals,
-                        _damon.unit_aggr_intervals))
-
-            for new_r in new_regions:
-                add_region(regions, new_r, nr_acc_to_add)
-            return
-    regions.append(region)
-
-def aggregate_snapshots(snapshots):
-    new_regions = []
-    for snapshot in snapshots:
-        # Suppose the first snapshot has a region 1-10:5, and the second
-        # snapshot has two regions, 1-5:2, 5-10: 4.  Aggregated snapshot should
-        # be 1-10:9.  That is, we should add maximum nr_accesses of
-        # intersecting regions.  nr_acc_to_add contains the information.
-        nr_acc_to_add = {}
-        for region in snapshot.regions:
-            add_region(new_regions, region, nr_acc_to_add)
-        for region in nr_acc_to_add:
-            region.nr_accesses.samples += nr_acc_to_add[region]
-            region.nr_accesses.val = region.nr_accesses.samples
-            region.nr_accesses.unit = _damon.unit_samples
-
-    new_snapshot = DamonSnapshot(snapshots[0].start_time,
-            snapshots[-1].end_time)
-    new_snapshot.regions = new_regions
-    return new_snapshot
-
-def adjusted_snapshots(snapshots, aggregate_interval_us):
-    adjusted = []
-    to_aggregate = []
-    for snapshot in snapshots:
-        to_aggregate.append(snapshot)
-        interval_ns = to_aggregate[-1].end_time - to_aggregate[0].start_time
-        if interval_ns >= aggregate_interval_us * 1000:
-            adjusted.append(aggregate_snapshots(to_aggregate))
-            to_aggregate = []
-    return adjusted
-
-def adjust_result(result, aggregate_interval, nr_snapshots_to_skip):
-    for record in result.records:
-        if record.intervals != None:
-            record.intervals.aggr = aggregate_interval
-        record.snapshots = adjusted_snapshots(
-                record.snapshots[nr_snapshots_to_skip:], aggregate_interval)
 
 # for recording
 
