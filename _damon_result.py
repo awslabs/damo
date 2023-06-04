@@ -411,6 +411,7 @@ def add_fake_snapshot_if_needed(result):
         snapshots.append(fake_snapshot)
 
 def write_damon_record(result, file_path, format_version):
+    warn_record_type_deprecation()
     add_fake_snapshot_if_needed(result)
 
     with open(file_path, 'wb') as f:
@@ -489,7 +490,6 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
     elif file_type == file_type_perf_script:
         write_damon_perf_script(result, file_path)
     elif file_type == file_type_record:
-        warn_record_type_deprecation()
         write_damon_record(result, file_path, 2)
 
     if file_permission != None:
