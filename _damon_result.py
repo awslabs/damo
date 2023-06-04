@@ -16,7 +16,7 @@ import _damon
 PERF = 'perf'
 PERF_EVENT = 'damon:damon_aggregated'
 
-class DAMONSnapshot:
+class DamonSnapshot:
     start_time = None
     end_time = None
     regions = None
@@ -28,7 +28,7 @@ class DAMONSnapshot:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        snapshot = DAMONSnapshot(_damo_fmt_str.text_to_ns(kv['start_time']),
+        snapshot = DamonSnapshot(_damo_fmt_str.text_to_ns(kv['start_time']),
                 _damo_fmt_str.text_to_ns(kv['end_time']))
         snapshot.regions = [_damon.DamonRegion.from_kvpairs(r)
                 for r in kv['regions']]
@@ -42,7 +42,7 @@ class DAMONSnapshot:
                 self.end_time, raw)),
             ('regions', [r.to_kvpairs() for r in self.regions])])
 
-class DAMONRecord:
+class DamonRecord:
     intervals = None
     target_id = None
     snapshots = None
@@ -58,8 +58,8 @@ class DAMONRecord:
         if 'intervals' in kv:
             intervals = _damon.DamonIntervals.from_kvpairs(kv['intervals'])
 
-        record = DAMONRecord(intervals, kv['target_id'])
-        record.snapshots = [DAMONSnapshot.from_kvpairs(s)
+        record = DamonRecord(intervals, kv['target_id'])
+        record.snapshots = [DamonSnapshot.from_kvpairs(s)
                 for s in kv['snapshots']]
 
         return record
@@ -72,7 +72,7 @@ class DAMONRecord:
         ordered_dict['snapshots'] = [s.to_kvpairs(raw) for s in self.snapshots]
         return ordered_dict
 
-class DAMONResult:
+class DamonResult:
     records = None
 
     def __init__(self):
@@ -82,7 +82,7 @@ class DAMONResult:
         for record in self.records:
             if record.target_id == target_id:
                 return record
-        record = DAMONRecord(intervals, target_id)
+        record = DamonRecord(intervals, target_id)
         self.records.append(record)
         return record
 
@@ -105,7 +105,7 @@ def read_end_time_from_record_file(f):
     return end_time
 
 def read_snapshot_from_record_file(f, start_time, end_time):
-    snapshot = DAMONSnapshot(start_time, end_time)
+    snapshot = DamonSnapshot(start_time, end_time)
     nr_regions = struct.unpack('I', f.read(4))[0]
     for r in range(nr_regions):
         start_addr = struct.unpack('L', f.read(8))[0]
@@ -143,7 +143,7 @@ def set_first_snapshot_start_time(result):
 def record_to_damon_result(file_path, monitoring_intervals):
     with open(file_path, 'rb') as f:
         fmt_version = read_record_format_version(f)
-        result = DAMONResult()
+        result = DamonResult()
         while True:
             end_time = read_end_time_from_record_file(f)
             if end_time == None:
@@ -208,7 +208,7 @@ def parse_perf_script_line(line):
         return region, end_time, target_id, nr_regions
 
 def perf_script_to_damon_result(script_output, monitoring_intervals):
-    result = DAMONResult()
+    result = DamonResult()
     snapshot = None
 
     for line in script_output.split('\n'):
@@ -225,7 +225,7 @@ def perf_script_to_damon_result(script_output, monitoring_intervals):
                 return None, 'trace is not time-sorted'
 
         if snapshot == None:
-            snapshot = DAMONSnapshot(start_time, end_time)
+            snapshot = DamonSnapshot(start_time, end_time)
             record.snapshots.append(snapshot)
         snapshot = record.snapshots[-1]
         snapshot.regions.append(region)
@@ -265,8 +265,8 @@ def parse_damon_record_json_compressed(result_file):
         compressed = f.read()
     decompressed = zlib.decompress(compressed).decode()
     kvpairs = json.loads(decompressed)
-    result = DAMONResult()
-    result.records = [DAMONRecord.from_kvpairs(kvp) for kvp in kvpairs]
+    result = DamonResult()
+    result.records = [DamonRecord.from_kvpairs(kvp) for kvp in kvpairs]
     return result
 
 def parse_damon_result(result_file, monitoring_intervals=None):
@@ -386,7 +386,7 @@ def add_fake_snapshot_if_needed(file_type, result):
             continue
         snapshot = snapshots[0]
         snap_duration = snapshot.end_time - snapshot.start_time
-        fake_snapshot = DAMONSnapshot(snapshot.end_time,
+        fake_snapshot = DamonSnapshot(snapshot.end_time,
                 snapshot.end_time + snap_duration)
         # -1 nr_accesses.samples / -1 age.aggr_intervals means fake
         fake_snapshot.regions = [_damon.DamonRegion(0, 0,
@@ -463,7 +463,7 @@ def aggregate_snapshots(snapshots):
             region.nr_accesses.val = region.nr_accesses.samples
             region.nr_accesses.unit = _damon.unit_samples
 
-    new_snapshot = DAMONSnapshot(snapshots[0].start_time,
+    new_snapshot = DamonSnapshot(snapshots[0].start_time,
             snapshots[-1].end_time)
     new_snapshot.regions = new_regions
     return new_snapshot
@@ -547,7 +547,7 @@ def install_scheme(scheme_to_install):
 def tried_regions_to_snapshot(tried_regions, intervals):
     snapshot_end_time_ns = time.time() * 1000000000
     snapshot_start_time_ns = snapshot_end_time_ns - intervals.aggr * 1000
-    snapshot = DAMONSnapshot(snapshot_start_time_ns, snapshot_end_time_ns)
+    snapshot = DamonSnapshot(snapshot_start_time_ns, snapshot_end_time_ns)
 
     for tried_region in tried_regions:
         snapshot.regions.append(tried_region)
@@ -571,7 +571,7 @@ def tried_regions_to_snapshots(monitor_scheme):
     return snapshots
 
 def get_snapshots(access_pattern):
-    'return DAMONSnapshots and an error'
+    'return DamonSnapshots and an error'
     running_kdamond_idxs = _damon.running_kdamond_idxs()
     if len(running_kdamond_idxs) == 0:
         return None, 'no kdamond running'
