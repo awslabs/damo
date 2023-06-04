@@ -317,7 +317,29 @@ def write_damon_record_json_compressed(result, file_path):
     with open(file_path, 'wb') as f:
         f.write(compressed)
 
+def add_fake_snapshot_if_needed(result):
+    '''
+    perf and record file format stores only snapshot end time.  For a record
+    having only single snapshot, hence, the reader of the files cannot knwo the
+    start time of the snapshot.  Add a fake snapshot for the case.
+    '''
+
+    for record in result.records:
+        snapshots = record.snapshots
+        if len(snapshots) != 1:
+            continue
+        snapshot = snapshots[0]
+        snap_duration = snapshot.end_time - snapshot.start_time
+        fake_snapshot = DamonSnapshot(snapshot.end_time,
+                snapshot.end_time + snap_duration)
+        # -1 nr_accesses.samples / -1 age.aggr_intervals means fake
+        fake_snapshot.regions = [_damon.DamonRegion(0, 0,
+            -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
+        snapshots.append(fake_snapshot)
+
 def write_damon_record(result, file_path, format_version):
+    add_fake_snapshot_if_needed(result)
+
     with open(file_path, 'wb') as f:
         f.write(b'damon_recfmt_ver')
         f.write(struct.pack('i', format_version))
@@ -350,6 +372,7 @@ def write_damon_perf_script(result, file_path):
             140731667070976-140731668037632: 0 3
     '''
 
+    add_fake_snapshot_if_needed(result)
     with open(file_path, 'w') as f:
         for record in result.records:
             snapshots = record.snapshots
@@ -383,35 +406,10 @@ file_types = [file_type_json_compressed, file_type_perf_script,
 self_write_supported_file_types = [file_type_json_compressed,
         file_type_perf_script, file_type_record]
 
-def add_fake_snapshot_if_needed(file_type, result):
-    '''
-    perf and record file format stores only snapshot end time.  For a record
-    having only single snapshot, hence, the reader of the files cannot knwo the
-    start time of the snapshot.  Add a fake snapshot for the case.
-    '''
-
-    if file_type == file_type_json_compressed:
-        return
-
-    for record in result.records:
-        snapshots = record.snapshots
-        if len(snapshots) != 1:
-            continue
-        snapshot = snapshots[0]
-        snap_duration = snapshot.end_time - snapshot.start_time
-        fake_snapshot = DamonSnapshot(snapshot.end_time,
-                snapshot.end_time + snap_duration)
-        # -1 nr_accesses.samples / -1 age.aggr_intervals means fake
-        fake_snapshot.regions = [_damon.DamonRegion(0, 0,
-            -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
-        snapshots.append(fake_snapshot)
-
 def write_damon_result(result, file_path, file_type, file_permission=None):
     '''Returns None if success, an error string otherwise'''
     if not file_type in self_write_supported_file_types:
         return 'write unsupported file type: %s' % file_type
-
-    add_fake_snapshot_if_needed(file_type, result)
 
     if file_type == file_type_json_compressed:
         write_damon_record_json_compressed(result, file_path)
