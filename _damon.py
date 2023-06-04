@@ -949,6 +949,12 @@ def is_kdamond_running(kdamond_idx):
 def current_kdamonds():
     return _damon_fs.current_kdamonds()
 
+def update_read_kdamonds():
+    err = update_schemes_status()
+    if err:
+        return None, err
+    return current_kdamonds(), None
+
 def nr_kdamonds():
     return _damon_fs.nr_kdamonds()
 
