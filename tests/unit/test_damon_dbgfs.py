@@ -20,8 +20,8 @@ def set_damon_dbgfs_features():
             'schemes_stat_succ': True, 'vaddr': True}
 
 class TestDamonDbgfs(unittest.TestCase):
-    def test_nr_current_kdamonds(self):
-        self.assertEqual(_damon_dbgfs.nr_current_kdamonds(), 1)
+    def test_nr_kdamonds(self):
+        self.assertEqual(_damon_dbgfs.nr_kdamonds(), 1)
 
     def test_debugfs_output_to_damos(self):
         set_damon_dbgfs_features()

@@ -435,7 +435,7 @@ def current_kdamonds():
     return files_content_to_kdamonds(
             _damo_fs.read_files(kdamonds_dir))
 
-def nr_current_kdamonds():
+def nr_kdamonds():
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
     if err != None:
         raise Exception('nr_kdamonds_file read fail (%s)' % err)
