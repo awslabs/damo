@@ -37,7 +37,7 @@ bindir=$(dirname "$0")
 
 for file in "setup.py" "pyproject.toml"
 do
-	cp "$bindir/$file" "$work_dir/"
+	cp -p "$bindir/$file" "$work_dir/"
 done
 
 "$bindir/mk_readme.sh" "$work_dir" "$version"
@@ -45,8 +45,8 @@ done
 damo_dir="$bindir/.."
 
 mkdir -p "$work_dir/src/damo"
-cp "$damo_dir/"*.py "$work_dir/src/damo"
-cp "$damo_dir/damo" "$work_dir/src/damo/damo.py"
+cp -p "$damo_dir/"*.py "$work_dir/src/damo"
+cp -p "$damo_dir/damo" "$work_dir/src/damo/damo.py"
 touch "$work_dir/src/damo/__init__.py"
 
 cd "$work_dir"
