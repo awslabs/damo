@@ -17,6 +17,7 @@ import damo_reclaim
 import damo_record
 import damo_report
 import damo_schemes
+import damo_show
 import damo_start
 import damo_stat
 import damo_stop
@@ -67,7 +68,10 @@ subcmds = [
             msg='translate old .damos to the new json format'),
         _damo_subcmds.DamoSubCmd(name='convert_record_format',
             module=damo_convert_record_format,
-            msg='convert DAMON result record file\'s format')
+            msg='convert DAMON result record file\'s format'),
+        _damo_subcmds.DamoSubCmd(name='show',
+            module=damo_show,
+            msg='show status or results of damon operations'),
         ]
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
