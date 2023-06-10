@@ -6,7 +6,6 @@ Show status and results of DAMON.
 
 import _damo_subcmds
 import _damon
-import _damon_args
 
 import damo_show_status
 
@@ -23,7 +22,6 @@ def set_argparser(parser):
     for subcmd in subcmds:
         subcmd.add_parser(subparsers)
 
-    _damon_args.set_common_argparser(parser)
     return parser
 
 def main(args=None):
