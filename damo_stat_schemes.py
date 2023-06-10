@@ -5,6 +5,7 @@ import argparse
 import damo_show_status
 import damo_stat
 
+import _damo_deprecation_notice
 import _damo_fmt_str
 import _damo_subcmds
 import _damon
@@ -19,6 +20,8 @@ def __main(args):
         damo_show_status.update_pr_schemes_tried_regions(args.raw)
 
 def main(args=None):
+    _damo_deprecation_notice.will_be_deprecated('\'damo stat schemes*\'',
+            'near future', 'Use \'damo show status schemes*\' instead')
     if not args:
         parser = argparse.ArgumentParser()
         set_argparser(parser)
