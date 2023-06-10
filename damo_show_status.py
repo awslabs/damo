@@ -4,6 +4,8 @@
 Show status of DAMON.
 """
 
+import damo_stat_schemes
+
 import _damo_fmt_str
 import _damon
 import _damon_args
@@ -30,7 +32,7 @@ def update_pr_kdamonds(json_format, raw_nr):
 
 
 def set_argparser(parser):
-    parser.add_argument('target', choices=['kdamonds'],
+    parser.add_argument('target', choices=['kdamonds', 'schemes_stats'],
             help='what status to show')
     parser.add_argument('--detail', action='store_true', default=False,
             help='show detailed status')
@@ -53,6 +55,8 @@ def main(args=None):
             update_pr_kdamonds_summary(args.json, args.raw)
         else:
             update_pr_kdamonds(args.json, args.raw)
+    elif args.target == 'schemes_stats':
+        damo_stat_schemes.update_pr_schemes_stats(args.raw)
 
 if __name__ == '__main__':
     main()
