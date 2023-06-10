@@ -10,7 +10,7 @@ import _damon_args
 import damo_stat_kdamonds
 
 def set_argparser(parser):
-    parser.add_argument('target', metavar='<target>', choices=['kdamonds'],
+    parser.add_argument('target', choices=['kdamonds'],
             help='what status to show')
     parser.add_argument('--detail', action='store_true', default=False,
             help='show detailed status')
