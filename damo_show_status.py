@@ -12,6 +12,10 @@ import damo_stat_kdamonds
 def set_argparser(parser):
     parser.add_argument('target', metavar='<target>', choices=['kdamonds'],
             help='what status to show')
+    parser.add_argument('--json', action='store_true', default=False,
+            help='print output in json format')
+    parser.add_argument('--raw', action='store_true', default=False,
+            help='print raw numbers')
     _damon_args.set_common_argparser(parser)
     return parser
 
@@ -23,7 +27,7 @@ def main(args=None):
     _damon.ensure_root_and_initialized(args)
 
     if args.target == 'kdamonds':
-        damo_stat_kdamonds.update_pr_kdamonds_summary(False, False)
+        damo_stat_kdamonds.update_pr_kdamonds_summary(args.json, args.raw)
 
 if __name__ == '__main__':
     main()
