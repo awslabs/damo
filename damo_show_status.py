@@ -4,11 +4,54 @@
 Show status of DAMON.
 """
 
-import damo_stat_schemes
-
 import _damo_fmt_str
 import _damon
 import _damon_args
+
+def pr_schemes_tried_regions(kdamonds, raw_nr):
+    print('# <kdamond> <context> <scheme>')
+    print('# <regions>')
+    print('# ...')
+    for kd_idx, kdamond in enumerate(kdamonds):
+        for ctx_idx, ctx in enumerate(kdamond.contexts):
+            for scheme_idx, scheme in enumerate(ctx.schemes):
+                print('%s %s %s' % (kd_idx, ctx_idx, scheme_idx))
+                print('\n'.join(
+                    r.to_str(raw_nr) for r in scheme.tried_regions))
+
+def update_pr_schemes_tried_regions(raw_nr):
+    err = _damon.update_schemes_tried_regions()
+    if err:
+        print(err)
+        return
+    pr_schemes_tried_regions(_damon.current_kdamonds(), raw_nr)
+
+def update_pr_schemes_stats(raw_nr):
+    err = _damon.update_schemes_stats()
+    if err:
+        print(err)
+        return
+    kdamonds = _damon.current_kdamonds()
+
+    print('# <kdamond> <context> <scheme> <field> <value>')
+    for kd_idx, kdamond in enumerate(kdamonds):
+        for ctx_idx, ctx in enumerate(kdamond.contexts):
+            for scheme_idx, scheme in enumerate(ctx.schemes):
+                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
+                    'nr_tried', _damo_fmt_str.format_nr(
+                        scheme.stats.nr_tried, raw_nr)))
+                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
+                    'sz_tried', _damo_fmt_str.format_sz(
+                        scheme.stats.sz_tried, raw_nr)))
+                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
+                    'nr_applied', _damo_fmt_str.format_nr(
+                        scheme.stats.nr_applied, raw_nr)))
+                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
+                    'sz_applied', _damo_fmt_str.format_sz(
+                        scheme.stats.sz_applied, raw_nr)))
+                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
+                    'qt_exceeds', _damo_fmt_str.format_nr(
+                        scheme.stats.qt_exceeds, raw_nr)))
 
 def update_pr_kdamonds_summary(json_format, raw_nr):
     kdamonds = _damon.current_kdamonds()
@@ -57,9 +100,9 @@ def main(args=None):
         else:
             update_pr_kdamonds(args.json, args.raw)
     elif args.target == 'schemes_stats':
-        damo_stat_schemes.update_pr_schemes_stats(args.raw)
+        update_pr_schemes_stats(args.raw)
     elif args.target == 'schemes_tried_regions':
-        damo_stat_schemes.update_pr_schemes_tried_regions(args.raw)
+        update_pr_schemes_tried_regions(args.raw)
 
 if __name__ == '__main__':
     main()
