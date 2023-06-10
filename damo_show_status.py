@@ -32,7 +32,8 @@ def update_pr_kdamonds(json_format, raw_nr):
 
 
 def set_argparser(parser):
-    parser.add_argument('target', choices=['kdamonds', 'schemes_stats'],
+    parser.add_argument('target',
+            choices=['kdamonds', 'schemes_stats', 'schemes_tried_regions'],
             help='what status to show')
     parser.add_argument('--detail', action='store_true', default=False,
             help='show detailed status')
@@ -57,6 +58,8 @@ def main(args=None):
             update_pr_kdamonds(args.json, args.raw)
     elif args.target == 'schemes_stats':
         damo_stat_schemes.update_pr_schemes_stats(args.raw)
+    elif args.target == 'schemes_tried_regions':
+        damo_stat_schemes.update_pr_schemes_tried_regions(args.raw)
 
 if __name__ == '__main__':
     main()
