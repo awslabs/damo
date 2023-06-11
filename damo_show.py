@@ -8,13 +8,13 @@ import _damo_subcmds
 import _damon
 
 import damo_show_status
-import damo_show_record
+import damo_show_accesses
 
 subcmds = [
         _damo_subcmds.DamoSubCmd(name='status', module=damo_show_status,
             msg='status of DAMON'),
-        _damo_subcmds.DamoSubCmd(name='record', module=damo_show_record,
-            msg='recorded access monitoring results'),
+        _damo_subcmds.DamoSubCmd(name='accesses', module=damo_show_accesses,
+            msg='DAMON-observed accesses monitoring results'),
         ]
 
 def set_argparser(parser):
