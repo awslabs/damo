@@ -19,11 +19,8 @@ Getting Started
     $ sudo damo stop
 
 
-damo show status kdamonds
-damo show status schemes
-damo show status schemes stats
-damo show status schemes tried_regions
-damo show status schemes tried_regions heatmap
+damo show status
+- Show kdamonds status
 damo show snapshot raw --json
 damo show snapshot wss --histogram
 damo show snapshot heatmap
