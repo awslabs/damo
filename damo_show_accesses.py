@@ -28,6 +28,10 @@ subcmds = [
             msg='number of regions')]
 
 def set_argparser(parser):
+    parser.add_argument('accesses_source',
+            choices=['file'], # TODO: Add snapshot and scheme_tried_regions
+            default='file', nargs='?',
+            help='source of the accesses to show')
     subparsers = parser.add_subparsers(title='format', dest='output_format',
             metavar='<output format>',
             help='the format of the output to show the record')
