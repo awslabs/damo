@@ -77,6 +77,7 @@ def update_pr_kdamonds(json_format, raw_nr):
 def set_argparser(parser):
     parser.add_argument('target',
             choices=['kdamonds', 'schemes_stats', 'schemes_tried_regions'],
+            nargs='?', default='kdamonds',
             help='what status to show')
     parser.add_argument('--detail', action='store_true', default=False,
             help='show detailed status')
