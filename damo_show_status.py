@@ -4,6 +4,8 @@
 Show status of DAMON.
 """
 
+import json
+
 import _damo_fmt_str
 import _damon
 import _damon_args
