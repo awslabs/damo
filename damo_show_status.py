@@ -77,12 +77,6 @@ def update_pr_kdamonds(json_format, raw_nr):
 
 
 def set_argparser(parser):
-    parser.add_argument('target',
-            choices=['kdamonds', 'schemes_stats', 'schemes_tried_regions'],
-            nargs='?', default='kdamonds',
-            help='what status to show')
-    parser.add_argument('--detail', action='store_true', default=False,
-            help='show detailed status')
     parser.add_argument('--json', action='store_true', default=False,
             help='print output in json format')
     parser.add_argument('--raw', action='store_true', default=False,
@@ -97,15 +91,7 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    if args.target == 'kdamonds':
-        if not args.detail:
-            update_pr_kdamonds_summary(args.json, args.raw)
-        else:
-            update_pr_kdamonds(args.json, args.raw)
-    elif args.target == 'schemes_stats':
-        update_pr_schemes_stats(args.raw)
-    elif args.target == 'schemes_tried_regions':
-        update_pr_schemes_tried_regions(args.raw)
+    update_pr_kdamonds(args.json, args.raw)
 
 if __name__ == '__main__':
     main()
