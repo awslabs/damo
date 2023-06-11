@@ -21,8 +21,7 @@ Getting Started
 
 damo show status
 - Show kdamonds status
-damo show snapshot raw --json
-damo show snapshot wss --histogram
-damo show snapshot heatmap
-damo show record raw
-damo show record json
+
+damo show accesses <source> <format>
+- source: snapshot, record, scheme_tried_regions
+- format: raw, heats, wss, ...
