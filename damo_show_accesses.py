@@ -1,5 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0
 
+"""
+Retrieve DAMON-observed accesses from a given source and show those in a
+specific format.
+"""
+
 import argparse
 
 import damo_heats
