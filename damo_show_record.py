@@ -4,12 +4,15 @@ import argparse
 
 import damo_heats
 import damo_nr_regions
+import damo_record_info
 import damo_report_raw
 import damo_wss
 
 import _damo_subcmds
 
 subcmds = [
+        _damo_subcmds.DamoSubCmd(name='info', module=damo_record_info,
+            msg='basic information about the record'),
         _damo_subcmds.DamoSubCmd(name='raw', module=damo_report_raw,
             msg='human readable raw data'),
         _damo_subcmds.DamoSubCmd(name='heats', module=damo_heats,
