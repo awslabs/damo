@@ -65,7 +65,9 @@ damos_action_to_int = {
         _damon.damos_action_pageout: 2,
         _damon.damos_action_hugepage: 3,
         _damon.damos_action_nohugepage: 4,
-        _damon.damos_action_stat: 5}
+        _damon.damos_action_lru_prio: 5,
+        _damon.damos_action_lru_deprio: 6,
+        _damon.damos_action_stat: 7}
 
 damos_wmark_metric_to_int = {
         _damon.damos_wmarks_metric_none: 0,
