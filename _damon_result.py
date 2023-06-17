@@ -645,7 +645,7 @@ def tried_regions_to_snapshots(monitor_scheme):
                 break
     return records
 
-def get_snapshots(access_pattern):
+def get_snapshot_records(access_pattern):
     'return DamonRecord objects each having single DamonSnapshot and an error'
     running_kdamond_idxs = _damon.running_kdamond_idxs()
     if len(running_kdamond_idxs) == 0:
