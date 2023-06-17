@@ -12,9 +12,7 @@ import _damon_args
 
 def cleanup_exit(exit_code):
     # ignore returning error, as kdamonds may already finished
-    err = _damon.turn_damon_off(kdamonds_idxs)
-    if err:
-        print('failed to turn damon off (%s)' % err)
+    _damon.turn_damon_off(kdamonds_idxs)
     err = _damon.stage_kdamonds(orig_kdamonds)
     if err:
         print('failed restoring previous kdamonds setup (%s)' % err)
