@@ -594,7 +594,7 @@ def tried_regions_to_snapshot(tried_regions, intervals):
         snapshot.regions.append(tried_region)
     return snapshot
 
-def tried_regions_to_snapshots(monitor_scheme):
+def tried_regions_to_records(monitor_scheme):
     records = []
     for kdamond_idx, kdamond in enumerate(_damon.current_kdamonds()):
         if kdamond.state != 'on':
@@ -634,7 +634,7 @@ def get_snapshot_records(access_pattern):
                 return None, 'monitoring scheme uninstall failed: %s' % err
         return None, 'updating schemes tried regions fail: %s' % err
 
-    snapshots = tried_regions_to_snapshots(monitor_scheme)
+    snapshots = tried_regions_to_records(monitor_scheme)
 
     if installed:
         err = _damon.commit(orig_kdamonds)
