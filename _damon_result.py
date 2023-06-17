@@ -56,8 +56,11 @@ class DamonRecord:
     target_id = None
     snapshots = None
 
-    def __init__(self, intervals, target_id):
+    def __init__(self, kd_idx, ctx_idx, intervals, scheme_idx, target_id):
+        self.kdamond_idx = kd_idx
+        self.context_idx = ctx_idx
         self.intervals = intervals
+        self.scheme_idx = scheme_idx
         self.target_id = target_id
         self.snapshots = []
 
@@ -67,7 +70,7 @@ class DamonRecord:
         if 'intervals' in kv:
             intervals = _damon.DamonIntervals.from_kvpairs(kv['intervals'])
 
-        record = DamonRecord(intervals, kv['target_id'])
+        record = DamonRecord(None, None, intervals, None, kv['target_id'])
         record.snapshots = [DamonSnapshot.from_kvpairs(s)
                 for s in kv['snapshots']]
 
@@ -119,7 +122,7 @@ class DamonResult:
         for record in self.records:
             if record.target_id == target_id:
                 return record
-        record = DamonRecord(intervals, target_id)
+        record = DamonRecord(None, None, intervals, None, target_id)
         self.records.append(record)
         return record
 
