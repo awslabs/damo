@@ -70,7 +70,12 @@ class DamonRecord:
         if 'intervals' in kv:
             intervals = _damon.DamonIntervals.from_kvpairs(kv['intervals'])
 
-        record = DamonRecord(None, None, intervals, None, kv['target_id'])
+        for keyword in ['kdamond_idx', 'context_idx', 'scheme_idx']:
+            if not keyword in kv:
+                kv[keyword] = None
+
+        record = DamonRecord(kv['kdamond_idx'], kv['context_idx'], intervals,
+                kv['scheme_idx'], kv['target_id'])
         record.snapshots = [DamonSnapshot.from_kvpairs(s)
                 for s in kv['snapshots']]
 
@@ -78,8 +83,11 @@ class DamonRecord:
 
     def to_kvpairs(self, raw=False):
         ordered_dict = collections.OrderedDict()
+        ordered_dict['kdamond_idx'] = self.kdamond_idx
+        ordered_dict['context_idx'] = self.context_idx
         if self.intervals != None:
             ordered_dict['intervals'] = self.intervals.to_kvpairs(raw)
+        ordered_dict['scheme_idx'] = self.scheme_idx
         ordered_dict['target_id'] = self.target_id
         ordered_dict['snapshots'] = [s.to_kvpairs(raw) for s in self.snapshots]
         return ordered_dict
