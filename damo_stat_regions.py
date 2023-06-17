@@ -32,14 +32,14 @@ def __pr_schemes_tried_regions(regions, intervals, size_only, sortby,
 
 def update_pr_schemes_tried_regions(access_pattern, size_only, sortby,
         prio_weights, raw_nr):
-    results, err = _damon_result.get_snapshots(access_pattern)
-    if results == None:
+    records, err = _damon_result.get_snapshots(access_pattern)
+    if records == None:
         print(err)
         return
 
-    for result in results:
-        print('kdamond %s ctx %s' % (result.kdamond_idx, result.context_idx))
-        __pr_schemes_tried_regions(result.records[0].snapshots[0].regions,
+    for record in records:
+        print('kdamond %s ctx %s' % (record.kdamond_idx, record.context_idx))
+        __pr_schemes_tried_regions(record.snapshots[0].regions,
                 result.intervals, size_only, sortby, prio_weights, raw_nr)
 
 def set_argparser(parser):

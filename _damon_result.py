@@ -627,7 +627,7 @@ def tried_regions_to_snapshot(tried_regions, intervals):
     return snapshot
 
 def tried_regions_to_snapshots(monitor_scheme):
-    results = []
+    records = []
     for kdamond_idx, kdamond in enumerate(_damon.current_kdamonds()):
         if kdamond.state != 'on':
             continue
@@ -640,17 +640,10 @@ def tried_regions_to_snapshots(monitor_scheme):
                 snapshot = tried_regions_to_snapshot(scheme.tried_regions,
                         ctx.intervals)
 
-                result = DamonResult()
-                result.kdamond_idx = kdamond_idx
-                result.context_idx = ctx_idx
-                record = result.record_of(None, ctx.intervals)
-                record.kdamond_idx = kdamond_idx
-                record.context_idx = ctx_idx
-                record.snapshots = [snapshot]
-
-                results.append(result)
+                records.append(DamonRecord(kdamond_idx, ctx_idx, ctx.intervals,
+                    None, [snapshot]))
                 break
-    return results
+    return records
 
 def get_snapshots(access_pattern):
     'return DamonSnapshots and an error'
