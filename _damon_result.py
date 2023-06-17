@@ -416,7 +416,8 @@ def parse_damon_result(result_file, monitoring_intervals=None):
 # for writing monitoring results to a file
 
 def write_damon_record_json_compressed(result, file_path):
-    json_str = json.dumps([r.to_kvpairs(r) for r in result.records], indent=4)
+    json_str = json.dumps([r.to_kvpairs(raw=True)
+        for r in result.records], indent=4)
     compressed = zlib.compress(json_str.encode())
     with open(file_path, 'wb') as f:
         f.write(compressed)
