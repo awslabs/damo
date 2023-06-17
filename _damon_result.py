@@ -244,7 +244,6 @@ def parse_binary_format_record(file_path, monitoring_intervals):
     with open(file_path, 'rb') as f:
         fmt_version = read_record_format_version(f)
         result = DamonResult()
-        result.intervals = monitoring_intervals
         while True:
             end_time = read_end_time_from_record_file(f)
             if end_time == None:
@@ -310,7 +309,6 @@ def parse_perf_script_line(line):
 
 def parse_perf_script(script_output, monitoring_intervals):
     result = DamonResult()
-    result.intervals = monitoring_intervals
     snapshot = None
 
     for line in script_output.split('\n'):
