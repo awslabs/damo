@@ -371,6 +371,12 @@ def parse_damon_record_json_compressed(result_file):
         compressed = f.read()
     decompressed = zlib.decompress(compressed).decode()
     kvpairs = json.loads(decompressed)
+
+    # DamonResult assumes multiple kdamonds/contexts, but many other code still
+    # assume single kdamon/context.  Support those for now.
+    if 'results' in kvpairs:
+        return [DamonResult.from_kvpairs(kvp) for kvp in kvpairs['results']][0]
+
     result = DamonResult()
     result.records = [DamonRecord.from_kvpairs(kvp) for kvp in kvpairs]
     return result
