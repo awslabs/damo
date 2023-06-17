@@ -390,6 +390,8 @@ def parse_damon_result(result_file, monitoring_intervals=None):
             ['file', '-b', result_file]).decode().strip()
     if file_type == 'zlib compressed data':
         try:
+            # we don't pass monitoring_intervals here because json compressed
+            # format has the information.
             return parse_damon_record_json_compressed(result_file)[0], None
         except Exception as e:
             return None, 'failed parsing json compressed file (%s)' % e
