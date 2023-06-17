@@ -644,6 +644,8 @@ def tried_regions_to_snapshots(monitor_scheme):
                 result.kdamond_idx = kdamond_idx
                 result.context_idx = ctx_idx
                 record = result.record_of(None, ctx.intervals)
+                record.kdamond_idx = kdamond_idx
+                record.context_idx = ctx_idx
                 record.snapshots = [snapshot]
 
                 results.append(result)
