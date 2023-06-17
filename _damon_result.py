@@ -82,6 +82,10 @@ class DamonResult:
     '''
     Contains data access monitoring results.
     '''
+    kdamond_idx = None
+    context_idx = None
+    scheme_idx = None
+    intervals = None
     records = None
 
     def __init__(self):
