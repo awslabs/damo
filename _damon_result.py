@@ -49,7 +49,10 @@ class DamonRecord:
     '''
     Contains data access monitoring results for single target
     '''
+    kdamond_idx = None
+    context_idx = None
     intervals = None
+    scheme_idx = None
     target_id = None
     snapshots = None
 
