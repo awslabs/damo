@@ -321,6 +321,7 @@ def parse_perf_script_line(line):
 
 def parse_perf_script(script_output, monitoring_intervals):
     result = DamonResult()
+    result.intervals = monitoring_intervals
     snapshot = None
 
     for line in script_output.split('\n'):
