@@ -150,25 +150,30 @@ def pr_heats(args, damon_result):
 
     # __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax)
 
-    snapshots = damon_result.record_of(tid, None).snapshots
-    pixels = heat_pixels_from_snapshots(snapshots, [tmin, tmax], [amin, amax],
-            [tres, ares])
+    records = []
+    for record in damon_result.records:
+        if record.target_id == tid:
+            records.append(record)
 
-    if args.heatmap == 'stdout':
-        heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax], [tres, ares],
-                args.stdout_heatmap_color)
-        return
+    for record in records:
+        pixels = heat_pixels_from_snapshots(record.snapshots,
+                [tmin, tmax], [amin, amax], [tres, ares])
 
-    for row in pixels:
-        for pixel in row:
-            time = pixel.time
-            addr = pixel.addr
-            if not args.abs_time:
-                time -= tmin
-            if not args.abs_addr:
-                addr -= amin
+        if args.heatmap == 'stdout':
+            heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax],
+                    [tres, ares], args.stdout_heatmap_color)
+            return
 
-            print('%s\t%s\t%s' % (time, addr, pixel.heat))
+        for row in pixels:
+            for pixel in row:
+                time = pixel.time
+                addr = pixel.addr
+                if not args.abs_time:
+                    time -= tmin
+                if not args.abs_addr:
+                    addr -= amin
+
+                print('%s\t%s\t%s' % (time, addr, pixel.heat))
 
 class GuideInfo:
     tid = None
