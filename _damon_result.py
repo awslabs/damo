@@ -84,8 +84,8 @@ class DamonRecord:
         ordered_dict = collections.OrderedDict()
         ordered_dict['kdamond_idx'] = self.kdamond_idx
         ordered_dict['context_idx'] = self.context_idx
-        ordered_dict['intervals'] = self.intervals.to_kvpairs(raw)
-                                    if self.intervals != None else None
+        ordered_dict['intervals'] = (self.intervals.to_kvpairs(raw)
+                if self.intervals != None else None)
         ordered_dict['scheme_idx'] = self.scheme_idx
         ordered_dict['target_id'] = self.target_id
         ordered_dict['snapshots'] = [s.to_kvpairs(raw) for s in self.snapshots]
