@@ -105,27 +105,6 @@ class DamonResult:
     def __init__(self):
         self.records = []
 
-    @classmethod
-    def from_kvpairs(cls, kv):
-        result = DamonResult()
-        result.kdamond_idx = kv['kdamond_idx']
-        result.context_idx = kv['context_idx']
-        result.scheme_idx = kv['scheme_idx']
-        if kv['intervals'] != None:
-            result.intervals = _damon.DamonIntervals.from_kvpairs(
-                    kv['intervals'])
-        result.records = [DamonRecord.from_kvpairs(r) for r in kv['records']]
-        return result
-
-    def to_kvpairs(self, raw=False):
-        return collections.OrderedDict([
-            ('kdamond_idx', self.kdamond_idx),
-            ('context_idx', self.context_idx),
-            ('scheme_idx', self.scheme_idx),
-            ('intervals', self.intervals.to_kvpairs(raw)
-                if self.intervals != None else None),
-            ('records', [r.to_kvpairs(raw) for r in self.records])])
-
     def record_of(self, target_id, intervals):
         for record in self.records:
             if record.target_id == target_id:
