@@ -391,7 +391,7 @@ def parse_damon_record_json_compressed(result_file):
     # DamonResult assumes multiple kdamonds/contexts, but many other code still
     # assume single kdamon/context.  Support those for now.
     if 'results' in kvpairs:
-        return [DamonResult.from_kvpairs(kvp) for kvp in kvpairs['results']]
+        return [DamonResult.from_kvpairs(kvp) for kvp in kvpairs['results']][0]
 
     result = DamonResult()
     result.records = [DamonRecord.from_kvpairs(kvp) for kvp in kvpairs]
@@ -406,9 +406,7 @@ def parse_damon_result(result_file, monitoring_intervals=None):
             ['file', '-b', result_file]).decode().strip()
     if file_type == 'zlib compressed data':
         try:
-            # we don't pass monitoring_intervals here because json compressed
-            # format has the information.
-            return parse_damon_record_json_compressed(result_file)[0], None
+            return parse_damon_record_json_compressed(result_file), None
         except Exception as e:
             return None, 'failed parsing json compressed file (%s)' % e
 
