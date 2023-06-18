@@ -284,10 +284,10 @@ def pr_guide(records):
 def region_sort_key(region):
     return region[1] - region[0]
 
-def set_missed_args(args, damon_result):
+def set_missed_args(args, records):
     if args.tid and args.time_range and args.address_range:
         return
-    guides = get_guide_info(damon_result.records)
+    guides = get_guide_info(records)
     guide = guides[0]
     if not args.tid:
         args.tid = guide.tid
@@ -378,7 +378,7 @@ def main(args=None):
     if args.guide:
         pr_guide(damon_result.records)
     else:
-        set_missed_args(args, damon_result)
+        set_missed_args(args, damon_result.records)
         orig_stdout = sys.stdout
         if args.heatmap and args.heatmap != 'stdout':
             tmp_path = tempfile.mkstemp()[1]
