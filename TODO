@@ -34,4 +34,3 @@
   address ranges monitoring (https://github.com/awslabs/damo/issues/46)
 - damo_show_accesses: Support snapshot source
 - damo_show_accesses: Support scheme_tried_regions source
-- Remove DamonResult (it's only making things complicated)
