@@ -91,23 +91,6 @@ class DamonRecord:
         ordered_dict['snapshots'] = [s.to_kvpairs(raw) for s in self.snapshots]
         return ordered_dict
 
-class DamonResult:
-    '''
-    Contains data access monitoring results.
-    '''
-    records = None
-
-    def __init__(self):
-        self.records = []
-
-    def record_of(self, target_id, intervals):
-        for record in self.records:
-            if record.target_id == target_id:
-                return record
-        record = DamonRecord(None, None, intervals, None, target_id)
-        self.records.append(record)
-        return record
-
 # for monitoring results manipulation
 
 def regions_intersect(r1, r2):
