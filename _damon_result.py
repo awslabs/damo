@@ -239,6 +239,14 @@ def warn_record_type_deprecation():
             deadline='2023-Q3',
             additional_notice='use json_compressed type instead.')
 
+def record_of(target_id, records, intervals):
+    for record in records:
+        if record.target_id == target_id:
+            return record
+    record = DamonRecord(None, None, intervals, None, target_id)
+    records.append(record)
+    return record
+
 def parse_binary_format_record(file_path, monitoring_intervals):
     warn_record_type_deprecation()
     with open(file_path, 'rb') as f:
