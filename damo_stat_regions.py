@@ -40,7 +40,7 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, sortby,
     for record in records:
         print('kdamond %s ctx %s' % (record.kdamond_idx, record.context_idx))
         __pr_schemes_tried_regions(record.snapshots[0].regions,
-                result.intervals, size_only, sortby, prio_weights, raw_nr)
+                record.intervals, size_only, sortby, prio_weights, raw_nr)
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
