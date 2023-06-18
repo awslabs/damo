@@ -620,10 +620,10 @@ def get_snapshot_records(access_pattern):
                 return None, 'monitoring scheme uninstall failed: %s' % err
         return None, 'updating schemes tried regions fail: %s' % err
 
-    snapshots = tried_regions_to_records(monitor_scheme)
+    records = tried_regions_to_records(monitor_scheme)
 
     if installed:
         err = _damon.commit(orig_kdamonds)
         if err:
-            return snapshots, 'monitoring scheme uninstall failed: %s' % err
-    return snapshots, None
+            return records, 'monitoring scheme uninstall failed: %s' % err
+    return records, None
