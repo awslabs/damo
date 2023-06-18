@@ -277,8 +277,8 @@ def get_guide_info(records):
     return sorted(list(guides.values()), key=lambda x: x.total_space(),
                     reverse=True)
 
-def pr_guide(damon_result):
-    for guide in get_guide_info(damon_result.records):
+def pr_guide(records):
+    for guide in get_guide_info(records):
         print(guide)
 
 def region_sort_key(region):
@@ -376,7 +376,7 @@ def main(args=None):
         args.resol = [40, 80]
 
     if args.guide:
-        pr_guide(damon_result)
+        pr_guide(damon_result.records)
     else:
         set_missed_args(args, damon_result)
         orig_stdout = sys.stdout
