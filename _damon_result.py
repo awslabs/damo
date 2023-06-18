@@ -251,8 +251,7 @@ def parse_binary_format_record(file_path, monitoring_intervals):
     warn_record_type_deprecation()
     with open(file_path, 'rb') as f:
         fmt_version = read_record_format_version(f)
-        result = DamonResult()
-        records = result.records
+        records = []
         while True:
             end_time = read_end_time_from_record_file(f)
             if end_time == None:
@@ -279,8 +278,8 @@ def parse_binary_format_record(file_path, monitoring_intervals):
                     return None, 'snapshot reading failead: %s' % e
                 record.snapshots.append(snapshot)
 
-    set_first_snapshot_start_time(result.records)
-    return result, None
+    set_first_snapshot_start_time(records)
+    return records, None
 
 def parse_perf_script_line(line):
         '''
@@ -403,7 +402,13 @@ def parse_records_file(result_file, monitoring_intervals=None):
     if perf_script_output != None:
         return parse_perf_script(perf_script_output, monitoring_intervals)
 
-    return parse_binary_format_record(result_file, monitoring_intervals)
+    records, err = parse_binary_format_record(result_file,
+            monitoring_intervals)
+    if err != None:
+        return None, err
+    result = DamonResult()
+    result.records = records
+    return result, err
 
 # for writing monitoring results to a file
 
