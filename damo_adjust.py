@@ -44,7 +44,8 @@ def main(args=None):
         exit(1)
 
     if args.aggregate_interval != None:
-        _damon_result.adjust_result(result, args.aggregate_interval, args.skip)
+        _damon_result.adjust_records(result.records, args.aggregate_interval,
+                args.skip)
     err = _damon_result.write_damon_records(result.records, args.output,
             args.output_type, output_permission)
     if err != None:

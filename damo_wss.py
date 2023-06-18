@@ -120,7 +120,8 @@ def main(args=None):
                 (file_path, err))
         exit(1)
 
-    _damon_result.adjust_result(result, args.work_time, args.exclude_samples)
+    _damon_result.adjust_records(result.records, args.work_time,
+            args.exclude_samples)
     wss_dists = get_wss_dists(result, args.acc_thres, args.sz_thres, wss_sort)
 
     if args.plot:
