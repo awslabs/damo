@@ -8,13 +8,13 @@ import sys
 import _damon_result
 import _damo_fmt_str
 
-def pr_result(args, result):
+def pr_records(args, records):
     if args.json:
         print(json.dumps([r.to_kvpairs(args.raw_number)
-            for r in result.records], indent=4))
+            for r in records], indent=4))
         exit(0)
 
-    for record in result.records:
+    for record in records:
         snapshots = record.snapshots
         if len(snapshots) == 0:
             continue
@@ -86,7 +86,7 @@ def main(args=None):
         exit(1)
 
     try:
-        pr_result(args, result)
+        pr_records(args, result.records)
     except BrokenPipeError as e:
         # maybe user piped to 'less' like pager and quit from it
         pass
