@@ -417,9 +417,8 @@ def parse_records_file(result_file, monitoring_intervals=None):
 
 # for writing monitoring results to a file
 
-def write_damon_record_json_compressed(result, file_path):
-    json_str = json.dumps([r.to_kvpairs(raw=True)
-        for r in result.records], indent=4)
+def write_damon_record_json_compressed(records, file_path):
+    json_str = json.dumps([r.to_kvpairs(raw=True) for r in records], indent=4)
     compressed = zlib.compress(json_str.encode())
     with open(file_path, 'wb') as f:
         f.write(compressed)
@@ -444,15 +443,15 @@ def add_fake_snapshot_if_needed(records):
             -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
         snapshots.append(fake_snapshot)
 
-def write_damon_record(result, file_path, format_version):
+def write_damon_record(records, file_path, format_version):
     warn_record_type_deprecation()
-    add_fake_snapshot_if_needed(result.records)
+    add_fake_snapshot_if_needed(records)
 
     with open(file_path, 'wb') as f:
         f.write(b'damon_recfmt_ver')
         f.write(struct.pack('i', format_version))
 
-        for record in result.records:
+        for record in records:
             snapshots = record.snapshots
             for snapshot in snapshots:
                 f.write(struct.pack('l', snapshot.end_time // 1000000000))
@@ -471,7 +470,7 @@ def write_damon_record(result, file_path, format_version):
                     f.write(struct.pack('L', region.end))
                     f.write(struct.pack('I', region.nr_accesses.samples))
 
-def write_damon_perf_script(result, file_path):
+def write_damon_perf_script(records, file_path):
     '''
     Example of the normal perf script output:
 
@@ -480,9 +479,9 @@ def write_damon_perf_script(result, file_path):
             140731667070976-140731668037632: 0 3
     '''
 
-    add_fake_snapshot_if_needed(result.records)
+    add_fake_snapshot_if_needed(records)
     with open(file_path, 'w') as f:
-        for record in result.records:
+        for record in records:
             snapshots = record.snapshots
             for snapshot in snapshots:
                 for region in snapshot.regions:
@@ -520,11 +519,11 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
         return 'write unsupported file type: %s' % file_type
 
     if file_type == file_type_json_compressed:
-        write_damon_record_json_compressed(result, file_path)
+        write_damon_record_json_compressed(result.records, file_path)
     elif file_type == file_type_perf_script:
-        write_damon_perf_script(result, file_path)
+        write_damon_perf_script(result.records, file_path)
     elif file_type == file_type_record:
-        write_damon_record(result, file_path, 2)
+        write_damon_record(result.records, file_path, 2)
 
     if file_permission != None:
         os.chmod(file_path, file_permission)
