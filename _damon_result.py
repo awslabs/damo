@@ -513,17 +513,17 @@ file_types = [file_type_json_compressed, file_type_perf_script,
 self_write_supported_file_types = [file_type_json_compressed,
         file_type_perf_script, file_type_record]
 
-def write_damon_result(result, file_path, file_type, file_permission=None):
+def write_damon_result(records, file_path, file_type, file_permission=None):
     '''Returns None if success, an error string otherwise'''
     if not file_type in self_write_supported_file_types:
         return 'write unsupported file type: %s' % file_type
 
     if file_type == file_type_json_compressed:
-        write_damon_record_json_compressed(result.records, file_path)
+        write_damon_record_json_compressed(records, file_path)
     elif file_type == file_type_perf_script:
-        write_damon_perf_script(result.records, file_path)
+        write_damon_perf_script(records, file_path)
     elif file_type == file_type_record:
-        write_damon_record(result.records, file_path, 2)
+        write_damon_record(records, file_path, 2)
 
     if file_permission != None:
         os.chmod(file_path, file_permission)
@@ -534,7 +534,8 @@ def update_result_file(file_path, file_format, file_permission=None,
     result, err = parse_records_file(file_path, monitoring_intervals)
     if err:
         return err
-    return write_damon_result(result, file_path, file_format, file_permission)
+    return write_damon_result(result.records, file_path, file_format,
+            file_permission)
 
 # for recording
 
