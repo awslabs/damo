@@ -345,7 +345,7 @@ def set_perf_path(perf_path):
         err = 'perf not found at "%s"' % PERF
     return err
 
-def parse_damon_record_json_compressed(result_file):
+def parse_json_compressed(result_file):
     with open(result_file, 'rb') as f:
         compressed = f.read()
     decompressed = zlib.decompress(compressed).decode()
@@ -354,14 +354,14 @@ def parse_damon_record_json_compressed(result_file):
 
 def parse_records_file(result_file, monitoring_intervals=None):
     '''
-    Return monitoring results and error string
+    Return monitoring results records and error string
     '''
 
     file_type = subprocess.check_output(
             ['file', '-b', result_file]).decode().strip()
     if file_type == 'zlib compressed data':
         try:
-            return parse_damon_record_json_compressed(result_file), None
+            return parse_json_compressed(result_file), None
         except Exception as e:
             return None, 'failed parsing json compressed file (%s)' % e
 
@@ -385,7 +385,7 @@ def parse_records_file(result_file, monitoring_intervals=None):
 
 # for writing monitoring results to a file
 
-def write_damon_record_json_compressed(records, file_path):
+def write_json_compressed(records, file_path):
     json_str = json.dumps([r.to_kvpairs(raw=True) for r in records], indent=4)
     compressed = zlib.compress(json_str.encode())
     with open(file_path, 'wb') as f:
@@ -411,7 +411,7 @@ def add_fake_snapshot_if_needed(records):
             -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
         snapshots.append(fake_snapshot)
 
-def write_damon_record(records, file_path, format_version):
+def write_binary(records, file_path, format_version):
     warn_record_type_deprecation()
     add_fake_snapshot_if_needed(records)
 
@@ -438,7 +438,7 @@ def write_damon_record(records, file_path, format_version):
                     f.write(struct.pack('L', region.end))
                     f.write(struct.pack('I', region.nr_accesses.samples))
 
-def write_damon_perf_script(records, file_path):
+def write_perf_script(records, file_path):
     '''
     Example of the normal perf script output:
 
@@ -487,11 +487,11 @@ def write_damon_records(records, file_path, file_type, file_permission=None):
         return 'write unsupported file type: %s' % file_type
 
     if file_type == file_type_json_compressed:
-        write_damon_record_json_compressed(records, file_path)
+        write_json_compressed(records, file_path)
     elif file_type == file_type_perf_script:
-        write_damon_perf_script(records, file_path)
+        write_perf_script(records, file_path)
     elif file_type == file_type_record:
-        write_damon_record(records, file_path, 2)
+        write_binary(records, file_path, 2)
 
     if file_permission != None:
         os.chmod(file_path, file_permission)
