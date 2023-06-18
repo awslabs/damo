@@ -211,7 +211,7 @@ def read_snapshot_from_record_file(f, start_time, end_time):
     return snapshot
 
 # if number of snapshots is one and the file type is record or perf script,
-# write_damon_result() adds a fake snapshot for snapshot start time deduction.
+# write_damon_records() adds a fake snapshot for snapshot start time deduction.
 def is_fake_snapshot(snapshot):
     if len(snapshot.regions) != 1:
         return False
@@ -513,7 +513,7 @@ file_types = [file_type_json_compressed, file_type_perf_script,
 self_write_supported_file_types = [file_type_json_compressed,
         file_type_perf_script, file_type_record]
 
-def write_damon_result(records, file_path, file_type, file_permission=None):
+def write_damon_records(records, file_path, file_type, file_permission=None):
     '''Returns None if success, an error string otherwise'''
     if not file_type in self_write_supported_file_types:
         return 'write unsupported file type: %s' % file_type
@@ -534,7 +534,7 @@ def update_result_file(file_path, file_format, file_permission=None,
     result, err = parse_records_file(file_path, monitoring_intervals)
     if err:
         return err
-    return write_damon_result(result.records, file_path, file_format,
+    return write_damon_records(result.records, file_path, file_format,
             file_permission)
 
 # for recording
