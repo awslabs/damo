@@ -128,7 +128,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    damon_result, err = _damon_result.parse_damon_result(args.input)
+    damon_result, err = _damon_result.parse_records_file(args.input)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (args.input, err))

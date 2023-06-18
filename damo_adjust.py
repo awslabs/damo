@@ -37,7 +37,7 @@ def main(args=None):
                 (args.output_permission, err))
         exit(1)
 
-    result, err = _damon_result.parse_damon_result(file_path)
+    result, err = _damon_result.parse_records_file(file_path)
     if err:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))

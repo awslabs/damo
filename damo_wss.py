@@ -114,7 +114,7 @@ def main(args=None):
         wss_sort = False
     raw_number = args.raw_number
 
-    result, err = _damon_result.parse_damon_result(file_path)
+    result, err = _damon_result.parse_records_file(file_path)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))

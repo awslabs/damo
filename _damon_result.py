@@ -371,7 +371,7 @@ def parse_damon_record_json_compressed(result_file):
     result.records = [DamonRecord.from_kvpairs(kvp) for kvp in kvpairs]
     return result
 
-def parse_damon_result(result_file, monitoring_intervals=None):
+def parse_records_file(result_file, monitoring_intervals=None):
     '''
     Return monitoring results and error string
     '''
@@ -520,7 +520,7 @@ def write_damon_result(result, file_path, file_type, file_permission=None):
 
 def update_result_file(file_path, file_format, file_permission=None,
         monitoring_intervals=None):
-    result, err = parse_damon_result(file_path, monitoring_intervals)
+    result, err = parse_records_file(file_path, monitoring_intervals)
     if err:
         return err
     return write_damon_result(result, file_path, file_format, file_permission)
