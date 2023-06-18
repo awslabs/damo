@@ -219,8 +219,8 @@ def is_fake_snapshot(snapshot):
     return (r.start == 0 and r.end == 0 and
             r.nr_accesses.samples == -1 and r.age.aggr_intervals == -1)
 
-def set_first_snapshot_start_time(result):
-    for record in result.records:
+def set_first_snapshot_start_time(records):
+    for record in records:
         snapshots = record.snapshots
         if len(snapshots) < 2:
             break
@@ -278,7 +278,7 @@ def parse_binary_format_record(file_path, monitoring_intervals):
                     return None, 'snapshot reading failead: %s' % e
                 record.snapshots.append(snapshot)
 
-    set_first_snapshot_start_time(result)
+    set_first_snapshot_start_time(result.records)
     return result, None
 
 def parse_perf_script_line(line):
@@ -341,7 +341,7 @@ def parse_perf_script(script_output, monitoring_intervals):
         if len(snapshot.regions) == nr_regions:
             snapshot = None
 
-    set_first_snapshot_start_time(result)
+    set_first_snapshot_start_time(result.records)
     return result, None
 
 def set_perf_path(perf_path):
