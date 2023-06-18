@@ -316,8 +316,7 @@ def parse_perf_script_line(line):
         return region, end_time, target_id, nr_regions
 
 def parse_perf_script(script_output, monitoring_intervals):
-    result = DamonResult()
-    records = result.records
+    records = []
     snapshot = None
 
     for line in script_output.split('\n'):
@@ -342,8 +341,8 @@ def parse_perf_script(script_output, monitoring_intervals):
         if len(snapshot.regions) == nr_regions:
             snapshot = None
 
-    set_first_snapshot_start_time(result.records)
-    return result, None
+    set_first_snapshot_start_time(records)
+    return records, None
 
 def set_perf_path(perf_path):
     global PERF
@@ -401,7 +400,12 @@ def parse_records_file(result_file, monitoring_intervals=None):
             # Should be record format file
             pass
     if perf_script_output != None:
-        return parse_perf_script(perf_script_output, monitoring_intervals)
+        records, err = parse_perf_script(perf_script_output, monitoring_intervals)
+        if err != None:
+            return None, err
+        result = DamonResult()
+        result.records = records
+        return result, err
 
     records, err = parse_binary_format_record(result_file,
             monitoring_intervals)
