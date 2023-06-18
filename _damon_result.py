@@ -424,14 +424,14 @@ def write_damon_record_json_compressed(result, file_path):
     with open(file_path, 'wb') as f:
         f.write(compressed)
 
-def add_fake_snapshot_if_needed(result):
+def add_fake_snapshot_if_needed(records):
     '''
     perf and record file format stores only snapshot end time.  For a record
     having only single snapshot, hence, the reader of the files cannot knwo the
     start time of the snapshot.  Add a fake snapshot for the case.
     '''
 
-    for record in result.records:
+    for record in records:
         snapshots = record.snapshots
         if len(snapshots) != 1:
             continue
@@ -446,7 +446,7 @@ def add_fake_snapshot_if_needed(result):
 
 def write_damon_record(result, file_path, format_version):
     warn_record_type_deprecation()
-    add_fake_snapshot_if_needed(result)
+    add_fake_snapshot_if_needed(result.records)
 
     with open(file_path, 'wb') as f:
         f.write(b'damon_recfmt_ver')
@@ -480,7 +480,7 @@ def write_damon_perf_script(result, file_path):
             140731667070976-140731668037632: 0 3
     '''
 
-    add_fake_snapshot_if_needed(result)
+    add_fake_snapshot_if_needed(result.records)
     with open(file_path, 'w') as f:
         for record in result.records:
             snapshots = record.snapshots
