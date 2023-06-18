@@ -611,7 +611,8 @@ def tried_regions_to_records(monitor_scheme):
                         ctx.intervals)
 
                 records.append(DamonRecord(kdamond_idx, ctx_idx, ctx.intervals,
-                    None, [snapshot]))
+                    None, None))
+                records[-1].snapshots.append(snapshot)
                 break
     return records
 
