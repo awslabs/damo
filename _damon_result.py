@@ -252,6 +252,7 @@ def parse_binary_format_record(file_path, monitoring_intervals):
     with open(file_path, 'rb') as f:
         fmt_version = read_record_format_version(f)
         result = DamonResult()
+        records = result.records
         while True:
             end_time = read_end_time_from_record_file(f)
             if end_time == None:
@@ -264,7 +265,7 @@ def parse_binary_format_record(file_path, monitoring_intervals):
                 else:
                     target_id = struct.unpack('L', f.read(8))[0]
 
-                record = result.record_of(target_id, monitoring_intervals)
+                record = record_of(target_id, records, monitoring_intervals)
                 if len(record.snapshots) == 0:
                     start_time = None
                 else:
@@ -317,6 +318,7 @@ def parse_perf_script_line(line):
 
 def parse_perf_script(script_output, monitoring_intervals):
     result = DamonResult()
+    records = result.records
     snapshot = None
 
     for line in script_output.split('\n'):
@@ -324,7 +326,7 @@ def parse_perf_script(script_output, monitoring_intervals):
         if region == None:
             continue
 
-        record = result.record_of(target_id, monitoring_intervals)
+        record = record_of(target_id, records, monitoring_intervals)
         if len(record.snapshots) == 0:
             start_time = None
         else:
