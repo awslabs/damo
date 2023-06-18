@@ -132,7 +132,7 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
         _damo_fmt_str.format_time_ns(
             float(time_range[1] - time_range[0]) / len(pixels), False)))
 
-def pr_heats(args, records):
+def pr_heats(args, __records):
     tid = args.tid
     tres = args.resol[0]
     tmin = args.time_range[0]
@@ -151,7 +151,7 @@ def pr_heats(args, records):
     # __pr_heats(damon_result, tid, tunit, tmin, tmax, aunit, amin, amax)
 
     records = []
-    for record in records:
+    for record in __records:
         if record.target_id == tid:
             records.append(record)
 
