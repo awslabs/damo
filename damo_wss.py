@@ -10,9 +10,9 @@ import _damo_dist
 import _damon_result
 import _damo_fmt_str
 
-def get_wss_dists(result, acc_thres, sz_thres, do_sort):
+def get_wss_dists(records, acc_thres, sz_thres, do_sort):
     wss_dists = {}
-    for record in result.records:
+    for record in records:
         wss_dist = []
         for snapshot in record.snapshots:
             wss = 0
@@ -122,7 +122,8 @@ def main(args=None):
 
     _damon_result.adjust_records(result.records, args.work_time,
             args.exclude_samples)
-    wss_dists = get_wss_dists(result, args.acc_thres, args.sz_thres, wss_sort)
+    wss_dists = get_wss_dists(result.records, args.acc_thres, args.sz_thres,
+            wss_sort)
 
     if args.plot:
         orig_stdout = sys.stdout
