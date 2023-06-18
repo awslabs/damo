@@ -239,10 +239,10 @@ def overlapping_regions(regions1, regions2):
             overlap_regions.append(r1)
     return overlap_regions
 
-def get_guide_info(damon_result):
+def get_guide_info(records):
     "return the set of guide information for the moitoring result"
     guides = {}
-    for record in damon_result.records:
+    for record in records:
         for snapshot in record.snapshots:
             monitor_time = snapshot.end_time
             tid = record.target_id
@@ -278,7 +278,7 @@ def get_guide_info(damon_result):
                     reverse=True)
 
 def pr_guide(damon_result):
-    for guide in get_guide_info(damon_result):
+    for guide in get_guide_info(damon_result.records):
         print(guide)
 
 def region_sort_key(region):
@@ -287,7 +287,7 @@ def region_sort_key(region):
 def set_missed_args(args, damon_result):
     if args.tid and args.time_range and args.address_range:
         return
-    guides = get_guide_info(damon_result)
+    guides = get_guide_info(damon_result.records)
     guide = guides[0]
     if not args.tid:
         args.tid = guide.tid
