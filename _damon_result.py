@@ -497,7 +497,7 @@ def write_damon_records(records, file_path, file_type, file_permission=None):
         os.chmod(file_path, file_permission)
     return None
 
-def update_result_file(file_path, file_format, file_permission=None,
+def update_records_file(file_path, file_format, file_permission=None,
         monitoring_intervals=None):
     records, err = parse_records_file(file_path, monitoring_intervals)
     if err:
@@ -536,7 +536,7 @@ def stop_monitoring_record(perf_pipe):
         os.chmod(file_path, file_permission)
         return
 
-    err = update_result_file(file_path, file_format, file_permission,
+    err = update_records_file(file_path, file_format, file_permission,
             monitoring_intervals)
     if err != None:
         print('converting format from perf_data to %s failed (%s)' %

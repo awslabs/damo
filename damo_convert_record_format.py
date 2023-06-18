@@ -22,7 +22,7 @@ def main(args=None):
         print('record file (%s) is not exist' % args.record_file)
         exit(1)
 
-    err = _damon_result.update_result_file(args.record_file, args.format)
+    err = _damon_result.update_records_file(args.record_file, args.format)
     if err != None:
         print('converting format failed (%s)' % err)
         exit(1)
