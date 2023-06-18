@@ -111,8 +111,8 @@ def get_guide_info(records):
     return sorted(list(guides.values()), key=lambda x: x.total_space(),
                     reverse=True)
 
-def pr_guide(damon_result):
-    for guide in get_guide_info(damon_result.records):
+def pr_guide(records):
+    for guide in get_guide_info(records):
         print(guide)
 
 def region_sort_key(region):
@@ -133,7 +133,7 @@ def main(args=None):
         print('monitoring result file (%s) parsing failed (%s)' %
                 (args.input, err))
         exit(1)
-    pr_guide(damon_result)
+    pr_guide(damon_result.records)
 
 if __name__ == '__main__':
     main()
