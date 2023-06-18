@@ -37,16 +37,16 @@ def main(args=None):
                 (args.output_permission, err))
         exit(1)
 
-    result, err = _damon_result.parse_records_file(file_path)
+    records, err = _damon_result.parse_records_file(file_path)
     if err:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))
         exit(1)
 
     if args.aggregate_interval != None:
-        _damon_result.adjust_records(result.records, args.aggregate_interval,
+        _damon_result.adjust_records(records, args.aggregate_interval,
                 args.skip)
-    err = _damon_result.write_damon_records(result.records, args.output,
+    err = _damon_result.write_damon_records(records, args.output,
             args.output_type, output_permission)
     if err != None:
         print('writing adjusted result failed (%s)' % err)

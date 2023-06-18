@@ -75,18 +75,18 @@ def main(args=None):
         print('input file (%s) is not exist' % file_path)
         exit(1)
 
-    result, err = _damon_result.parse_records_file(file_path)
+    records, err = _damon_result.parse_records_file(file_path)
     if err:
         print('parsing damon result file (%s) failed (%s)' %
                 (file_path, err))
         exit(1)
 
-    if not result:
+    if len(records) == 0:
         print('no monitoring result in the file')
         exit(1)
 
     try:
-        pr_records(args, result.records)
+        pr_records(args, records)
     except BrokenPipeError as e:
         # maybe user piped to 'less' like pager and quit from it
         pass

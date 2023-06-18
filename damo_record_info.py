@@ -128,12 +128,12 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    damon_result, err = _damon_result.parse_records_file(args.input)
+    records, err = _damon_result.parse_records_file(args.input)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (args.input, err))
         exit(1)
-    pr_guide(damon_result.records)
+    pr_guide(records)
 
 if __name__ == '__main__':
     main()

@@ -68,16 +68,16 @@ def main(args=None):
                 print('wrong boundary input %s' % boundary)
             regions_boundary.append(parsed_boundary)
 
-    result, err = _damon_result.parse_records_file(args.input)
+    records, err = _damon_result.parse_records_file(args.input)
     if err != None:
         print('parsing failed (%s)' % err)
         exit(1)
 
-    if len(result.records) == 0:
+    if len(records) == 0:
         print('target snapshots is zero')
         exit(1)
 
-    for record in result.records:
+    for record in records:
         target = record.target_id
         nr_snapshots = len(record.snapshots)
         nr_allowed_errors = nr_snapshots * args.allow_error / 100.0

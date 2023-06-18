@@ -378,10 +378,7 @@ def parse_records_file(result_file, monitoring_intervals=None):
             ['file', '-b', result_file]).decode().strip()
     if file_type == 'zlib compressed data':
         try:
-            records = parse_damon_record_json_compressed(result_file)
-            result = DamonResult()
-            result.records = records
-            return result, None
+            return parse_damon_record_json_compressed(result_file), None
         except Exception as e:
             return None, 'failed parsing json compressed file (%s)' % e
 
@@ -400,20 +397,8 @@ def parse_records_file(result_file, monitoring_intervals=None):
             # Should be record format file
             pass
     if perf_script_output != None:
-        records, err = parse_perf_script(perf_script_output, monitoring_intervals)
-        if err != None:
-            return None, err
-        result = DamonResult()
-        result.records = records
-        return result, err
-
-    records, err = parse_binary_format_record(result_file,
-            monitoring_intervals)
-    if err != None:
-        return None, err
-    result = DamonResult()
-    result.records = records
-    return result, err
+        return parse_perf_script(perf_script_output, monitoring_intervals)
+    return parse_binary_format_record(result_file, monitoring_intervals)
 
 # for writing monitoring results to a file
 
@@ -531,10 +516,10 @@ def write_damon_records(records, file_path, file_type, file_permission=None):
 
 def update_result_file(file_path, file_format, file_permission=None,
         monitoring_intervals=None):
-    result, err = parse_records_file(file_path, monitoring_intervals)
+    records, err = parse_records_file(file_path, monitoring_intervals)
     if err:
         return err
-    return write_damon_records(result.records, file_path, file_format,
+    return write_damon_records(records, file_path, file_format,
             file_permission)
 
 # for recording

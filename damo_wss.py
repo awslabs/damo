@@ -114,16 +114,14 @@ def main(args=None):
         wss_sort = False
     raw_number = args.raw_number
 
-    result, err = _damon_result.parse_records_file(file_path)
+    records, err = _damon_result.parse_records_file(file_path)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))
         exit(1)
 
-    _damon_result.adjust_records(result.records, args.work_time,
-            args.exclude_samples)
-    wss_dists = get_wss_dists(result.records, args.acc_thres, args.sz_thres,
-            wss_sort)
+    _damon_result.adjust_records(records, args.work_time, args.exclude_samples)
+    wss_dists = get_wss_dists(records, args.acc_thres, args.sz_thres, wss_sort)
 
     if args.plot:
         orig_stdout = sys.stdout

@@ -365,7 +365,7 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    damon_result, err = _damon_result.parse_records_file(args.input)
+    records, err = _damon_result.parse_records_file(args.input)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (args.input, err))
@@ -376,16 +376,16 @@ def main(args=None):
         args.resol = [40, 80]
 
     if args.guide:
-        pr_guide(damon_result.records)
+        pr_guide(records)
     else:
-        set_missed_args(args, damon_result.records)
+        set_missed_args(args, records)
         orig_stdout = sys.stdout
         if args.heatmap and args.heatmap != 'stdout':
             tmp_path = tempfile.mkstemp()[1]
             tmp_file = open(tmp_path, 'w')
             sys.stdout = tmp_file
 
-        pr_heats(args, damon_result.records)
+        pr_heats(args, records)
 
         if args.heatmap and args.heatmap != 'stdout':
             sys.stdout = orig_stdout
