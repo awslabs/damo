@@ -128,15 +128,15 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
 
 def get_scheme_version():
     '''Return the scheme version that the running kernel supports'''
-    scheme_version = 0
+    scheme_version = 0      # 5.15-based DAMON implementation
     if feature_supported('schemes_speed_limit'):
-        scheme_version = 1
+        scheme_version = 1  # Non-mainlined implementation (deprecated)
     if feature_supported('schemes_prioritization'):
-        scheme_version = 2
+        scheme_version = 2  # Non-mainlined implementation (deprecated)
     if feature_supported('schemes_wmarks'):
-        scheme_version = 3
+        scheme_version = 3  # Non-mainlined implementation (deprecated)
     if feature_supported('schemes_quotas'):
-        scheme_version = 4
+        scheme_version = 4  # 5.16-based DAMON implementation
     return scheme_version
 
 def wops_for_schemes(schemes, intervals):
