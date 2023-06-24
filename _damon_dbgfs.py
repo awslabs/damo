@@ -190,7 +190,12 @@ def wops_for_kdamonds(kdamonds):
     return write_contents
 
 def stage_kdamonds(kdamonds):
-    return _damo_fs.write_files(wops_for_kdamonds(kdamonds))
+    '''Return error'''
+    try:
+        wops = wops_for_kdamonds(kdamonds)
+    except Exception as e:
+        return 'staging kdamond failed (%s)' % e
+    return _damo_fs.write_files(wops)
 
 # for current_kdamonds
 
