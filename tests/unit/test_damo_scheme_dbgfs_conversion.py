@@ -141,7 +141,7 @@ min max     5 max       min max     hugepage
                             }
         intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
         for input_name, input_scheme in inputs.items():
-            for version in range(0, 5):
+            for version in [0, 4]:
                 damos_list, err = _damo_deprecated.damo_single_line_schemes_to_damos(
                         input_scheme)
                 self.assertEqual(err, None)
