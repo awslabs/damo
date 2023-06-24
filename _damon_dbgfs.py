@@ -59,6 +59,11 @@ def wops_for_target(target, target_has_pid):
         wops.append({debugfs_init_regions: string})
     return wops
 
+# note that DAMON debugfs interface is deprecated[1], and hence newer DAMOS
+# actions including _damon.damos_action_lru_prio and
+# _damon.damos_action_lru_deprio are not supported.
+#
+# [1] https://git.kernel.org/torvalds/c/5445fcbc4cda
 damos_action_to_int = {
         _damon.damos_action_willneed: 0,
         _damon.damos_action_cold: 1,
