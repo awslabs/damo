@@ -238,30 +238,6 @@ def debugfs_output_to_damos(output, intervals_us):
 
     if len(fields) == 7:
         damos = _damon.Damos(access_pattern=access_pattern, action=action)
-    elif len(fields) == 9:
-        damos = _damon.Damos(access_pattern=access_pattern, action=action)
-        damos.quotas.sz_bytes = fields[7]
-        damos.quotas.reset_interval_ms = fields[8]
-    elif len(fields) == 12:
-        damos = _damon.Damos(access_pattern=access_pattern, action=action)
-        damos.quotas.sz_bytes = fields[7]
-        damos.quotas.reset_interval_ms = fields[8]
-        damos.quotas.weight_sz_permil = fields[9]
-        damos.quotas.weight_nr_accesses_permil = fields[10]
-        damos.quotas.weight_age_permil = fields[11]
-    elif len(fields) == 17:
-        damos = _damon.Damos(access_pattern=access_pattern, action=action)
-        damos.quotas.sz_bytes = fields[7]
-        damos.quotas.reset_interval_ms = fields[8]
-        damos.quotas.weight_sz_permil = fields[9]
-        damos.quotas.weight_nr_accesses_permil = fields[10]
-        damos.quotas.weight_age_permil = fields[11]
-        damos.watermarks.metric = file_content_to_damos_wmarks_metric(
-                fields[12])
-        damos.watermarks.interval_us = fields[13]
-        damos.watermarks.high_permil = fields[14]
-        damos.watermarks.mid_permil = fields[15]
-        damos.watermarks.low_permil = fields[16]
     elif len(fields) == 18:
         damos = _damon.Damos(access_pattern=access_pattern, action=action)
         damos.quotas.time_ms = fields[7]
