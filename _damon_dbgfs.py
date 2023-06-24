@@ -82,6 +82,9 @@ def damos_action_to_file_input(action_str):
     return '%d' % damos_action_to_int[action_str]
 
 def damos_wmarks_metric_to_file_input(metric_str):
+    if not metric_str in damos_wmark_metric_to_int:
+        raise Exception('\'%s\' DAMOS watermark metric is not supported' %
+                metric_str)
     return '%d' % damos_wmark_metric_to_int[metric_str]
 
 def file_content_to_damos_action(action_file_content):
