@@ -79,7 +79,7 @@ damos_wmark_metric_to_int = {
 def damos_action_to_file_input(action_str):
     if not action_str in damos_action_to_int:
         raise Exception('\'%s\' DAMOS action is not supported' % action_str)
-    return '%d' % damos_action_to_int[action_str]
+    return damos_action_to_int[action_str]
 
 def damos_wmarks_metric_to_file_input(metric_str):
     if not metric_str in damos_wmark_metric_to_int:
@@ -105,7 +105,7 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     watermarks = damos.watermarks
 
     max_nr_accesses = intervals.aggr / intervals.sample
-    v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%s' % (
+    v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
             pattern.sz_bytes[0], pattern.sz_bytes[1],
             pattern.nr_acc_min_max[0].samples,
             pattern.nr_acc_min_max[1].samples,
