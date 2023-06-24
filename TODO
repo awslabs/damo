@@ -20,9 +20,9 @@
 - Support DAMOS quotas/watermarks/filters with command line options
 - Deprecate old features
   - Deprecate --rbuf and in-kernel record feature support (done.  code also removed)
-  - Deprecate single line per-scheme (done but code remain)
-  - Deprecate v1-v3 schemes (done but code remain)
-  - Deprecate python2 support (done but code remain)
+  - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
+  - Deprecate v1-v3 schemes (done.  necessary code moved to _damon_deprecated)
+  - Deprecate python2 support (done.  code moved to _damon_deprecated)
   - Deprecate scheme subcommand
     - Can be replaced by start or tune
   - Deprecate old scheme usages in tests
