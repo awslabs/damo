@@ -115,24 +115,6 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     if scheme_version == 0:
         return v0_scheme
 
-    v1_scheme = '%s\t%d\t%d' % (v0_scheme,
-            quotas.sz_bytes, quotas.reset_interval_ms)
-    if scheme_version == 1:
-        return v1_scheme
-
-    v2_scheme = '%s\t%d\t%d\t%d' % (v1_scheme,
-            quotas.weight_sz_permil, quotas.weight_nr_accesses_permil,
-            quotas.weight_age_permil)
-    if scheme_version == 2:
-        return v2_scheme
-
-    v3_scheme = '%s\t%s\t%d\t%d\t%d\t%d' % (v2_scheme,
-            damos_wmarks_metric_to_file_input(watermarks.metric),
-            watermarks.interval_us, watermarks.high_permil,
-            watermarks.mid_permil, watermarks.low_permil)
-    if scheme_version == 3:
-        return v3_scheme
-
     v4_scheme = '%s\t' % v0_scheme + '\t'.join('%d' % x for x in [quotas.time_ms,
         quotas.sz_bytes, quotas.reset_interval_ms, quotas.weight_sz_permil,
         quotas.weight_nr_accesses_permil, quotas.weight_age_permil,
