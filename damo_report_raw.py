@@ -24,13 +24,13 @@ def filter_snapshots(records, start_time_sec, end_time_sec):
         record.snapshots = filtered_snapshots
 
 def pr_records(args, records):
+    if args.duration:
+        filter_snapshots(records, args.duration[0], args.duration[1])
+
     if args.json:
         print(json.dumps([r.to_kvpairs(args.raw_number)
             for r in records], indent=4))
         exit(0)
-
-    if args.duration:
-        filter_snapshots(records, args.duration[0], args.duration[1])
 
     for record in records:
         snapshots = record.snapshots
