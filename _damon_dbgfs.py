@@ -85,7 +85,7 @@ def damos_wmarks_metric_to_file_input(metric_str):
     if not metric_str in damos_wmark_metric_to_int:
         raise Exception('\'%s\' DAMOS watermark metric is not supported' %
                 metric_str)
-    return '%d' % damos_wmark_metric_to_int[metric_str]
+    return damos_wmark_metric_to_int[metric_str]
 
 def file_content_to_damos_action(action_file_content):
     for action_str in damos_action_to_int:
@@ -122,7 +122,7 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
                 quotas.weight_sz_permil, quotas.weight_nr_accesses_permil,
                 quotas.weight_age_permil,
                 # wmarks
-                int(damos_wmarks_metric_to_file_input(watermarks.metric)),
+                damos_wmarks_metric_to_file_input(watermarks.metric),
                 watermarks.interval_us, watermarks.high_permil,
                 watermarks.mid_permil, watermarks.low_permil])
     if scheme_version == 4:
