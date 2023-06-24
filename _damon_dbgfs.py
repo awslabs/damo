@@ -77,6 +77,8 @@ damos_wmark_metric_to_int = {
         _damon.damos_wmarks_metric_free_mem_rate: 1}
 
 def damos_action_to_file_input(action_str):
+    if not action_str in damos_action_to_int:
+        raise Exception('\'%s\' DAMOS action is not supported' % action_str)
     return '%d' % damos_action_to_int[action_str]
 
 def damos_wmarks_metric_to_file_input(metric_str):
