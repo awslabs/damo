@@ -27,7 +27,6 @@
     - Can be replaced by start or tune
   - Deprecate old scheme usages in tests
   - Deprecate DAMON results record binary format (noticing for Q3 deprecation)
-- Merge into Linux mainline
 - Refactor heats code
 - Add test for translate_damos and convert_record_format
 - Fix 'damo stat regions' clearing monitoring results bug on dynamic virtual
