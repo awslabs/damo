@@ -8,11 +8,29 @@ import sys
 import _damon_result
 import _damo_fmt_str
 
+def filter_snapshots(records, start_time_sec, end_time_sec):
+    for record in records:
+        if len(record.snapshots) == 0:
+            continue
+        base_time = record.snapshots[0].start_time
+        filtered_snapshots = []
+        for snapshot in record.snapshots:
+            offset_sec = (snapshot.start_time - base_time) / 1000000000
+            if offset_sec < start_time_sec:
+                continue
+            if offset_sec > end_time_sec:
+                break
+            filtered_snapshots.append(snapshot)
+        record.snapshots = filtered_snapshots
+
 def pr_records(args, records):
     if args.json:
         print(json.dumps([r.to_kvpairs(args.raw_number)
             for r in records], indent=4))
         exit(0)
+
+    if args.duration:
+        filter_snapshots(records, args.duration[0], args.duration[1])
 
     for record in records:
         snapshots = record.snapshots
@@ -24,12 +42,6 @@ def pr_records(args, records):
                 _damo_fmt_str.format_time_ns(base_time, args.raw_number))
 
         for snapshot in snapshots:
-            if args.duration:
-                time_offset_sec = (snapshot.start_time - base_time) / 1000000000
-                if time_offset_sec < args.duration[0]:
-                    continue
-                if time_offset_sec > args.duration[1]:
-                    break
             print('monitoring_start:    %16s' %
                     _damo_fmt_str.format_time_ns(
                         snapshot.start_time - base_time, args.raw_number))
