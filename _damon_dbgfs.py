@@ -475,6 +475,6 @@ def update_supported_features():
     if 0 < get_scheme_version() and get_scheme_version() < 4:
         _damo_deprecation_notice.deprecated(
                 feature='support of non-mainlined DAMOS implementation',
-                deadline='2023-Q2')
+                deadline='2023-Q2', do_exit=True)
 
     return None
