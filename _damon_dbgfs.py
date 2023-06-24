@@ -145,6 +145,7 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     raise Exception('Unsupported scheme version: %d' % scheme_version)
 
 def get_scheme_version():
+    '''Return the scheme version that the running kernel supports'''
     scheme_version = 0
     if feature_supported('schemes_speed_limit'):
         scheme_version = 1
