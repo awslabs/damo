@@ -3,6 +3,9 @@ picked by human sense, so could be incomplete and missing many things.
 
 v1.8.7
 - Stop supporting non-mainlined DAMOS kernel implementations
+- Rename 'damo show status' into 'damo status'
+- Re-implement 'damo show': Support snapshot and record files, but still not
+  stabilized
 
 v1.8.6
 - Cleanup code
