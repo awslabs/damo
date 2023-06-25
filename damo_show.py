@@ -43,10 +43,35 @@ def pr_records(args, records):
                 print(r.to_str(args.raw_number, record.intervals))
             print('')
 
+def filter_by_pattern(record, access_pattern):
+    sz_bytes = access_pattern.sz_bytes
+    nr_acc = access_pattern.nr_acc_min_max
+    age = access_pattern.age_min_max
+
+    for snapshot in record.snapshots:
+        filtered = []
+        for region in snapshot.regions:
+            sz = region.end - region.start
+            if sz < sz_bytes[0] or sz_bytes[1] < sz:
+                continue
+            intervals = record.intervals
+            if intervals == None:
+                filtered.append(region)
+                continue
+            region.nr_accesses.add_unset_unit(intervals)
+            freq = region.nr_accesses.percent
+            if freq < nr_acc[0].percent or nr_acc[1].percent < freq:
+                continue
+            region.age.add_unset_unit(intervals)
+            usecs = region.age.usec
+            if usecs < age[0].usec or age[1].usec < usecs:
+                continue
+            filtered.append(region)
+        snapshot.regions = filtered
+
 def set_argparser(parser):
     '''
     TODOs
-    - access pattern based filtering for file
     - schemes tried regions based filtering
     - time based filtering
     - printing heatbar (bar of the size colored with access rate)
@@ -83,12 +108,14 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
+    access_pattern = _damon.DamosAccessPattern(args.sz_region,
+            args.access_freq, _damon.unit_percent, args.age * 1000000,
+            _damon.unit_usec)
+
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args)
 
-        records, err = _damon_result.get_snapshot_records(
-                _damon.DamosAccessPattern(args.sz_region, args.access_freq,
-                    _damon.unit_percent, args.age * 1000000, _damon.unit_usec))
+        records, err = _damon_result.get_snapshot_records(access_pattern)
         if err != None:
             print(err)
             exit(1)
@@ -102,6 +129,8 @@ def main(args=None):
             print('parsing damon result file (%s) failed (%s)' %
                     (args.input_file, err))
             exit(1)
+        for record in records:
+            filter_by_pattern(record, access_pattern)
 
     for record in records:
         pr_records(args, records)
