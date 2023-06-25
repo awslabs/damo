@@ -69,6 +69,10 @@ def main(args=None):
             print(err)
             exit(1)
     else:
+        if not os.path.isfile(args.input):
+            print('unsupported input: neither \'snapshot\', nor a file')
+            exit(1)
+
         records, err = _damon_result.parse_records_file(args.input)
         if err:
             print('parsing damon result file (%s) failed (%s)' %
