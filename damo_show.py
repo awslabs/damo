@@ -46,7 +46,7 @@ def pr_records(args, records):
 def set_argparser(parser):
     '''
     TODOs
-    - access pattern based filtering
+    - access pattern based filtering for file
     - schemes tried regions based filtering
     - time based filtering
     - printing heatbar (bar of the size colored with access rate)
@@ -58,6 +58,16 @@ def set_argparser(parser):
     - collapse by priority value (more histogram control)
     '''
     _damon_args.set_common_argparser(parser)
+    parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
+            default=['min', 'max'],
+            help='min/max size of regions (bytes)')
+    parser.add_argument('--access_freq', metavar=('<min>', '<max>'), nargs=2,
+            default=['min', 'max'],
+            help='min/max access frequency of regions (percent)')
+    parser.add_argument('--age', metavar=('<min>', '<max>'), nargs=2,
+            default=['min', 'max'],
+            help='min/max age of regions (seconds)')
+
     parser.add_argument('--input_file', metavar='<file>',
             help='source of the access pattern to show')
     parser.add_argument('--raw_number', action='store_true',
@@ -77,7 +87,8 @@ def main(args=None):
         _damon.ensure_root_and_initialized(args)
 
         records, err = _damon_result.get_snapshot_records(
-                _damon.DamosAccessPattern())
+                _damon.DamosAccessPattern(args.sz_region, args.access_freq,
+                    _damon.unit_percent, args.age * 1000000, _damon.unit_usec))
         if err != None:
             print(err)
             exit(1)
