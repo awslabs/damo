@@ -4,7 +4,7 @@ import argparse
 import json
 
 import damo_stat
-import damo_show_status
+import damo_status
 
 import _damo_deprecation_notice
 import _damo_fmt_str
@@ -19,9 +19,9 @@ def set_argparser(parser):
 
 def __main(args):
     if not args.detail:
-        damo_show_status.update_pr_kdamonds_summary(args.json, args.raw)
+        damo_status.update_pr_kdamonds_summary(args.json, args.raw)
     else:
-        damo_show_status.update_pr_kdamonds(args.json, args.raw)
+        damo_status.update_pr_kdamonds(args.json, args.raw)
 
 def main(args=None):
     _damo_deprecation_notice.will_be_deprecated('\'damo stat kdamonds\'',

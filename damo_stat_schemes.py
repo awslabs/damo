@@ -2,7 +2,7 @@
 
 import argparse
 
-import damo_show_status
+import damo_status
 import damo_stat
 
 import _damo_deprecation_notice
@@ -15,9 +15,9 @@ def set_argparser(parser):
 
 def __main(args):
     if args.stat_type == 'schemes_stats':
-        damo_show_status.update_pr_schemes_stats(args.raw)
+        damo_status.update_pr_schemes_stats(args.raw)
     elif args.stat_type == 'schemes_tried_regions':
-        damo_show_status.update_pr_schemes_tried_regions(args.raw)
+        damo_status.update_pr_schemes_tried_regions(args.raw)
 
 def main(args=None):
     _damo_deprecation_notice.will_be_deprecated('\'damo stat schemes*\'',
