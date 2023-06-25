@@ -8,7 +8,7 @@ os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sys
 
 import damo_adjust
-import damo_capture
+import damo_show
 import damo_convert_record_format
 import damo_features
 import damo_fmt_json
@@ -73,8 +73,8 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='status',
             module=damo_status,
             msg='show DAMON status'),
-        _damo_subcmds.DamoSubCmd(name='capture', module=damo_capture,
-            msg='capture access pattern'),
+        _damo_subcmds.DamoSubCmd(name='show', module=damo_show,
+            msg='show monitored access pattern'),
         ]
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
