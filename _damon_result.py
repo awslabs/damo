@@ -355,6 +355,11 @@ def parse_json_compressed(result_file):
     decompressed = zlib.decompress(compressed).decode()
     return parse_json(decompressed)
 
+def parse_json_file(record_file):
+    with open(record_file) as f:
+        json_str = f.read()
+    return parse_json(json_str)
+
 def parse_records_file(result_file, monitoring_intervals=None):
     '''
     Return monitoring results records and error string
@@ -362,6 +367,11 @@ def parse_records_file(result_file, monitoring_intervals=None):
 
     file_type = subprocess.check_output(
             ['file', '-b', result_file]).decode().strip()
+    if file_type == 'JSON data':
+        try:
+            return parse_json_file(result_file), None
+        except Exception as e:
+            return None, 'failed parsing json file (%s)' % e
     if file_type == 'zlib compressed data':
         try:
             return parse_json_compressed(result_file), None
