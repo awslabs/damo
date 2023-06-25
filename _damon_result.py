@@ -404,6 +404,11 @@ def write_json_compressed(records, file_path):
     with open(file_path, 'wb') as f:
         f.write(compressed)
 
+def write_json(records, file_path):
+    json_str = json.dumps([r.to_kvpairs(raw=True) for r in records], indent=4)
+    with open(file_path, 'w') as f:
+        f.write(json_str)
+
 def add_fake_snapshot_if_needed(records):
     '''
     perf and record file format stores only snapshot end time.  For a record
@@ -492,7 +497,7 @@ file_type_json_compressed = 'json_compressed'
 
 file_types = [file_type_json_compressed, file_type_json, file_type_perf_script,
         file_type_perf_data, file_type_record]
-self_write_supported_file_types = [file_type_json_compressed,
+self_write_supported_file_types = [file_type_json_compressed, file_type_json,
         file_type_perf_script, file_type_record]
 
 def write_damon_records(records, file_path, file_type, file_permission=None):
@@ -502,6 +507,8 @@ def write_damon_records(records, file_path, file_type, file_permission=None):
 
     if file_type == file_type_json_compressed:
         write_json_compressed(records, file_path)
+    elif file_type == file_type_json:
+        write_json(records, file_path)
     elif file_type == file_type_perf_script:
         write_perf_script(records, file_path)
     elif file_type == file_type_record:
