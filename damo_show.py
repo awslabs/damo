@@ -3,7 +3,6 @@
 import argparse
 import json
 import os
-import sys
 
 import _damo_fmt_str
 import _damon
@@ -49,6 +48,7 @@ def set_argparser(parser):
     TODOs
     - access pattern based filtering
     - schemes tried regions based filtering
+    - time based filtering
     - printing heatbar (bar of the size colored with access rate)
     - printing only heatbars (becomes heatmap)
     - printing only total size (becomes wss)
