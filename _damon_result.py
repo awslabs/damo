@@ -345,12 +345,15 @@ def set_perf_path(perf_path):
         err = 'perf not found at "%s"' % PERF
     return err
 
+def parse_json(json_str):
+    kvpairs = json.loads(json_str)
+    return [DamonRecord.from_kvpairs(kvp) for kvp in kvpairs]
+
 def parse_json_compressed(result_file):
     with open(result_file, 'rb') as f:
         compressed = f.read()
     decompressed = zlib.decompress(compressed).decode()
-    kvpairs = json.loads(decompressed)
-    return [DamonRecord.from_kvpairs(kvp) for kvp in kvpairs]
+    return parse_json(decompressed)
 
 def parse_records_file(result_file, monitoring_intervals=None):
     '''
