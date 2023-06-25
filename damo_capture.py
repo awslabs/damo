@@ -41,12 +41,7 @@ def pr_records(args, records):
             print('# %10s %12s  %12s  %11s %5s' %
                     ('start_addr', 'end_addr', 'length', 'nr_accesses', 'age'))
             for r in snapshot.regions:
-                print("%012x-%012x (%12s) %11d %5d" %
-                        (r.start, r.end,
-                            _damo_fmt_str.format_sz(r.end - r.start,
-                                args.raw_number), r.nr_accesses.samples,
-                                r.age.aggr_intervals
-                                if r.age.aggr_intervals != None else -1))
+                print(r.to_str(args.raw_number, record.intervals))
             print('')
 
 def set_argparser(parser):
