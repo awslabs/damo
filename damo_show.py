@@ -46,6 +46,9 @@ def pr_records(args, records):
 
 def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
+    parser.add_argument('--input', default='snapshot',
+            metavar='<\'snapshot\' or file>',
+            help='source of the access pattern to show')
     parser.add_argument('--raw_number', action='store_true',
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
@@ -57,13 +60,20 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    _damon.ensure_root_and_initialized(args)
+    if args.input == 'snapshot':
+        _damon.ensure_root_and_initialized(args)
 
-    records, err = _damon_result.get_snapshot_records(
-            _damon.DamosAccessPattern())
-    if err != None:
-        print(err)
-        exit(1)
+        records, err = _damon_result.get_snapshot_records(
+                _damon.DamosAccessPattern())
+        if err != None:
+            print(err)
+            exit(1)
+    else:
+        records, err = _damon_result.parse_records_file(args.input)
+        if err:
+            print('parsing damon result file (%s) failed (%s)' %
+                    (args.input, err))
+            exit(1)
 
     for record in records:
         pr_records(args, records)
