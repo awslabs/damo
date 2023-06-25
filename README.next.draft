@@ -13,15 +13,9 @@ Getting Started
 ===============
 
     $ sudo damo start
-    $ sudo damo show
-    $ sudo damo record
+    $ sudo damo capture
+    $ sudo damo read
+    $ # sudo damo record
+    $ # sudo damo report
     $ sudo damo tune
     $ sudo damo stop
-
-
-damo show status
-- Show kdamonds status
-
-damo show accesses <source> <format>
-- source: snapshot, record, scheme_tried_regions
-- format: raw, heats, wss, ...
