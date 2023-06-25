@@ -52,6 +52,8 @@ def set_argparser(parser):
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
             help='print in json format')
+    parser.description='Show DAMON-monitored access pattern'
+    parser.epilog='If --input_file is not provided, capture snapshot'
 
 def main(args=None):
     if not args:
