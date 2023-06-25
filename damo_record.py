@@ -157,6 +157,10 @@ def main(args=None):
         # TODO: Support multiple kdamonds, multiple contexts
         monitoring_intervals = kdamonds[0].contexts[0].intervals
     else:
+        if not _damon.any_kdamond_running():
+            print('DAMON is not turned on')
+            exit(1)
+
         # TODO: Support multiple kdamonds, multiple contexts
         monitoring_intervals = data_for_cleanup.orig_kdamonds[
                 0].contexts[0].intervals
