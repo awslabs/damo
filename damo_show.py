@@ -45,6 +45,18 @@ def pr_records(args, records):
             print('')
 
 def set_argparser(parser):
+    '''
+    TODOs
+    - access pattern based filtering
+    - schemes tried regions based filtering
+    - printing heatbar (bar of the size colored with access rate)
+    - printing only heatbars (becomes heatmap)
+    - printing only total size (becomes wss)
+    - printing only size (becomes sort of working set histogram)
+    - sort by prioritiy with priority weights (become histogram)
+    - collapse by time
+    - collapse by priority value (more histogram control)
+    '''
     _damon_args.set_common_argparser(parser)
     parser.add_argument('--input_file', metavar='<file>',
             help='source of the access pattern to show')
