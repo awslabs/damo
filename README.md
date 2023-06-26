@@ -22,10 +22,13 @@ http://www.youtube.com/watch?v=l63eqbVBZRY
 Getting Started
 ===============
 
+[![Packaging status](https://repology.org/badge/vertical-allrepos/damo.svg)](https://repology.org/project/damo/versions)
+
 Follow below instructions and commands to monitor and visualize the access
 pattern of your workload.
 
     $ # ensure your kernel is built with CONFIG_DAMON_*=y
+    $ # install from PyPI, or use your distribution's package manager
     $ sudo pip3 install damo
     $ sudo damo record $(pidof <your workload>)
     $ damo report heats --heatmap stdout --stdout_heatmap_color emotion
