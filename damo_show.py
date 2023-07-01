@@ -35,9 +35,9 @@ def pr_records(args, records):
                             args.raw_number)))
             if record.target_id != None:
                 print('target_id: %s' % record.target_id)
-            print('nr_regions: %s' % len(snapshot.regions))
-            for r in snapshot.regions:
-                print(r.to_str(args.raw_number, record.intervals))
+            for idx, r in enumerate(snapshot.regions):
+                print('%3d %s' % (idx,
+                    r.to_str(args.raw_number, record.intervals)))
             print('')
 
 def filter_by_pattern(record, access_pattern):
