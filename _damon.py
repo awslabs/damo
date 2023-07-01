@@ -623,7 +623,7 @@ class Damos:
     # for monitoring only by default
     def __init__(self, access_pattern=None, action=damos_action_stat,
             quotas=None, watermarks=None, filters=None, stats=None,
-            tried_regions=None):
+            tried_regions=None, tried_regions_total_bytes=None):
         self.access_pattern = (access_pattern
                 if access_pattern != None else DamosAccessPattern())
         if not action in damos_actions:
@@ -638,8 +638,12 @@ class Damos:
         if self.tried_regions == None:
             self.tried_regions = []
         self.tried_regions_total_bytes = 0
-        for region in self.tried_regions:
-            self.tried_regions_total_bytes += (region.end - region.start)
+        if tried_regions_total_bytes:
+            self.tried_regions_total_bytes = _damo_fmt_str.text_to_bytes(
+                    tried_regions_total_bytes)
+        else:
+            for region in self.tried_regions:
+                self.tried_regions_total_bytes += (region.end - region.start)
 
     def to_str(self, raw):
         lines = ['action: %s' % self.action]
