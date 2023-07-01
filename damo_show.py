@@ -21,6 +21,8 @@ def pr_records(args, records):
             continue
 
         base_time = snapshots[0].start_time
+        print('kdamond %s / context %s / scheme %s' %
+                (record.kdamond_idx, record.context_idx, record.scheme_idx))
         print('base_time_absolute: %s\n' %
                 _damo_fmt_str.format_time_ns(base_time, args.raw_number))
 
