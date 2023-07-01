@@ -25,16 +25,14 @@ def pr_records(args, records):
                 _damo_fmt_str.format_time_ns(base_time, args.raw_number))
 
         for snapshot in snapshots:
-            print('monitoring_start:    %16s' %
-                    _damo_fmt_str.format_time_ns(
-                        snapshot.start_time - base_time, args.raw_number))
-            print('monitoring_end:      %16s' %
-                    _damo_fmt_str.format_time_ns(
-                        snapshot.end_time - base_time, args.raw_number))
-            print('monitoring_duration: %16s' %
-                    _damo_fmt_str.format_time_ns(
-                        snapshot.end_time - snapshot.start_time,
-                        args.raw_number))
+            print('monitored time: %s-%s (%s)' %
+                    (_damo_fmt_str.format_time_ns(
+                        snapshot.start_time - base_time, args.raw_number),
+                        _damo_fmt_str.format_time_ns(
+                            snapshot.end_time - base_time, args.raw_number),
+                        _damo_fmt_str.format_time_ns(
+                            snapshot.end_time - snapshot.start_time,
+                            args.raw_number)))
             print('target_id: %s' % record.target_id)
             print('nr_regions: %s' % len(snapshot.regions))
             for r in snapshot.regions:
