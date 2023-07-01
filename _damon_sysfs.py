@@ -377,7 +377,10 @@ def files_content_to_scheme(files_content):
             files_content_to_damos_stats(files_content['stats']),
             files_content_to_damos_tried_regions(
                 files_content['tried_regions'])
-                if 'tried_regions' in files_content else [])
+                if 'tried_regions' in files_content else [],
+            files_content['tried_regions']['total_bytes']
+                if 'tried_regions' in files_content and
+                    'total_bytes' in files_content['tried_regions'] else None)
 
 def files_content_to_regions(files_content):
     return [_damon.DamonRegion(
