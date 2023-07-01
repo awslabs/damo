@@ -618,6 +618,7 @@ class Damos:
     filters = None
     stats = None
     tried_regions = None
+    tried_regions_total_bytes = None
 
     # for monitoring only by default
     def __init__(self, access_pattern=None, action=damos_action_stat,
