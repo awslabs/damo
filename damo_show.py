@@ -27,7 +27,7 @@ def pr_records(args, records):
                 _damo_fmt_str.format_time_ns(base_time, args.raw_number))
 
         for snapshot in snapshots:
-            print('monitored time: %s-%s (%s)' %
+            print('monitored time: [%s, %s] (%s)' %
                     (_damo_fmt_str.format_time_ns(
                         snapshot.start_time - base_time, args.raw_number),
                         _damo_fmt_str.format_time_ns(
