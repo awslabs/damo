@@ -620,6 +620,23 @@ def tried_regions_to_records(monitor_scheme):
                 break
     return records
 
+def current_regions_for(pid):
+    if not os.path.isfile('/proc/%s/maps' % pid):
+        print('maps file for %s pid not found' % pid)
+        exit(0)
+    with open('/proc/%s/maps' % pid, 'r') as f:
+        maps_content = f.read()
+    regions = []
+    for line in maps_content.split('\n'):
+        if line == '':
+            continue
+        start, end = [int(addr, 16) for addr in line.split()[0].split('-')]
+        if len(regions) > 0 and regions[-1].end == start:
+            regions[-1].end = end
+        else:
+            regions.append(_damon.DamonRegion(start, end))
+    return regions
+
 def get_snapshot_records(access_pattern):
     'return DamonRecord objects each having single DamonSnapshot and an error'
     running_kdamond_idxs = _damon.running_kdamond_idxs()
@@ -627,6 +644,24 @@ def get_snapshot_records(access_pattern):
         return None, 'no kdamond running'
 
     orig_kdamonds = _damon.current_kdamonds()
+
+    need_restage = False
+    for kd in orig_kdamonds:
+        for ctx in kd.contexts:
+            if ctx.ops != 'vaddr':
+                continue
+            need_restage = True
+            for target in ctx.targets:
+                target.regions = current_regions_for(target.pid)
+    if need_restage:
+        _damon.commit(orig_kdamonds)
+        for kd in orig_kdamonds:
+            for ctx in kd.contexts:
+                if ctx.ops != 'vaddr':
+                    continue
+                for target in ctx.targets:
+                    target.regions = []
+
 
     monitor_scheme = _damon.Damos(access_pattern=access_pattern)
     installed, err = install_scheme(monitor_scheme)
