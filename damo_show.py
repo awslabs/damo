@@ -37,8 +37,6 @@ def pr_records(args, records):
                         args.raw_number))
             print('target_id: %s' % record.target_id)
             print('nr_regions: %s' % len(snapshot.regions))
-            print('# %10s %12s  %12s  %11s %5s' %
-                    ('start_addr', 'end_addr', 'length', 'nr_accesses', 'age'))
             for r in snapshot.regions:
                 print(r.to_str(args.raw_number, record.intervals))
             print('')
