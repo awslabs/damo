@@ -36,8 +36,18 @@ def pr_records(args, records):
             if record.target_id != None:
                 print('target_id: %s' % record.target_id)
             for idx, r in enumerate(snapshot.regions):
-                print('%3d %s' % (idx,
-                    r.to_str(args.raw_number, record.intervals)))
+                address_range = '[%s, %s)' % (
+                        _damo_fmt_str.format_sz(r.start, args.raw_number),
+                        _damo_fmt_str.format_sz(r.end, args.raw_number))
+                region_size = _damo_fmt_str.format_sz((r.end - r.start),
+                        args.raw_number)
+                r.nr_accesses.add_unset_unit(record.intervals)
+                r.age.add_unset_unit(record.intervals)
+                access_rate = r.nr_accesses.to_str(_damon.unit_percent,
+                        args.raw_number)
+                age = r.age.to_str(_damon.unit_usec, args.raw_number)
+                print('%3d addr %s (%s) access %s age %s' % (
+                    idx, address_range, region_size, access_rate, age))
             print('')
 
 def filter_by_pattern(record, access_pattern):
