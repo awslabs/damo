@@ -209,6 +209,8 @@ def kdamonds_for(args):
         err = deduce_target_update_args(args)
         if err:
             return None, err
+    if args.ops == None:
+        args.ops = 'paddr'
 
     ctx, err = damon_ctx_for(args)
     if err:
@@ -306,7 +308,6 @@ def set_argparser(parser, add_record_options):
         parser = argparse.ArgumentParser()
     set_monitoring_argparser(parser)
     parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
-            default='paddr',
             help='monitoring operations set')
     parser.add_argument('--target_pid', type=int, help='target pid')
     set_damos_argparser(parser)
