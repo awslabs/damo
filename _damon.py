@@ -635,6 +635,11 @@ class Damos:
         self.filters = filters if filters != None else []
         self.stats = stats
         self.tried_regions = tried_regions
+        if self.tried_regions == None:
+            self.tried_regions = []
+        self.tried_regions_total_bytes = 0
+        for region in self.tried_regions:
+            self.tried_regions_total_bytes += (region.end - region.start)
 
     def to_str(self, raw):
         lines = ['action: %s' % self.action]
@@ -654,7 +659,8 @@ class Damos:
             lines.append('statistics')
             lines.append(_damo_fmt_str.indent_lines(self.stats.to_str(raw), 4))
         if self.tried_regions != None:
-            lines.append('tried regions')
+            lines.append('tried regions (%s)' % _damo_fmt_str.format_sz(
+                    self.tried_regions_total_bytes, raw))
             for region in self.tried_regions:
                 lines.append(_damo_fmt_str.indent_lines(region.to_str(raw), 4))
         return '\n'.join(lines)
