@@ -95,6 +95,10 @@ def set_argparser(parser):
 
     parser.add_argument('--input_file', metavar='<file>',
             help='source of the access pattern to show')
+    parser.add_argument('--tried_regions_of', nargs=3, type=int,
+            action='append',
+            metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
+            help='show tried regions of given schemes')
     parser.add_argument('--raw_number', action='store_true',
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
