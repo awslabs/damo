@@ -33,7 +33,8 @@ def pr_records(args, records):
                         _damo_fmt_str.format_time_ns(
                             snapshot.end_time - snapshot.start_time,
                             args.raw_number)))
-            print('target_id: %s' % record.target_id)
+            if record.target_id != None:
+                print('target_id: %s' % record.target_id)
             print('nr_regions: %s' % len(snapshot.regions))
             for r in snapshot.regions:
                 print(r.to_str(args.raw_number, record.intervals))
