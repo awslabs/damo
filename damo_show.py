@@ -47,7 +47,7 @@ def pr_records(args, records):
                 r.age.add_unset_unit(record.intervals)
                 access_rate = r.nr_accesses.to_str(_damon.unit_percent,
                         args.raw_number)
-                age = r.age.to_str(_damon.unit_usec, args.raw_number)
+                age = _damo_fmt_str.format_time_us(r.age.usec, args.raw_number)
                 print('%3d addr %s (%s) access %s age %s' % (
                     idx, address_range, region_size, access_rate, age))
             print('')
