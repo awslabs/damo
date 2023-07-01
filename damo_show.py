@@ -86,9 +86,9 @@ def set_argparser(parser):
     parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
             help='min/max size of regions (bytes)')
-    parser.add_argument('--access_freq', metavar=('<min>', '<max>'), nargs=2,
+    parser.add_argument('--access_rate', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
-            help='min/max access frequency of regions (percent)')
+            help='min/max access rate of regions (percent)')
     parser.add_argument('--age', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
             help='min/max age of regions (seconds)')
@@ -109,7 +109,7 @@ def main(args=None):
         args = parser.parse_args()
 
     access_pattern = _damon.DamosAccessPattern(args.sz_region,
-            args.access_freq, _damon.unit_percent, args.age * 1000000,
+            args.access_rate, _damon.unit_percent, args.age * 1000000,
             _damon.unit_usec)
 
     if args.input_file == None:
