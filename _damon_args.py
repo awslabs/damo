@@ -163,13 +163,20 @@ def deduced_target_type(target):
         pass
     return target_type_unknown
 
+def warn_option_override(option_name):
+    print('warning: %s is overriden by <deducible target>' % option_name)
+
 def deduce_target_update_args(args):
     args.self_started_target = False
     target_type = deduced_target_type(args.deducible_target)
     if target_type == target_type_unknown:
         return 'target \'%s\' is not supported' % args.deducible_target
     if target_type == target_type_explict and args.deducible_target == 'paddr':
+        if not args.ops in ['paddr', None]:
+            warn_option_override('--ops')
         args.ops = 'paddr'
+        if args.target_pid != None:
+            warn_option_override('--target_pid')
         args.target_pid = None
         return None
     if target_type == target_type_cmd:
@@ -179,9 +186,16 @@ def deduce_target_update_args(args):
         args.self_started_target = True
     elif target_type == target_type_pid:
         pid = int(args.deducible_target)
+    if args.target_pid != None:
+        print('warning: --target_pid will be ignored')
     args.target_pid = pid
-    args.ops = 'vaddr'
+    if not args.regions:
+        if not args.ops in ['vaddr', None]:
+            warn_option_override('--ops')
+        args.ops = 'vaddr'
     if args.regions:
+        if not args.ops in ['fvaddr', None]:
+            print('warning: override --ops by <deducible target> and --regions')
         args.ops = 'fvaddr'
 
 def kdamonds_for(args):
