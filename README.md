@@ -177,8 +177,8 @@ For some old distros, DAMO initially supported Python2.  Because Python2 is
 really old now, the support has deprecated.  Please use Python3 or newer.
 
 
-DAMOS singline format
----------------------
+DAMOS single line format
+------------------------
 
 Deprecated.  Use `--damos_*` command line options or json format input.
 
