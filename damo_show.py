@@ -10,18 +10,17 @@ import _damon_args
 import _damon_result
 
 def format_pretty(template, idx, region, raw):
-    address_range = '[%s, %s)' % (
-            _damo_fmt_str.format_sz(region.start, raw),
-            _damo_fmt_str.format_sz(region.end, raw))
-    region_size = _damo_fmt_str.format_sz((region.end - region.start), raw)
-    access_rate = region.nr_accesses.to_str(_damon.unit_percent, raw)
-    age = _damo_fmt_str.format_time_us(region.age.usec, raw)
-
     template = template.replace('<index>', '%s' % idx)
-    template = template.replace('<address range>', address_range)
-    template = template.replace('<region size>', region_size)
-    template = template.replace('<access rate>', access_rate)
-    template = template.replace('<age>', age)
+    template = template.replace('<start address>',
+            _damo_fmt_str.format_sz(region.start, raw))
+    template = template.replace('<end address>',
+            _damo_fmt_str.format_sz(region.end, raw))
+    template = template.replace('<region size>',
+            _damo_fmt_str.format_sz(region.end - region.start, raw))
+    template = template.replace('<access rate>',
+            region.nr_accesses.to_str(_damon.unit_percent, raw))
+    template = template.replace('<age>',
+            _damo_fmt_str.format_time_us(region.age.usec, raw))
     return template
 
 def pr_records(args, records):
