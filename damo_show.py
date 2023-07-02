@@ -59,21 +59,22 @@ def pr_records(args, records):
                 total_size += r.end - r.start
                 if args.total_sz_only:
                     continue
+                r.nr_accesses.add_unset_unit(record.intervals)
+                r.age.add_unset_unit(record.intervals)
+                if args.pretty:
+                    print(format_pretty(args.pretty, idx, r, args.raw_number))
+                    continue
+
                 address_range = '[%s, %s)' % (
                         _damo_fmt_str.format_sz(r.start, args.raw_number),
                         _damo_fmt_str.format_sz(r.end, args.raw_number))
                 region_size = _damo_fmt_str.format_sz((r.end - r.start),
                         args.raw_number)
-                r.nr_accesses.add_unset_unit(record.intervals)
-                r.age.add_unset_unit(record.intervals)
                 access_rate = r.nr_accesses.to_str(_damon.unit_percent,
                         args.raw_number)
                 age = _damo_fmt_str.format_time_us(r.age.usec, args.raw_number)
-                if args.pretty:
-                    print(format_pretty(args.pretty, idx, r, args.raw_number))
-                else:
-                    print('%3d addr %s (%s) access %s age %s' % (
-                        idx, address_range, region_size, access_rate, age))
+                print('%3d addr %s (%s) access %s age %s' % (
+                    idx, address_range, region_size, access_rate, age))
             print('total sz: %s' % _damo_fmt_str.format_sz(total_size,
                 args.raw_number))
             print('')
