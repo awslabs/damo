@@ -614,7 +614,7 @@ def tried_regions_to_records(monitor_scheme):
 
                 snapshot = tried_regions_to_snapshot(scheme.tried_regions,
                         ctx.intervals)
-                snapshot.total_bytes = scheme.tried_regions_total_bytes
+                snapshot.total_bytes = scheme.tried_bytes
 
                 records.append(DamonRecord(kdamond_idx, ctx_idx, ctx.intervals,
                     None, None))
