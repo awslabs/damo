@@ -9,7 +9,14 @@ import _damon
 import _damon_args
 import _damon_result
 
-def format_pretty(template, idx, address_range, region_size, access_rate, age):
+def format_pretty(template, idx, region, raw):
+    address_range = '[%s, %s)' % (
+            _damo_fmt_str.format_sz(region.start, raw),
+            _damo_fmt_str.format_sz(region.end, raw))
+    region_size = _damo_fmt_str.format_sz((region.end - region.start), raw)
+    access_rate = region.nr_accesses.to_str(_damon.unit_percent, raw)
+    age = _damo_fmt_str.format_time_us(region.age.usec, raw)
+
     template = template.replace('<index>', '%s' % idx)
     template = template.replace('<address range>', address_range)
     template = template.replace('<region size>', region_size)
@@ -63,8 +70,7 @@ def pr_records(args, records):
                         args.raw_number)
                 age = _damo_fmt_str.format_time_us(r.age.usec, args.raw_number)
                 if args.pretty:
-                    print(format_pretty(args.pretty, idx, address_range,
-                        region_size, access_rate, age))
+                    print(format_pretty(args.pretty, idx, r, args.raw_number))
                 else:
                     print('%3d addr %s (%s) access %s age %s' % (
                         idx, address_range, region_size, access_rate, age))
