@@ -165,7 +165,8 @@ def main(args=None):
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args)
 
-        records, err = _damon_result.get_snapshot_records(access_pattern)
+        records, err = _damon_result.get_snapshot_records(access_pattern,
+                False)
         if err != None:
             print(err)
             exit(1)
