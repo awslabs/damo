@@ -620,7 +620,13 @@ def tried_regions_to_records(monitor_scheme):
                 break
     return records
 
-def current_regions_for(pid):
+def three_regions_of(pid):
+    '''
+    Return three big mapped virtual address ranges of a given process, which
+    separated by the two huge gaps[1].
+
+    [1] https://docs.kernel.org/mm/damon/design.html#vma-based-target-address-range-construction
+    '''
     if not os.path.isfile('/proc/%s/maps' % pid):
         print('maps file for %s pid not found' % pid)
         exit(0)
@@ -668,7 +674,7 @@ def get_snapshot_records(access_pattern):
                 continue
             need_restage = True
             for target in ctx.targets:
-                target.regions = current_regions_for(target.pid)
+                target.regions = three_regions_of(target.pid)
     if need_restage:
         _damon.commit(orig_kdamonds)
         for kd in orig_kdamonds:
