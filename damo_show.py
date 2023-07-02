@@ -166,7 +166,7 @@ def main(args=None):
         _damon.ensure_root_and_initialized(args)
 
         records, err = _damon_result.get_snapshot_records(access_pattern,
-                False)
+                args.total_sz_only)
         if err != None:
             print(err)
             exit(1)
