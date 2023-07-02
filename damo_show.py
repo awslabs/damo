@@ -114,8 +114,6 @@ def set_argparser(parser):
     - time based filtering
     - printing heatbar (bar of the size colored with access rate)
     - printing only heatbars (becomes heatmap)
-    - printing only total size (becomes wss)
-    - printing only size (becomes sort of working set histogram)
     - sort by prioritiy with priority weights (become histogram)
     - collapse by time
     - collapse by priority value (more histogram control)
