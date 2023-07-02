@@ -922,6 +922,11 @@ def update_schemes_stats(kdamond_idxs=None):
         kdamond_idxs = running_kdamond_idxs()
     return _damon_fs.update_schemes_stats(kdamond_idxs)
 
+def update_schemes_tried_bytes(kdamond_idxs=None):
+    if kdamond_idxs == None:
+        kdamond_idxs = running_kdamond_idxs()
+    return _damon_fs.update_schemes_tried_bytes(kdamond_idxs)
+
 def update_schemes_tried_regions(kdamond_idxs=None):
     if kdamond_idxs == None:
         kdamond_idxs = running_kdamond_idxs()

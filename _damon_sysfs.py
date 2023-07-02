@@ -77,6 +77,15 @@ def update_schemes_stats(kdamond_idxs):
     return None
 
 'Return error'
+def update_schemes_tried_bytes(kdamond_idxs):
+    for kdamond_idx in kdamond_idxs:
+        err = _damo_fs.write_file(
+                state_file_of(kdamond_idx), 'update_schemes_tried_bytes')
+        if err != None:
+            return err
+    return None
+
+'Return error'
 def update_schemes_tried_regions(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
         err = _damo_fs.write_file(
