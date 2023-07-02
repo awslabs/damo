@@ -55,6 +55,11 @@ def pr_records(args, records):
                                 args.raw_number)))
             if record.target_id != None:
                 print('target_id: %s' % record.target_id)
+            if args.total_sz_only and snapshot.total_bytes != None:
+                print('total sz: %s' %
+                        _damo_fmt_str.format_sz(snapshot.total_bytes,
+                            args.raw_number))
+                continue
             total_size = 0
             for idx, r in enumerate(snapshot.regions):
                 total_size += r.end - r.start
