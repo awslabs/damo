@@ -9,6 +9,14 @@ import _damon
 import _damon_args
 import _damon_result
 
+def format_pretty(template, idx, address_range, region_size, access_rate, age):
+    template = template.replace('<index>', '%s' % idx)
+    template = template.replace('<address range>', address_range)
+    template = template.replace('<region size>', region_size)
+    template = template.replace('<access rate>', access_rate)
+    template = template.replace('<age>', age)
+    return template
+
 def pr_records(args, records):
     if args.json:
         print(json.dumps([r.to_kvpairs(args.raw_number)
@@ -50,8 +58,12 @@ def pr_records(args, records):
                 access_rate = r.nr_accesses.to_str(_damon.unit_percent,
                         args.raw_number)
                 age = _damo_fmt_str.format_time_us(r.age.usec, args.raw_number)
-                print('%3d addr %s (%s) access %s age %s' % (
-                    idx, address_range, region_size, access_rate, age))
+                if args.pretty:
+                    print(format_pretty(args.pretty, idx, address_range,
+                        region_size, access_rate, age))
+                else:
+                    print('%3d addr %s (%s) access %s age %s' % (
+                        idx, address_range, region_size, access_rate, age))
             print('')
 
 def filter_by_pattern(record, access_pattern):
@@ -110,6 +122,9 @@ def set_argparser(parser):
             action='append',
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
+
+    parser.add_argument('--pretty',
+            help='output format for each region')
     parser.add_argument('--raw_number', action='store_true',
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
