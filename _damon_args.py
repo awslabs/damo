@@ -210,7 +210,10 @@ def kdamonds_for(args):
         if err:
             return None, err
     if args.ops == None:
-        args.ops = 'paddr'
+        if args.target_pid == None:
+            args.ops = 'paddr'
+        else:
+            args.ops = 'vaddr'
 
     ctx, err = damon_ctx_for(args)
     if err:
