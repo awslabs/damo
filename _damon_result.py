@@ -659,6 +659,24 @@ def three_regions_of(pid):
             _damon.DamonRegion(gaps[0][1], gaps[1][0]),
             _damon.DamonRegion(gaps[1][1], regions[-1].end)]
 
+def install_target_regions_if_needed(kdamonds):
+    need_restage = False
+    for kd in kdamonds:
+        for ctx in kd.contexts:
+            if ctx.ops != 'vaddr':
+                continue
+            need_restage = True
+            for target in ctx.targets:
+                target.regions = three_regions_of(target.pid)
+    if need_restage:
+        _damon.commit(kdamonds)
+        for kd in kdamonds:
+            for ctx in kd.contexts:
+                if ctx.ops != 'vaddr':
+                    continue
+                for target in ctx.targets:
+                    target.regions = []
+
 def get_snapshot_records(access_pattern):
     'return DamonRecord objects each having single DamonSnapshot and an error'
     running_kdamond_idxs = _damon.running_kdamond_idxs()
@@ -667,23 +685,7 @@ def get_snapshot_records(access_pattern):
 
     orig_kdamonds = _damon.current_kdamonds()
 
-    need_restage = False
-    for kd in orig_kdamonds:
-        for ctx in kd.contexts:
-            if ctx.ops != 'vaddr':
-                continue
-            need_restage = True
-            for target in ctx.targets:
-                target.regions = three_regions_of(target.pid)
-    if need_restage:
-        _damon.commit(orig_kdamonds)
-        for kd in orig_kdamonds:
-            for ctx in kd.contexts:
-                if ctx.ops != 'vaddr':
-                    continue
-                for target in ctx.targets:
-                    target.regions = []
-
+    install_target_regions_if_needed(orig_kdamonds)
 
     monitor_scheme = _damon.Damos(access_pattern=access_pattern)
     installed, err = install_scheme(monitor_scheme)
