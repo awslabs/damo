@@ -635,7 +635,23 @@ def current_regions_for(pid):
             regions[-1].end = end
         else:
             regions.append(_damon.DamonRegion(start, end))
-    return regions
+
+    gaps = []
+    for idx, region in enumerate(regions):
+        if idx == 0:
+            continue
+        prev_region = regions[idx - 1]
+        if region.start != prev_region.end:
+            gaps.append([prev_region.end, region.start])
+    gaps.sort(key=lambda x: x[1] - x[0], reverse=True)
+    if len(gaps) < 2:
+        return regions
+    # sort biggest two gaps in address
+    gaps = sorted(gaps[:2], key=lambda x: x[0])
+
+    return [_damon.DamonRegion(regions[0].start, gaps[0][0]),
+            _damon.DamonRegion(gaps[0][1], gaps[1][0]),
+            _damon.DamonRegion(gaps[1][1], regions[-1].end)]
 
 def get_snapshot_records(access_pattern):
     'return DamonRecord objects each having single DamonSnapshot and an error'
