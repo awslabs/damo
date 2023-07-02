@@ -50,6 +50,8 @@ def pr_records(args, records):
             total_size = 0
             for idx, r in enumerate(snapshot.regions):
                 total_size += r.end - r.start
+                if args.total_sz_only:
+                    continue
                 address_range = '[%s, %s)' % (
                         _damo_fmt_str.format_sz(r.start, args.raw_number),
                         _damo_fmt_str.format_sz(r.end, args.raw_number))
@@ -129,6 +131,8 @@ def set_argparser(parser):
 
     parser.add_argument('--pretty',
             help='output format for each region')
+    parser.add_argument('--total_sz_only', action='store_true',
+            help='print only total size of the regions')
     parser.add_argument('--raw_number', action='store_true',
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
