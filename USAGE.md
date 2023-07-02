@@ -271,6 +271,5 @@ refer to the ``schemes`` part of the output.  This can be useful for more
 detailed tuning of the scheme, or for multiple schemes.
 
 NOTE: DAMO used to support one-line scheme specification format before.  The
-format is now DEPRECATED, and the support will be removed by 2023-Q2.  Please
-report your usage of it to sj@kernel.org, damon@lists.linux.dev, and
-linux-mm@kvack.org if you depend on it.
+format is now DEPRECATED.  You may use `damo trasnalte_damos` to convert your
+old single line DAMOS schemes specification to the new json format.
