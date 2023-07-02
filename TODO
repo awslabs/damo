@@ -31,3 +31,11 @@
 - Add test for translate_damos and convert_record_format
 - Fix 'damo stat regions' clearing monitoring results bug on dynamic virtual
   address ranges monitoring (https://github.com/awslabs/damo/issues/46)
+- damo status features implementation
+  - specify target to show
+- damo show features implementation
+  - specify target to show
+  - sortby temperature
+  - support heat bar
+  - support minimum pretty field length
+  - support tried regions
