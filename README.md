@@ -127,9 +127,9 @@ image files.
 You can show the images on a web page [1].  Those made with other realistic
 workloads are also available [2,3,4].
 
-[1] https://damonitor.github.io/doc/html/latest/admin-guide/mm/damon/start.html#visualizing-recorded-patterns  
-[2] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html  
-[3] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html  
+[1] https://damonitor.github.io/doc/html/latest/admin-guide/mm/damon/start.html#visualizing-recorded-patterns<br>
+[2] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html<br>
+[3] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html<br>
 [4] https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html
 
 
