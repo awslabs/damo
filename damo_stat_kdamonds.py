@@ -25,7 +25,7 @@ def __main(args):
 
 def main(args=None):
     _damo_deprecation_notice.will_be_deprecated('\'damo stat kdamonds\'',
-            'near future', 'Use \'damo show status kdamonds\' instead')
+            'near future', 'Use \'damo status\' instead')
 
     if not args:
         parser = argparse.ArgumentParser()
