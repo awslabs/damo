@@ -47,7 +47,9 @@ def pr_records(args, records):
                             args.raw_number)))
             if record.target_id != None:
                 print('target_id: %s' % record.target_id)
+            total_size = 0
             for idx, r in enumerate(snapshot.regions):
+                total_size += r.end - r.start
                 address_range = '[%s, %s)' % (
                         _damo_fmt_str.format_sz(r.start, args.raw_number),
                         _damo_fmt_str.format_sz(r.end, args.raw_number))
@@ -64,6 +66,8 @@ def pr_records(args, records):
                 else:
                     print('%3d addr %s (%s) access %s age %s' % (
                         idx, address_range, region_size, access_rate, age))
+            print('total sz: %s' % _damo_fmt_str.format_sz(total_size,
+                args.raw_number))
             print('')
 
 def filter_by_pattern(record, access_pattern):
