@@ -39,18 +39,20 @@ def pr_records(args, records):
             print('kdamond %s / context %s / scheme %s' %
                     (record.kdamond_idx, record.context_idx,
                         record.scheme_idx))
-        print('base_time_absolute: %s\n' %
-                _damo_fmt_str.format_time_ns(base_time, args.raw_number))
+        if len(snapshots) > 1:
+            print('base_time_absolute: %s\n' %
+                    _damo_fmt_str.format_time_ns(base_time, args.raw_number))
 
-        for snapshot in snapshots:
-            print('monitored time: [%s, %s] (%s)' %
-                    (_damo_fmt_str.format_time_ns(
-                        snapshot.start_time - base_time, args.raw_number),
-                        _damo_fmt_str.format_time_ns(
-                            snapshot.end_time - base_time, args.raw_number),
-                        _damo_fmt_str.format_time_ns(
-                            snapshot.end_time - snapshot.start_time,
-                            args.raw_number)))
+        for sidx, snapshot in enumerate(snapshots):
+            if len(snapshots) > 1:
+                print('monitored time: [%s, %s] (%s)' %
+                        (_damo_fmt_str.format_time_ns(
+                            snapshot.start_time - base_time, args.raw_number),
+                            _damo_fmt_str.format_time_ns(
+                                snapshot.end_time - base_time, args.raw_number),
+                            _damo_fmt_str.format_time_ns(
+                                snapshot.end_time - snapshot.start_time,
+                                args.raw_number)))
             if record.target_id != None:
                 print('target_id: %s' % record.target_id)
             total_size = 0
@@ -76,7 +78,8 @@ def pr_records(args, records):
                     idx, address_range, region_size, access_rate, age))
             print('total sz: %s' % _damo_fmt_str.format_sz(total_size,
                 args.raw_number))
-            print('')
+            if sidx < len(snapshots) - 1:
+                print('')
 
 def filter_by_pattern(record, access_pattern):
     sz_bytes = access_pattern.sz_bytes
