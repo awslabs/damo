@@ -7,8 +7,8 @@ import sys
 import tempfile
 
 import _damo_dist
-import _damon_result
 import _damo_fmt_str
+import _damon_result
 
 def get_wss_dists(records, acc_thres, sz_thres, do_sort):
     wss_dists = {}

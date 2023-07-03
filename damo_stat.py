@@ -3,13 +3,12 @@
 import signal
 import time
 
-import damo_stat_kdamonds
-import damo_stat_regions
-import damo_stat_schemes
-
 import _damo_subcmds
 import _damon
 import _damon_args
+import damo_stat_kdamonds
+import damo_stat_regions
+import damo_stat_schemes
 
 def pr_damon_interface(args):
     _damon.ensure_root_and_initialized(args)

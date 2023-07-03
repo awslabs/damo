@@ -10,10 +10,9 @@ import os
 import subprocess
 import sys
 
-import _damon
-
 import _damo_deprecation_notice
 import _damo_fmt_str
+import _damon
 
 '''
 Python2 support

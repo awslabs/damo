@@ -7,8 +7,8 @@ import _test_damo_common
 
 _test_damo_common.add_damo_dir_to_syspath()
 
-import _damon
 import _damo_deprecated
+import _damon
 import _damon_dbgfs
 
 class TestDamoSchemeDbgfsConversion(unittest.TestCase):

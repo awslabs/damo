@@ -17,8 +17,8 @@ import subprocess
 import sys
 import tempfile
 
-import _damon_result
 import _damo_fmt_str
+import _damon_result
 
 class HeatPixel:
     time = None

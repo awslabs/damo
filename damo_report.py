@@ -2,12 +2,11 @@
 
 import argparse
 
+import _damo_subcmds
 import damo_heats
 import damo_nr_regions
 import damo_report_raw
 import damo_wss
-
-import _damo_subcmds
 
 subcmds = [
         _damo_subcmds.DamoSubCmd(name='raw', module=damo_report_raw,

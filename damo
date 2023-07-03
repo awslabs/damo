@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
-
 import os
+
 os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sys
 
+import _damo_subcmds
 import damo_adjust
-import damo_show
 import damo_convert_record_format
 import damo_features
 import damo_fmt_json
@@ -18,6 +18,7 @@ import damo_reclaim
 import damo_record
 import damo_report
 import damo_schemes
+import damo_show
 import damo_start
 import damo_stat
 import damo_status
@@ -26,8 +27,6 @@ import damo_translate_damos
 import damo_tune
 import damo_validate
 import damo_version
-
-import _damo_subcmds
 
 def pr_damo_version(args_not_use):
     print(damo_version.__version__)
