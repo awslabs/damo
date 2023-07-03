@@ -341,7 +341,7 @@ def set_argparser(parser):
             help='target id')
     parser.add_argument('--resol', metavar='<resolution>', type=int, nargs=2,
             default=[500, 500],
-            help='resolutions for time and address axises')
+            help='resolutions for time and address axes')
     parser.add_argument('--time_range', metavar='<time>', type=int, nargs=2,
             help='start and end time of the output')
     parser.add_argument('--address_range', metavar='<address>', type=int,

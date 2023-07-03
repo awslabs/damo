@@ -49,7 +49,7 @@ def main(args=None):
     if target_type == None:
         print('invalid target \'%s\'' % target)
         exit(1)
-    if target_type == _damon_args.target_type_explict and target == 'paddr':
+    if target_type == _damon_args.target_type_explicit and target == 'paddr':
         pass
     elif target_type == _damon_args.target_type_cmd:
         cmd_pipe = subprocess.Popen(target, shell=True, executable='/bin/bash',

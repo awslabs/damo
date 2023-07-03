@@ -16,7 +16,7 @@ def assert_value_in_range(value, min_max, name, error_allowed):
         return 0
     if error_allowed:
         return 1
-    print('invalid: expecte %d<=%s<=%d but %d' %
+    print('invalid: expect %d<=%s<=%d but %d' %
             (min_max[0], name, min_max[1], value))
     exit(1)
 

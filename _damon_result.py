@@ -413,7 +413,7 @@ def write_json(records, file_path):
 def add_fake_snapshot_if_needed(records):
     '''
     perf and record file format stores only snapshot end time.  For a record
-    having only single snapshot, hence, the reader of the files cannot knwo the
+    having only single snapshot, hence, the reader of the files cannot know the
     start time of the snapshot.  Add a fake snapshot for the case.
     '''
 
