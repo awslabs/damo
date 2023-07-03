@@ -905,7 +905,7 @@ def stage_kdamonds(kdamonds):
 
 def commit_staged(kdamond_idxs):
     if _damon_fs == _damon_dbgfs:
-        return 'debugfs interface unsupport commit_staged()'
+        return 'debugfs interface does not support commit_staged()'
     return _damon_fs.commit_staged(kdamond_idxs)
 
 def commit(kdamonds):

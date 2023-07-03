@@ -97,7 +97,7 @@ def damos_for(args):
 
     schemes, err = schemes_option_to_damos(args.schemes)
     if err:
-        return None, 'failed damo schemes arguents parsing (%s)' % err
+        return None, 'failed damo schemes arguments parsing (%s)' % err
     return schemes, None
 
 def damon_ctx_for(args):
@@ -143,14 +143,14 @@ def kdamonds_from_json_arg(arg):
     except Exception as e:
         return None, e
 
-target_type_explict = 'explict'
+target_type_explicit = 'explicit'
 target_type_cmd = 'cmd'
 target_type_pid = 'pid'
 target_type_unknown = None
 
 def deduced_target_type(target):
     if target in ['vaddr', 'paddr', 'fvaddr']:
-        return target_type_explict
+        return target_type_explicit
     try:
         subprocess.check_output(['which', target.split()[0]])
         return target_type_cmd
@@ -164,14 +164,14 @@ def deduced_target_type(target):
     return target_type_unknown
 
 def warn_option_override(option_name):
-    print('warning: %s is overriden by <deducible target>' % option_name)
+    print('warning: %s is overridden by <deducible target>' % option_name)
 
 def deduce_target_update_args(args):
     args.self_started_target = False
     target_type = deduced_target_type(args.deducible_target)
     if target_type == target_type_unknown:
         return 'target \'%s\' is not supported' % args.deducible_target
-    if target_type == target_type_explict and args.deducible_target == 'paddr':
+    if target_type == target_type_explicit and args.deducible_target == 'paddr':
         if not args.ops in ['paddr', None]:
             warn_option_override('--ops')
         args.ops = 'paddr'
