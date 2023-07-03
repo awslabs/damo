@@ -6,8 +6,8 @@ Print basic information of the access monitoring results record file.
 
 import argparse
 
-import _damon_result
 import _damo_fmt_str
+import _damon_result
 
 class GuideInfo:
     tid = None

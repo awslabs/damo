@@ -3,12 +3,11 @@
 import argparse
 import json
 
-import damo_stat
-import damo_status
-
 import _damo_deprecation_notice
 import _damo_fmt_str
 import _damon
+import damo_stat
+import damo_status
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)

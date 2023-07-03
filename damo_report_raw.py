@@ -5,8 +5,8 @@ import json
 import os
 import sys
 
-import _damon_result
 import _damo_fmt_str
+import _damon_result
 
 def filter_snapshots(records, start_time_sec, end_time_sec):
     for record in records:

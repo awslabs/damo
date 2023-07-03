@@ -2,13 +2,12 @@
 
 import argparse
 
-import damo_stat
-
 import _damo_deprecation_notice
 import _damo_fmt_str
 import _damo_subcmds
 import _damon
 import _damon_result
+import damo_stat
 
 def priority(region, weights):
     if region.nr_accesses.samples > 0:
