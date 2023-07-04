@@ -29,6 +29,7 @@ def format_for(template, min_chars, field_name, txt):
             field_name, apply_min_chars(min_chars, field_name, txt))
 
 def format_pretty(template, min_chars, idx, region, raw):
+    template = template.replace('\\n', '\n')
     template = format_for(template, min_chars, '<index>', '%s' % idx)
     template = format_for(template, min_chars, '<start address>',
             _damo_fmt_str.format_sz(region.start, raw))
