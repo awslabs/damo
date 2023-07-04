@@ -5,3 +5,10 @@ lines_after_imports = 1
 combine_as_imports = true
 ignore_whitespace = true
 skip_gitignore = true
+
+[tool.yapf]
+column_limit = 80
+blank_lines_around_top_level_definition = 1
+blank_line_before_class_docstring = false
+blank_line_before_module_docstring = false
+blank_line_before_nested_class_or_def = false
