@@ -44,6 +44,13 @@ def format_pretty(template, min_chars, idx, region, raw):
             _damo_fmt_str.format_time_us(region.age.usec, raw))
     return template
 
+def format_snapshot_tail_pretty(template, min_chars, snapshot, raw):
+    template = template.replace('\\n', '\n')
+    template = template.replace('<total bytes>',
+            apply_min_chars(min_chars, '<total bytes>',
+                _damo_fmt_str.format_sz(snapshot.total_bytes, raw)))
+    return template
+
 def pr_records(args, records):
     if args.json:
         print(json.dumps([r.to_kvpairs(args.raw_number)
@@ -94,6 +101,11 @@ def pr_records(args, records):
                     idx, r, args.raw_number))
             print('total sz: %s' % _damo_fmt_str.format_sz(total_size,
                 args.raw_number))
+            if args.snapshot_tail_pretty:
+                print(format_snapshot_tail_pretty(
+                    args.snapshot_tail_pretty, args.pretty_min_chars, snapshot,
+                    args.raw_number))
+
             if sidx < len(snapshots) - 1:
                 print('')
 
@@ -152,6 +164,8 @@ def set_argparser(parser):
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
 
+    parser.add_argument('--snapshot_tail_pretty',
+            help='snapshot output tail format')
     parser.add_argument('--region_pretty',
             help='region output format')
     parser.add_argument('--pretty_min_chars', nargs=2, default=[],
