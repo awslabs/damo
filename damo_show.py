@@ -46,6 +46,8 @@ def format_pretty(template, min_chars, idx, region, raw):
 
 def format_snapshot_head_tail_pretty(template, min_chars, snapshot, raw):
     template = template.replace('\\n', '\n')
+    if template.find('<total bytes>') != -1 and snapshot.total_bytes == None:
+        snapshot.total_bytes = sum([r.end - r.start for r in snapshot.regions])
     template = template.replace('<total bytes>',
             apply_min_chars(min_chars, '<total bytes>',
                 _damo_fmt_str.format_sz(snapshot.total_bytes, raw)))
