@@ -24,54 +24,58 @@ def apply_min_chars(min_chars, field_name, txt):
             return txt
     return txt
 
-def format_for(template, min_chars, field_name, txt):
-    return template.replace(
-            field_name, apply_min_chars(min_chars, field_name, txt))
+def format_field(min_chars, field_name, index, region, snapshot, record, raw):
+    if field_name == '<index>':
+        txt = _damo_fmt_str.format_nr(index, raw)
+    elif field_name == '<start address>':
+        txt = _damo_fmt_str.format_sz(region.start, raw)
+    elif field_name == '<end address>':
+        txt = _damo_fmt_str.format_sz(region.end, raw)
+    elif field_name == '<region size>':
+        txt = _damo_fmt_str.format_sz(region.end - region.start, raw)
+    elif field_name == '<access rate>':
+        txt = _damo_fmt_str.format_percent(region.nr_accesses.percent, raw)
+    elif field_name == '<age>':
+        txt = _damo_fmt_str.format_time_us(region.age.usec, raw)
+    elif field_name == '<total bytes>':
+        if snapshot.total_bytes == None:
+            snapshot.total_bytes = sum([r.end - r.start
+                for r in snapshot.regions])
+        txt = _damo_fmt_str.format_sz(snapshot.total_bytes, raw)
+    elif field_name == '<monitor duration>':
+        txt = _damo_fmt_str.format_time_ns(
+                snapshot.end_time - snapshot.start_time, raw)
+    elif field_name == '<monitor start time>':
+        base_time = record.snapshots[0].start_time
+        txt = _damo_fmt_str.format_time_ns(
+                snapshot.start_time - base_time, raw)
+    elif field_name == '<monitor end time>':
+        base_time = record.snapshots[0].start_time
+        txt = _damo_fmt_str.format_time_ns(snapshot.end_time - base_time, raw)
+    elif field_name == '<monitor start abs time>':
+        txt = _damo_fmt_str.format_time_ns(snapshot.start_time, raw)
+    elif field_name == '<monitor end abs time>':
+        txt = _damo_fmt_str.format_time_ns(snapshot.end_time, raw)
+    else:
+        print(field_name)
+        raise(Exception)
 
-def format_pretty(template, min_chars, idx, region, raw):
+    return apply_min_chars(min_chars, field_name, txt)
+
+def format_pretty(template, min_chars, index, region, snapshot, record, raw):
+    for field_name in [
+            # for region pretty
+            '<index>', '<start address>', '<end address>', '<region size>',
+            '<access rate>', '<age>',
+            # for snapshot pretty
+            '<total bytes>', '<monitor duration>',
+            '<monitor start time>', '<monitor end time>',
+            '<monitor start abs time>', '<monitor end abs time>']:
+        if template.find(field_name) == -1:
+            continue
+        template = template.replace(field_name, format_field(min_chars,
+            field_name, index, region, snapshot, record, raw))
     template = template.replace('\\n', '\n')
-    template = format_for(template, min_chars, '<index>',
-            _damo_fmt_str.format_nr(idx, raw))
-    template = format_for(template, min_chars, '<start address>',
-            _damo_fmt_str.format_sz(region.start, raw))
-    template = format_for(template, min_chars, '<end address>',
-            _damo_fmt_str.format_sz(region.end, raw))
-    template = format_for(template, min_chars, '<region size>',
-            _damo_fmt_str.format_sz(region.end - region.start, raw))
-    template = format_for(template, min_chars, '<access rate>',
-            _damo_fmt_str.format_percent(region.nr_accesses.percent, raw))
-    template = format_for(template, min_chars, '<age>',
-            _damo_fmt_str.format_time_us(region.age.usec, raw))
-    return template
-
-def format_snapshot_head_tail_pretty(template, min_chars, snapshot, record,
-        raw):
-    template = template.replace('\\n', '\n')
-    if template.find('<total bytes>') != -1 and snapshot.total_bytes == None:
-        snapshot.total_bytes = sum([r.end - r.start for r in snapshot.regions])
-    template = template.replace('<total bytes>',
-            apply_min_chars(min_chars, '<total bytes>',
-                _damo_fmt_str.format_sz(snapshot.total_bytes, raw)))
-    template = template.replace('<monitor duration>',
-            apply_min_chars(min_chars, '<monitor duration>',
-                _damo_fmt_str.format_time_ns(
-                    snapshot.end_time - snapshot.start_time, raw)))
-    base_time = record.snapshots[0].start_time
-    template = template.replace('<monitor start time>',
-            apply_min_chars(min_chars, '<monitor start time>',
-                _damo_fmt_str.format_time_ns(
-                    snapshot.start_time - base_time, raw)))
-    template = template.replace('<monitor end time>',
-            apply_min_chars(min_chars, '<monitor end time>',
-                _damo_fmt_str.format_time_ns(
-                    snapshot.end_time - base_time, raw)))
-    template = template.replace('<monitor start abs time>',
-            apply_min_chars(min_chars, '<monitor start time>',
-                _damo_fmt_str.format_time_ns(snapshot.start_time, raw)))
-    template = template.replace('<monitor end time>',
-            apply_min_chars(min_chars, '<monitor end abs time>',
-                _damo_fmt_str.format_time_ns(snapshot.end_time, raw)))
-
     return template
 
 def pr_records(args, records):
@@ -112,20 +116,20 @@ def pr_records(args, records):
             if record.target_id != None:
                 print('target_id: %s' % record.target_id)
             if args.snapshot_head_pretty:
-                print(format_snapshot_head_tail_pretty(
-                    args.snapshot_head_pretty, args.pretty_min_chars, snapshot,
-                    record, args.raw_number))
+                print(format_pretty(args.snapshot_head_pretty,
+                    args.pretty_min_chars, None, None, snapshot, record,
+                    args.raw_number))
             for idx, r in enumerate(snapshot.regions):
                 if args.region_pretty == '':
                     continue
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
                 print(format_pretty(args.region_pretty, args.pretty_min_chars,
-                    idx, r, args.raw_number))
+                    idx, r, snapshot, record, args.raw_number))
             if args.snapshot_tail_pretty:
-                print(format_snapshot_head_tail_pretty(
-                    args.snapshot_tail_pretty, args.pretty_min_chars, snapshot,
-                    record, args.raw_number))
+                print(format_pretty(args.snapshot_tail_pretty,
+                    args.pretty_min_chars, None, None, snapshot, record,
+                    args.raw_number))
 
             if sidx < len(snapshots) - 1:
                 print('')
