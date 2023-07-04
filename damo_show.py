@@ -44,7 +44,8 @@ def format_pretty(template, min_chars, idx, region, raw):
             _damo_fmt_str.format_time_us(region.age.usec, raw))
     return template
 
-def format_snapshot_head_tail_pretty(template, min_chars, snapshot, raw):
+def format_snapshot_head_tail_pretty(template, min_chars, snapshot, record,
+        raw):
     template = template.replace('\\n', '\n')
     if template.find('<total bytes>') != -1 and snapshot.total_bytes == None:
         snapshot.total_bytes = sum([r.end - r.start for r in snapshot.regions])
@@ -55,11 +56,20 @@ def format_snapshot_head_tail_pretty(template, min_chars, snapshot, raw):
             apply_min_chars(min_chars, '<monitor duration>',
                 _damo_fmt_str.format_time_ns(
                     snapshot.end_time - snapshot.start_time, raw)))
+    base_time = record.snapshots[0].start_time
     template = template.replace('<monitor start time>',
+            apply_min_chars(min_chars, '<monitor start time>',
+                _damo_fmt_str.format_time_ns(
+                    snapshot.start_time - base_time, raw)))
+    template = template.replace('<monitor end time>',
+            apply_min_chars(min_chars, '<monitor end time>',
+                _damo_fmt_str.format_time_ns(
+                    snapshot.end_time - base_time, raw)))
+    template = template.replace('<monitor start abs time>',
             apply_min_chars(min_chars, '<monitor start time>',
                 _damo_fmt_str.format_time_ns(snapshot.start_time, raw)))
     template = template.replace('<monitor end time>',
-            apply_min_chars(min_chars, '<monitor end time>',
+            apply_min_chars(min_chars, '<monitor end abs time>',
                 _damo_fmt_str.format_time_ns(snapshot.end_time, raw)))
 
     return template
@@ -104,7 +114,7 @@ def pr_records(args, records):
             if args.snapshot_head_pretty:
                 print(format_snapshot_head_tail_pretty(
                     args.snapshot_head_pretty, args.pretty_min_chars, snapshot,
-                    args.raw_number))
+                    record, args.raw_number))
             for idx, r in enumerate(snapshot.regions):
                 if args.region_pretty == '':
                     continue
@@ -115,7 +125,7 @@ def pr_records(args, records):
             if args.snapshot_tail_pretty:
                 print(format_snapshot_head_tail_pretty(
                     args.snapshot_tail_pretty, args.pretty_min_chars, snapshot,
-                    args.raw_number))
+                    record, args.raw_number))
 
             if sidx < len(snapshots) - 1:
                 print('')
