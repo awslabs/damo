@@ -71,9 +71,9 @@ def pr_records(args, records):
         exit(0)
 
     if args.total_sz_only:
-        args.snapshot_head_pretty=''
+        args.snapshot_head_pretty = ''
         args.region_pretty = ''
-        args.snapshot_tail_pretty='<total bytes>'
+        args.snapshot_tail_pretty = '<total bytes>'
 
     for record in records:
         snapshots = record.snapshots
