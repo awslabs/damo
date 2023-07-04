@@ -96,6 +96,7 @@ def pr_records(args, records):
                 r.age.add_unset_unit(record.intervals)
                 print(format_pretty(args.region_pretty, args.pretty_min_chars,
                     idx, r, args.raw_number))
+            snapshot.total_bytes = total_size
             if args.snapshot_tail_pretty:
                 print(format_snapshot_tail_pretty(
                     args.snapshot_tail_pretty, args.pretty_min_chars, snapshot,
