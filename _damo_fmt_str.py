@@ -162,6 +162,12 @@ def format_ratio(ratio, machine_friendly):
         return '%s %%' % over_percent_str
     return '%s.%s %%' % (over_percent_str, under_percent_str)
 
+def format_percent(percent, machine_friendly):
+    if machine_friendly:
+        return '%f' % percent
+
+    return format_ratio(float(percent) / 100, machine_friendly)
+
 def format_permil(permil, machine_friendly):
     if machine_friendly:
         return '%f' % permil
