@@ -9,17 +9,36 @@ import _damon
 import _damon_args
 import _damon_result
 
-def format_pretty(template, idx, region, raw):
-    template = template.replace('<index>', '%s' % idx)
-    template = template.replace('<start address>',
+def apply_min_chars(min_chars, field_name, txt):
+    # min_chars: [[<field name>, <number of min chars>]...]
+    for name, nr in min_chars:
+        try:
+            nr = int(nr)
+        except:
+            print('wrong min_chars: %s' % min_chars)
+
+        if name == field_name:
+            if len(txt) >= nr:
+                return txt
+            txt += ' ' * (nr - len(txt))
+            return txt
+    return txt
+
+def format_for(template, min_chars, field_name, txt):
+    return template.replace(
+            field_name, apply_min_chars(min_chars, field_name, txt))
+
+def format_pretty(template, min_chars, idx, region, raw):
+    template = format_for(template, min_chars, '<index>', '%s' % idx)
+    template = format_for(template, min_chars, '<start address>',
             _damo_fmt_str.format_sz(region.start, raw))
-    template = template.replace('<end address>',
+    template = format_for(template, min_chars, '<end address>',
             _damo_fmt_str.format_sz(region.end, raw))
-    template = template.replace('<region size>',
+    template = format_for(template, min_chars, '<region size>',
             _damo_fmt_str.format_sz(region.end - region.start, raw))
-    template = template.replace('<access rate>',
+    template = format_for(template, min_chars, '<access rate>',
             region.nr_accesses.to_str(_damon.unit_percent, raw))
-    template = template.replace('<age>',
+    template = format_for(template, min_chars, '<age>',
             _damo_fmt_str.format_time_us(region.age.usec, raw))
     return template
 
@@ -68,7 +87,8 @@ def pr_records(args, records):
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
                 if args.pretty:
-                    print(format_pretty(args.pretty, idx, r, args.raw_number))
+                    print(format_pretty(args.pretty, args.pretty_min_chars,
+                        idx, r, args.raw_number))
                     continue
 
                 address_range = '[%s, %s)' % (
@@ -143,6 +163,9 @@ def set_argparser(parser):
 
     parser.add_argument('--pretty',
             help='output format for each region')
+    parser.add_argument('--pretty_min_chars', nargs=2, default=[],
+            metavar=('<field name> <number>'), action='append',
+            help='minimum character for each field')
     parser.add_argument('--total_sz_only', action='store_true',
             help='print only total size of the regions')
     parser.add_argument('--raw_number', action='store_true',
