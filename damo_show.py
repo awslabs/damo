@@ -88,21 +88,10 @@ def pr_records(args, records):
                     continue
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
-                if args.pretty:
-                    print(format_pretty(args.pretty, args.pretty_min_chars,
-                        idx, r, args.raw_number))
-                    continue
-
-                address_range = '[%s, %s)' % (
-                        _damo_fmt_str.format_sz(r.start, args.raw_number),
-                        _damo_fmt_str.format_sz(r.end, args.raw_number))
-                region_size = _damo_fmt_str.format_sz((r.end - r.start),
-                        args.raw_number)
-                access_rate = r.nr_accesses.to_str(_damon.unit_percent,
-                        args.raw_number)
-                age = _damo_fmt_str.format_time_us(r.age.usec, args.raw_number)
-                print('%3d addr %s (%s) access %s age %s' % (
-                    idx, address_range, region_size, access_rate, age))
+                if not args.pretty:
+                    args.pretty='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>'
+                print(format_pretty(args.pretty, args.pretty_min_chars,
+                    idx, r, args.raw_number))
             print('total sz: %s' % _damo_fmt_str.format_sz(total_size,
                 args.raw_number))
             if sidx < len(snapshots) - 1:
