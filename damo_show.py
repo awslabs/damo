@@ -53,6 +53,13 @@ def format_snapshot_head_tail_pretty(template, min_chars, snapshot, raw):
             apply_min_chars(min_chars, '<monitor duration>',
                 _damo_fmt_str.format_time_ns(
                     snapshot.end_time - snapshot.start_time, raw)))
+    template = template.replace('<monitor start time>',
+            apply_min_chars(min_chars, '<monitor start time>',
+                _damo_fmt_str.format_time_ns(snapshot.start_time, raw)))
+    template = template.replace('<monitor end time>',
+            apply_min_chars(min_chars, '<monitor end time>',
+                _damo_fmt_str.format_time_ns(snapshot.end_time, raw)))
+
     return template
 
 def pr_records(args, records):
