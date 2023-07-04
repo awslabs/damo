@@ -95,7 +95,9 @@ def pr_records(args, records):
                     continue
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
-                if not args.region_pretty:
+                if args.region_pretty == '':
+                    continue
+                if args.region_pretty == None:
                     args.region_pretty='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>'
                 print(format_pretty(args.region_pretty, args.pretty_min_chars,
                     idx, r, args.raw_number))
