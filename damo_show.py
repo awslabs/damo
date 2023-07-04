@@ -90,6 +90,9 @@ def pr_records(args, records):
         args.snapshot_tail_pretty = '<total bytes>'
 
     for record in records:
+        if args.record_head_pretty != None:
+            print(format_pretty(args.record_head_pretty, args.pretty_min_chars,
+                None, None, None, record, args.raw_number))
         snapshots = record.snapshots
         if len(snapshots) == 0:
             continue
@@ -133,6 +136,9 @@ def pr_records(args, records):
 
             if sidx < len(snapshots) - 1:
                 print('')
+        if args.record_tail_pretty != None:
+            print(format_pretty(args.record_tail_pretty, args.pretty_min_chars,
+            None, None, None, record, args.raw_number))
 
 def filter_by_pattern(record, access_pattern):
     sz_bytes = access_pattern.sz_bytes
@@ -189,6 +195,10 @@ def set_argparser(parser):
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
 
+    parser.add_argument('--record_head_pretty',
+            help='record output head format')
+    parser.add_argument('--record_tail_pretty',
+            help='record output tail format')
     parser.add_argument('--snapshot_head_pretty', default='',
             help='snapshot output tail format')
     parser.add_argument('--snapshot_tail_pretty',
