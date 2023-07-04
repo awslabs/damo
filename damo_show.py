@@ -95,13 +95,19 @@ def pr_records(args, records):
             for r in records], indent=4))
         exit(0)
 
+    if args.record_head_pretty == None:
+        if len(records) > 1:
+            args.record_head_pretty = 'kdamond <kdamond index> / context <context index> / scheme <scheme index>'
+        else:
+            args.record_head_pretty = ''
+
     if args.total_sz_only:
         args.snapshot_head_pretty = ''
         args.region_pretty = ''
         args.snapshot_tail_pretty = '<total bytes>'
 
     for record in records:
-        if args.record_head_pretty != None:
+        if args.record_head_pretty != '':
             print(format_pretty(args.record_head_pretty, args.pretty_min_chars,
                 None, None, None, record, args.raw_number))
         snapshots = record.snapshots
@@ -109,24 +115,15 @@ def pr_records(args, records):
             continue
 
         base_time = snapshots[0].start_time
-        if len(records) > 1:
-            print('kdamond %s / context %s / scheme %s' %
-                    (record.kdamond_idx, record.context_idx,
-                        record.scheme_idx))
         if len(snapshots) > 1:
             print('base_time_absolute: %s\n' %
                     _damo_fmt_str.format_time_ns(base_time, args.raw_number))
 
-        for sidx, snapshot in enumerate(snapshots):
+        if args.snapshot_head_pretty == None:
             if len(snapshots) > 1:
-                print('monitored time: [%s, %s] (%s)' %
-                        (_damo_fmt_str.format_time_ns(
-                            snapshot.start_time - base_time, args.raw_number),
-                            _damo_fmt_str.format_time_ns(
-                                snapshot.end_time - base_time, args.raw_number),
-                            _damo_fmt_str.format_time_ns(
-                                snapshot.end_time - snapshot.start_time,
-                                args.raw_number)))
+                args.snapshot_head_pretty = 'monitored time: [<monitor start time>, <monitor end time>] (<monitor duration>)'
+
+        for sidx, snapshot in enumerate(snapshots):
             if record.target_id != None:
                 print('target_id: %s' % record.target_id)
             if args.snapshot_head_pretty:
@@ -210,7 +207,7 @@ def set_argparser(parser):
             help='record output head format')
     parser.add_argument('--record_tail_pretty',
             help='record output tail format')
-    parser.add_argument('--snapshot_head_pretty', default='',
+    parser.add_argument('--snapshot_head_pretty',
             help='snapshot output tail format')
     parser.add_argument('--snapshot_tail_pretty',
             default='total size: <total bytes>',
