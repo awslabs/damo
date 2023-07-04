@@ -97,8 +97,6 @@ def pr_records(args, records):
                 r.age.add_unset_unit(record.intervals)
                 if args.region_pretty == '':
                     continue
-                if args.region_pretty == None:
-                    args.region_pretty='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>'
                 print(format_pretty(args.region_pretty, args.pretty_min_chars,
                     idx, r, args.raw_number))
             print('total sz: %s' % _damo_fmt_str.format_sz(total_size,
@@ -169,6 +167,7 @@ def set_argparser(parser):
     parser.add_argument('--snapshot_tail_pretty',
             help='snapshot output tail format')
     parser.add_argument('--region_pretty',
+            default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
             help='region output format')
     parser.add_argument('--pretty_min_chars', nargs=2, default=[],
             metavar=('<field name> <number>'), action='append',
