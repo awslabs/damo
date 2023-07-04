@@ -97,7 +97,7 @@ def pr_records(args, records):
 
     if args.record_head_pretty == None:
         if len(records) > 1:
-            args.record_head_pretty = 'kdamond <kdamond index> / context <context index> / scheme <scheme index>'
+            args.record_head_pretty = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id>'
         else:
             args.record_head_pretty = ''
 
@@ -124,8 +124,6 @@ def pr_records(args, records):
                 args.snapshot_head_pretty = 'monitored time: [<monitor start time>, <monitor end time>] (<monitor duration>)'
 
         for sidx, snapshot in enumerate(snapshots):
-            if record.target_id != None:
-                print('target_id: %s' % record.target_id)
             if args.snapshot_head_pretty:
                 print(format_pretty(args.snapshot_head_pretty,
                     args.pretty_min_chars, None, None, snapshot, record,
