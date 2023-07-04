@@ -56,6 +56,14 @@ def format_field(min_chars, field_name, index, region, snapshot, record, raw):
         txt = _damo_fmt_str.format_time_ns(snapshot.start_time, raw)
     elif field_name == '<monitor end abs time>':
         txt = _damo_fmt_str.format_time_ns(snapshot.end_time, raw)
+    elif field_name == '<kdamond index>':
+        txt = '%s' % record.kdamond_idx
+    elif field_name == '<context index>':
+        txt = '%s' % record.context_idx
+    elif field_name == '<scheme index>':
+        txt = '%s' % record.scheme_idx
+    elif field_name == '<target id>':
+        txt = '%s' % record.target_id
     else:
         print(field_name)
         raise(Exception)
@@ -70,7 +78,10 @@ def format_pretty(template, min_chars, index, region, snapshot, record, raw):
             # for snapshot pretty
             '<total bytes>', '<monitor duration>',
             '<monitor start time>', '<monitor end time>',
-            '<monitor start abs time>', '<monitor end abs time>']:
+            '<monitor start abs time>', '<monitor end abs time>',
+            # for record pretty
+            '<kdamond index>', '<context index>', '<scheme index>',
+            '<target id>']:
         if template.find(field_name) == -1:
             continue
         template = template.replace(field_name, format_field(min_chars,
@@ -138,7 +149,7 @@ def pr_records(args, records):
                 print('')
         if args.record_tail_pretty != None:
             print(format_pretty(args.record_tail_pretty, args.pretty_min_chars,
-            None, None, None, record, args.raw_number))
+                None, None, None, record, args.raw_number))
 
 def filter_by_pattern(record, access_pattern):
     sz_bytes = access_pattern.sz_bytes
