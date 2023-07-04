@@ -44,7 +44,7 @@ def format_pretty(template, min_chars, idx, region, raw):
             _damo_fmt_str.format_time_us(region.age.usec, raw))
     return template
 
-def format_snapshot_tail_pretty(template, min_chars, snapshot, raw):
+def format_snapshot_head_tail_pretty(template, min_chars, snapshot, raw):
     template = template.replace('\\n', '\n')
     template = template.replace('<total bytes>',
             apply_min_chars(min_chars, '<total bytes>',
@@ -58,6 +58,7 @@ def pr_records(args, records):
         exit(0)
 
     if args.total_sz_only:
+        args.snapshot_head_pretty=''
         args.region_pretty = ''
         args.snapshot_tail_pretty='<total bytes>'
 
@@ -87,6 +88,10 @@ def pr_records(args, records):
                                 args.raw_number)))
             if record.target_id != None:
                 print('target_id: %s' % record.target_id)
+            if args.snapshot_head_pretty:
+                print(format_snapshot_head_tail_pretty(
+                    args.snapshot_head_pretty, args.pretty_min_chars, snapshot,
+                    args.raw_number))
             total_size = 0
             for idx, r in enumerate(snapshot.regions):
                 total_size += r.end - r.start
@@ -98,7 +103,7 @@ def pr_records(args, records):
                     idx, r, args.raw_number))
             snapshot.total_bytes = total_size
             if args.snapshot_tail_pretty:
-                print(format_snapshot_tail_pretty(
+                print(format_snapshot_head_tail_pretty(
                     args.snapshot_tail_pretty, args.pretty_min_chars, snapshot,
                     args.raw_number))
 
@@ -160,6 +165,8 @@ def set_argparser(parser):
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
 
+    parser.add_argument('--snapshot_head_pretty', default='',
+            help='snapshot output tail format')
     parser.add_argument('--snapshot_tail_pretty',
             default='total size: <total bytes>',
             help='snapshot output tail format')
