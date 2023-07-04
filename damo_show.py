@@ -99,8 +99,6 @@ def pr_records(args, records):
                     continue
                 print(format_pretty(args.region_pretty, args.pretty_min_chars,
                     idx, r, args.raw_number))
-            print('total sz: %s' % _damo_fmt_str.format_sz(total_size,
-                args.raw_number))
             if args.snapshot_tail_pretty:
                 print(format_snapshot_tail_pretty(
                     args.snapshot_tail_pretty, args.pretty_min_chars, snapshot,
@@ -165,6 +163,7 @@ def set_argparser(parser):
             help='show tried regions of given schemes')
 
     parser.add_argument('--snapshot_tail_pretty',
+            default='total size: <total bytes>',
             help='snapshot output tail format')
     parser.add_argument('--region_pretty',
             default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
