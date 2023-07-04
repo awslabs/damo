@@ -39,7 +39,7 @@ def format_pretty(template, min_chars, idx, region, raw):
     template = format_for(template, min_chars, '<region size>',
             _damo_fmt_str.format_sz(region.end - region.start, raw))
     template = format_for(template, min_chars, '<access rate>',
-            region.nr_accesses.to_str(_damon.unit_percent, raw))
+            _damo_fmt_str.format_ratio(region.nr_accesses.percent / 100, raw))
     template = format_for(template, min_chars, '<age>',
             _damo_fmt_str.format_time_us(region.age.usec, raw))
     return template
