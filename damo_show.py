@@ -57,6 +57,10 @@ def pr_records(args, records):
             for r in records], indent=4))
         exit(0)
 
+    if args.total_sz_only:
+        args.region_pretty = ''
+        args.snapshot_tail_pretty='<total bytes>'
+
     for record in records:
         snapshots = record.snapshots
         if len(snapshots) == 0:
@@ -83,20 +87,13 @@ def pr_records(args, records):
                                 args.raw_number)))
             if record.target_id != None:
                 print('target_id: %s' % record.target_id)
-            if args.total_sz_only and snapshot.total_bytes != None:
-                print('total sz: %s' %
-                        _damo_fmt_str.format_sz(snapshot.total_bytes,
-                            args.raw_number))
-                continue
             total_size = 0
             for idx, r in enumerate(snapshot.regions):
                 total_size += r.end - r.start
-                if args.total_sz_only:
+                if args.region_pretty == '':
                     continue
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
-                if args.region_pretty == '':
-                    continue
                 print(format_pretty(args.region_pretty, args.pretty_min_chars,
                     idx, r, args.raw_number))
             if args.snapshot_tail_pretty:
