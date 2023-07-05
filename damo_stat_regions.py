@@ -16,7 +16,7 @@ def priority(region, weights):
     return region.age * weights[1] * -1
 
 def __pr_schemes_tried_regions(regions, intervals, size_only, sortby,
-        prio_weights, raw_nr):
+                               prio_weights, raw_nr):
 
     if sortby == 'priority':
         regions.sort(key=lambda region: priority(region, prio_weights))
@@ -31,9 +31,9 @@ def __pr_schemes_tried_regions(regions, intervals, size_only, sortby,
         print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
 
 def update_pr_schemes_tried_regions(access_pattern, size_only, sortby,
-        prio_weights, raw_nr):
+                                    prio_weights, raw_nr):
     records, err = _damon_result.get_snapshot_records(access_pattern,
-            total_sz_only=False)
+                                                      total_sz_only=False)
     if err != None:
         print(err)
     if records == None:
@@ -42,36 +42,52 @@ def update_pr_schemes_tried_regions(access_pattern, size_only, sortby,
     for record in records:
         print('kdamond %s ctx %s' % (record.kdamond_idx, record.context_idx))
         __pr_schemes_tried_regions(record.snapshots[0].regions,
-                record.intervals, size_only, sortby, prio_weights, raw_nr)
+                                   record.intervals, size_only, sortby,
+                                   prio_weights, raw_nr)
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
-    parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
-            default=['min', 'max'],
-            help='min/max size of regions (bytes)')
-    parser.add_argument('--access_rate', metavar=('<min>', '<max>'), nargs=2,
-            default=['min', 'max'],
-            help='min/max access rate of regions (percent)')
-    parser.add_argument('--age', metavar=('<min>', '<max>'), nargs=2,
-            default=['min', 'max'],
-            help='min/max age of regions (microseconds)')
-    parser.add_argument('--size_only', action='store_true',
-            help='print total size only')
-    parser.add_argument('--sortby', choices=['address', 'priority'],
-            default='sortby',
-            help='the metric for the regions print order')
-    parser.add_argument('--priority_weights', nargs=2, type=float,
-            default=[1, 1,],
-            metavar=('<access rate weight>, <age weight>'),
-            help='priority weights for priority calculation')
+    parser.add_argument('--sz_region',
+                        metavar=('<min>', '<max>'),
+                        nargs=2,
+                        default=['min', 'max'],
+                        help='min/max size of regions (bytes)')
+    parser.add_argument('--access_rate',
+                        metavar=('<min>', '<max>'),
+                        nargs=2,
+                        default=['min', 'max'],
+                        help='min/max access rate of regions (percent)')
+    parser.add_argument('--age',
+                        metavar=('<min>', '<max>'),
+                        nargs=2,
+                        default=['min', 'max'],
+                        help='min/max age of regions (microseconds)')
+    parser.add_argument('--size_only',
+                        action='store_true',
+                        help='print total size only')
+    parser.add_argument('--sortby',
+                        choices=['address', 'priority'],
+                        default='sortby',
+                        help='the metric for the regions print order')
+    parser.add_argument('--priority_weights',
+                        nargs=2,
+                        type=float,
+                        default=[
+                            1,
+                            1,
+                        ],
+                        metavar=('<access rate weight>, <age weight>'),
+                        help='priority weights for priority calculation')
 
 def __main(args):
     update_pr_schemes_tried_regions(args.access_pattern, args.size_only,
-            args.sortby, args.priority_weights, args.raw)
+                                    args.sortby, args.priority_weights,
+                                    args.raw)
 
 def main(args=None):
     _damo_deprecation_notice.will_be_deprecated('\'damo stat regions\'',
-            'near future', 'Use \'damo show\' instead')
+                                                'near future',
+                                                'Use \'damo show\' instead')
     if not args:
         parser = argparse.ArgumentParser()
         set_argparser(parser)
@@ -80,7 +96,9 @@ def main(args=None):
     _damon.ensure_root_and_initialized(args)
 
     args.access_pattern = _damon.DamosAccessPattern(args.sz_region,
-            args.access_rate, _damon.unit_percent, args.age, _damon.unit_usec)
+                                                    args.access_rate,
+                                                    _damon.unit_percent,
+                                                    args.age, _damon.unit_usec)
 
     damo_stat.run_count_delay(__main, args)
 

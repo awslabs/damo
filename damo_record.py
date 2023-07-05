@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 """
 Record monitored data access patterns.
 """
@@ -42,10 +41,10 @@ def handle_args(args):
         args.deducible_target = 'ongoing'
 
     args.output_permission, err = _damon_result.parse_file_permission_str(
-            args.output_permission)
+        args.output_permission)
     if err != None:
         print('wrong --output permission (%s) (%s)' %
-                (args.output_permission, err))
+              (args.output_permission, err))
         exit(1)
 
     # backup duplicate output file
@@ -84,8 +83,8 @@ def poll_target_pids(kdamonds, add_childs):
             continue
         try:
             childs_pids = subprocess.check_output(
-                    ['ps', '--ppid', '%s' % target.pid, '-o', 'pid=']
-                    ).decode().split()
+                ['ps', '--ppid',
+                 '%s' % target.pid, '-o', 'pid=']).decode().split()
         except:
             childs_pids = []
         if len(childs_pids) == 0:
@@ -99,8 +98,10 @@ def poll_target_pids(kdamonds, add_childs):
                 continue
             # remove already terminated targets, since committing already
             # terminated targets to DAMON fails
-            new_targets = [target for target in current_targets
-                    if pid_running('%s' % target.pid)]
+            new_targets = [
+                target for target in current_targets
+                if pid_running('%s' % target.pid)
+            ]
             new_targets.append(_damon.DamonTarget(pid=child_pid, regions=[]))
         if new_targets == []:
             continue
@@ -118,15 +119,20 @@ def poll_target_pids(kdamonds, add_childs):
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type',
-            choices=_damon_result.file_types,
-            default=_damon_result.file_type_json_compressed,
-            help='output file\'s type')
-    parser.add_argument('--output_permission', type=str, default='600',
-            help='permission of the output file')
-    parser.add_argument('--perf_path', type=str, default='perf',
-            help='path of perf tool ')
-    parser.add_argument('--include_child_tasks', action='store_true',
-            help='record accesses of child processes')
+                        choices=_damon_result.file_types,
+                        default=_damon_result.file_type_json_compressed,
+                        help='output file\'s type')
+    parser.add_argument('--output_permission',
+                        type=str,
+                        default='600',
+                        help='permission of the output file')
+    parser.add_argument('--perf_path',
+                        type=str,
+                        default='perf',
+                        help='path of perf tool ')
+    parser.add_argument('--include_child_tasks',
+                        action='store_true',
+                        help='record accesses of child processes')
     return parser
 
 def main(args=None):
@@ -152,8 +158,9 @@ def main(args=None):
         if err:
             print('could not turn DAMON on (%s)' % err)
             cleanup_exit(-2)
-        data_for_cleanup.kdamonds_idxs = ['%d' % idx
-                for idx, k in enumerate(kdamonds)]
+        data_for_cleanup.kdamonds_idxs = [
+            '%d' % idx for idx, k in enumerate(kdamonds)
+        ]
         # TODO: Support multiple kdamonds, multiple contexts
         monitoring_intervals = kdamonds[0].contexts[0].intervals
     else:
@@ -162,12 +169,12 @@ def main(args=None):
             exit(1)
 
         # TODO: Support multiple kdamonds, multiple contexts
-        monitoring_intervals = data_for_cleanup.orig_kdamonds[
-                0].contexts[0].intervals
+        monitoring_intervals = data_for_cleanup.orig_kdamonds[0].contexts[
+            0].intervals
 
     data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
-            args.out, args.output_type, args.output_permission,
-            monitoring_intervals)
+        args.out, args.output_type, args.output_permission,
+        monitoring_intervals)
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):

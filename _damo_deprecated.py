@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 '''
 Keep code for deprecated features, which still need to help old users migrate,
 e.g., 'translate_damos' and 'convert_record_format'.
@@ -13,14 +12,13 @@ import sys
 import _damo_deprecation_notice
 import _damo_fmt_str
 import _damon
-
 '''
 Python2 support
 '''
 
 if sys.version.startswith('2.'):
     _damo_deprecation_notice.deprecated(feature='Python2 support of damo',
-            deadline='2023-Q2')
+                                        deadline='2023-Q2')
 
 # For supporting python 2.6
 try:
@@ -31,6 +29,7 @@ except AttributeError:
 try:
     subprocess.check_output = subprocess.check_output
 except AttributeError:
+
     def check_output(*popenargs, **kwargs):
         process = subprocess.Popen(stdout=subprocess.PIPE, *popenargs, **kwargs)
         output, err = process.communicate()
@@ -40,7 +39,6 @@ except AttributeError:
         return output
 
     subprocess.check_output = check_output
-
 '''
 DAMOS single-line scheme specification input.
 
@@ -85,22 +83,27 @@ Below are examples of the single-line scheme input.
 def fields_to_v0_scheme(fields):
     scheme = _damon.Damos()
     scheme.access_pattern = _damon.DamosAccessPattern(
-            sz_bytes = [_damo_fmt_str.text_to_bytes(fields[0]),
-                _damo_fmt_str.text_to_bytes(fields[1])],
-            nr_accesses = [_damo_fmt_str.text_to_percent(fields[2]),
-                _damo_fmt_str.text_to_percent(fields[3])],
-            nr_accesses_unit = _damon.unit_percent,
-            age = [_damo_fmt_str.text_to_us(fields[4]),
-                _damo_fmt_str.text_to_us(fields[5])],
-            age_unit = _damon.unit_usec)
+        sz_bytes=[
+            _damo_fmt_str.text_to_bytes(fields[0]),
+            _damo_fmt_str.text_to_bytes(fields[1])
+        ],
+        nr_accesses=[
+            _damo_fmt_str.text_to_percent(fields[2]),
+            _damo_fmt_str.text_to_percent(fields[3])
+        ],
+        nr_accesses_unit=_damon.unit_percent,
+        age=[
+            _damo_fmt_str.text_to_us(fields[4]),
+            _damo_fmt_str.text_to_us(fields[5])
+        ],
+        age_unit=_damon.unit_usec)
     scheme.action = fields[6].lower()
     return scheme
 
 def fields_to_v1_scheme(fields):
     scheme = fields_to_v0_scheme(fields)
     scheme.quotas.sz_bytes = _damo_fmt_str.text_to_bytes(fields[7])
-    scheme.quotas.reset_interval_ms = _damo_fmt_str.text_to_ms(
-            fields[8])
+    scheme.quotas.reset_interval_ms = _damo_fmt_str.text_to_ms(fields[8])
     return scheme
 
 def fields_to_v2_scheme(fields):
@@ -113,8 +116,7 @@ def fields_to_v2_scheme(fields):
 def fields_to_v3_scheme(fields):
     scheme = fields_to_v2_scheme(fields)
     scheme.watermarks.metric = fields[12].lower()
-    scheme.watermarks.interval_us = _damo_fmt_str.text_to_us(
-            fields[13])
+    scheme.watermarks.interval_us = _damo_fmt_str.text_to_us(fields[13])
     scheme.watermarks.high_permil = int(fields[14])
     scheme.watermarks.mid_permil = int(fields[15])
     scheme.watermarks.low_permil = int(fields[16])
@@ -124,14 +126,12 @@ def fields_to_v4_scheme(fields):
     scheme = fields_to_v0_scheme(fields)
     scheme.quotas.time_ms = _damo_fmt_str.text_to_ms(fields[7])
     scheme.quotas.sz_bytes = _damo_fmt_str.text_to_bytes(fields[8])
-    scheme.quotas.reset_interval_ms = _damo_fmt_str.text_to_ms(
-            fields[9])
+    scheme.quotas.reset_interval_ms = _damo_fmt_str.text_to_ms(fields[9])
     scheme.quotas.weight_sz_permil = int(fields[10])
     scheme.quotas.weight_nr_accesses_permil = int(fields[11])
     scheme.quotas.weight_age_permil = int(fields[12])
     scheme.watermarks.metric = fields[13].lower()
-    scheme.watermarks.interval_us = _damo_fmt_str.text_to_us(
-            fields[14])
+    scheme.watermarks.interval_us = _damo_fmt_str.text_to_us(fields[14])
     scheme.watermarks.high_permil = int(fields[15])
     scheme.watermarks.mid_permil = int(fields[16])
     scheme.watermarks.low_permil = int(fields[17])
@@ -139,25 +139,26 @@ def fields_to_v4_scheme(fields):
 
 avoid_crashing_single_line_scheme_for_testing = False
 avoid_crashing_v1_v3_schemes_for_testing = False
+
 def damo_single_line_scheme_to_damos(line):
     '''Returns Damos object and err'''
 
     _damo_deprecation_notice.deprecated(
-            feature='single line scheme input',
-            deadline='2023-Q2',
-            do_exit=not avoid_crashing_single_line_scheme_for_testing,
-            exit_code=1,
-            additional_notice='Please use json format or --damo_* options')
+        feature='single line scheme input',
+        deadline='2023-Q2',
+        do_exit=not avoid_crashing_single_line_scheme_for_testing,
+        exit_code=1,
+        additional_notice='Please use json format or --damo_* options')
 
     fields = line.split()
 
     # Remove below if someone depends on the v1-v3  DAMOS input is found.
     if len(fields) in [9, 12, 17]:
         _damo_deprecation_notice.deprecated(
-                feature='9, 12, or 17 fields single line scheme input',
-                do_exit=not avoid_crashing_v1_v3_schemes_for_testing,
-                exit_code=1,
-                deadline='2023-Q2')
+            feature='9, 12, or 17 fields single line scheme input',
+            do_exit=not avoid_crashing_v1_v3_schemes_for_testing,
+            exit_code=1,
+            deadline='2023-Q2')
 
     try:
         if len(fields) == 7:
@@ -171,8 +172,8 @@ def damo_single_line_scheme_to_damos(line):
         elif len(fields) == 18:
             return fields_to_v4_scheme(fields), None
         else:
-            return None, 'expected %s fields, but \'%s\'' % (
-                    [7, 9, 12, 17, 18], line)
+            return None, 'expected %s fields, but \'%s\'' % ([7, 9, 12, 17, 18
+                                                              ], line)
     except:
         return None, 'wrong input field'
     return None, 'unsupported version of single line scheme'
@@ -183,8 +184,10 @@ def damo_single_line_schemes_to_damos(schemes):
             schemes = f.read()
 
     # remove comments, empty lines, and unnecessary white spaces
-    damo_schemes_lines = [l.strip() for l in schemes.strip().split('\n')
-            if not l.strip().startswith('#') and l.strip() != '']
+    damo_schemes_lines = [
+        l.strip() for l in schemes.strip().split('\n')
+        if not l.strip().startswith('#') and l.strip() != ''
+    ]
 
     damos_list = []
     for line in damo_schemes_lines:

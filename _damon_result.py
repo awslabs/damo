@@ -33,18 +33,20 @@ class DamonSnapshot:
     @classmethod
     def from_kvpairs(cls, kv):
         snapshot = DamonSnapshot(_damo_fmt_str.text_to_ns(kv['start_time']),
-                _damo_fmt_str.text_to_ns(kv['end_time']))
-        snapshot.regions = [_damon.DamonRegion.from_kvpairs(r)
-                for r in kv['regions']]
+                                 _damo_fmt_str.text_to_ns(kv['end_time']))
+        snapshot.regions = [
+            _damon.DamonRegion.from_kvpairs(r) for r in kv['regions']
+        ]
         return snapshot
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
-            ('start_time', _damo_fmt_str.format_time_ns_exact(
-                self.start_time, raw)),
-            ('end_time', _damo_fmt_str.format_time_ns_exact(
-                self.end_time, raw)),
-            ('regions', [r.to_kvpairs() for r in self.regions])])
+            ('start_time',
+             _damo_fmt_str.format_time_ns_exact(self.start_time, raw)),
+            ('end_time', _damo_fmt_str.format_time_ns_exact(self.end_time,
+                                                            raw)),
+            ('regions', [r.to_kvpairs() for r in self.regions])
+        ])
 
 class DamonRecord:
     '''
@@ -67,17 +69,20 @@ class DamonRecord:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        for keyword in ['kdamond_idx', 'context_idx', 'intervals',
-                'scheme_idx']:
+        for keyword in [
+                'kdamond_idx', 'context_idx', 'intervals', 'scheme_idx'
+        ]:
             if not keyword in kv:
                 kv[keyword] = None
 
-        record = DamonRecord(kv['kdamond_idx'], kv['context_idx'],
-                _damon.DamonIntervals.from_kvpairs(kv['intervals'])
-                if kv['intervals'] != None else None,
-                kv['scheme_idx'], kv['target_id'])
-        record.snapshots = [DamonSnapshot.from_kvpairs(s)
-                for s in kv['snapshots']]
+        record = DamonRecord(
+            kv['kdamond_idx'], kv['context_idx'],
+            _damon.DamonIntervals.from_kvpairs(kv['intervals'])
+            if kv['intervals'] != None else None, kv['scheme_idx'],
+            kv['target_id'])
+        record.snapshots = [
+            DamonSnapshot.from_kvpairs(s) for s in kv['snapshots']
+        ]
 
         return record
 
@@ -86,7 +91,7 @@ class DamonRecord:
         ordered_dict['kdamond_idx'] = self.kdamond_idx
         ordered_dict['context_idx'] = self.context_idx
         ordered_dict['intervals'] = (self.intervals.to_kvpairs(raw)
-                if self.intervals != None else None)
+                                     if self.intervals != None else None)
         ordered_dict['scheme_idx'] = self.scheme_idx
         ordered_dict['target_id'] = self.target_id
         ordered_dict['snapshots'] = [s.to_kvpairs(raw) for s in self.snapshots]
@@ -102,21 +107,23 @@ def add_region(regions, region, nr_acc_to_add):
         if regions_intersect(r, region):
             if not r in nr_acc_to_add:
                 nr_acc_to_add[r] = 0
-            nr_acc_to_add[r] = max(nr_acc_to_add[r],
-                    region.nr_accesses.samples)
+            nr_acc_to_add[r] = max(nr_acc_to_add[r], region.nr_accesses.samples)
 
             new_regions = []
             if region.start < r.start:
-                new_regions.append(_damon.DamonRegion(
-                    region.start, r.start,
-                    region.nr_accesses.samples, _damon.unit_samepls,
-                    region.age.aggr_intervals, _damon.unit_aggr_intervals))
+                new_regions.append(
+                    _damon.DamonRegion(region.start, r.start,
+                                       region.nr_accesses.samples,
+                                       _damon.unit_samepls,
+                                       region.age.aggr_intervals,
+                                       _damon.unit_aggr_intervals))
             if r.end < region.end:
-                new_regions.append(_damon.DamonRegion(
-                        r.end, region.end,
-                        region.nr_accesses.samples, _damon.unit_samples,
-                        region.age.aggr_intervals,
-                        _damon.unit_aggr_intervals))
+                new_regions.append(
+                    _damon.DamonRegion(r.end, region.end,
+                                       region.nr_accesses.samples,
+                                       _damon.unit_samples,
+                                       region.age.aggr_intervals,
+                                       _damon.unit_aggr_intervals))
 
             for new_r in new_regions:
                 add_region(regions, new_r, nr_acc_to_add)
@@ -139,7 +146,7 @@ def aggregate_snapshots(snapshots):
             region.nr_accesses.unit = _damon.unit_samples
 
     new_snapshot = DamonSnapshot(snapshots[0].start_time,
-            snapshots[-1].end_time)
+                                 snapshots[-1].end_time)
     new_snapshot.regions = new_regions
     return new_snapshot
 
@@ -159,7 +166,7 @@ def adjust_records(records, aggregate_interval, nr_snapshots_to_skip):
         if record.intervals != None:
             record.intervals.aggr = aggregate_interval
         record.snapshots = adjusted_snapshots(
-                record.snapshots[nr_snapshots_to_skip:], aggregate_interval)
+            record.snapshots[nr_snapshots_to_skip:], aggregate_interval)
 
 # For reading monitoring results from a file
 
@@ -188,9 +195,9 @@ def read_snapshot_from_record_file(f, start_time, end_time):
         start_addr = struct.unpack('L', f.read(8))[0]
         end_addr = struct.unpack('L', f.read(8))[0]
         nr_accesses = struct.unpack('I', f.read(4))[0]
-        region = _damon.DamonRegion(start_addr, end_addr,
-                nr_accesses, _damon.unit_samples,
-                None, _damon.unit_aggr_intervals)
+        region = _damon.DamonRegion(start_addr, end_addr, nr_accesses,
+                                    _damon.unit_samples, None,
+                                    _damon.unit_aggr_intervals)
         snapshot.regions.append(region)
     return snapshot
 
@@ -200,8 +207,8 @@ def is_fake_snapshot(snapshot):
     if len(snapshot.regions) != 1:
         return False
     r = snapshot.regions[0]
-    return (r.start == 0 and r.end == 0 and
-            r.nr_accesses.samples == -1 and r.age.aggr_intervals == -1)
+    return (r.start == 0 and r.end == 0 and r.nr_accesses.samples == -1
+            and r.age.aggr_intervals == -1)
 
 def set_first_snapshot_start_time(records):
     for record in records:
@@ -219,9 +226,9 @@ def set_first_snapshot_start_time(records):
 
 def warn_record_type_deprecation():
     _damo_deprecation_notice.will_be_deprecated(
-            feature='\'record\' file type support',
-            deadline='2023-Q3',
-            additional_notice='use json_compressed type instead.')
+        feature='\'record\' file type support',
+        deadline='2023-Q3',
+        additional_notice='use json_compressed type instead.')
 
 def record_of(target_id, records, intervals):
     for record in records:
@@ -256,8 +263,8 @@ def parse_binary_format_record(file_path, monitoring_intervals):
                     if end_time < start_time:
                         return None, 'snapshot is not sorted by time'
                 try:
-                    snapshot = read_snapshot_from_record_file(f,
-                            start_time, end_time)
+                    snapshot = read_snapshot_from_record_file(
+                        f, start_time, end_time)
                 except Exception as e:
                     return None, 'snapshot reading failead: %s' % e
                 record.snapshots.append(snapshot)
@@ -266,7 +273,7 @@ def parse_binary_format_record(file_path, monitoring_intervals):
     return records, None
 
 def parse_perf_script_line(line):
-        '''
+    '''
         example line is as below:
 
         kdamond.0  4452 [000] 82877.315633: damon:damon_aggregated: \
@@ -277,27 +284,27 @@ def parse_perf_script_line(line):
 
         [1] https://lore.kernel.org/linux-mm/df8d52f1fb2f353a62ff34dc09fe99e32ca1f63f.1636610337.git.xhao@linux.alibaba.com/
         '''
-        fields = line.strip().split()
-        if not len(fields) in [9, 10]:
-            return None, None, None, None
-        if fields[4] != 'damon:damon_aggregated:':
-            return None, None, None, None
+    fields = line.strip().split()
+    if not len(fields) in [9, 10]:
+        return None, None, None, None
+    if fields[4] != 'damon:damon_aggregated:':
+        return None, None, None, None
 
-        end_time = int(float(fields[3][:-1]) * 1000000000)
-        target_id = int(fields[5].split('=')[1])
-        nr_regions = int(fields[6].split('=')[1])
+    end_time = int(float(fields[3][:-1]) * 1000000000)
+    target_id = int(fields[5].split('=')[1])
+    nr_regions = int(fields[6].split('=')[1])
 
-        start_addr, end_addr = [int(x) for x in fields[7][:-1].split('-')]
-        nr_accesses = int(fields[8])
-        if len(fields) == 10:
-            age = int(fields[9])
-        else:
-            age = None
-        region = _damon.DamonRegion(start_addr, end_addr,
-                nr_accesses, _damon.unit_samples,
-                age, _damon.unit_aggr_intervals)
+    start_addr, end_addr = [int(x) for x in fields[7][:-1].split('-')]
+    nr_accesses = int(fields[8])
+    if len(fields) == 10:
+        age = int(fields[9])
+    else:
+        age = None
+    region = _damon.DamonRegion(start_addr, end_addr, nr_accesses,
+                                _damon.unit_samples, age,
+                                _damon.unit_aggr_intervals)
 
-        return region, end_time, target_id, nr_regions
+    return region, end_time, target_id, nr_regions
 
 def parse_perf_script(script_output, monitoring_intervals):
     records = []
@@ -338,8 +345,8 @@ def set_perf_path(perf_path):
         subprocess.check_output(['which', PERF])
         try:
             subprocess.check_output(
-                    [PERF, 'record', '-e', PERF_EVENT, '--', 'sleep', '0'],
-                    stderr=subprocess.PIPE)
+                [PERF, 'record', '-e', PERF_EVENT, '--', 'sleep', '0'],
+                stderr=subprocess.PIPE)
         except:
             err = 'perf record not working with "%s"' % PERF
     except:
@@ -366,8 +373,8 @@ def parse_records_file(result_file, monitoring_intervals=None):
     Return monitoring results records and error string
     '''
 
-    file_type = subprocess.check_output(
-            ['file', '-b', result_file]).decode().strip()
+    file_type = subprocess.check_output(['file', '-b',
+                                         result_file]).decode().strip()
     if file_type == 'JSON data':
         try:
             return parse_json_file(result_file), None
@@ -388,8 +395,7 @@ def parse_records_file(result_file, monitoring_intervals=None):
         try:
             with open(os.devnull, 'w') as fnull:
                 perf_script_output = subprocess.check_output(
-                        [PERF, 'script', '-i', result_file],
-                        stderr=fnull).decode()
+                    [PERF, 'script', '-i', result_file], stderr=fnull).decode()
         except:
             # Should be record format file
             pass
@@ -424,10 +430,12 @@ def add_fake_snapshot_if_needed(records):
         snapshot = snapshots[0]
         snap_duration = snapshot.end_time - snapshot.start_time
         fake_snapshot = DamonSnapshot(snapshot.end_time,
-                snapshot.end_time + snap_duration)
+                                      snapshot.end_time + snap_duration)
         # -1 nr_accesses.samples / -1 age.aggr_intervals means fake
-        fake_snapshot.regions = [_damon.DamonRegion(0, 0,
-            -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
+        fake_snapshot.regions = [
+            _damon.DamonRegion(0, 0, -1, _damon.unit_samples, -1,
+                               _damon.unit_aggr_intervals)
+        ]
         snapshots.append(fake_snapshot)
 
 def write_binary(records, file_path, format_version):
@@ -472,14 +480,16 @@ def write_perf_script(records, file_path):
             snapshots = record.snapshots
             for snapshot in snapshots:
                 for region in snapshot.regions:
-                    f.write(' '.join(['kdamond.x', 'xxxx', 'xxxx',
-                        '%f:' % (snapshot.end_time / 1000000000.0),
-                        'damon:damon_aggregated:',
+                    f.write(' '.join([
+                        'kdamond.x', 'xxxx', 'xxxx',
+                        '%f:' % (snapshot.end_time /
+                                 1000000000.0), 'damon:damon_aggregated:',
                         'target_id=%s' % record.target_id,
                         'nr_regions=%d' % len(snapshot.regions),
-                        '%d-%d: %d %s' % (region.start, region.end,
-                            region.nr_accesses.samples,
-                            region.age.aggr_intervals)]) + '\n')
+                        '%d-%d: %d %s' %
+                        (region.start, region.end, region.nr_accesses.samples,
+                         region.age.aggr_intervals)
+                    ]) + '\n')
 
 def parse_file_permission_str(file_permission_str):
     try:
@@ -490,16 +500,20 @@ def parse_file_permission_str(file_permission_str):
         return None, 'out of available permission range'
     return file_permission, None
 
-file_type_record = 'record'             # damo defined binary format
-file_type_perf_script = 'perf_script'   # perf script output
-file_type_perf_data = 'perf_data'       # perf record result file
-file_type_json = 'json'                 # list of DamonRecord objects in json
+file_type_record = 'record'  # damo defined binary format
+file_type_perf_script = 'perf_script'  # perf script output
+file_type_perf_data = 'perf_data'  # perf record result file
+file_type_json = 'json'  # list of DamonRecord objects in json
 file_type_json_compressed = 'json_compressed'
 
-file_types = [file_type_json_compressed, file_type_json, file_type_perf_script,
-        file_type_perf_data, file_type_record]
-self_write_supported_file_types = [file_type_json_compressed, file_type_json,
-        file_type_perf_script, file_type_record]
+file_types = [
+    file_type_json_compressed, file_type_json, file_type_perf_script,
+    file_type_perf_data, file_type_record
+]
+self_write_supported_file_types = [
+    file_type_json_compressed, file_type_json, file_type_perf_script,
+    file_type_record
+]
 
 def write_damon_records(records, file_path, file_type, file_permission=None):
     '''Returns None if success, an error string otherwise'''
@@ -519,13 +533,14 @@ def write_damon_records(records, file_path, file_type, file_permission=None):
         os.chmod(file_path, file_permission)
     return None
 
-def update_records_file(file_path, file_format, file_permission=None,
-        monitoring_intervals=None):
+def update_records_file(file_path,
+                        file_format,
+                        file_permission=None,
+                        monitoring_intervals=None):
     records, err = parse_records_file(file_path, monitoring_intervals)
     if err:
         return err
-    return write_damon_records(records, file_path, file_format,
-            file_permission)
+    return write_damon_records(records, file_path, file_format, file_permission)
 
 # for recording
 
@@ -536,12 +551,14 @@ Start recording DAMON's monitoring results using perf.
 Returns pipe for the perf.  The pipe should be passed to
 stop_monitoring_record() later.
 '''
+
 def start_monitoring_record(file_path, file_format, file_permission,
-        monitoring_intervals):
+                            monitoring_intervals):
     pipe = subprocess.Popen(
-            [PERF, 'record', '-a', '-e', PERF_EVENT, '-o', file_path])
-    record_requests[pipe] = [file_path, file_format, file_permission,
-            monitoring_intervals]
+        [PERF, 'record', '-a', '-e', PERF_EVENT, '-o', file_path])
+    record_requests[pipe] = [
+        file_path, file_format, file_permission, monitoring_intervals
+    ]
     return pipe
 
 def stop_monitoring_record(perf_pipe):
@@ -559,10 +576,10 @@ def stop_monitoring_record(perf_pipe):
         return
 
     err = update_records_file(file_path, file_format, file_permission,
-            monitoring_intervals)
+                              monitoring_intervals)
     if err != None:
         print('converting format from perf_data to %s failed (%s)' %
-                (file_format, err))
+              (file_format, err))
 
 # for snapshot
 
@@ -613,11 +630,12 @@ def tried_regions_to_records(monitor_scheme):
                     continue
 
                 snapshot = tried_regions_to_snapshot(scheme.tried_regions,
-                        ctx.intervals)
+                                                     ctx.intervals)
                 snapshot.total_bytes = scheme.tried_bytes
 
-                records.append(DamonRecord(kdamond_idx, ctx_idx, ctx.intervals,
-                    None, None))
+                records.append(
+                    DamonRecord(kdamond_idx, ctx_idx, ctx.intervals, None,
+                                None))
                 records[-1].snapshots.append(snapshot)
                 break
     return records
@@ -657,9 +675,11 @@ def three_regions_of(pid):
     # sort biggest two gaps in address
     gaps = sorted(gaps[:2], key=lambda x: x[0])
 
-    return [_damon.DamonRegion(regions[0].start, gaps[0][0]),
-            _damon.DamonRegion(gaps[0][1], gaps[1][0]),
-            _damon.DamonRegion(gaps[1][1], regions[-1].end)]
+    return [
+        _damon.DamonRegion(regions[0].start, gaps[0][0]),
+        _damon.DamonRegion(gaps[0][1], gaps[1][0]),
+        _damon.DamonRegion(gaps[1][1], regions[-1].end)
+    ]
 
 def install_target_regions_if_needed(kdamonds):
     '''Returns an error string, or None'''

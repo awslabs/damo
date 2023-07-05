@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 "Control DAMON_RECLAIM"
 
 import argparse
@@ -10,15 +9,18 @@ import _damon
 
 darc_params_dir = '/sys/module/damon_reclaim/parameters'
 # parameters that existed since the initial release of DAMON_RECLAIM
-darc_essential_params = ['kdamond_pid', 'enabled', 'min_age', 'quota_ms',
-        'quota_sz', 'quota_reset_interval_ms', 'wmarks_interval',
-        'wmarks_high', 'wmarks_mid', 'wmarks_low', 'sample_interval',
-        'aggr_interval', 'min_nr_regions', 'max_nr_regions',
-        'monitor_region_start', 'monitor_region_end']
+darc_essential_params = [
+    'kdamond_pid', 'enabled', 'min_age', 'quota_ms', 'quota_sz',
+    'quota_reset_interval_ms', 'wmarks_interval', 'wmarks_high', 'wmarks_mid',
+    'wmarks_low', 'sample_interval', 'aggr_interval', 'min_nr_regions',
+    'max_nr_regions', 'monitor_region_start', 'monitor_region_end'
+]
 
 # parameters that introduced after the initial release
-darc_optional_params = ['nr_reclaim_tried_regions', 'nr_reclaimed_regions',
-        'bytes_reclaim_tried_regions', 'bytes_reclaimed_regions']
+darc_optional_params = [
+    'nr_reclaim_tried_regions', 'nr_reclaimed_regions',
+    'bytes_reclaim_tried_regions', 'bytes_reclaimed_regions'
+]
 
 def chk_darc_sysfs():
     if not os.path.isdir(darc_params_dir):
@@ -65,29 +67,50 @@ def darc_read_status():
             print('%s: %s' % (param, f.read().strip()))
 
 def set_argparser(parser):
-    parser.add_argument('action', type=str, nargs='?',
-            choices=['status', 'enable', 'disable'], default='status',
-            help='read status, enable, or disable DAMON_RECLAIM')
-    parser.add_argument('--min_age', type=int, metavar='<microseconds>',
-            help='time threshold for cold memory regions identification (us)')
-    parser.add_argument('--quota', type=int,
-            metavar=('<ms>', '<bytes>', '<ms>'), nargs=3,
-            default=[None] * 3,
-            help='quotas for time and size, and reset interval')
-    parser.add_argument('--wmarks', type=int,
-            metavar=('<us>', '<per-thousand>', '<per-thousand>',
-                '<per-thousand>'),
-            nargs=4, default=[None] * 4,
-            help='watermarks check interval and three watermarks')
-    parser.add_argument('--monitor_intervals', type=int,
-            metavar='<microseconds>', nargs=2, default=[None] * 2,
-            help='intervals for sampling and aggregation of DAMON')
-    parser.add_argument('--nr_regions', type=int, metavar='<number>',
-            nargs=2, default=[None] * 2,
-            help='minimum and maximum number of DAMON memory regions')
-    parser.add_argument('--monitor_region', type=int, metavar='<phy addr>',
-            nargs=2, default=[None] * 2,
-            help='start and end addresses of the target memory region')
+    parser.add_argument('action',
+                        type=str,
+                        nargs='?',
+                        choices=['status', 'enable', 'disable'],
+                        default='status',
+                        help='read status, enable, or disable DAMON_RECLAIM')
+    parser.add_argument(
+        '--min_age',
+        type=int,
+        metavar='<microseconds>',
+        help='time threshold for cold memory regions identification (us)')
+    parser.add_argument('--quota',
+                        type=int,
+                        metavar=('<ms>', '<bytes>', '<ms>'),
+                        nargs=3,
+                        default=[None] * 3,
+                        help='quotas for time and size, and reset interval')
+    parser.add_argument('--wmarks',
+                        type=int,
+                        metavar=('<us>', '<per-thousand>', '<per-thousand>',
+                                 '<per-thousand>'),
+                        nargs=4,
+                        default=[None] * 4,
+                        help='watermarks check interval and three watermarks')
+    parser.add_argument('--monitor_intervals',
+                        type=int,
+                        metavar='<microseconds>',
+                        nargs=2,
+                        default=[None] * 2,
+                        help='intervals for sampling and aggregation of DAMON')
+    parser.add_argument(
+        '--nr_regions',
+        type=int,
+        metavar='<number>',
+        nargs=2,
+        default=[None] * 2,
+        help='minimum and maximum number of DAMON memory regions')
+    parser.add_argument(
+        '--monitor_region',
+        type=int,
+        metavar='<phy addr>',
+        nargs=2,
+        default=[None] * 2,
+        help='start and end addresses of the target memory region')
 
 def main(args=None):
     if not args:

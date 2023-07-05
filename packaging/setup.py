@@ -2,7 +2,9 @@
 
 import os
 import setuptools
-os.sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
+
+os.sys.path.insert(
+    0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 
 from damo import damo_version
 
@@ -29,7 +31,7 @@ setuptools.setup(
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
-    entry_points = {
+    entry_points={
         "console_scripts": ["damo=damo.damo:main"],
     },
     python_requires=">=3.6",

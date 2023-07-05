@@ -5,12 +5,14 @@ import os
 import _damon_result
 
 def set_argparser(parser):
-    parser.add_argument('--record_file', metavar='<file>',
-            default='damon.data', help='the record file')
+    parser.add_argument('--record_file',
+                        metavar='<file>',
+                        default='damon.data',
+                        help='the record file')
     parser.add_argument('--format',
-            choices=_damon_result.self_write_supported_file_types,
-            default=_damon_result.file_type_json_compressed,
-            help='new file format')
+                        choices=_damon_result.self_write_supported_file_types,
+                        default=_damon_result.file_type_json_compressed,
+                        help='new file format')
 
 def main(args=None):
     if not args:

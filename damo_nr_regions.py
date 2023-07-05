@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 "Print out distribution of the number of regions in the given record"
 
 import argparse
@@ -10,15 +9,28 @@ import _damo_dist
 import _damon_result
 
 def set_argparser(parser):
-    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-            default='damon.data', help='input file name')
-    parser.add_argument('--range', '-r', type=int, nargs=3,
-            metavar=('<start>', '<stop>', '<step>'),
-            help='range of percentiles to print')
-    parser.add_argument('--sortby', '-s', choices=['time', 'size'],
-            help='the metric to be used for sorting the number of regions')
-    parser.add_argument('--plot', '-p', type=str, metavar='<file>',
-            help='plot the distribution to an image file')
+    parser.add_argument('--input',
+                        '-i',
+                        type=str,
+                        metavar='<file>',
+                        default='damon.data',
+                        help='input file name')
+    parser.add_argument('--range',
+                        '-r',
+                        type=int,
+                        nargs=3,
+                        metavar=('<start>', '<stop>', '<step>'),
+                        help='range of percentiles to print')
+    parser.add_argument(
+        '--sortby',
+        '-s',
+        choices=['time', 'size'],
+        help='the metric to be used for sorting the number of regions')
+    parser.add_argument('--plot',
+                        '-p',
+                        type=str,
+                        metavar='<file>',
+                        help='plot the distribution to an image file')
 
 def main(args=None):
     if not args:
@@ -38,7 +50,7 @@ def main(args=None):
     records, err = _damon_result.parse_records_file(file_path)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
-                (file_path, err))
+              (file_path, err))
         exit(1)
 
     orig_stdout = sys.stdout
@@ -74,7 +86,7 @@ def main(args=None):
         if nr_regions_sort:
             xlabel = 'percentile'
         err = _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
-                'number of monitoring target regions')
+                                   'number of monitoring target regions')
         if err:
             print('plot failed (%s)' % err)
 

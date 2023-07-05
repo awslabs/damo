@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 """
 Print basic information of the access monitoring results record file.
 """
@@ -44,13 +43,15 @@ class GuideInfo:
 
     def __str__(self):
         lines = ['target_id:%d' % self.tid]
-        lines.append('time: %d-%d (%s)' % (self.start_time, self.end_time,
-                    _damo_fmt_str.format_time_ns(self.end_time - self.start_time,
-                        False)))
+        lines.append('time: %d-%d (%s)' %
+                     (self.start_time, self.end_time,
+                      _damo_fmt_str.format_time_ns(
+                          self.end_time - self.start_time, False)))
         for idx, region in enumerate(self.regions()):
-            lines.append('region\t%2d: %020d-%020d (%s)' %
-                    (idx, region[0], region[1],
-                        _damo_fmt_str.format_sz(region[1] - region[0], False)))
+            lines.append(
+                'region\t%2d: %020d-%020d (%s)' %
+                (idx, region[0], region[1],
+                 _damo_fmt_str.format_sz(region[1] - region[0], False)))
         return '\n'.join(lines)
 
 def is_overlap(region1, region2):
@@ -108,8 +109,9 @@ def get_guide_info(records):
             else:
                 guide.gaps = overlapping_regions(guide.gaps, gaps)
 
-    return sorted(list(guides.values()), key=lambda x: x.total_space(),
-                    reverse=True)
+    return sorted(list(guides.values()),
+                  key=lambda x: x.total_space(),
+                  reverse=True)
 
 def pr_guide(records):
     for guide in get_guide_info(records):
@@ -119,8 +121,12 @@ def region_sort_key(region):
     return region[1] - region[0]
 
 def set_argparser(parser):
-    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-            default='damon.data', help='input file name')
+    parser.add_argument('--input',
+                        '-i',
+                        type=str,
+                        metavar='<file>',
+                        default='damon.data',
+                        help='input file name')
 
 def main(args=None):
     if not args:
@@ -131,7 +137,7 @@ def main(args=None):
     records, err = _damon_result.parse_records_file(args.input)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
-                (args.input, err))
+              (args.input, err))
         exit(1)
     pr_guide(records)
 

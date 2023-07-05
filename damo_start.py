@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 """
 Start DAMON with given parameters.
 """

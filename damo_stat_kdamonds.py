@@ -11,10 +11,12 @@ import damo_status
 
 def set_argparser(parser):
     damo_stat.set_common_argparser(parser)
-    parser.add_argument('--detail', action='store_true',
-            help='print detailed stat of kdamonds')
-    parser.add_argument('--json', action='store_true',
-            help='print kdamond in json format')
+    parser.add_argument('--detail',
+                        action='store_true',
+                        help='print detailed stat of kdamonds')
+    parser.add_argument('--json',
+                        action='store_true',
+                        help='print kdamond in json format')
 
 def __main(args):
     if not args.detail:
@@ -24,7 +26,8 @@ def __main(args):
 
 def main(args=None):
     _damo_deprecation_notice.will_be_deprecated('\'damo stat kdamonds\'',
-            'near future', 'Use \'damo status\' instead')
+                                                'near future',
+                                                'Use \'damo status\' instead')
 
     if not args:
         parser = argparse.ArgumentParser()

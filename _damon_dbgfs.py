@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 """
 Contains core functions for DAMON debugfs control.
 """
@@ -31,6 +30,7 @@ def is_kdamond_running(kdamond_idx):
     return content.strip() == 'on'
 
 'Return error'
+
 def update_schemes_stats(kdamond_idxs):
     # DAMON debugfs updates stats always
     return None
@@ -54,8 +54,8 @@ def wops_for_target(target, target_has_pid):
         tid = 0
 
     if feature_supported('init_regions'):
-        string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in
-            target.regions])
+        string = ' '.join(
+            ['%s %d %d' % (tid, r.start, r.end) for r in target.regions])
         wops.append({debugfs_init_regions: string})
     return wops
 
@@ -65,16 +65,18 @@ def wops_for_target(target, target_has_pid):
 #
 # [1] https://git.kernel.org/torvalds/c/5445fcbc4cda
 damos_action_to_int = {
-        _damon.damos_action_willneed: 0,
-        _damon.damos_action_cold: 1,
-        _damon.damos_action_pageout: 2,
-        _damon.damos_action_hugepage: 3,
-        _damon.damos_action_nohugepage: 4,
-        _damon.damos_action_stat: 5}
+    _damon.damos_action_willneed: 0,
+    _damon.damos_action_cold: 1,
+    _damon.damos_action_pageout: 2,
+    _damon.damos_action_hugepage: 3,
+    _damon.damos_action_nohugepage: 4,
+    _damon.damos_action_stat: 5
+}
 
 damos_wmark_metric_to_int = {
-        _damon.damos_wmarks_metric_none: 0,
-        _damon.damos_wmarks_metric_free_mem_rate: 1}
+    _damon.damos_wmarks_metric_none: 0,
+    _damon.damos_wmarks_metric_free_mem_rate: 1
+}
 
 def damos_action_to_file_input(action_str):
     if not action_str in damos_action_to_int:
@@ -84,7 +86,7 @@ def damos_action_to_file_input(action_str):
 def damos_wmarks_metric_to_file_input(metric_str):
     if not metric_str in damos_wmark_metric_to_int:
         raise Exception('\'%s\' DAMOS watermark metric is not supported' %
-                metric_str)
+                        metric_str)
     return damos_wmark_metric_to_int[metric_str]
 
 def file_content_to_damos_action(action_file_content):
@@ -99,32 +101,35 @@ def file_content_to_damos_wmarks_metric(metric_file_content):
 
 def damos_to_debugfs_input(damos, intervals, scheme_version):
     pattern = damos.access_pattern.converted_for_units(
-            _damon.unit_samples, _damon.unit_aggr_intervals,
-            intervals)
+        _damon.unit_samples, _damon.unit_aggr_intervals, intervals)
     quotas = damos.quotas
     watermarks = damos.watermarks
 
     max_nr_accesses = intervals.aggr / intervals.sample
     v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
-            pattern.sz_bytes[0], pattern.sz_bytes[1],
-            pattern.nr_acc_min_max[0].samples,
-            pattern.nr_acc_min_max[1].samples,
-            pattern.age_min_max[0].aggr_intervals,
-            pattern.age_min_max[1].aggr_intervals,
-            damos_action_to_file_input(damos.action))
+        pattern.sz_bytes[0], pattern.sz_bytes[1],
+        pattern.nr_acc_min_max[0].samples, pattern.nr_acc_min_max[1].samples,
+        pattern.age_min_max[0].aggr_intervals,
+        pattern.age_min_max[1].aggr_intervals,
+        damos_action_to_file_input(damos.action))
     if scheme_version == 0:
         return v0_scheme
 
-    v4_scheme = '%s\t' % v0_scheme + '\t'.join(
-            '%d' % x for x in [
-                # quotas
-                quotas.time_ms, quotas.sz_bytes, quotas.reset_interval_ms,
-                quotas.weight_sz_permil, quotas.weight_nr_accesses_permil,
-                quotas.weight_age_permil,
-                # wmarks
-                damos_wmarks_metric_to_file_input(watermarks.metric),
-                watermarks.interval_us, watermarks.high_permil,
-                watermarks.mid_permil, watermarks.low_permil])
+    v4_scheme = '%s\t' % v0_scheme + '\t'.join('%d' % x for x in [
+        # quotas
+        quotas.time_ms,
+        quotas.sz_bytes,
+        quotas.reset_interval_ms,
+        quotas.weight_sz_permil,
+        quotas.weight_nr_accesses_permil,
+        quotas.weight_age_permil,
+        # wmarks
+        damos_wmarks_metric_to_file_input(watermarks.metric),
+        watermarks.interval_us,
+        watermarks.high_permil,
+        watermarks.mid_permil,
+        watermarks.low_permil
+    ])
     if scheme_version == 4:
         return v4_scheme
 
@@ -132,7 +137,7 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
 
 def get_scheme_version():
     '''Return the scheme version that the running kernel supports'''
-    scheme_version = 0      # 5.15-based DAMON implementation
+    scheme_version = 0  # 5.15-based DAMON implementation
     if feature_supported('schemes_speed_limit'):
         scheme_version = 1  # Non-mainlined implementation (deprecated)
     if feature_supported('schemes_prioritization'):
@@ -146,8 +151,8 @@ def get_scheme_version():
 def wops_for_schemes(schemes, intervals):
     scheme_file_input_lines = []
     for scheme in schemes:
-        scheme_file_input_lines.append(damos_to_debugfs_input(scheme,
-            intervals, get_scheme_version()))
+        scheme_file_input_lines.append(
+            damos_to_debugfs_input(scheme, intervals, get_scheme_version()))
     scheme_file_input = '\n'.join(scheme_file_input_lines)
     if scheme_file_input == '':
         scheme_file_input = '\n'
@@ -157,15 +162,16 @@ def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
     nr_regions = damon_ctx.nr_regions
     return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
-            intervals.ops_update, nr_regions.minimum, nr_regions.maximum)
+                                intervals.ops_update, nr_regions.minimum,
+                                nr_regions.maximum)
 
 def wops_for_kdamonds(kdamonds):
     if len(kdamonds) > 1:
         raise Exception('Currently only <=one kdamond is supported')
     if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
         raise Exception('currently only <= one damon_ctx is supported')
-    if (len(kdamonds) == 1 and len(kdamonds[0].contexts) == 1 and
-            len(kdamonds[0].contexts[0].targets) > 1):
+    if (len(kdamonds) == 1 and len(kdamonds[0].contexts) == 1
+            and len(kdamonds[0].contexts[0].targets) > 1):
         raise Exception('currently only <= one target is supported')
     ctx = kdamonds[0].contexts[0]
 
@@ -174,7 +180,7 @@ def wops_for_kdamonds(kdamonds):
 
     if len(ctx.targets) > 0:
         write_contents += wops_for_target(ctx.targets[0],
-                _damon.target_has_pid(ctx.ops))
+                                          _damon.target_has_pid(ctx.ops))
 
     if not feature_supported('schemes'):
         return write_contents
@@ -198,8 +204,10 @@ def debugfs_schemes_output_fields_to_access_pattern(fields, intervals_us):
 
     # convert nr_accesses from sample intervals to percent
     max_nr_accesses = intervals_us.aggr / intervals_us.sample
-    nr_accesses = [float(fields[2]) * 100 / max_nr_accesses,
-            float(fields[3]) * 100 / max_nr_accesses]
+    nr_accesses = [
+        float(fields[2]) * 100 / max_nr_accesses,
+        float(fields[3]) * 100 / max_nr_accesses
+    ]
     nr_accesses_unit = _damon.unit_percent
 
     # convert ages in update_interval to us
@@ -207,7 +215,7 @@ def debugfs_schemes_output_fields_to_access_pattern(fields, intervals_us):
     age_unit = _damon.unit_usec
 
     return _damon.DamosAccessPattern(sz_bytes, nr_accesses, nr_accesses_unit,
-            age, age_unit)
+                                     age, age_unit)
 
 def debugfs_output_to_damos(output, intervals_us):
     fields = [int(x) for x in output.strip().split()]
@@ -218,8 +226,8 @@ def debugfs_output_to_damos(output, intervals_us):
     stat_fields = fields[-1 * nr_stat_fields:]
     fields = [int(x) for x in output.strip().split()][:-1 * nr_stat_fields]
 
-    access_pattern = debugfs_schemes_output_fields_to_access_pattern(fields,
-            intervals_us)
+    access_pattern = debugfs_schemes_output_fields_to_access_pattern(
+        fields, intervals_us)
     action = file_content_to_damos_action(fields[6])
 
     if len(fields) == 7:
@@ -233,7 +241,7 @@ def debugfs_output_to_damos(output, intervals_us):
         damos.quotas.weight_nr_accesses_permil = fields[11]
         damos.quotas.weight_age_permil = fields[12]
         damos.watermarks.metric = file_content_to_damos_wmarks_metric(
-                fields[13])
+            fields[13])
         damos.watermarks.interval_us = fields[14]
         damos.watermarks.high_permil = fields[15]
         damos.watermarks.mid_permil = fields[16]
@@ -255,19 +263,19 @@ def files_content_to_kdamonds(files_content):
             id_or_index = fields[i]
             if not id_or_index in regions_dict:
                 regions_dict[id_or_index] = []
-            regions_dict[id_or_index].append(_damon.DamonRegion(
-                    fields[i + 1], fields[i + 2]))
+            regions_dict[id_or_index].append(
+                _damon.DamonRegion(fields[i + 1], fields[i + 2]))
     ops = 'vaddr'
     is_paddr = False
     if 42 in target_ids:
         ops = 'paddr'
     targets = []
     for idx, target_id in enumerate(target_ids):
-        targets.append(_damon.DamonTarget(
-            pid=target_id if not is_paddr else None,
-            regions=regions_dict[idx
-                if feature_supported('init_regions_target_idx')
-                else target_id] if len(regions_dict) > 0 else []))
+        targets.append(
+            _damon.DamonTarget(pid=target_id if not is_paddr else None,
+                               regions=regions_dict[idx if feature_supported(
+                                   'init_regions_target_idx') else target_id]
+                               if len(regions_dict) > 0 else []))
 
     schemes = []
     if feature_supported('schemes'):
@@ -282,8 +290,7 @@ def files_content_to_kdamonds(files_content):
     return [_damon.Kdamond(state, pid, [ctx])]
 
 def current_kdamonds():
-    return files_content_to_kdamonds(
-            _damo_fs.read_files(debugfs_damon))
+    return files_content_to_kdamonds(_damo_fs.read_files(debugfs_damon))
 
 def nr_kdamonds():
     # TODO: Support manually created kdamonds
@@ -307,6 +314,7 @@ def values_for_restore(filepath, read_val):
     return read_val
 
 '''Return value to write back to the filepath for restoring, and error'''
+
 def read_value_for_restore(filepath):
     err = True
     read_val, err = _damo_fs.read_file(filepath)
@@ -407,7 +415,7 @@ def update_supported_features():
     if os.path.isfile(debugfs_init_regions):
         feature_supports['init_regions'] = True
         init_regions_version = test_init_regions_version(
-                feature_supports['paddr'])
+            feature_supports['paddr'])
         if init_regions_version == 2:
             feature_supports['init_regions_target_idx'] = True
 
@@ -436,7 +444,8 @@ def update_supported_features():
 
     if 0 < get_scheme_version() and get_scheme_version() < 4:
         _damo_deprecation_notice.deprecated(
-                feature='support of non-mainlined DAMOS implementation',
-                deadline='2023-Q2', do_exit=True)
+            feature='support of non-mainlined DAMOS implementation',
+            deadline='2023-Q2',
+            do_exit=True)
 
     return None

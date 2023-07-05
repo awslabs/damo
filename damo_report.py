@@ -9,18 +9,26 @@ import damo_report_raw
 import damo_wss
 
 subcmds = [
-        _damo_subcmds.DamoSubCmd(name='raw', module=damo_report_raw,
-            msg='human readable raw data'),
-        _damo_subcmds.DamoSubCmd(name='heats', module=damo_heats,
-            msg='heats of regions'),
-        _damo_subcmds.DamoSubCmd(name='wss', module=damo_wss,
-            msg='working set size'),
-        _damo_subcmds.DamoSubCmd(name='nr_regions', module=damo_nr_regions,
-            msg='number of regions')]
+    _damo_subcmds.DamoSubCmd(name='raw',
+                             module=damo_report_raw,
+                             msg='human readable raw data'),
+    _damo_subcmds.DamoSubCmd(name='heats',
+                             module=damo_heats,
+                             msg='heats of regions'),
+    _damo_subcmds.DamoSubCmd(name='wss',
+                             module=damo_wss,
+                             msg='working set size'),
+    _damo_subcmds.DamoSubCmd(name='nr_regions',
+                             module=damo_nr_regions,
+                             msg='number of regions')
+]
 
 def set_argparser(parser):
-    subparsers = parser.add_subparsers(title='report type', dest='report_type',
-            metavar='<report type>', help='the type of the report to generate')
+    subparsers = parser.add_subparsers(
+        title='report type',
+        dest='report_type',
+        metavar='<report type>',
+        help='the type of the report to generate')
     subparsers.required = True
 
     for subcmd in subcmds:

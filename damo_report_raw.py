@@ -28,8 +28,9 @@ def pr_records(args, records):
         filter_snapshots(records, args.duration[0], args.duration[1])
 
     if args.json:
-        print(json.dumps([r.to_kvpairs(args.raw_number)
-            for r in records], indent=4))
+        print(
+            json.dumps([r.to_kvpairs(args.raw_number) for r in records],
+                       indent=4))
         exit(0)
 
     for record in records:
@@ -39,41 +40,46 @@ def pr_records(args, records):
 
         base_time = snapshots[0].start_time
         print('base_time_absolute: %s\n' %
-                _damo_fmt_str.format_time_ns(base_time, args.raw_number))
+              _damo_fmt_str.format_time_ns(base_time, args.raw_number))
 
         for snapshot in snapshots:
-            print('monitoring_start:    %16s' %
-                    _damo_fmt_str.format_time_ns(
-                        snapshot.start_time - base_time, args.raw_number))
-            print('monitoring_end:      %16s' %
-                    _damo_fmt_str.format_time_ns(
-                        snapshot.end_time - base_time, args.raw_number))
-            print('monitoring_duration: %16s' %
-                    _damo_fmt_str.format_time_ns(
-                        snapshot.end_time - snapshot.start_time,
-                        args.raw_number))
+            print('monitoring_start:    %16s' % _damo_fmt_str.format_time_ns(
+                snapshot.start_time - base_time, args.raw_number))
+            print('monitoring_end:      %16s' % _damo_fmt_str.format_time_ns(
+                snapshot.end_time - base_time, args.raw_number))
+            print('monitoring_duration: %16s' % _damo_fmt_str.format_time_ns(
+                snapshot.end_time - snapshot.start_time, args.raw_number))
             print('target_id: %s' % record.target_id)
             print('nr_regions: %s' % len(snapshot.regions))
             print('# %10s %12s  %12s  %11s %5s' %
-                    ('start_addr', 'end_addr', 'length', 'nr_accesses', 'age'))
+                  ('start_addr', 'end_addr', 'length', 'nr_accesses', 'age'))
             for r in snapshot.regions:
-                print("%012x-%012x (%12s) %11d %5d" %
-                        (r.start, r.end,
-                            _damo_fmt_str.format_sz(r.end - r.start,
-                                args.raw_number), r.nr_accesses.samples,
-                                r.age.aggr_intervals
-                                if r.age.aggr_intervals != None else -1))
+                print(
+                    "%012x-%012x (%12s) %11d %5d" %
+                    (r.start, r.end,
+                     _damo_fmt_str.format_sz(r.end - r.start, args.raw_number),
+                     r.nr_accesses.samples, r.age.aggr_intervals
+                     if r.age.aggr_intervals != None else -1))
             print('')
 
 def set_argparser(parser):
-    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-            default='damon.data', help='input file name')
-    parser.add_argument('--duration', type=float, metavar='<seconds>', nargs=2,
-            help='start and end time offset for record to parse')
-    parser.add_argument('--raw_number', action='store_true',
-            help='use machine-friendly raw numbers')
-    parser.add_argument('--json', action='store_true',
-            help='print in json format')
+    parser.add_argument('--input',
+                        '-i',
+                        type=str,
+                        metavar='<file>',
+                        default='damon.data',
+                        help='input file name')
+    parser.add_argument('--duration',
+                        type=float,
+                        metavar='<seconds>',
+                        nargs=2,
+                        help='start and end time offset for record to parse')
+    parser.add_argument('--raw_number',
+                        action='store_true',
+                        help='use machine-friendly raw numbers')
+    parser.add_argument('--json',
+                        action='store_true',
+                        help='print in json format')
 
 def main(args=None):
     if not args:
@@ -89,8 +95,7 @@ def main(args=None):
 
     records, err = _damon_result.parse_records_file(file_path)
     if err:
-        print('parsing damon result file (%s) failed (%s)' %
-                (file_path, err))
+        print('parsing damon result file (%s) failed (%s)' % (file_path, err))
         exit(1)
 
     if len(records) == 0:
@@ -102,7 +107,6 @@ def main(args=None):
     except BrokenPipeError as e:
         # maybe user piped to 'less' like pager and quit from it
         pass
-
 
 if __name__ == '__main__':
     main()

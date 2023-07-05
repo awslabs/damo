@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 """
 Show status of DAMON.
 """
@@ -18,8 +17,7 @@ def pr_schemes_tried_regions(kdamonds, raw_nr):
         for ctx_idx, ctx in enumerate(kdamond.contexts):
             for scheme_idx, scheme in enumerate(ctx.schemes):
                 print('%s %s %s' % (kd_idx, ctx_idx, scheme_idx))
-                print('\n'.join(
-                    r.to_str(raw_nr) for r in scheme.tried_regions))
+                print('\n'.join(r.to_str(raw_nr) for r in scheme.tried_regions))
 
 def update_pr_schemes_tried_regions(raw_nr):
     err = _damon.update_schemes_tried_regions()
@@ -39,21 +37,24 @@ def update_pr_schemes_stats(raw_nr):
     for kd_idx, kdamond in enumerate(kdamonds):
         for ctx_idx, ctx in enumerate(kdamond.contexts):
             for scheme_idx, scheme in enumerate(ctx.schemes):
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'nr_tried', _damo_fmt_str.format_nr(
-                        scheme.stats.nr_tried, raw_nr)))
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'sz_tried', _damo_fmt_str.format_sz(
-                        scheme.stats.sz_tried, raw_nr)))
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'nr_applied', _damo_fmt_str.format_nr(
-                        scheme.stats.nr_applied, raw_nr)))
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'sz_applied', _damo_fmt_str.format_sz(
-                        scheme.stats.sz_applied, raw_nr)))
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'qt_exceeds', _damo_fmt_str.format_nr(
-                        scheme.stats.qt_exceeds, raw_nr)))
+                print('%s %s %s %s %s' %
+                      (kd_idx, ctx_idx, scheme_idx, 'nr_tried',
+                       _damo_fmt_str.format_nr(scheme.stats.nr_tried, raw_nr)))
+                print('%s %s %s %s %s' %
+                      (kd_idx, ctx_idx, scheme_idx, 'sz_tried',
+                       _damo_fmt_str.format_sz(scheme.stats.sz_tried, raw_nr)))
+                print(
+                    '%s %s %s %s %s' %
+                    (kd_idx, ctx_idx, scheme_idx, 'nr_applied',
+                     _damo_fmt_str.format_nr(scheme.stats.nr_applied, raw_nr)))
+                print(
+                    '%s %s %s %s %s' %
+                    (kd_idx, ctx_idx, scheme_idx, 'sz_applied',
+                     _damo_fmt_str.format_sz(scheme.stats.sz_applied, raw_nr)))
+                print(
+                    '%s %s %s %s %s' %
+                    (kd_idx, ctx_idx, scheme_idx, 'qt_exceeds',
+                     _damo_fmt_str.format_nr(scheme.stats.qt_exceeds, raw_nr)))
 
 def update_pr_kdamonds_summary(json_format, raw_nr):
     kdamonds = _damon.current_kdamonds()
@@ -73,14 +74,17 @@ def update_pr_kdamonds(json_format, raw_nr):
     else:
         for idx, k in enumerate(kdamonds):
             print('kdamond %d' % idx)
-            print(_damo_fmt_str.indent_lines( k.to_str(raw_nr), 4))
-
+            print(_damo_fmt_str.indent_lines(k.to_str(raw_nr), 4))
 
 def set_argparser(parser):
-    parser.add_argument('--json', action='store_true', default=False,
-            help='print output in json format')
-    parser.add_argument('--raw', action='store_true', default=False,
-            help='print raw numbers')
+    parser.add_argument('--json',
+                        action='store_true',
+                        default=False,
+                        help='print output in json format')
+    parser.add_argument('--raw',
+                        action='store_true',
+                        default=False,
+                        help='print raw numbers')
     _damon_args.set_common_argparser(parser)
     return parser
 

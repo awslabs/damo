@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 """
 Contains core functions for DAMON sysfs control.
 """
@@ -25,20 +24,19 @@ def state_file_of(kdamond_idx):
     return os.path.join(kdamond_dir_of(kdamond_idx), 'state')
 
 def ctx_dir_of(kdamond_idx, context_idx):
-    return os.path.join(
-            kdamond_dir_of(kdamond_idx), 'contexts', '%s' % context_idx)
+    return os.path.join(kdamond_dir_of(kdamond_idx), 'contexts',
+                        '%s' % context_idx)
 
 def schemes_dir_of(kdamond_idx, context_idx):
     return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
 
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
-    return os.path.join(
-            schemes_dir_of(kdamond_idx, context_idx), '%s' % scheme_idx)
+    return os.path.join(schemes_dir_of(kdamond_idx, context_idx),
+                        '%s' % scheme_idx)
 
 def scheme_tried_regions_dir_of(kdamond_idx, context_idx, scheme_idx):
-    return os.path.join(
-            scheme_dir_of(kdamond_idx, context_idx, scheme_idx),
-            'tried_regions')
+    return os.path.join(scheme_dir_of(kdamond_idx, context_idx, scheme_idx),
+                        'tried_regions')
 
 def supported():
     return os.path.isdir(kdamonds_dir)
@@ -68,28 +66,31 @@ def is_kdamond_running(kdamond_idx):
     return content.strip() == 'on'
 
 'Return error'
+
 def update_schemes_stats(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
-        err = _damo_fs.write_file(
-                state_file_of(kdamond_idx), 'update_schemes_stats')
+        err = _damo_fs.write_file(state_file_of(kdamond_idx),
+                                  'update_schemes_stats')
         if err != None:
             return err
     return None
 
 'Return error'
+
 def update_schemes_tried_bytes(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
-        err = _damo_fs.write_file(
-                state_file_of(kdamond_idx), 'update_schemes_tried_bytes')
+        err = _damo_fs.write_file(state_file_of(kdamond_idx),
+                                  'update_schemes_tried_bytes')
         if err != None:
             return err
     return None
 
 'Return error'
+
 def update_schemes_tried_regions(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
-        err = _damo_fs.write_file(
-                state_file_of(kdamond_idx), 'update_schemes_tried_regions')
+        err = _damo_fs.write_file(state_file_of(kdamond_idx),
+                                  'update_schemes_tried_regions')
         if err != None:
             return err
     return None
@@ -98,11 +99,14 @@ def update_schemes_tried_regions(kdamond_idxs):
 
 def wops_for_scheme_filter(damos_filter):
     return {
-        'type': '%s' % damos_filter.filter_type,
-        'memcg_path': ('%s' % damos_filter.memcg_path
-            if damos_filter.memcg_path != None else ''),
-        'matching': 'Y' if damos_filter.matching else 'N',
-        }
+        'type':
+        '%s' % damos_filter.filter_type,
+        'memcg_path':
+        ('%s' %
+         damos_filter.memcg_path if damos_filter.memcg_path != None else ''),
+        'matching':
+        'Y' if damos_filter.matching else 'N',
+    }
 
 def wops_for_scheme_filters(filters):
     wops = {}
@@ -138,9 +142,9 @@ def wops_for_scheme_quotas(quotas):
 def wops_for_scheme_access_pattern(pattern, ctx):
     if pattern == None:
         return {}
-    pattern = pattern.converted_for_units(
-            _damon.unit_samples, _damon.unit_aggr_intervals,
-            ctx.intervals)
+    pattern = pattern.converted_for_units(_damon.unit_samples,
+                                          _damon.unit_aggr_intervals,
+                                          ctx.intervals)
 
     return {
         'sz': {
@@ -164,30 +168,38 @@ def wops_for_schemes(ctx):
     for idx, scheme in enumerate(schemes):
         dirname = '%d' % idx
         schemes_wops[dirname] = {
-            'access_pattern': wops_for_scheme_access_pattern(
-                scheme.access_pattern, ctx),
-            'action': scheme.action,
-            'quotas': wops_for_scheme_quotas(scheme.quotas),
-            'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
+            'access_pattern':
+            wops_for_scheme_access_pattern(scheme.access_pattern, ctx),
+            'action':
+            scheme.action,
+            'quotas':
+            wops_for_scheme_quotas(scheme.quotas),
+            'watermarks':
+            wops_for_scheme_watermarks(scheme.watermarks),
         }
         if feature_supported('schemes_filters'):
             schemes_wops[dirname]['filters'] = wops_for_scheme_filters(
-                    scheme.filters)
+                scheme.filters)
     return schemes_wops
 
 def wops_for_regions(regions):
-    return {'%d' % region_idx: {
-        'start': '%d' % region.start,
-        'end': '%d' % region.end}
-        for region_idx, region in enumerate(regions)}
+    return {
+        '%d' % region_idx: {
+            'start': '%d' % region.start,
+            'end': '%d' % region.end
+        }
+        for region_idx, region in enumerate(regions)
+    }
 
 def wops_for_targets(ctx):
     return {
-            '%d' % idx: {
-                'pid_target': '%s' %
-                target.pid if _damon.target_has_pid(ctx.ops) else '',
-                'regions': wops_for_regions(target.regions)
-                } for idx, target in enumerate(ctx.targets)}
+        '%d' % idx: {
+            'pid_target':
+            '%s' % target.pid if _damon.target_has_pid(ctx.ops) else '',
+            'regions': wops_for_regions(target.regions)
+        }
+        for idx, target in enumerate(ctx.targets)
+    }
 
 def wops_for_monitoring_attrs(ctx):
     return {
@@ -207,10 +219,18 @@ def wops_for_ctx(ctx):
     if ops == 'fvaddr' and not feature_supported('fvaddr'):
         ops = 'vaddr'
     return [
-            {'operations': ops},
-            {'monitoring_attrs': wops_for_monitoring_attrs(ctx)},
-            {'targets': wops_for_targets(ctx)},
-            {'schemes': wops_for_schemes(ctx)},
+        {
+            'operations': ops
+        },
+        {
+            'monitoring_attrs': wops_for_monitoring_attrs(ctx)
+        },
+        {
+            'targets': wops_for_targets(ctx)
+        },
+        {
+            'schemes': wops_for_schemes(ctx)
+        },
     ]
 
 def wops_for_ctxs(ctxs):
@@ -220,8 +240,10 @@ def wops_for_kdamond(kdamond):
     return {'contexts': wops_for_ctxs(kdamond.contexts)}
 
 def wops_for_kdamonds(kdamonds):
-    return {'%d' % idx: wops_for_kdamond(kdamond)
-            for idx, kdamond in enumerate(kdamonds)}
+    return {
+        '%d' % idx: wops_for_kdamond(kdamond)
+        for idx, kdamond in enumerate(kdamonds)
+    }
 
 def __ensure_scheme_dir_populated(scheme_dir, scheme):
     if not feature_supported('schemes_filters'):
@@ -328,73 +350,76 @@ def number_sorted_dirs(files_content):
 
 def files_content_to_access_pattern(files_content):
     return _damon.DamosAccessPattern(
-            [int(files_content['sz']['min']),
-                int(files_content['sz']['max'])],
-            [int(files_content['nr_accesses']['min']),
-                int(files_content['nr_accesses']['max'])],
-            _damon.unit_samples, # nr_accesses_unit
-            [int(files_content['age']['min']),
-                int(files_content['age']['max'])],
-            _damon.unit_aggr_intervals) # age_unit
+        [int(files_content['sz']['min']),
+         int(files_content['sz']['max'])],
+        [
+            int(files_content['nr_accesses']['min']),
+            int(files_content['nr_accesses']['max'])
+        ],
+        _damon.unit_samples,  # nr_accesses_unit
+        [int(files_content['age']['min']),
+         int(files_content['age']['max'])],
+        _damon.unit_aggr_intervals)  # age_unit
 
 def files_content_to_quotas(files_content):
     return _damon.DamosQuotas(
-            int(files_content['ms']),
-            int(files_content['bytes']),
-            int(files_content['reset_interval_ms']),
-            [int(files_content['weights']['sz_permil']),
-                int(files_content['weights']['nr_accesses_permil']),
-                int(files_content['weights']['age_permil'])])
+        int(files_content['ms']), int(files_content['bytes']),
+        int(files_content['reset_interval_ms']), [
+            int(files_content['weights']['sz_permil']),
+            int(files_content['weights']['nr_accesses_permil']),
+            int(files_content['weights']['age_permil'])
+        ])
 
 def files_content_to_watermarks(files_content):
-    return _damon.DamosWatermarks(
-            files_content['metric'].strip(),
-            int(files_content['interval_us']),
-            int(files_content['high']),
-            int(files_content['mid']),
-            int(files_content['low']))
+    return _damon.DamosWatermarks(files_content['metric'].strip(),
+                                  int(files_content['interval_us']),
+                                  int(files_content['high']),
+                                  int(files_content['mid']),
+                                  int(files_content['low']))
 
 def files_content_to_damos_filters(files_content):
-    return [_damon.DamosFilter(filter_kv['type'].strip(),
-            filter_kv['memcg_path'].strip(), filter_kv['matching'].strip())
-            for filter_kv in numbered_dirs_content(
-                files_content, 'nr_filters')]
+    return [
+        _damon.DamosFilter(filter_kv['type'].strip(),
+                           filter_kv['memcg_path'].strip(),
+                           filter_kv['matching'].strip())
+        for filter_kv in numbered_dirs_content(files_content, 'nr_filters')
+    ]
 
 def files_content_to_damos_stats(files_content):
-    return _damon.DamosStats(
-            int(files_content['nr_tried']),
-            int(files_content['sz_tried']),
-            int(files_content['nr_applied']),
-            int(files_content['sz_applied']),
-            int(files_content['qt_exceeds']))
+    return _damon.DamosStats(int(files_content['nr_tried']),
+                             int(files_content['sz_tried']),
+                             int(files_content['nr_applied']),
+                             int(files_content['sz_applied']),
+                             int(files_content['qt_exceeds']))
 
 def files_content_to_damos_tried_regions(files_content):
-    return [_damon.DamonRegion(
-            int(kv['start']), int(kv['end']),
-            int(kv['nr_accesses']), _damon.unit_samples,
-            int(kv['age']), _damon.unit_aggr_intervals)
-            for kv in number_sorted_dirs(files_content)]
+    return [
+        _damon.DamonRegion(int(kv['start']), int(kv['end']),
+                           int(kv['nr_accesses']), _damon.unit_samples,
+                           int(kv['age']), _damon.unit_aggr_intervals)
+        for kv in number_sorted_dirs(files_content)
+    ]
 
 def files_content_to_scheme(files_content):
     return _damon.Damos(
-            files_content_to_access_pattern(files_content['access_pattern']),
-            files_content['action'].strip(),
-            files_content_to_quotas(files_content['quotas']),
-            files_content_to_watermarks(files_content['watermarks']),
-            files_content_to_damos_filters(files_content['filters'])
-                if 'filters' in files_content else [],
-            files_content_to_damos_stats(files_content['stats']),
-            files_content_to_damos_tried_regions(
-                files_content['tried_regions'])
-                if 'tried_regions' in files_content else [],
-            files_content['tried_regions']['total_bytes']
-                if 'tried_regions' in files_content and
-                    'total_bytes' in files_content['tried_regions'] else None)
+        files_content_to_access_pattern(files_content['access_pattern']),
+        files_content['action'].strip(),
+        files_content_to_quotas(files_content['quotas']),
+        files_content_to_watermarks(files_content['watermarks']),
+        files_content_to_damos_filters(files_content['filters'])
+        if 'filters' in files_content else [],
+        files_content_to_damos_stats(files_content['stats']),
+        files_content_to_damos_tried_regions(files_content['tried_regions'])
+        if 'tried_regions' in files_content else [],
+        files_content['tried_regions']['total_bytes']
+        if 'tried_regions' in files_content
+        and 'total_bytes' in files_content['tried_regions'] else None)
 
 def files_content_to_regions(files_content):
-    return [_damon.DamonRegion(
-            int(kv['start']), int(kv['end']))
-            for kv in numbered_dirs_content(files_content, 'nr_regions')]
+    return [
+        _damon.DamonRegion(int(kv['start']), int(kv['end']))
+        for kv in numbered_dirs_content(files_content, 'nr_regions')
+    ]
 
 def files_content_to_target(files_content):
     try:
@@ -407,45 +432,46 @@ def files_content_to_target(files_content):
 def files_content_to_context(files_content):
     mon_attrs_content = files_content['monitoring_attrs']
     intervals_content = mon_attrs_content['intervals']
-    intervals = _damon.DamonIntervals(
-            int(intervals_content['sample_us']),
-            int(intervals_content['aggr_us']),
-            int(intervals_content['update_us']))
+    intervals = _damon.DamonIntervals(int(intervals_content['sample_us']),
+                                      int(intervals_content['aggr_us']),
+                                      int(intervals_content['update_us']))
     nr_regions_content = mon_attrs_content['nr_regions']
-    nr_regions = _damon.DamonNrRegionsRange(
-            int(nr_regions_content['min']),
-            int(nr_regions_content['max']))
+    nr_regions = _damon.DamonNrRegionsRange(int(nr_regions_content['min']),
+                                            int(nr_regions_content['max']))
     ops = files_content['operations'].strip()
 
     targets_content = files_content['targets']
-    targets = [files_content_to_target(content)
-            for content in numbered_dirs_content(
-                targets_content, 'nr_targets')]
+    targets = [
+        files_content_to_target(content)
+        for content in numbered_dirs_content(targets_content, 'nr_targets')
+    ]
 
     schemes_content = files_content['schemes']
-    schemes = [files_content_to_scheme(content)
-            for content in numbered_dirs_content(
-                schemes_content, 'nr_schemes')]
+    schemes = [
+        files_content_to_scheme(content)
+        for content in numbered_dirs_content(schemes_content, 'nr_schemes')
+    ]
 
     return _damon.DamonCtx(intervals, nr_regions, ops, targets, schemes)
 
 def files_content_to_kdamond(files_content):
     contexts_content = files_content['contexts']
-    contexts = [files_content_to_context(content)
-            for content in numbered_dirs_content(
-                contexts_content, 'nr_contexts')]
+    contexts = [
+        files_content_to_context(content)
+        for content in numbered_dirs_content(contexts_content, 'nr_contexts')
+    ]
     state = files_content['state'].strip()
     pid = files_content['pid'].strip()
     return _damon.Kdamond(state, pid, contexts)
 
 def files_content_to_kdamonds(files_contents):
-    return [files_content_to_kdamond(content)
-            for content in numbered_dirs_content(
-                files_contents, 'nr_kdamonds')]
+    return [
+        files_content_to_kdamond(content)
+        for content in numbered_dirs_content(files_contents, 'nr_kdamonds')
+    ]
 
 def current_kdamonds():
-    return files_content_to_kdamonds(
-            _damo_fs.read_files(kdamonds_dir))
+    return files_content_to_kdamonds(_damo_fs.read_files(kdamonds_dir))
 
 def nr_kdamonds():
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
@@ -468,26 +494,26 @@ def feature_supported(feature):
     return feature_supports[feature]
 
 features_sysfs_support_from_begining = [
-        'schemes',
-        'init_regions',
-        'vaddr',
-        'fvaddr',
-        'paddr',
-        'init_regions_target_idx',
-        'schemes_speed_limit',
-        'schemes_quotas',
-        'schemes_prioritization',
-        'schemes_wmarks',
-        'schemes_stat_succ',
-        'schemes_stat_qt_exceed',
-        ]
+    'schemes',
+    'init_regions',
+    'vaddr',
+    'fvaddr',
+    'paddr',
+    'init_regions_target_idx',
+    'schemes_speed_limit',
+    'schemes_quotas',
+    'schemes_prioritization',
+    'schemes_wmarks',
+    'schemes_stat_succ',
+    'schemes_stat_qt_exceed',
+]
 
 def _avail_ops():
     '''Assumes called by update_supported_features() assuming one scheme.
     Returns available ops input and error'''
     avail_ops = []
     avail_operations_filepath = os.path.join(ctx_dir_of(0, 0),
-            'avail_operations')
+                                             'avail_operations')
     if not os.path.isfile(avail_operations_filepath):
         operations_filepath = os.path.join(ctx_dir_of(0, 0), 'operations')
         for ops in ['vaddr', 'paddr', 'fvaddr']:
@@ -516,19 +542,33 @@ def update_supported_features():
     orig_kdamonds = None
     if not os.path.isdir(scheme_dir_of(0, 0, 0)):
         orig_kdamonds = current_kdamonds()
-        kdamonds_for_feature_check = [_damon.Kdamond(state=None,
-            pid=None, contexts=[_damon.DamonCtx(intervals=None,
-                nr_regions=None, ops=None, targets=[],
-                schemes=[_damon.Damos(access_pattern=None,
-                    action='stat', quotas=None, watermarks=None, filters=[],
-                    stats=None)])])]
+        kdamonds_for_feature_check = [
+            _damon.Kdamond(state=None,
+                           pid=None,
+                           contexts=[
+                               _damon.DamonCtx(intervals=None,
+                                               nr_regions=None,
+                                               ops=None,
+                                               targets=[],
+                                               schemes=[
+                                                   _damon.Damos(
+                                                       access_pattern=None,
+                                                       action='stat',
+                                                       quotas=None,
+                                                       watermarks=None,
+                                                       filters=[],
+                                                       stats=None)
+                                               ])
+                           ])
+        ]
         ensure_dirs_populated_for(kdamonds_for_feature_check)
 
     if os.path.isdir(scheme_tried_regions_dir_of(0, 0, 0)):
         feature_supports['schemes_tried_regions'] = True
 
-    if os.path.isfile(os.path.join(scheme_tried_regions_dir_of(0, 0, 0),
-            'sz_regions_sum')):
+    if os.path.isfile(
+            os.path.join(scheme_tried_regions_dir_of(0, 0, 0),
+                         'sz_regions_sum')):
         feature_supports['schemes_tried_regions_sz'] = True
 
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'filters')):

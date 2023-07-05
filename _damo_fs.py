@@ -3,8 +3,8 @@
 import os
 
 import _damon
-
 '''Returns content and error'''
+
 def read_file(filepath):
     try:
         with open(filepath, 'r') as f:
@@ -30,6 +30,7 @@ def read_files(root):
 '''
 Returns None if success error string otherwise
 '''
+
 def write_file(filepath, content):
     if _damon.pr_debug_log:
         print('write \'%s\' to \'%s\'' % (content.strip(), filepath))
@@ -70,6 +71,7 @@ For example:
 
 Return an error string if fails any write, or None otherwise.
 '''
+
 def write_files(operations, root=''):
     if not type(operations) in [list, dict]:
         return ('write_files() received none-list, none-dict content: %s' %

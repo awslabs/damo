@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 "Record and report data access pattern in realtime"
 
 import argparse
@@ -20,14 +19,25 @@ def sighandler(signum, frame):
     cleanup()
 
 def set_argparser(parser):
-    parser.add_argument('target', type=str, metavar='<target>',
-            help='monitoring target (command, pid or \'paddr\')')
-    parser.add_argument('--report_type', type=str, choices=['heats', 'wss'],
-            default='heats', help='report type')
-    parser.add_argument('--delay', type=float, metavar='<seconds>', default=3,
-            help='deplay between updates in seconds.')
-    parser.add_argument('--count', type=int, metavar='<count>', default=0,
-            help='number of updates.')
+    parser.add_argument('target',
+                        type=str,
+                        metavar='<target>',
+                        help='monitoring target (command, pid or \'paddr\')')
+    parser.add_argument('--report_type',
+                        type=str,
+                        choices=['heats', 'wss'],
+                        default='heats',
+                        help='report type')
+    parser.add_argument('--delay',
+                        type=float,
+                        metavar='<seconds>',
+                        default=3,
+                        help='deplay between updates in seconds.')
+    parser.add_argument('--count',
+                        type=int,
+                        metavar='<count>',
+                        default=0,
+                        help='number of updates.')
 
 def main(args=None):
     if not args:
@@ -52,8 +62,11 @@ def main(args=None):
     if target_type == _damon_args.target_type_explicit and target == 'paddr':
         pass
     elif target_type == _damon_args.target_type_cmd:
-        cmd_pipe = subprocess.Popen(target, shell=True, executable='/bin/bash',
-                stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        cmd_pipe = subprocess.Popen(target,
+                                    shell=True,
+                                    executable='/bin/bash',
+                                    stdout=subprocess.DEVNULL,
+                                    stderr=subprocess.STDOUT)
         target = cmd_pipe.pid
     else:
         pid = int(target)
@@ -71,12 +84,14 @@ def main(args=None):
 
     nr_reports = 0
     while not args.count or nr_reports < args.count:
-        if (target_type == _damon_args.target_type_cmd and
-                cmd_pipe.poll() != None):
+        if (target_type == _damon_args.target_type_cmd
+                and cmd_pipe.poll() != None):
             break
         try:
-            subprocess.check_output(record_cmd, shell=True,
-                    stderr=subprocess.STDOUT, executable='/bin/bash')
+            subprocess.check_output(record_cmd,
+                                    shell=True,
+                                    stderr=subprocess.STDOUT,
+                                    executable='/bin/bash')
         except subprocess.CalledProcessError as e:
             pass
         try:

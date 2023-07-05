@@ -20,25 +20,24 @@ def format_sz(sz_bytes, machine_friendly):
     sz_bytes = float(sz_bytes)
     if sz_bytes == float(ulong_max):
         return 'max'
-    if sz_bytes > 1<<60:
-        return '%.3f EiB' % (sz_bytes / (1<<60))
-    if sz_bytes > 1<<50:
-        return '%.3f PiB' % (sz_bytes / (1<<50))
-    if sz_bytes > 1<<40:
-        return '%.3f TiB' % (sz_bytes / (1<<40))
-    if sz_bytes > 1<<30:
-        return '%.3f GiB' % (sz_bytes / (1<<30))
-    if sz_bytes > 1<<20:
-        return '%.3f MiB' % (sz_bytes / (1<<20))
-    if sz_bytes > 1<<10:
-        return '%.3f KiB' % (sz_bytes / (1<<10))
+    if sz_bytes > 1 << 60:
+        return '%.3f EiB' % (sz_bytes / (1 << 60))
+    if sz_bytes > 1 << 50:
+        return '%.3f PiB' % (sz_bytes / (1 << 50))
+    if sz_bytes > 1 << 40:
+        return '%.3f TiB' % (sz_bytes / (1 << 40))
+    if sz_bytes > 1 << 30:
+        return '%.3f GiB' % (sz_bytes / (1 << 30))
+    if sz_bytes > 1 << 20:
+        return '%.3f MiB' % (sz_bytes / (1 << 20))
+    if sz_bytes > 1 << 10:
+        return '%.3f KiB' % (sz_bytes / (1 << 10))
     return '%d B' % sz_bytes
 
 def format_addr_range(start, end, machine_friendly):
-    return '[%s, %s) (%s)' % (
-            format_nr(start, machine_friendly),
-            format_nr(end, machine_friendly),
-            format_sz(end - start, machine_friendly))
+    return '[%s, %s) (%s)' % (format_nr(
+        start, machine_friendly), format_nr(
+            end, machine_friendly), format_sz(end - start, machine_friendly))
 
 ns_ns = 1
 us_ns = 1000
@@ -48,8 +47,15 @@ minute_ns = 60 * sec_ns
 hour_ns = 60 * minute_ns
 day_ns = 24 * hour_ns
 
-nsecs_to_unit = {1: 'ns', us_ns: 'us', ms_ns: 'ms', sec_ns: 's',
-        minute_ns: 'm', hour_ns: 'h', day_ns: 'd'}
+nsecs_to_unit = {
+    1: 'ns',
+    us_ns: 'us',
+    ms_ns: 'ms',
+    sec_ns: 's',
+    minute_ns: 'm',
+    hour_ns: 'h',
+    day_ns: 'd'
+}
 
 def format_time_ns_min_unit(time_ns, min_unit, machine_friendly):
     if machine_friendly:
@@ -64,21 +70,22 @@ def format_time_ns_min_unit(time_ns, min_unit, machine_friendly):
         if unit_nsecs == min_unit:
             if time_ns % unit_nsecs:
                 return '%.3f %s' % (time_ns / unit_nsecs,
-                        nsecs_to_unit[unit_nsecs])
+                                    nsecs_to_unit[unit_nsecs])
             else:
                 return '%d %s' % (time_ns / unit_nsecs,
-                        nsecs_to_unit[unit_nsecs])
+                                  nsecs_to_unit[unit_nsecs])
 
         unit_nr = int(time_ns / unit_nsecs)
-        unit_str = '%s %s' % (
-                format_nr(unit_nr, False), nsecs_to_unit[unit_nsecs])
+        unit_str = '%s %s' % (format_nr(unit_nr,
+                                        False), nsecs_to_unit[unit_nsecs])
 
         less_unit_ns = time_ns - unit_nr * unit_nsecs
         if less_unit_ns == 0:
             return unit_str
         else:
-            return '%s %s' % (unit_str, format_time_ns_min_unit(less_unit_ns,
-                min_unit, False))
+            return '%s %s' % (unit_str,
+                              format_time_ns_min_unit(less_unit_ns, min_unit,
+                                                      False))
     return '0 ns'
 
 def format_time_ns_exact(time_ns, machine_friendly):
@@ -111,9 +118,9 @@ def format_time_ns(time_ns, machine_friendly):
             return '%d m' % (time_ns / minute_ns)
         if time_ns % sec_ns == 0:
             return '%d m %d s' % (time_ns / minute_ns,
-                    (time_ns % minute_ns) / sec_ns)
+                                  (time_ns % minute_ns) / sec_ns)
         return '%d m %.3f s' % (time_ns / minute_ns,
-                (time_ns % minute_ns) / sec_ns)
+                                (time_ns % minute_ns) / sec_ns)
     if time_ns >= sec_ns:
         if time_ns % sec_ns == 0:
             return '%d s' % (time_ns / sec_ns)
@@ -190,13 +197,27 @@ ulong_max = 2**64 - 1
 if platform.architecture()[0] != '64bit':
     ulong_max = 2**32 - 1
 
-unit_to_bytes = {'B': 1,
-        'K': 1 << 10, 'KB': 1 << 10, 'KiB': 1 << 10,
-        'M': 1 << 20, 'MB': 1 << 20, 'MiB': 1 << 20,
-        'G': 1 << 30, 'GB': 1 << 30, 'GiB': 1 << 30,
-        'T': 1 << 40, 'TB': 1 << 40, 'TiB': 1 << 40,
-        'P': 1 << 50, 'PB': 1 << 50, 'PiB': 1 << 50,
-        'E': 1 << 60, 'EB': 1 << 60, 'EiB': 1 << 60}
+unit_to_bytes = {
+    'B': 1,
+    'K': 1 << 10,
+    'KB': 1 << 10,
+    'KiB': 1 << 10,
+    'M': 1 << 20,
+    'MB': 1 << 20,
+    'MiB': 1 << 20,
+    'G': 1 << 30,
+    'GB': 1 << 30,
+    'GiB': 1 << 30,
+    'T': 1 << 40,
+    'TB': 1 << 40,
+    'TiB': 1 << 40,
+    'P': 1 << 50,
+    'PB': 1 << 50,
+    'PiB': 1 << 50,
+    'E': 1 << 60,
+    'EB': 1 << 60,
+    'EiB': 1 << 60
+}
 
 def text_to_nr(txt):
     if type(txt) in number_types:
@@ -248,12 +269,19 @@ def text_to_bytes(txt):
             number = text_to_nr(txt[:-1])
         else:
             unit = 'B'
-            number  = text_to_nr(txt)
+            number = text_to_nr(txt)
 
     return min(ulong_max, int(number * unit_to_bytes[unit]))
 
-unit_to_nsecs = {'ns': ns_ns, 'us': us_ns, 'ms': ms_ns, 's': sec_ns,
-        'm': minute_ns, 'h': hour_ns, 'd': day_ns}
+unit_to_nsecs = {
+    'ns': ns_ns,
+    'us': us_ns,
+    'ms': ms_ns,
+    's': sec_ns,
+    'm': minute_ns,
+    'h': hour_ns,
+    'd': day_ns
+}
 
 def text_to_ns(txt):
     success, number = try_common_input(txt)
@@ -264,7 +292,7 @@ def text_to_ns(txt):
     if len(fields) > 1:
         result_us = 0
         for i in range(0, len(fields), 2):
-            result_us += text_to_ns(''.join(fields[i: i + 2]))
+            result_us += text_to_ns(''.join(fields[i:i + 2]))
         return result_us
 
     if not txt[-2:] in unit_to_nsecs and not txt[-1] in unit_to_nsecs:
@@ -347,4 +375,4 @@ def text_to_bool(txt):
         return False
     else:
         raise Exception('txt should be one of %s but %s' %
-                (' '.join(true_txts + false_txts), txt))
+                        (' '.join(true_txts + false_txts), txt))

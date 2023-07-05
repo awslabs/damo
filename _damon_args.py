@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 """
 Command line arguments handling
 """
@@ -21,7 +20,7 @@ def init_regions_for(args):
             addrs = region.split('-')
             try:
                 if len(addrs) != 2:
-                    raise Exception ('two addresses not given')
+                    raise Exception('two addresses not given')
                 region = _damon.DamonRegion(addrs[0], addrs[1])
                 if region.start >= region.end:
                     raise Exception('start >= end')
@@ -37,8 +36,9 @@ def init_regions_for(args):
         else:
             init_regions = [_damo_paddr_layout.default_paddr_region()]
         try:
-            init_regions = [_damon.DamonRegion(r[0], r[1])
-                    for r in init_regions]
+            init_regions = [
+                _damon.DamonRegion(r[0], r[1]) for r in init_regions
+            ]
         except Exception as e:
             return None, 'Wrong \'--regions\' argument (%s)' % e
 
@@ -77,11 +77,10 @@ def schemes_option_to_damos(schemes):
 
 def damos_options_to_scheme(args):
     try:
-        return _damon.Damos(
-                access_pattern=_damon.DamosAccessPattern(
-                    args.damos_sz_region, args.damos_access_rate,
-                    _damon.unit_percent, args.damos_age, _damon.unit_usec),
-                action=args.damos_action), None
+        return _damon.Damos(access_pattern=_damon.DamosAccessPattern(
+            args.damos_sz_region, args.damos_access_rate, _damon.unit_percent,
+            args.damos_age, _damon.unit_usec),
+                            action=args.damos_action), None
     except Exception as e:
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
 
@@ -116,8 +115,9 @@ def damon_ctx_for(args):
         return None, err
 
     try:
-        target = _damon.DamonTarget(args.target_pid
-                if _damon.target_has_pid(ops) else None, init_regions)
+        target = _damon.DamonTarget(
+            args.target_pid if _damon.target_has_pid(ops) else None,
+            init_regions)
     except Exception as e:
         return 'Wrong \'--target_pid\' argument (%s)' % e
 
@@ -180,8 +180,9 @@ def deduce_target_update_args(args):
         args.target_pid = None
         return None
     if target_type == target_type_cmd:
-        p = subprocess.Popen(args.deducible_target, shell=True,
-                executable='/bin/bash')
+        p = subprocess.Popen(args.deducible_target,
+                             shell=True,
+                             executable='/bin/bash')
         pid = p.pid
         args.self_started_target = True
     elif target_type == target_type_pid:
@@ -251,78 +252,126 @@ def turn_damon_on(args):
     if err:
         return err, None
     return _damon.turn_damon_on(
-            ['%s' % kidx for kidx, k in enumerate(kdamonds)]), kdamonds
+        ['%s' % kidx for kidx, k in enumerate(kdamonds)]), kdamonds
 
 # Commandline options setup helpers
 
 def set_common_argparser(parser):
-    parser.add_argument('--damon_interface',
-            choices=['sysfs', 'debugfs', 'auto'],
-            default='auto',
-            help='underlying DAMON interface to use (!! DEPRECATED)')
-    parser.add_argument('--debug_damon', action='store_true',
-            help='Print debugging log')
+    parser.add_argument(
+        '--damon_interface',
+        choices=['sysfs', 'debugfs', 'auto'],
+        default='auto',
+        help='underlying DAMON interface to use (!! DEPRECATED)')
+    parser.add_argument('--debug_damon',
+                        action='store_true',
+                        help='Print debugging log')
 
 def set_monitoring_attrs_argparser(parser):
     # for easier pinpoint setup
-    parser.add_argument('-s', '--sample', metavar='<microseconds>',
-            default=5000, help='sampling interval (us)')
-    parser.add_argument('-a', '--aggr', metavar='<microseconds>',
-            default=100000, help='aggregate interval (us)')
-    parser.add_argument('-u', '--updr', metavar='<microseconds>',
-            default=1000000, help='regions update interval (us)')
-    parser.add_argument('-n', '--minr', metavar='<# regions>',
-            default=10, help='minimal number of regions')
-    parser.add_argument('-m', '--maxr', metavar='<# regions>',
-            default=1000, help='maximum number of regions')
+    parser.add_argument('-s',
+                        '--sample',
+                        metavar='<microseconds>',
+                        default=5000,
+                        help='sampling interval (us)')
+    parser.add_argument('-a',
+                        '--aggr',
+                        metavar='<microseconds>',
+                        default=100000,
+                        help='aggregate interval (us)')
+    parser.add_argument('-u',
+                        '--updr',
+                        metavar='<microseconds>',
+                        default=1000000,
+                        help='regions update interval (us)')
+    parser.add_argument('-n',
+                        '--minr',
+                        metavar='<# regions>',
+                        default=10,
+                        help='minimal number of regions')
+    parser.add_argument('-m',
+                        '--maxr',
+                        metavar='<# regions>',
+                        default=1000,
+                        help='maximum number of regions')
 
     # for easier total setup
-    parser.add_argument('--monitoring_intervals', nargs=3,
-            default=['5ms', '100ms', '1s'],
-            metavar=('<sample>', '<aggr>', '<update>'),
-            help='monitoring intervals (us)')
-    parser.add_argument('--monitoring_nr_regions_range', nargs=2,
-            metavar=('<min>', '<max>'), default=[10, 1000],
-            help='min/max number of monitoring regions')
+    parser.add_argument('--monitoring_intervals',
+                        nargs=3,
+                        default=['5ms', '100ms', '1s'],
+                        metavar=('<sample>', '<aggr>', '<update>'),
+                        help='monitoring intervals (us)')
+    parser.add_argument('--monitoring_nr_regions_range',
+                        nargs=2,
+                        metavar=('<min>', '<max>'),
+                        default=[10, 1000],
+                        help='min/max number of monitoring regions')
 
 def set_monitoring_argparser(parser):
     set_monitoring_attrs_argparser(parser)
-    parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
-            type=str, default='', help='monitoring target address regions')
-    parser.add_argument('--numa_node', metavar='<node id>', type=int,
-            help='if target is \'paddr\', limit it to the numa node')
+    parser.add_argument('-r',
+                        '--regions',
+                        metavar='"<start>-<end> ..."',
+                        type=str,
+                        default='',
+                        help='monitoring target address regions')
+    parser.add_argument(
+        '--numa_node',
+        metavar='<node id>',
+        type=int,
+        help='if target is \'paddr\', limit it to the numa node')
 
 def set_damos_argparser(parser):
-    parser.add_argument('--damos_sz_region', metavar=('<min>', '<max>'),
-            nargs=2, default=['min', 'max'],
-            help='min/max size of damos target regions (bytes)')
-    parser.add_argument('--damos_access_rate', metavar=('<min>', '<max>'),
-            nargs=2, default=['min', 'max'],
-            help='min/max access rate of damos target regions (percent)')
-    parser.add_argument('--damos_age', metavar=('<min>', '<max>'), nargs=2,
-            default=['min', 'max'],
-            help='min/max age of damos target regions (microseconds)')
-    parser.add_argument('--damos_action', metavar='<action>',
-            choices=_damon.damos_actions,
-            help='damos action to apply to the target regions')
+    parser.add_argument('--damos_sz_region',
+                        metavar=('<min>', '<max>'),
+                        nargs=2,
+                        default=['min', 'max'],
+                        help='min/max size of damos target regions (bytes)')
+    parser.add_argument(
+        '--damos_access_rate',
+        metavar=('<min>', '<max>'),
+        nargs=2,
+        default=['min', 'max'],
+        help='min/max access rate of damos target regions (percent)')
+    parser.add_argument(
+        '--damos_age',
+        metavar=('<min>', '<max>'),
+        nargs=2,
+        default=['min', 'max'],
+        help='min/max age of damos target regions (microseconds)')
+    parser.add_argument('--damos_action',
+                        metavar='<action>',
+                        choices=_damon.damos_actions,
+                        help='damos action to apply to the target regions')
 
 def set_argparser(parser, add_record_options):
     if parser == None:
         parser = argparse.ArgumentParser()
     set_monitoring_argparser(parser)
-    parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
-            help='monitoring operations set')
+    parser.add_argument('--ops',
+                        choices=['vaddr', 'paddr', 'fvaddr'],
+                        help='monitoring operations set')
     parser.add_argument('--target_pid', type=int, help='target pid')
     set_damos_argparser(parser)
-    parser.add_argument('-c', '--schemes', metavar='<json string or file>',
-	    help='data access monitoring-based operation schemes')
-    parser.add_argument('--kdamonds', metavar='<json string or file>',
-            help='json format kdamonds specification to run DAMON for')
-    parser.add_argument('deducible_target', type=str,
-            metavar='<deducible target>', nargs='?',
-            help='the target (command, pid, or special keywords) to monitor')
+    parser.add_argument('-c',
+                        '--schemes',
+                        metavar='<json string or file>',
+                        help='data access monitoring-based operation schemes')
+    parser.add_argument(
+        '--kdamonds',
+        metavar='<json string or file>',
+        help='json format kdamonds specification to run DAMON for')
+    parser.add_argument(
+        'deducible_target',
+        type=str,
+        metavar='<deducible target>',
+        nargs='?',
+        help='the target (command, pid, or special keywords) to monitor')
     if add_record_options:
-        parser.add_argument('-o', '--out', metavar='<file path>', type=str,
-                default='damon.data', help='output file path')
+        parser.add_argument('-o',
+                            '--out',
+                            metavar='<file path>',
+                            type=str,
+                            default='damon.data',
+                            help='output file path')
     set_common_argparser(parser)
     return parser

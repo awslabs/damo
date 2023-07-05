@@ -20,8 +20,8 @@ class PaddrRange:
         self.name = name
 
     def __str__(self):
-        return '%x-%x, nid %s, state %s, name %s' % (self.start, self.end,
-                self.nid, self.state, self.name)
+        return '%x-%x, nid %s, state %s, name %s' % (
+            self.start, self.end, self.nid, self.state, self.name)
 
 class MemBlock:
     nid = None
@@ -60,13 +60,14 @@ def collapse_ranges(ranges):
 def memblocks_to_ranges(blocks, block_size):
     ranges = []
     for b in blocks:
-        ranges.append(PaddrRange(b.index * block_size,
-            (b.index + 1) * block_size, b.nid, b.state, None))
+        ranges.append(
+            PaddrRange(b.index * block_size, (b.index + 1) * block_size, b.nid,
+                       b.state, None))
 
     return collapse_ranges(ranges)
 
 def memblock_ranges():
-    SYSFS='/sys/devices/system/node'
+    SYSFS = '/sys/devices/system/node'
     sz_block = int(readfile('/sys/devices/system/memory/block_size_bytes'), 16)
     sys_nodes = [x for x in os.listdir(SYSFS) if x.startswith('node')]
 
@@ -132,8 +133,8 @@ def paddr_ranges():
 def pr_ranges(ranges):
     print('#%12s %13s\tnode\tstate\tresource\tsize' % ('start', 'end'))
     for r in ranges:
-        print('%13d %13d\t%s\t%s\t%s\t%d' % (r.start, r.end, r.nid,
-            r.state, r.name, r.end - r.start))
+        print('%13d %13d\t%s\t%s\t%s\t%d' %
+              (r.start, r.end, r.nid, r.state, r.name, r.end - r.start))
 
 def default_paddr_region():
     "Largest System RAM region becomes the default"
@@ -167,11 +168,12 @@ def paddr_region_of(numa_node):
 
     return regions
 
-
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--numa_node', type=int, metavar='<node id>',
-            help='print ranges of this numa node only')
+    parser.add_argument('--numa_node',
+                        type=int,
+                        metavar='<node id>',
+                        help='print ranges of this numa node only')
     args = parser.parse_args()
 
     _damon.ensure_root_permission()

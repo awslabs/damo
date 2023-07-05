@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-
 "Print out the distribution of the working set sizes of the given trace"
 
 import argparse
@@ -36,8 +35,9 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
         if len(wss_dist) == 0:
             print('# no snapshot')
             return
-        print('# avr:\t%s' % _damo_fmt_str.format_sz(
-            sum(wss_dist) / len(wss_dist), raw_number))
+        print(
+            '# avr:\t%s' %
+            _damo_fmt_str.format_sz(sum(wss_dist) / len(wss_dist), raw_number))
 
         if pr_all_wss:
             for idx, wss in enumerate(wss_dist):
@@ -64,7 +64,7 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
                 wss_idx -= 1
             wss = wss_dist[wss_idx]
             line = '%3d %15s' % (percentile,
-                _damo_fmt_str.format_sz(wss, raw_number))
+                                 _damo_fmt_str.format_sz(wss, raw_number))
             if nr_cols_bar > 0:
                 cols = int(wss / sz_per_col)
                 remaining_cols = nr_cols_bar - cols
@@ -72,34 +72,64 @@ def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
             print(line)
 
 def set_argparser(parser):
-    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-            default='damon.data', help='input file name')
-    parser.add_argument('--range', '-r', type=int, nargs=3,
-            metavar=('<start>', '<stop>', '<step>'), default=[0,101,25],
-            help='range of wss percentiles to print')
-    parser.add_argument('--exclude_samples', type=int, default=20,
-            metavar='<# samples>',
-            help='number of first samples to be excluded')
-    parser.add_argument('--acc_thres', '-t', type=int, default=1,
-            metavar='<# accesses>',
-            help='minimal number of accesses for treated as working set')
-    parser.add_argument('--sz_thres', type=int, default=1,
-            metavar='<size>',
-            help='minimal size of region for treated as working set')
-    parser.add_argument('--work_time', type=int, default=1,
-            metavar='<micro-seconds>',
-            help='supposed time for each unit of the work')
-    parser.add_argument('--sortby', '-s', choices=['time', 'size'],
-            help='the metric to be used for the sort of the working set sizes')
-    parser.add_argument('--plot', '-p', type=str, metavar='<file>',
-            help='plot the distribution to an image file')
-    parser.add_argument('--nr_cols_bar', type=int, metavar='<num>',
-            default=59,
-            help='number of columns that is reserved for wss visualization')
-    parser.add_argument('--raw_number', action='store_true',
-            help='use machine-friendly raw numbers')
-    parser.add_argument('--all_wss', action='store_true',
-            help='Do not print percentile but all calculated wss')
+    parser.add_argument('--input',
+                        '-i',
+                        type=str,
+                        metavar='<file>',
+                        default='damon.data',
+                        help='input file name')
+    parser.add_argument('--range',
+                        '-r',
+                        type=int,
+                        nargs=3,
+                        metavar=('<start>', '<stop>', '<step>'),
+                        default=[0, 101, 25],
+                        help='range of wss percentiles to print')
+    parser.add_argument('--exclude_samples',
+                        type=int,
+                        default=20,
+                        metavar='<# samples>',
+                        help='number of first samples to be excluded')
+    parser.add_argument(
+        '--acc_thres',
+        '-t',
+        type=int,
+        default=1,
+        metavar='<# accesses>',
+        help='minimal number of accesses for treated as working set')
+    parser.add_argument(
+        '--sz_thres',
+        type=int,
+        default=1,
+        metavar='<size>',
+        help='minimal size of region for treated as working set')
+    parser.add_argument('--work_time',
+                        type=int,
+                        default=1,
+                        metavar='<micro-seconds>',
+                        help='supposed time for each unit of the work')
+    parser.add_argument(
+        '--sortby',
+        '-s',
+        choices=['time', 'size'],
+        help='the metric to be used for the sort of the working set sizes')
+    parser.add_argument('--plot',
+                        '-p',
+                        type=str,
+                        metavar='<file>',
+                        help='plot the distribution to an image file')
+    parser.add_argument(
+        '--nr_cols_bar',
+        type=int,
+        metavar='<num>',
+        default=59,
+        help='number of columns that is reserved for wss visualization')
+    parser.add_argument('--raw_number',
+                        action='store_true',
+                        help='use machine-friendly raw numbers')
+    parser.add_argument('--all_wss',
+                        action='store_true',
+                        help='Do not print percentile but all calculated wss')
 
 def main(args=None):
     if not args:
@@ -117,7 +147,7 @@ def main(args=None):
     records, err = _damon_result.parse_records_file(file_path)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
-                (file_path, err))
+              (file_path, err))
         exit(1)
 
     _damon_result.adjust_records(records, args.work_time, args.exclude_samples)
@@ -132,7 +162,7 @@ def main(args=None):
         args.nr_cols_bar = 0
 
     pr_wss_dists(wss_dists, percentiles, raw_number, args.nr_cols_bar,
-            args.all_wss)
+                 args.all_wss)
 
     if args.plot:
         sys.stdout = orig_stdout
@@ -142,7 +172,7 @@ def main(args=None):
         if wss_sort:
             xlabel = 'percentile'
         err = _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
-                'working set size (bytes)')
+                                   'working set size (bytes)')
         if err:
             print('plot failed (%s)' % err)
 

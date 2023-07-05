@@ -6,9 +6,11 @@ import _damon
 import _damon_args
 
 def set_argparser(parser):
-    parser.add_argument('type', nargs='?',
-            choices=['supported', 'unsupported', 'all', 'json'], default='all',
-            help='type of features to listed')
+    parser.add_argument('type',
+                        nargs='?',
+                        choices=['supported', 'unsupported', 'all', 'json'],
+                        default='all',
+                        help='type of features to listed')
     _damon_args.set_common_argparser(parser)
 
 def main(args=None):
@@ -23,8 +25,8 @@ def main(args=None):
     for feature in sorted(_damon.features):
         supported = _damon.feature_supported(feature)
         if args.type == 'all':
-            print('%s: %s' % (feature,
-                'Supported' if supported else 'Unsupported'))
+            print('%s: %s' %
+                  (feature, 'Supported' if supported else 'Unsupported'))
         elif args.type == 'supported' and supported:
             print(feature)
         elif args.type == 'unsupported' and not supported:
