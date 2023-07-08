@@ -103,7 +103,7 @@ def pr_records(args, records):
 
     if args.record_head_pretty == None:
         if len(records) > 1:
-            args.record_head_pretty = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id>'
+            args.record_head_pretty = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <record duration> from <record start abs time>'
         else:
             args.record_head_pretty = ''
 
