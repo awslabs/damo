@@ -190,6 +190,8 @@ def set_argparser(parser):
     - collapse by priority value (more histogram control)
     '''
     _damon_args.set_common_argparser(parser)
+
+    # what to show
     parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
             help='min/max size of regions (bytes)')
@@ -206,6 +208,8 @@ def set_argparser(parser):
             action='append',
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
+
+    # how to show
 
     # don't set default for record head and snapshot head because it depends on
     # given number of record and snapshots.  Decide those in set_formats().
@@ -233,6 +237,7 @@ def set_argparser(parser):
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
             help='print in json format')
+
     parser.description='Show DAMON-monitored access pattern'
     parser.epilog='If --input_file is not provided, capture snapshot'
 
