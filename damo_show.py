@@ -101,11 +101,11 @@ def pr_records(args, records):
             for r in records], indent=4))
         exit(0)
 
-    if args.record_head_pretty == None:
+    if args.format_record_head == None:
         if len(records) > 1:
-            args.record_head_pretty = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <record duration> from <record start abs time>'
+            args.format_record_head = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <record duration> from <record start abs time>'
         else:
-            args.record_head_pretty = ''
+            args.format_record_head = ''
 
     if args.total_sz_only:
         args.snapshot_head_pretty = ''
@@ -113,8 +113,8 @@ def pr_records(args, records):
         args.snapshot_tail_pretty = '<total bytes>'
 
     for record in records:
-        if args.record_head_pretty != '':
-            print(format_pretty(args.record_head_pretty, args.pretty_min_chars,
+        if args.format_record_head != '':
+            print(format_pretty(args.format_record_head, args.pretty_min_chars,
                 None, None, None, record, args.raw_number))
         snapshots = record.snapshots
         if len(snapshots) == 0:
@@ -207,7 +207,7 @@ def set_argparser(parser):
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
 
-    parser.add_argument('--record_head_pretty',
+    parser.add_argument('--format_record_head',
             help='record output head format')
     parser.add_argument('--record_tail_pretty',
             help='record output tail format')
