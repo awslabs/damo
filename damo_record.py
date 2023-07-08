@@ -127,6 +127,7 @@ def set_argparser(parser):
             help='path of perf tool ')
     parser.add_argument('--include_child_tasks', action='store_true',
             help='record accesses of child processes')
+    parser.description='Record monitoring results'
     return parser
 
 def main(args=None):
