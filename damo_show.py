@@ -148,8 +148,8 @@ def pr_records(args, records):
 
             if sidx < len(snapshots) - 1:
                 print('')
-        if args.record_tail_pretty != None:
-            print(format_pretty(args.record_tail_pretty, args.pretty_min_chars,
+        if args.format_record_tail != None:
+            print(format_pretty(args.format_record_tail, args.pretty_min_chars,
                 None, None, None, record, args.raw_number))
 
 def filter_by_pattern(record, access_pattern):
@@ -209,7 +209,7 @@ def set_argparser(parser):
 
     parser.add_argument('--format_record_head',
             help='record output head format')
-    parser.add_argument('--record_tail_pretty',
+    parser.add_argument('--format_record_tail',
             help='record output tail format')
     parser.add_argument('--snapshot_head_pretty',
             help='snapshot output tail format')
