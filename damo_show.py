@@ -212,6 +212,8 @@ def set_argparser(parser):
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
 
+    # don't set default for record head and snapshot head because it depends on
+    # given number of record and snapshots.  Decide those in set_formats().
     parser.add_argument('--format_record_head',
             help='record output head format')
     parser.add_argument('--format_record_tail', default='',
