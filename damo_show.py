@@ -95,12 +95,7 @@ def format_pretty(template, min_chars, index, region, snapshot, record, raw):
     template = template.replace('\\n', '\n')
     return template
 
-def pr_records(args, records):
-    if args.json:
-        print(json.dumps([r.to_kvpairs(args.raw_number)
-            for r in records], indent=4))
-        exit(0)
-
+def set_formats(args, records):
     if args.format_record_head == None:
         if len(records) > 1:
             args.format_record_head = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <record duration> from <record start abs time>'
@@ -116,6 +111,14 @@ def pr_records(args, records):
         args.min_chars_field = [['<index>', 3],
         ['<start address>', 12], ['<end address>', 11], ['<region size>', 11],
         ['<access rate>', 5]]
+
+def pr_records(args, records):
+    if args.json:
+        print(json.dumps([r.to_kvpairs(args.raw_number)
+            for r in records], indent=4))
+        exit(0)
+
+    set_formats(args, records)
 
     for record in records:
         if args.format_record_head != '':
