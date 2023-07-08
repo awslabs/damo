@@ -151,10 +151,8 @@ def pr_records(args, records):
                 r.age.add_unset_unit(record.intervals)
                 format_pr(args.format_region, args.min_chars_field, idx, r,
                         snapshot, record, args.raw_number)
-            if args.format_snapshot_tail:
-                print(format_pretty(args.format_snapshot_tail,
-                    args.min_chars_field, None, None, snapshot, record,
-                    args.raw_number))
+            format_pr(args.format_snapshot_tail, args.min_chars_field, None,
+                    None, snapshot, record, args.raw_number)
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
