@@ -125,11 +125,6 @@ def pr_records(args, records):
         if len(snapshots) == 0:
             continue
 
-        base_time = snapshots[0].start_time
-        if len(snapshots) > 1:
-            print('base_time_absolute: %s\n' %
-                    _damo_fmt_str.format_time_ns(base_time, args.raw_number))
-
         if args.format_snapshot_head == None:
             if len(snapshots) > 1:
                 args.format_snapshot_head = 'monitored time: [<monitor start time>, <monitor end time>] (<monitor duration>)'
