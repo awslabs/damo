@@ -107,8 +107,6 @@ def set_formats(args, records):
             args.format_record_head = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <record duration> from <record start abs time>'
         else:
             args.format_record_head = ''
-    if args.format_record_tail == None:
-        args.format_record_tail = ''
 
     if args.format_snapshot_head == None:
         need_snapshot_head = False
@@ -217,7 +215,7 @@ def set_argparser(parser):
 
     parser.add_argument('--format_record_head',
             help='record output head format')
-    parser.add_argument('--format_record_tail',
+    parser.add_argument('--format_record_tail', default='',
             help='record output tail format')
     parser.add_argument('--format_snapshot_head',
             help='snapshot output tail format')
