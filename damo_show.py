@@ -95,6 +95,12 @@ def format_pretty(template, min_chars, index, region, snapshot, record, raw):
     template = template.replace('\\n', '\n')
     return template
 
+def format_pr(template, min_chars, index, region, snapshot, record, raw):
+    if template == '':
+        return
+    print(format_pretty(template, min_chars, index, region, snapshot, record,
+        raw))
+
 def set_formats(args, records):
     if args.format_record_head == None:
         if len(records) > 1:
