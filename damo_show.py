@@ -101,6 +101,8 @@ def set_formats(args, records):
             args.format_record_head = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <record duration> from <record start abs time>'
         else:
             args.format_record_head = ''
+    if args.format_record_tail == None:
+        args.format_record_tail = ''
 
     if args.total_sz_only:
         args.format_snapshot_head = ''
