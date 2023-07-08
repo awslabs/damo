@@ -112,6 +112,9 @@ def pr_records(args, records):
         args.format_region = ''
         args.format_snapshot_tail = '<total bytes>'
 
+    if args.min_chars_field == None:
+        args.min_chars_field = [['<index>', 3]]
+
     for record in records:
         if args.format_record_head != '':
             print(format_pretty(args.format_record_head, args.min_chars_field,
@@ -219,7 +222,7 @@ def set_argparser(parser):
     parser.add_argument('--format_region',
             default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
             help='region output format')
-    parser.add_argument('--min_chars_field', nargs=2, default=[],
+    parser.add_argument('--min_chars_field', nargs=2,
             metavar=('<field name> <number>'), action='append',
             help='minimum character for each field')
     parser.add_argument('--total_sz_only', action='store_true',
