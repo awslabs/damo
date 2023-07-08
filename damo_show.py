@@ -147,12 +147,10 @@ def pr_records(args, records):
             format_pr(args.format_snapshot_head, args.min_chars_field, None,
                     None, snapshot, record, args.raw_number)
             for idx, r in enumerate(snapshot.regions):
-                if args.format_region == '':
-                    continue
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
-                print(format_pretty(args.format_region, args.min_chars_field,
-                    idx, r, snapshot, record, args.raw_number))
+                format_pr(args.format_region, args.min_chars_field, idx, r,
+                        snapshot, record, args.raw_number)
             if args.format_snapshot_tail:
                 print(format_pretty(args.format_snapshot_tail,
                     args.min_chars_field, None, None, snapshot, record,
