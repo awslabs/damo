@@ -125,8 +125,6 @@ def pr_records(args, records):
             print(format_pretty(args.format_record_head, args.min_chars_field,
                 None, None, None, record, args.raw_number))
         snapshots = record.snapshots
-        if len(snapshots) == 0:
-            continue
 
         if args.format_snapshot_head == None:
             if len(snapshots) > 1:
