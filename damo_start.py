@@ -8,7 +8,9 @@ import _damon
 import _damon_args
 
 def set_argparser(parser):
-    return _damon_args.set_argparser(parser, add_record_options=False)
+    parser = _damon_args.set_argparser(parser, add_record_options=False)
+    parser.description='Start DAMON'
+    return parser
 
 def main(args=None):
     if not args:
