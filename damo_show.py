@@ -108,13 +108,13 @@ def pr_records(args, records):
             args.format_record_head = ''
 
     if args.total_sz_only:
-        args.snapshot_head_pretty = ''
-        args.region_pretty = ''
-        args.snapshot_tail_pretty = '<total bytes>'
+        args.format_snapshot_head = ''
+        args.format_region = ''
+        args.format_snapshot_tail = '<total bytes>'
 
     for record in records:
         if args.format_record_head != '':
-            print(format_pretty(args.format_record_head, args.pretty_min_chars,
+            print(format_pretty(args.format_record_head, args.min_chars_field,
                 None, None, None, record, args.raw_number))
         snapshots = record.snapshots
         if len(snapshots) == 0:
@@ -125,31 +125,31 @@ def pr_records(args, records):
             print('base_time_absolute: %s\n' %
                     _damo_fmt_str.format_time_ns(base_time, args.raw_number))
 
-        if args.snapshot_head_pretty == None:
+        if args.format_snapshot_head == None:
             if len(snapshots) > 1:
-                args.snapshot_head_pretty = 'monitored time: [<monitor start time>, <monitor end time>] (<monitor duration>)'
+                args.format_snapshot_head = 'monitored time: [<monitor start time>, <monitor end time>] (<monitor duration>)'
 
         for sidx, snapshot in enumerate(snapshots):
-            if args.snapshot_head_pretty:
-                print(format_pretty(args.snapshot_head_pretty,
-                    args.pretty_min_chars, None, None, snapshot, record,
+            if args.format_snapshot_head:
+                print(format_pretty(args.format_snapshot_head,
+                    args.min_chars_field, None, None, snapshot, record,
                     args.raw_number))
             for idx, r in enumerate(snapshot.regions):
-                if args.region_pretty == '':
+                if args.format_region == '':
                     continue
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
-                print(format_pretty(args.region_pretty, args.pretty_min_chars,
+                print(format_pretty(args.format_region, args.min_chars_field,
                     idx, r, snapshot, record, args.raw_number))
-            if args.snapshot_tail_pretty:
-                print(format_pretty(args.snapshot_tail_pretty,
-                    args.pretty_min_chars, None, None, snapshot, record,
+            if args.format_snapshot_tail:
+                print(format_pretty(args.format_snapshot_tail,
+                    args.min_chars_field, None, None, snapshot, record,
                     args.raw_number))
 
             if sidx < len(snapshots) - 1:
                 print('')
         if args.format_record_tail != None:
-            print(format_pretty(args.format_record_tail, args.pretty_min_chars,
+            print(format_pretty(args.format_record_tail, args.min_chars_field,
                 None, None, None, record, args.raw_number))
 
 def filter_by_pattern(record, access_pattern):
@@ -211,15 +211,15 @@ def set_argparser(parser):
             help='record output head format')
     parser.add_argument('--format_record_tail',
             help='record output tail format')
-    parser.add_argument('--snapshot_head_pretty',
+    parser.add_argument('--format_snapshot_head',
             help='snapshot output tail format')
-    parser.add_argument('--snapshot_tail_pretty',
+    parser.add_argument('--format_snapshot_tail',
             default='total size: <total bytes>',
             help='snapshot output tail format')
-    parser.add_argument('--region_pretty',
+    parser.add_argument('--format_region',
             default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
             help='region output format')
-    parser.add_argument('--pretty_min_chars', nargs=2, default=[],
+    parser.add_argument('--min_chars_field', nargs=2, default=[],
             metavar=('<field name> <number>'), action='append',
             help='minimum character for each field')
     parser.add_argument('--total_sz_only', action='store_true',
