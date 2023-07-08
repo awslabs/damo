@@ -154,9 +154,8 @@ def pr_records(args, records):
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
-        if args.format_record_tail != None:
-            print(format_pretty(args.format_record_tail, args.min_chars_field,
-                None, None, None, record, args.raw_number))
+        format_pr(args.format_record_tail, args.min_chars_field, None, None,
+                None, record, args.raw_number)
 
 def filter_by_pattern(record, access_pattern):
     sz_bytes = access_pattern.sz_bytes
