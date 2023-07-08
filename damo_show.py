@@ -123,6 +123,18 @@ def set_formats(args, records):
         args.format_region = ''
         args.format_snapshot_tail = '<total bytes>'
 
+def sorted_regions(regions, sort_fields):
+    for field in sort_fields:
+        if field == 'address':
+            regions = sorted(regions, key=lambda r: r.start)
+        elif field == 'access_rate':
+            regions = sorted(regions, key=lambda r: r.nr_accesses.percent)
+        elif field == 'age':
+            regions = sorted(regions, key=lambda r: r.age.usec)
+        elif field == 'size':
+            regions = sorted(regions, key=lambda r: r.end - r.start)
+    return regions
+
 def pr_records(args, records):
     if args.json:
         print(json.dumps([r.to_kvpairs(args.raw_number)
@@ -139,9 +151,11 @@ def pr_records(args, records):
         for sidx, snapshot in enumerate(snapshots):
             format_pr(args.format_snapshot_head, args.min_chars_field, None,
                     None, snapshot, record, args.raw_number)
-            for idx, r in enumerate(snapshot.regions):
+            for r in snapshot.regions:
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
+            for idx, r in enumerate(
+                    sorted_regions(snapshot.regions, args.sort_regions_by)):
                 format_pr(args.format_region, args.min_chars_field, idx, r,
                         snapshot, record, args.raw_number)
             format_pr(args.format_snapshot_tail, args.min_chars_field, None,
@@ -237,6 +251,10 @@ def set_argparser(parser):
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
             help='print in json format')
+    parser.add_argument('--sort_regions_by',
+            choices=['address', 'access_rate', 'age', 'size'], nargs='+',
+            default=['address'],
+            help='fields to sort regions by')
 
     parser.description='Show DAMON-monitored access pattern'
     parser.epilog='If --input_file is not provided, capture snapshot'
