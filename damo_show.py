@@ -123,11 +123,6 @@ def set_formats(args, records):
         args.format_region = ''
         args.format_snapshot_tail = '<total bytes>'
 
-    if args.min_chars_field == None:
-        args.min_chars_field = [['<index>', 3],
-        ['<start address>', 12], ['<end address>', 11], ['<region size>', 11],
-        ['<access rate>', 5]]
-
 def pr_records(args, records):
     if args.json:
         print(json.dumps([r.to_kvpairs(args.raw_number)
@@ -228,6 +223,9 @@ def set_argparser(parser):
             help='region output format')
     parser.add_argument('--min_chars_field', nargs=2,
             metavar=('<field name> <number>'), action='append',
+            default=[['<index>', 3],
+                ['<start address>', 12],['<end address>', 11],
+                ['<region size>', 11], ['<access rate>', 5]],
             help='minimum character for each field')
     parser.add_argument('--total_sz_only', action='store_true',
             help='print only total size of the regions')
