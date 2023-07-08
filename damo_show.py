@@ -113,7 +113,9 @@ def pr_records(args, records):
         args.format_snapshot_tail = '<total bytes>'
 
     if args.min_chars_field == None:
-        args.min_chars_field = [['<index>', 3]]
+        args.min_chars_field = [['<index>', 3],
+        ['<start address>', 12], ['<end address>', 11], ['<region size>', 11],
+        ['<access rate>', 5]]
 
     for record in records:
         if args.format_record_head != '':
