@@ -144,10 +144,8 @@ def pr_records(args, records):
         snapshots = record.snapshots
 
         for sidx, snapshot in enumerate(snapshots):
-            if args.format_snapshot_head:
-                print(format_pretty(args.format_snapshot_head,
-                    args.min_chars_field, None, None, snapshot, record,
-                    args.raw_number))
+            format_pr(args.format_snapshot_head, args.min_chars_field, None,
+                    None, snapshot, record, args.raw_number)
             for idx, r in enumerate(snapshot.regions):
                 if args.format_region == '':
                     continue
