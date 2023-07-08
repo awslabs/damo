@@ -64,6 +64,12 @@ def format_field(min_chars, field_name, index, region, snapshot, record, raw):
         txt = '%s' % record.scheme_idx
     elif field_name == '<target id>':
         txt = '%s' % record.target_id
+    elif field_name == '<record start abs time>':
+        txt = _damo_fmt_str.format_time_ns(record.snapshots[0].start_time, raw)
+    elif field_name == '<record duration>':
+        txt = _damo_fmt_str.format_time_ns(
+                record.snapshots[-1].end_time - record.snapshots[0].start_time,
+                raw)
     else:
         print(field_name)
         raise(Exception)
@@ -81,7 +87,7 @@ def format_pretty(template, min_chars, index, region, snapshot, record, raw):
             '<monitor start abs time>', '<monitor end abs time>',
             # for record pretty
             '<kdamond index>', '<context index>', '<scheme index>',
-            '<target id>']:
+            '<target id>', '<record start abs time>', '<record duration>']:
         if template.find(field_name) == -1:
             continue
         template = template.replace(field_name, format_field(min_chars,
