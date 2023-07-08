@@ -268,7 +268,11 @@ def main(args=None):
             filter_by_pattern(record, access_pattern)
 
     for record in records:
-        pr_records(args, records)
+        try:
+            pr_records(args, records)
+        except BrokenPipeError as e:
+            # maybe user piped to 'less' like pager, and quit from it
+            pass
 
 if __name__ == '__main__':
     main()
