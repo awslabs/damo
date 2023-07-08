@@ -149,7 +149,7 @@ def pr_records(args, records):
                     args.min_chars_field, None, None, snapshot, record,
                     args.raw_number))
 
-            if sidx < len(snapshots) - 1:
+            if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
         if args.format_record_tail != None:
             print(format_pretty(args.format_record_tail, args.min_chars_field,
