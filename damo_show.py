@@ -129,9 +129,8 @@ def pr_records(args, records):
     set_formats(args, records)
 
     for record in records:
-        if args.format_record_head != '':
-            print(format_pretty(args.format_record_head, args.min_chars_field,
-                None, None, None, record, args.raw_number))
+        format_pr(args.format_record_head, args.min_chars_field, None, None,
+                None, record, args.raw_number)
         snapshots = record.snapshots
 
         if args.format_snapshot_head == None:
