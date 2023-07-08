@@ -110,6 +110,16 @@ def set_formats(args, records):
     if args.format_record_tail == None:
         args.format_record_tail = ''
 
+    if args.format_snapshot_head == None:
+        need_snapshot_head = False
+        for record in records:
+            if len(record.snapshots) > 1:
+                need_snapshot_head = True
+        if need_snapshot_head:
+            args.format_snapshot_head = 'monitored time: [<monitor start time>, <monitor end time>] (<monitor duration>)'
+        else:
+            args.format_snapshot_head = ''
+
     if args.total_sz_only:
         args.format_snapshot_head = ''
         args.format_region = ''
@@ -132,10 +142,6 @@ def pr_records(args, records):
         format_pr(args.format_record_head, args.min_chars_field, None, None,
                 None, record, args.raw_number)
         snapshots = record.snapshots
-
-        if args.format_snapshot_head == None:
-            if len(snapshots) > 1:
-                args.format_snapshot_head = 'monitored time: [<monitor start time>, <monitor end time>] (<monitor duration>)'
 
         for sidx, snapshot in enumerate(snapshots):
             if args.format_snapshot_head:
