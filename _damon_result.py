@@ -609,7 +609,9 @@ def tried_regions_to_records(monitor_scheme):
         # TODO: Make a cleaner way for passing the index
         for ctx_idx, ctx in enumerate(kdamond.contexts):
             for scheme_idx, scheme in enumerate(ctx.schemes):
-                if not scheme.effectively_equal(monitor_scheme, ctx.intervals):
+                if (monitor_scheme != None and
+                        not scheme.effectively_equal(
+                            monitor_scheme, ctx.intervals)):
                     continue
 
                 snapshot = tried_regions_to_snapshot(scheme.tried_regions,
