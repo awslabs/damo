@@ -7,7 +7,7 @@
 - Support 'init': Do the system/features check and store the result in a file
   (.damo?)
 - Support 'cleanup': echo 0 > nr_kdamonds
-- Document new workflow: init-start-stat-tune-stop
+- Document new workflow: init-start-show-tune-stop
 - Support ongoing schemes
 - Cleanup schemes test using damo stat
 - Find a better and consistent rule for feature check
@@ -34,8 +34,5 @@
 - damo status features implementation
   - specify target to show
 - damo show features implementation
-  - specify target to show
-  - sortby temperature
   - support heat bar
-  - support minimum pretty field length
-  - support tried regions
+- Fix >100% nr_accesses case (9fcc32e3529e)
