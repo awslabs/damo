@@ -608,7 +608,7 @@ def tried_regions_to_records(monitor_scheme):
             continue
         # TODO: Make a cleaner way for passing the index
         for ctx_idx, ctx in enumerate(kdamond.contexts):
-            for scheme in ctx.schemes:
+            for scheme_idx, scheme in enumerate(ctx.schemes):
                 if not scheme.effectively_equal(monitor_scheme, ctx.intervals):
                     continue
 
@@ -617,7 +617,7 @@ def tried_regions_to_records(monitor_scheme):
                 snapshot.total_bytes = scheme.tried_bytes
 
                 records.append(DamonRecord(kdamond_idx, ctx_idx, ctx.intervals,
-                    None, None))
+                    scheme_idx, None))
                 records[-1].snapshots.append(snapshot)
                 break
     return records
