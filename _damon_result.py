@@ -606,7 +606,6 @@ def tried_regions_to_records(monitor_scheme):
     for kdamond_idx, kdamond in enumerate(_damon.current_kdamonds()):
         if kdamond.state != 'on':
             continue
-        # TODO: Make a cleaner way for passing the index
         for ctx_idx, ctx in enumerate(kdamond.contexts):
             for scheme_idx, scheme in enumerate(ctx.schemes):
                 if (monitor_scheme != None and
