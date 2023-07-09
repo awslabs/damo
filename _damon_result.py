@@ -601,6 +601,28 @@ def tried_regions_to_snapshot(tried_regions, intervals):
         snapshot.regions.append(tried_region)
     return snapshot
 
+def tried_regions_to_records_of(idxs):
+    '''idxs: list of kdamond/context/scheme indices to get records for.  If it
+    is None, return records for all schemes'''
+    records = []
+    for kdamond_idx, kdamond in enumerate(_damon.current_kdamonds()):
+        if kdamond.state != 'on':
+            continue
+        for ctx_idx, ctx in enumerate(kdamond.contexts):
+            for scheme_idx, scheme in enumerate(ctx.schemes):
+                if not [kdamond_idx, ctx_idx, scheme_idx] in idxs:
+                    continue
+
+                snapshot = tried_regions_to_snapshot(scheme.tried_regions,
+                        ctx.intervals)
+                snapshot.total_bytes = scheme.tried_bytes
+
+                records.append(DamonRecord(kdamond_idx, ctx_idx, ctx.intervals,
+                    scheme_idx, None))
+                records[-1].snapshots.append(snapshot)
+                break
+    return records
+
 def tried_regions_to_records(monitor_scheme):
     records = []
     for kdamond_idx, kdamond in enumerate(_damon.current_kdamonds()):
