@@ -292,18 +292,11 @@ def main(args=None):
     elif args.tried_regions_of != None:
         _damon.ensure_root_and_initialized(args)
 
-        all_records, err = _damon_result.get_snapshot_records_for_schemes(
-                args.total_sz_only)
+        records, err = _damon_result.get_snapshot_records_for_schemes(
+                args.tried_regions_of, args.total_sz_only)
         if err != None:
             print(err)
             exit(1)
-        records = []
-        for record in all_records:
-            for kd_idx, ctx_idx, scheme_idx in args.tried_regions_of:
-                if (record.kdamond_idx == kd_idx and
-                        record.context_idx == ctx_idx and
-                        record.scheme_idx == scheme_idx):
-                    records.append(record)
 
     for record in records:
         try:

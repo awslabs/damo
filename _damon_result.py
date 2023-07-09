@@ -749,8 +749,9 @@ def get_snapshot_records(access_pattern, total_sz_only):
             return records, 'monitoring scheme uninstall failed: %s' % err
     return records, None
 
-def get_snapshot_records_for_schemes(total_sz_only):
-    'return DamonRecord objects each having single DamonSnapshot and an error'
+def get_snapshot_records_for_schemes(idxs, total_sz_only):
+    '''idxs: list of kdamond/context/scheme indices to get records for.
+    Return DamonRecord objects each having single DamonSnapshot and an error'''
     running_kdamond_idxs = _damon.running_kdamond_idxs()
     if len(running_kdamond_idxs) == 0:
         return None, 'no kdamond running'
@@ -758,12 +759,12 @@ def get_snapshot_records_for_schemes(total_sz_only):
     if total_sz_only:
         err = _damon.update_schemes_tried_bytes(running_kdamond_idxs)
         if err == None:
-            records = tried_regions_to_records(None)
+            records = tried_regions_to_records_of(idxs)
             return records, None
 
     err = _damon.update_schemes_tried_regions(running_kdamond_idxs)
     if err != None:
         return None, 'updating schemes tried regions fail: %s' % err
 
-    records = tried_regions_to_records(None)
+    records = tried_regions_to_records_of(idxs)
     return records, None
