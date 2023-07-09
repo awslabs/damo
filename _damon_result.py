@@ -595,32 +595,6 @@ def find_install_scheme(scheme_to_find):
                     'committing scheme installed kdamonds failed: %s' % err)
     return installed, indices, None
 
-def install_scheme(scheme_to_install):
-    '''Install given scheme to all contexts if effectively same scheme is not
-    installed.
-    Returns whether it found a context doesn't having the scheme, and an error
-    if something wrong.
-    '''
-    installed = False
-    kdamonds = _damon.current_kdamonds()
-    for kdamond in kdamonds:
-        for ctx in kdamond.contexts:
-            ctx_has_the_scheme = False
-            for scheme in ctx.schemes:
-                if scheme.effectively_equal(scheme_to_install, ctx.intervals):
-                    ctx_has_the_scheme = True
-                    break
-            if ctx_has_the_scheme:
-                continue
-            ctx.schemes.append(scheme_to_install)
-            installed = True
-    if installed:
-        err = _damon.commit(kdamonds)
-        if err != None:
-            return (False,
-                    'committing scheme installed kdamonds failed: %s' % err)
-    return installed, None
-
 def tried_regions_to_snapshot(tried_regions, intervals):
     snapshot_end_time_ns = time.time() * 1000000000
     snapshot_start_time_ns = snapshot_end_time_ns - intervals.aggr * 1000
