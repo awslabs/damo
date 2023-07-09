@@ -193,16 +193,6 @@ def filter_by_pattern(record, access_pattern):
         snapshot.regions = filtered
 
 def set_argparser(parser):
-    '''
-    TODOs
-    - schemes tried regions based filtering
-    - time based filtering
-    - printing heatbar (bar of the size colored with access rate)
-    - printing only heatbars (becomes heatmap)
-    - sort by priority with priority weights (become histogram)
-    - collapse by time
-    - collapse by priority value (more histogram control)
-    '''
     _damon_args.set_common_argparser(parser)
 
     # what to show

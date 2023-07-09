@@ -35,4 +35,11 @@
   - specify target to show
 - damo show features implementation
   - support heat bar
+  - schemes tried regions based filtering
+  - time based filtering
+  - printing heatbar (bar of the size colored with access rate)
+  - printing only heatbars (becomes heatmap)
+  - sort by priority with priority weights (become histogram)
+  - collapse by time
+  - collapse by priority value (more histogram control)
 - Fix >100% nr_accesses case (9fcc32e3529e)
