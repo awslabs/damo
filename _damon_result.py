@@ -747,14 +747,14 @@ def get_snapshot_records(access_pattern, total_sz_only):
         return None, 'vaddr region install failed (%s)' % err
 
     monitor_scheme = _damon.Damos(access_pattern=access_pattern)
-    installed, err = install_scheme(monitor_scheme)
+    installed, idxs, err = find_install_scheme(monitor_scheme)
     if err:
         return None, 'monitoring scheme install failed: %s' % err
 
     if total_sz_only:
         err = _damon.update_schemes_tried_bytes(running_kdamond_idxs)
         if err == None:
-            records = tried_regions_to_records(monitor_scheme)
+            records = tried_regions_to_records_of(idxs)
 
             if installed:
                 err = _damon.commit(orig_kdamonds)
@@ -770,7 +770,7 @@ def get_snapshot_records(access_pattern, total_sz_only):
                 return None, 'monitoring scheme uninstall failed: %s' % err
         return None, 'updating schemes tried regions fail: %s' % err
 
-    records = tried_regions_to_records(monitor_scheme)
+    records = tried_regions_to_records_of(idxs)
 
     if installed:
         err = _damon.commit(orig_kdamonds)
