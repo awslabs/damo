@@ -652,28 +652,6 @@ def tried_regions_to_records_of(idxs):
                 break
     return records
 
-def tried_regions_to_records(monitor_scheme):
-    records = []
-    for kdamond_idx, kdamond in enumerate(_damon.current_kdamonds()):
-        if kdamond.state != 'on':
-            continue
-        for ctx_idx, ctx in enumerate(kdamond.contexts):
-            for scheme_idx, scheme in enumerate(ctx.schemes):
-                if (monitor_scheme != None and
-                        not scheme.effectively_equal(
-                            monitor_scheme, ctx.intervals)):
-                    continue
-
-                snapshot = tried_regions_to_snapshot(scheme.tried_regions,
-                        ctx.intervals)
-                snapshot.total_bytes = scheme.tried_bytes
-
-                records.append(DamonRecord(kdamond_idx, ctx_idx, ctx.intervals,
-                    scheme_idx, None))
-                records[-1].snapshots.append(snapshot)
-                break
-    return records
-
 def three_regions_of(pid):
     '''
     Return three big mapped virtual address ranges of a given process, which
