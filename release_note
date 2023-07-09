@@ -2,7 +2,10 @@ This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
 v1.8.9
-- Support --pretty for 'damo show'
+- Support flexible formatting of 'damo show' output
+- Implement access pattern based 'damo show' output sorting
+- Support --tried_regions_of option of 'damo show'
+- Cleanup _damon_resul.py
 
 v1.8.8
 - Support under-development schemes tried regions total bytes file
