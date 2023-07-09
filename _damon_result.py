@@ -566,6 +566,35 @@ def stop_monitoring_record(perf_pipe):
 
 # for snapshot
 
+def find_install_scheme(scheme_to_find):
+    '''Install given scheme to all contexts if effectively same scheme is not
+    installed.
+    Returns whether it found a context doesn't having the scheme, indices list
+    for the effectively same schemes, and an error if something wrong.
+    '''
+    installed = False
+    indices = []
+    kdamonds = _damon.current_kdamonds()
+    for kidx, kdamond in enumerate(kdamonds):
+        for cidx, ctx in enumerate(kdamond.contexts):
+            ctx_has_the_scheme = False
+            for sidx, scheme in enumerate(ctx.schemes):
+                if scheme.effectively_equal(scheme_to_find, ctx.intervals):
+                    ctx_has_the_scheme = True
+                    indices.append([kidx, cidx, sidx])
+                    break
+            if ctx_has_the_scheme:
+                continue
+            ctx.schemes.append(scheme_to_find)
+            installed = True
+            indices.append([kidx, cidx, len(ctx.schemes) - 1])
+    if installed:
+        err = _damon.commit(kdamonds)
+        if err != None:
+            return (False, [],
+                    'committing scheme installed kdamonds failed: %s' % err)
+    return installed, indices, None
+
 def install_scheme(scheme_to_install):
     '''Install given scheme to all contexts if effectively same scheme is not
     installed.
