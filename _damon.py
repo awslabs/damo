@@ -105,7 +105,7 @@ class DamonNrAccesses:
         if self.samples == None:
             self.samples = int(self.percent * max_val / 100)
         elif self.percent == None:
-            self.percent = int(self.samples * 100.0 / max_val)
+            self.percent = min(100, int(self.samples * 100.0 / max_val))
 
     def to_str(self, unit, raw):
         if unit == unit_percent:
