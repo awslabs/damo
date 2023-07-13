@@ -28,9 +28,9 @@ region_formatters = {
         '<index>': lambda index, region, raw:
             _damo_fmt_str.format_nr(index, raw),
         '<start address>': lambda index, region, raw:
-            _damo_fmt_str.format_sz(region.start, raw),
+            _damo_fmt_str.format_addr(region.start),
         '<end address>': lambda index, region, raw:
-            _damo_fmt_str.format_sz(region.end, raw),
+            _damo_fmt_str.format_addr(region.end),
         '<region size>': lambda index, region, raw:
             _damo_fmt_str.format_sz(region.size(), raw),
         '<access rate>': lambda index, region, raw:

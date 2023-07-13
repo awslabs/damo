@@ -34,10 +34,12 @@ def format_sz(sz_bytes, machine_friendly):
         return '%.3f KiB' % (sz_bytes / (1<<10))
     return '%d B' % sz_bytes
 
+def format_addr(addr):
+    return str('%08x' % addr)
+
 def format_addr_range(start, end, machine_friendly):
     return '[%s, %s) (%s)' % (
-            format_nr(start, machine_friendly),
-            format_nr(end, machine_friendly),
+            format_addr(start), format_addr(end),
             format_sz(end - start, machine_friendly))
 
 ns_ns = 1
