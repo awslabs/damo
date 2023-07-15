@@ -387,8 +387,12 @@ def parse_records_file(result_file, monitoring_intervals=None):
         # might be perf data
         try:
             with open(os.devnull, 'w') as fnull:
+                # in some setup, perf record file ends up having no proper
+                # ownership.  There's no reason to be strict about that from
+                # damo.  As long as we can, just parse it with '--force'
+                # option.
                 perf_script_output = subprocess.check_output(
-                        [PERF, 'script', '-i', result_file],
+                        [PERF, 'script', '--force', '-i', result_file],
                         stderr=fnull).decode()
         except:
             # Should be record format file
