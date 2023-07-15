@@ -297,10 +297,6 @@ class DamosAccessPattern:
                 unit_usec: _damo_fmt_str.text_to_us,
                 unit_aggr_intervals: _damo_fmt_str.text_to_nr}
 
-        if not age_unit in parsers_for_unit:
-            raise Exception('invalid access pattern age_unit \'%s\'' %
-                    age_unit)
-
         self.nr_acc_min_max = [
                 DamonNrAccesses(nr_accesses[0], nr_accesses_unit),
                 DamonNrAccesses(nr_accesses[1], nr_accesses_unit)]
