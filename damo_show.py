@@ -27,57 +27,55 @@ def apply_min_chars(min_chars, field_name, txt):
 def format_field(field_name, index, region, snapshot, record, raw):
     # for region
     if field_name == '<index>':
-        txt = _damo_fmt_str.format_nr(index, raw)
+        return _damo_fmt_str.format_nr(index, raw)
     elif field_name == '<start address>':
-        txt = _damo_fmt_str.format_sz(region.start, raw)
+        return _damo_fmt_str.format_sz(region.start, raw)
     elif field_name == '<end address>':
-        txt = _damo_fmt_str.format_sz(region.end, raw)
+        return _damo_fmt_str.format_sz(region.end, raw)
     elif field_name == '<region size>':
-        txt = _damo_fmt_str.format_sz(region.end - region.start, raw)
+        return _damo_fmt_str.format_sz(region.end - region.start, raw)
     elif field_name == '<access rate>':
-        txt = _damo_fmt_str.format_percent(region.nr_accesses.percent, raw)
+        return _damo_fmt_str.format_percent(region.nr_accesses.percent, raw)
     elif field_name == '<age>':
-        txt = _damo_fmt_str.format_time_us(region.age.usec, raw)
+        return _damo_fmt_str.format_time_us(region.age.usec, raw)
     # for snapshot
     elif field_name == '<total bytes>':
         if snapshot.total_bytes == None:
             snapshot.total_bytes = sum([r.end - r.start
                 for r in snapshot.regions])
-        txt = _damo_fmt_str.format_sz(snapshot.total_bytes, raw)
+        return _damo_fmt_str.format_sz(snapshot.total_bytes, raw)
     elif field_name == '<monitor duration>':
-        txt = _damo_fmt_str.format_time_ns(
+        return _damo_fmt_str.format_time_ns(
                 snapshot.end_time - snapshot.start_time, raw)
     elif field_name == '<monitor start time>':
         base_time = record.snapshots[0].start_time
-        txt = _damo_fmt_str.format_time_ns(
+        return _damo_fmt_str.format_time_ns(
                 snapshot.start_time - base_time, raw)
     elif field_name == '<monitor end time>':
         base_time = record.snapshots[0].start_time
-        txt = _damo_fmt_str.format_time_ns(snapshot.end_time - base_time, raw)
+        return _damo_fmt_str.format_time_ns(snapshot.end_time - base_time, raw)
     elif field_name == '<monitor start abs time>':
-        txt = _damo_fmt_str.format_time_ns(snapshot.start_time, raw)
+        return _damo_fmt_str.format_time_ns(snapshot.start_time, raw)
     elif field_name == '<monitor end abs time>':
-        txt = _damo_fmt_str.format_time_ns(snapshot.end_time, raw)
+        return _damo_fmt_str.format_time_ns(snapshot.end_time, raw)
     # for record
     elif field_name == '<kdamond index>':
-        txt = '%s' % record.kdamond_idx
+        return '%s' % record.kdamond_idx
     elif field_name == '<context index>':
-        txt = '%s' % record.context_idx
+        return '%s' % record.context_idx
     elif field_name == '<scheme index>':
-        txt = '%s' % record.scheme_idx
+        return '%s' % record.scheme_idx
     elif field_name == '<target id>':
-        txt = '%s' % record.target_id
+        return '%s' % record.target_id
     elif field_name == '<record start abs time>':
-        txt = _damo_fmt_str.format_time_ns(record.snapshots[0].start_time, raw)
+        return _damo_fmt_str.format_time_ns(record.snapshots[0].start_time, raw)
     elif field_name == '<record duration>':
-        txt = _damo_fmt_str.format_time_ns(
+        return _damo_fmt_str.format_time_ns(
                 record.snapshots[-1].end_time - record.snapshots[0].start_time,
                 raw)
     else:
         print(field_name)
         raise(Exception)
-
-    return txt
 
 def format_pretty(template, min_chars, index, region, snapshot, record, raw):
     for field_name in [
