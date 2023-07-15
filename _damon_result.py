@@ -36,6 +36,11 @@ class DamonSnapshot:
                 _damo_fmt_str.text_to_ns(kv['end_time']))
         snapshot.regions = [_damon.DamonRegion.from_kvpairs(r)
                 for r in kv['regions']]
+        if 'total_bytes' in kv and kv['total_bytes'] != None:
+            snapshot.total_bytes = _damo_fmt_str.text_to_bytes['total_bytes']
+        else:
+            snapshot.total_bytes = sum([r.end - r.start
+                for r in snapshot.regions])
         return snapshot
 
     def to_kvpairs(self, raw=False):
@@ -44,7 +49,10 @@ class DamonSnapshot:
                 self.start_time, raw)),
             ('end_time', _damo_fmt_str.format_time_ns_exact(
                 self.end_time, raw)),
-            ('regions', [r.to_kvpairs() for r in self.regions])])
+            ('regions', [r.to_kvpairs() for r in self.regions]),
+            ('total_bytes', _damo_fmt_str.format_sz(self.total_bytes, raw)
+                if self.total_bytes != None else None),
+            ])
 
 class DamonRecord:
     '''
