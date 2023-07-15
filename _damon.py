@@ -254,6 +254,9 @@ class DamonRegion:
             ('nr_accesses', self.nr_accesses.to_kvpairs(raw)),
             ('age', self.age.to_kvpairs(raw))])
 
+    def size(self):
+        return self.end - self.start
+
 class DamonTarget:
     pid = None
     regions = None
