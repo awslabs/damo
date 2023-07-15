@@ -88,10 +88,14 @@ class DamonNrAccesses:
     percent = None
 
     def __init__(self, val, unit):
+        if val == None or unit == None:
+            return
         if unit == unit_samples:
-            self.samples = val
+            self.samples = _damo_fmt_str.text_to_nr(val)
         elif unit == unit_percent:
-            self.percent = val
+            self.percent = _damo_fmt_str.text_to_percent(val)
+        else:
+            raise Exception('invalid DamonNrAccesses unit \'%s\'' % unit)
 
     def __eq__(self, other):
         return (type(self) == type(other) and
@@ -290,22 +294,16 @@ class DamosAccessPattern:
                 _damo_fmt_str.text_to_bytes(sz_bytes[1])]
 
         parsers_for_unit = {
-                unit_percent: _damo_fmt_str.text_to_percent,
-                unit_samples: _damo_fmt_str.text_to_nr,
                 unit_usec: _damo_fmt_str.text_to_us,
                 unit_aggr_intervals: _damo_fmt_str.text_to_nr}
 
-        if not nr_accesses_unit in parsers_for_unit:
-            raise Exception('invalid access pattern nr_accesses_unit \'%s\'' %
-                    nr_accesses_unit)
         if not age_unit in parsers_for_unit:
             raise Exception('invalid access pattern age_unit \'%s\'' %
                     age_unit)
 
-        fn = parsers_for_unit[nr_accesses_unit]
         self.nr_acc_min_max = [
-                DamonNrAccesses(fn(nr_accesses[0]), nr_accesses_unit),
-                DamonNrAccesses(fn(nr_accesses[1]), nr_accesses_unit)]
+                DamonNrAccesses(nr_accesses[0], nr_accesses_unit),
+                DamonNrAccesses(nr_accesses[1], nr_accesses_unit)]
         self.nr_accesses_unit = nr_accesses_unit
         fn = parsers_for_unit[age_unit]
         self.age_min_max = [
