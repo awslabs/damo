@@ -149,8 +149,9 @@ class DamonAge:
 
     def __eq__(self, other):
         return (type(self) == type(other) and
-                (self.usec == other.usec or
-                    self.aggr_intervals == other.aggr_intervals))
+                ((self.usec != None and self.usec == other.usec) or
+                    (self.aggr_intervals != None and
+                        self.aggr_intervals == other.aggr_intervals)))
 
     def add_unset_unit(self, intervals):
         if self.usec != None and self.aggr_intervals != None:
