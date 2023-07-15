@@ -300,7 +300,7 @@ def text_to_sec(txt):
     return text_to_ms(txt) / 1000
 
 def text_to_ratio(txt):
-    success, number = try_common_input(txt, 0.0, 1.0)
+    success, number = try_common_input(txt, 0.0)
     if success:
         return number
 
@@ -314,14 +314,14 @@ def text_to_ratio(txt):
     return ratio
 
 def text_to_permil(txt):
-    success, number = try_common_input(txt, 0, 1000)
+    success, number = try_common_input(txt, 0)
     if success:
         return number
 
     return text_to_ratio(txt) * 1000
 
 def text_to_percent(txt):
-    success, number = try_common_input(txt, 0, 100)
+    success, number = try_common_input(txt, 0)
     if success:
         return number
 
