@@ -599,16 +599,25 @@ def find_install_scheme(scheme_to_find):
                     'committing scheme installed kdamonds failed: %s' % err)
     return installed, indices, None
 
-def tried_regions_to_snapshot(tried_regions, intervals):
+def tried_regions_to_snapshot(tried_regions, intervals, merge_regions):
     snapshot_end_time_ns = time.time() * 1000000000
     snapshot_start_time_ns = snapshot_end_time_ns - intervals.aggr * 1000
     snapshot = DamonSnapshot(snapshot_start_time_ns, snapshot_end_time_ns)
 
     for tried_region in tried_regions:
+        '''Merge regions that having same access pattern, since DAMON usually
+        splits regions unnecessarily to keep the min_nr_regions'''
+        if merge_regions and len(snapshot.regions) > 0:
+            last_region = snapshot.regions[-1]
+            if (last_region.end == tried_region.start and
+                    last_region.nr_accesses == tried_region.nr_accesses and
+                    last_region.age == tried_region.age):
+                last_region.end = tried_region.end
+                continue
         snapshot.regions.append(tried_region)
     return snapshot
 
-def tried_regions_to_records_of(idxs):
+def tried_regions_to_records_of(idxs, merge_regions=False):
     '''idxs: list of kdamond/context/scheme indices to get records for.  If it
     is None, return records for all schemes'''
     records = []
@@ -621,7 +630,7 @@ def tried_regions_to_records_of(idxs):
                     continue
 
                 snapshot = tried_regions_to_snapshot(scheme.tried_regions,
-                        ctx.intervals)
+                        ctx.intervals, merge_regions)
                 snapshot.total_bytes = scheme.tried_bytes
 
                 records.append(DamonRecord(kdamond_idx, ctx_idx, ctx.intervals,
