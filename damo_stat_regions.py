@@ -26,7 +26,7 @@ def __pr_schemes_tried_regions(regions, intervals, size_only, sortby,
         if not size_only:
             print(region.to_str(raw_nr, intervals))
         else:
-            total_sz += (region.end - region.start)
+            total_sz += region.size()
     if size_only:
         print('%s' % _damo_fmt_str.format_sz(total_sz, raw_nr))
 

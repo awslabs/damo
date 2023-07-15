@@ -20,9 +20,9 @@ def get_wss_dists(records, acc_thres, sz_thres, do_sort):
                 # Ignore regions not fulfill working set conditions
                 if r.nr_accesses.samples < acc_thres:
                     continue
-                if r.end - r.start < sz_thres:
+                if r.size() < sz_thres:
                     continue
-                wss += r.end - r.start
+                wss += r.size()
             wss_dist.append(wss)
         if do_sort:
             wss_dist.sort(reverse=False)

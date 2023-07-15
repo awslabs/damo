@@ -640,7 +640,7 @@ class Damos:
                     tried_bytes)
         else:
             for region in self.tried_regions:
-                self.tried_bytes += (region.end - region.start)
+                self.tried_bytes += region.size()
 
     def to_str(self, raw):
         lines = ['action: %s' % self.action]

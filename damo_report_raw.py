@@ -59,9 +59,8 @@ def pr_records(args, records):
             for r in snapshot.regions:
                 print("%012x-%012x (%12s) %11d %5d" %
                         (r.start, r.end,
-                            _damo_fmt_str.format_sz(r.end - r.start,
-                                args.raw_number), r.nr_accesses.samples,
-                                r.age.aggr_intervals
+                            _damo_fmt_str.format_sz(r.size(), args.raw_number),
+                            r.nr_accesses.samples, r.age.aggr_intervals
                                 if r.age.aggr_intervals != None else -1))
             print('')
 

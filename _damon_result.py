@@ -39,8 +39,7 @@ class DamonSnapshot:
         if 'total_bytes' in kv and kv['total_bytes'] != None:
             snapshot.total_bytes = _damo_fmt_str.text_to_bytes['total_bytes']
         else:
-            snapshot.total_bytes = sum([r.end - r.start
-                for r in snapshot.regions])
+            snapshot.total_bytes = sum([r.size() for r in snapshot.regions])
         return snapshot
 
     def to_kvpairs(self, raw=False):
@@ -626,8 +625,7 @@ def tried_regions_to_snapshot(scheme, intervals, merge_regions):
     if scheme.tried_bytes != None:
         snapshot.total_bytes = scheme.tried_bytes
     else:
-        snapshot.total_bytes = sum([r.end - r.start
-            for r in scheme.tried_region])
+        snapshot.total_bytes = sum([r.size() for r in scheme.tried_region])
 
     return snapshot
 

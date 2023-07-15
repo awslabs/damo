@@ -32,7 +32,7 @@ region_formatters = {
         '<end address>': lambda index, region, raw:
             _damo_fmt_str.format_sz(region.end, raw),
         '<region size>': lambda index, region, raw:
-            _damo_fmt_str.format_sz(region.end - region.start, raw),
+            _damo_fmt_str.format_sz(region.size(), raw),
         '<access rate>': lambda index, region, raw:
             _damo_fmt_str.format_percent(region.nr_accesses.percent, raw),
         '<age>': lambda index, region, raw:
@@ -43,8 +43,7 @@ def format_field(field_name, index, region, snapshot, record, raw):
     # for snapshot
     if field_name == '<total bytes>':
         if snapshot.total_bytes == None:
-            snapshot.total_bytes = sum([r.end - r.start
-                for r in snapshot.regions])
+            snapshot.total_bytes = sum([r.size() for r in snapshot.regions])
         return _damo_fmt_str.format_sz(snapshot.total_bytes, raw)
     elif field_name == '<monitor duration>':
         return _damo_fmt_str.format_time_ns(
@@ -139,7 +138,7 @@ def sorted_regions(regions, sort_fields):
         elif field == 'age':
             regions = sorted(regions, key=lambda r: r.age.usec)
         elif field == 'size':
-            regions = sorted(regions, key=lambda r: r.end - r.start)
+            regions = sorted(regions, key=lambda r: r.size())
     return regions
 
 def pr_records(args, records):
@@ -181,7 +180,7 @@ def filter_by_pattern(record, access_pattern):
     for snapshot in record.snapshots:
         filtered = []
         for region in snapshot.regions:
-            sz = region.end - region.start
+            sz = region.size()
             if sz < sz_bytes[0] or sz_bytes[1] < sz:
                 continue
             intervals = record.intervals
