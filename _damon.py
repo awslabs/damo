@@ -135,10 +135,15 @@ class DamonAge:
     aggr_intervals = None
 
     def __init__(self, val, unit):
+        if val == None and unit != None:
+            self.unit = unit
+            return
+        if val == None and unit == None:
+            return
         if unit == unit_usec:
-            self.usec = val
+            self.usec = _damo_fmt_str.text_to_us(val)
         elif unit == unit_aggr_intervals:
-            self.aggr_intervals = val
+            self.aggr_intervals = _damo_fmt_str.text_to_nr(val)
         else:
             raise Exception('DamonAge unsupported unit (%s)' % unit)
 
@@ -163,7 +168,7 @@ class DamonAge:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        ret = DamonAge(None, unit_usec)
+        ret = DamonAge(None, None)
         if kv['usec'] != None:
             ret.usec = _damo_fmt_str.text_to_us(kv['usec'])
         if kv['aggr_intervals'] != None:
@@ -293,18 +298,12 @@ class DamosAccessPattern:
         self.sz_bytes = [_damo_fmt_str.text_to_bytes(sz_bytes[0]),
                 _damo_fmt_str.text_to_bytes(sz_bytes[1])]
 
-        parsers_for_unit = {
-                unit_usec: _damo_fmt_str.text_to_us,
-                unit_aggr_intervals: _damo_fmt_str.text_to_nr}
-
         self.nr_acc_min_max = [
                 DamonNrAccesses(nr_accesses[0], nr_accesses_unit),
                 DamonNrAccesses(nr_accesses[1], nr_accesses_unit)]
         self.nr_accesses_unit = nr_accesses_unit
-        fn = parsers_for_unit[age_unit]
         self.age_min_max = [
-                DamonAge(fn(age[0]), age_unit),
-                DamonAge(fn(age[1]), age_unit)]
+                DamonAge(age[0], age_unit), DamonAge(age[1], age_unit)]
         self.age_unit = age_unit
 
     def to_str(self, raw):
