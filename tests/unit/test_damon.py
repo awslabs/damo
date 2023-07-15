@@ -314,6 +314,10 @@ class TestDamon(unittest.TestCase):
         intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
 
         age = _damon.DamonAge(15, _damon.unit_aggr_intervals)
+        age_2 = _damon.DamonAge(15, _damon.unit_aggr_intervals)
+        self.assertEqual(age, age_2)
+        age_2 = _damon.DamonAge(18, _damon.unit_aggr_intervals)
+        self.assertNotEqual(age, age_2)
         age.add_unset_unit(intervals)
         self.assertEqual(age.aggr_intervals, 15)
         self.assertEqual(age.usec, 1500000)
