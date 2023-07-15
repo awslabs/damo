@@ -24,22 +24,24 @@ def apply_min_chars(min_chars, field_name, txt):
             return txt
     return txt
 
+region_formatters = {
+        '<index>': lambda index, region, raw:
+            _damo_fmt_str.format_nr(index, raw),
+        '<start address>': lambda index, region, raw:
+            _damo_fmt_str.format_sz(region.start, raw),
+        '<end address>': lambda index, region, raw:
+            _damo_fmt_str.format_sz(region.end, raw),
+        '<region size>': lambda index, region, raw:
+            _damo_fmt_str.format_sz(region.end - region.start, raw),
+        '<access rate>': lambda index, region, raw:
+            _damo_fmt_str.format_percent(region.nr_accesses.percent, raw),
+        '<age>': lambda index, region, raw:
+            _damo_fmt_str.format_time_us(region.age.usec, raw)
+        }
+
 def format_field(field_name, index, region, snapshot, record, raw):
-    # for region
-    if field_name == '<index>':
-        return _damo_fmt_str.format_nr(index, raw)
-    elif field_name == '<start address>':
-        return _damo_fmt_str.format_sz(region.start, raw)
-    elif field_name == '<end address>':
-        return _damo_fmt_str.format_sz(region.end, raw)
-    elif field_name == '<region size>':
-        return _damo_fmt_str.format_sz(region.end - region.start, raw)
-    elif field_name == '<access rate>':
-        return _damo_fmt_str.format_percent(region.nr_accesses.percent, raw)
-    elif field_name == '<age>':
-        return _damo_fmt_str.format_time_us(region.age.usec, raw)
     # for snapshot
-    elif field_name == '<total bytes>':
+    if field_name == '<total bytes>':
         if snapshot.total_bytes == None:
             snapshot.total_bytes = sum([r.end - r.start
                 for r in snapshot.regions])
@@ -78,10 +80,13 @@ def format_field(field_name, index, region, snapshot, record, raw):
         raise(Exception)
 
 def format_pretty(template, min_chars, index, region, snapshot, record, raw):
+    for field_name in region_formatters:
+        if template.find(field_name) == -1:
+            continue
+        txt = region_formatters[field_name](index, region, raw)
+        txt = apply_min_chars(min_chars, field_name, txt)
+        template = template.replace(field_name, txt)
     for field_name in [
-            # for region pretty
-            '<index>', '<start address>', '<end address>', '<region size>',
-            '<access rate>', '<age>',
             # for snapshot pretty
             '<total bytes>', '<monitor duration>',
             '<monitor start time>', '<monitor end time>',
