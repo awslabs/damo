@@ -25,6 +25,7 @@ def apply_min_chars(min_chars, field_name, txt):
     return txt
 
 def format_field(min_chars, field_name, index, region, snapshot, record, raw):
+    # for region
     if field_name == '<index>':
         txt = _damo_fmt_str.format_nr(index, raw)
     elif field_name == '<start address>':
@@ -37,6 +38,7 @@ def format_field(min_chars, field_name, index, region, snapshot, record, raw):
         txt = _damo_fmt_str.format_percent(region.nr_accesses.percent, raw)
     elif field_name == '<age>':
         txt = _damo_fmt_str.format_time_us(region.age.usec, raw)
+    # for snapshot
     elif field_name == '<total bytes>':
         if snapshot.total_bytes == None:
             snapshot.total_bytes = sum([r.end - r.start
@@ -56,6 +58,7 @@ def format_field(min_chars, field_name, index, region, snapshot, record, raw):
         txt = _damo_fmt_str.format_time_ns(snapshot.start_time, raw)
     elif field_name == '<monitor end abs time>':
         txt = _damo_fmt_str.format_time_ns(snapshot.end_time, raw)
+    # for record
     elif field_name == '<kdamond index>':
         txt = '%s' % record.kdamond_idx
     elif field_name == '<context index>':
