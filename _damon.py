@@ -99,8 +99,8 @@ class DamonNrAccesses:
 
     def __eq__(self, other):
         return (type(self) == type(other) and
-                (self.samples == other.samples or
-                    self.percent == other.percent))
+                ((self.samples != None and self.samples == other.samples) or
+                    (self.percent != None and self.percent == other.percent)))
 
     def add_unset_unit(self, intervals):
         if self.samples != None and self.percent != None:
