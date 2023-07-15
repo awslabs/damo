@@ -617,7 +617,7 @@ def tried_regions_to_snapshot(tried_regions, intervals, merge_regions):
         snapshot.regions.append(tried_region)
     return snapshot
 
-def tried_regions_to_records_of(idxs, merge_regions=False):
+def tried_regions_to_records_of(idxs, merge_regions):
     '''idxs: list of kdamond/context/scheme indices to get records for.  If it
     is None, return records for all schemes'''
     records = []
@@ -699,7 +699,7 @@ def install_target_regions_if_needed(kdamonds):
                 target.regions = []
     return err
 
-def get_snapshot_records(access_pattern, total_sz_only):
+def get_snapshot_records(access_pattern, total_sz_only, merge_regions):
     'return DamonRecord objects each having single DamonSnapshot and an error'
     running_kdamond_idxs = _damon.running_kdamond_idxs()
     if len(running_kdamond_idxs) == 0:
@@ -719,7 +719,7 @@ def get_snapshot_records(access_pattern, total_sz_only):
     if total_sz_only:
         err = _damon.update_schemes_tried_bytes(running_kdamond_idxs)
         if err == None:
-            records = tried_regions_to_records_of(idxs)
+            records = tried_regions_to_records_of(idxs, merge_regions)
 
             if installed:
                 err = _damon.commit(orig_kdamonds)
@@ -735,7 +735,7 @@ def get_snapshot_records(access_pattern, total_sz_only):
                 return None, 'monitoring scheme uninstall failed: %s' % err
         return None, 'updating schemes tried regions fail: %s' % err
 
-    records = tried_regions_to_records_of(idxs)
+    records = tried_regions_to_records_of(idxs, merge_regions)
 
     if installed:
         err = _damon.commit(orig_kdamonds)
@@ -743,7 +743,7 @@ def get_snapshot_records(access_pattern, total_sz_only):
             return records, 'monitoring scheme uninstall failed: %s' % err
     return records, None
 
-def get_snapshot_records_for_schemes(idxs, total_sz_only):
+def get_snapshot_records_for_schemes(idxs, total_sz_only, merge_regions):
     '''idxs: list of kdamond/context/scheme indices to get records for.
     Return DamonRecord objects each having single DamonSnapshot and an error'''
     running_kdamond_idxs = _damon.running_kdamond_idxs()
@@ -753,12 +753,12 @@ def get_snapshot_records_for_schemes(idxs, total_sz_only):
     if total_sz_only:
         err = _damon.update_schemes_tried_bytes(running_kdamond_idxs)
         if err == None:
-            records = tried_regions_to_records_of(idxs)
+            records = tried_regions_to_records_of(idxs, merge_regions)
             return records, None
 
     err = _damon.update_schemes_tried_regions(running_kdamond_idxs)
     if err != None:
         return None, 'updating schemes tried regions fail: %s' % err
 
-    records = tried_regions_to_records_of(idxs)
+    records = tried_regions_to_records_of(idxs, merge_regions)
     return records, None

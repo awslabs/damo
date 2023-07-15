@@ -245,6 +245,8 @@ def set_argparser(parser):
             choices=['address', 'access_rate', 'age', 'size'], nargs='+',
             default=['address'],
             help='fields to sort regions by')
+    parser.add_argument('--dont_merge_regions', action='store_true',
+            help='don\'t merge contiguous regions of same access pattern')
 
     parser.description='Show DAMON-monitored access pattern'
     parser.epilog='If --input_file is not provided, capture snapshot'
@@ -263,7 +265,7 @@ def main(args=None):
         _damon.ensure_root_and_initialized(args)
 
         records, err = _damon_result.get_snapshot_records(access_pattern,
-                args.total_sz_only)
+                args.total_sz_only, not args.dont_merge_regions)
         if err != None:
             print(err)
             exit(1)
@@ -283,7 +285,8 @@ def main(args=None):
         _damon.ensure_root_and_initialized(args)
 
         records, err = _damon_result.get_snapshot_records_for_schemes(
-                args.tried_regions_of, args.total_sz_only)
+                args.tried_regions_of, args.total_sz_only,
+                not args.dont_merge_regions)
         if err != None:
             print(err)
             exit(1)
