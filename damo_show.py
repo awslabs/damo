@@ -24,7 +24,7 @@ def apply_min_chars(min_chars, field_name, txt):
             return txt
     return txt
 
-def format_field(min_chars, field_name, index, region, snapshot, record, raw):
+def format_field(field_name, index, region, snapshot, record, raw):
     # for region
     if field_name == '<index>':
         txt = _damo_fmt_str.format_nr(index, raw)
@@ -77,7 +77,7 @@ def format_field(min_chars, field_name, index, region, snapshot, record, raw):
         print(field_name)
         raise(Exception)
 
-    return apply_min_chars(min_chars, field_name, txt)
+    return txt
 
 def format_pretty(template, min_chars, index, region, snapshot, record, raw):
     for field_name in [
@@ -93,8 +93,9 @@ def format_pretty(template, min_chars, index, region, snapshot, record, raw):
             '<target id>', '<record start abs time>', '<record duration>']:
         if template.find(field_name) == -1:
             continue
-        template = template.replace(field_name, format_field(min_chars,
-            field_name, index, region, snapshot, record, raw))
+        txt = format_field(field_name, index, region, snapshot, record, raw)
+        txt = apply_min_chars(min_chars, field_name, txt)
+        template = template.replace(field_name, txt)
     template = template.replace('\\n', '\n')
     return template
 
