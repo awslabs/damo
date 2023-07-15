@@ -279,6 +279,10 @@ class TestDamon(unittest.TestCase):
         intervals = _damon.DamonIntervals('5ms', '100ms', '1s')
 
         nr_acc = _damon.DamonNrAccesses(4, _damon.unit_samples)
+        nr_acc_2 = _damon.DamonNrAccesses(4, _damon.unit_samples)
+        self.assertEqual(nr_acc, nr_acc_2)
+        nr_acc_2 = _damon.DamonNrAccesses(6, _damon.unit_samples)
+        self.assertNotEqual(nr_acc, nr_acc_2)
         nr_acc.add_unset_unit(intervals)
         self.assertEqual(nr_acc.samples, 4)
         self.assertEqual(nr_acc.percent, 20)
@@ -288,6 +292,11 @@ class TestDamon(unittest.TestCase):
                 '20 %')
 
         nr_acc = _damon.DamonNrAccesses(20, _damon.unit_percent)
+        nr_acc_2 = _damon.DamonNrAccesses(20, _damon.unit_percent)
+        self.assertEqual(nr_acc, nr_acc_2)
+        nr_acc_2 = _damon.DamonNrAccesses(25, _damon.unit_percent)
+        self.assertNotEqual(nr_acc, nr_acc_2)
+
         nr_acc.add_unset_unit(intervals)
         self.assertEqual(nr_acc.samples, 4)
         self.assertEqual(nr_acc.percent, 20)
