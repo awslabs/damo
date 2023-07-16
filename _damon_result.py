@@ -37,7 +37,8 @@ class DamonSnapshot:
         snapshot.regions = [_damon.DamonRegion.from_kvpairs(r)
                 for r in kv['regions']]
         if 'total_bytes' in kv and kv['total_bytes'] != None:
-            snapshot.total_bytes = _damo_fmt_str.text_to_bytes['total_bytes']
+            snapshot.total_bytes = _damo_fmt_str.text_to_bytes(
+                    kv['total_bytes'])
         else:
             snapshot.total_bytes = sum([r.size() for r in snapshot.regions])
         return snapshot
