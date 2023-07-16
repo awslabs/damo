@@ -25,23 +25,26 @@ class DamonSnapshot:
     regions = None
     total_bytes = None
 
-    def __init__(self, start_time, end_time):
+    def update_total_bytes(self):
+        self.total_bytes = sum([r.size() for r in self.regions])
+
+    def __init__(self, start_time, end_time, regions, total_bytes):
         self.start_time = start_time
         self.end_time = end_time
-        self.regions = []
+        self.regions = regions
+        self.total_bytes = total_bytes
+        if self.total_bytes == None:
+            self.update_total_bytes()
 
     @classmethod
     def from_kvpairs(cls, kv):
-        snapshot = DamonSnapshot(_damo_fmt_str.text_to_ns(kv['start_time']),
-                _damo_fmt_str.text_to_ns(kv['end_time']))
-        snapshot.regions = [_damon.DamonRegion.from_kvpairs(r)
-                for r in kv['regions']]
-        if 'total_bytes' in kv and kv['total_bytes'] != None:
-            snapshot.total_bytes = _damo_fmt_str.text_to_bytes(
-                    kv['total_bytes'])
-        else:
-            snapshot.total_bytes = sum([r.size() for r in snapshot.regions])
-        return snapshot
+        return DamonSnapshot(
+                _damo_fmt_str.text_to_ns(kv['start_time']),
+                _damo_fmt_str.text_to_ns(kv['end_time']),
+                [_damon.DamonRegion.from_kvpairs(r) for r in kv['regions']],
+                _damo_fmt_str.text_to_bytes(kv['total_bytes'])
+                if 'total_bytes' in kv and kv['total_bytes'] != None
+                else None)
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
@@ -147,8 +150,7 @@ def aggregate_snapshots(snapshots):
             region.nr_accesses.unit = _damon.unit_samples
 
     new_snapshot = DamonSnapshot(snapshots[0].start_time,
-            snapshots[-1].end_time)
-    new_snapshot.regions = new_regions
+            snapshots[-1].end_time, new_regions, None)
     return new_snapshot
 
 def adjusted_snapshots(snapshots, aggregate_interval_us):
@@ -190,8 +192,8 @@ def read_end_time_from_record_file(f):
     return end_time
 
 def read_snapshot_from_record_file(f, start_time, end_time):
-    snapshot = DamonSnapshot(start_time, end_time)
     nr_regions = struct.unpack('I', f.read(4))[0]
+    regions = []
     for r in range(nr_regions):
         start_addr = struct.unpack('L', f.read(8))[0]
         end_addr = struct.unpack('L', f.read(8))[0]
@@ -199,8 +201,8 @@ def read_snapshot_from_record_file(f, start_time, end_time):
         region = _damon.DamonRegion(start_addr, end_addr,
                 nr_accesses, _damon.unit_samples,
                 None, _damon.unit_aggr_intervals)
-        snapshot.regions.append(region)
-    return snapshot
+        regions.append(region)
+    return DamonSnapshot(start_time, end_time, regions, None)
 
 # if number of snapshots is one and the file type is record or perf script,
 # write_damon_records() adds a fake snapshot for snapshot start time deduction.
@@ -325,13 +327,17 @@ def parse_perf_script(script_output, monitoring_intervals):
                 return None, 'trace is not time-sorted'
 
         if snapshot == None:
-            snapshot = DamonSnapshot(start_time, end_time)
+            snapshot = DamonSnapshot(start_time, end_time, [], None)
             record.snapshots.append(snapshot)
         snapshot = record.snapshots[-1]
         snapshot.regions.append(region)
 
         if len(snapshot.regions) == nr_regions:
             snapshot = None
+
+    for record in records:
+        for snapshot in record.snapshots:
+            snapshot.update_total_bytes()
 
     set_first_snapshot_start_time(records)
     return records, None
@@ -435,11 +441,11 @@ def add_fake_snapshot_if_needed(records):
             continue
         snapshot = snapshots[0]
         snap_duration = snapshot.end_time - snapshot.start_time
-        fake_snapshot = DamonSnapshot(snapshot.end_time,
-                snapshot.end_time + snap_duration)
         # -1 nr_accesses.samples / -1 age.aggr_intervals means fake
-        fake_snapshot.regions = [_damon.DamonRegion(0, 0,
+        fake_regions = [_damon.DamonRegion(0, 0,
             -1, _damon.unit_samples, -1, _damon.unit_aggr_intervals)]
+        fake_snapshot = DamonSnapshot(snapshot.end_time,
+                snapshot.end_time + snap_duration, fake_regions, None)
         snapshots.append(fake_snapshot)
 
 def write_binary(records, file_path, format_version):
@@ -610,25 +616,26 @@ def find_install_scheme(scheme_to_find):
 def tried_regions_to_snapshot(scheme, intervals, merge_regions):
     snapshot_end_time_ns = time.time() * 1000000000
     snapshot_start_time_ns = snapshot_end_time_ns - intervals.aggr * 1000
-    snapshot = DamonSnapshot(snapshot_start_time_ns, snapshot_end_time_ns)
+    regions = []
 
     for tried_region in scheme.tried_regions:
         '''Merge regions that having same access pattern, since DAMON usually
         splits regions unnecessarily to keep the min_nr_regions'''
-        if merge_regions and len(snapshot.regions) > 0:
-            last_region = snapshot.regions[-1]
+        if merge_regions and len(regions) > 0:
+            last_region = regions[-1]
             if (last_region.end == tried_region.start and
                     last_region.nr_accesses == tried_region.nr_accesses and
                     last_region.age == tried_region.age):
                 last_region.end = tried_region.end
                 continue
-        snapshot.regions.append(tried_region)
+        regions.append(tried_region)
     if scheme.tried_bytes != None:
-        snapshot.total_bytes = scheme.tried_bytes
+        total_bytes = scheme.tried_bytes
     else:
-        snapshot.total_bytes = sum([r.size() for r in scheme.tried_region])
+        total_bytes = None
 
-    return snapshot
+    return DamonSnapshot(snapshot_start_time_ns, snapshot_end_time_ns, regions,
+            total_bytes)
 
 def tried_regions_to_records_of(idxs, merge_regions):
     '''idxs: list of kdamond/context/scheme indices to get records for.  If it
