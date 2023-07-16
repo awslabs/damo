@@ -24,6 +24,24 @@ def apply_min_chars(min_chars, field_name, txt):
             return txt
     return txt
 
+snapshot_formatters = {
+        '<total bytes>': lambda snapshot, record, raw:
+            _damo_fmt_str.format_sz(snapshot.total_bytes, raw),
+        '<monitor duration>': lambda snapshot, record, raw:
+            _damo_fmt_str.format_time_ns(
+                snapshot.end_time - snapshot.start_time, raw),
+        '<monitor start time>': lambda snapshot, record, raw:
+            _damo_fmt_str.format_time_ns(
+                snapshot.start_time - record.snapshots[0].start_time, raw),
+        '<monitor end time>': lambda snapshot, record, raw:
+            _damo_fmt_str.format_time_ns(
+                snapshot.end_time - record.snapshots[0].start_time, raw),
+        '<monitor start abs time>': lambda snapshot, record, raw:
+            _damo_fmt_str.format_time_ns(snapshot.start_time, raw),
+        '<monitor end abs time>': lambda snapshot, record, raw:
+            _damo_fmt_str.format_time_ns(snapshot.end_time, raw),
+            }
+
 region_formatters = {
         '<index>': lambda index, region, raw:
             _damo_fmt_str.format_nr(index, raw),
@@ -40,25 +58,8 @@ region_formatters = {
         }
 
 def format_field(field_name, index, region, snapshot, record, raw):
-    # for snapshot
-    if field_name == '<total bytes>':
-        return _damo_fmt_str.format_sz(snapshot.total_bytes, raw)
-    elif field_name == '<monitor duration>':
-        return _damo_fmt_str.format_time_ns(
-                snapshot.end_time - snapshot.start_time, raw)
-    elif field_name == '<monitor start time>':
-        base_time = record.snapshots[0].start_time
-        return _damo_fmt_str.format_time_ns(
-                snapshot.start_time - base_time, raw)
-    elif field_name == '<monitor end time>':
-        base_time = record.snapshots[0].start_time
-        return _damo_fmt_str.format_time_ns(snapshot.end_time - base_time, raw)
-    elif field_name == '<monitor start abs time>':
-        return _damo_fmt_str.format_time_ns(snapshot.start_time, raw)
-    elif field_name == '<monitor end abs time>':
-        return _damo_fmt_str.format_time_ns(snapshot.end_time, raw)
     # for record
-    elif field_name == '<kdamond index>':
+    if field_name == '<kdamond index>':
         return '%s' % record.kdamond_idx
     elif field_name == '<context index>':
         return '%s' % record.context_idx
@@ -77,6 +78,13 @@ def format_field(field_name, index, region, snapshot, record, raw):
         raise(Exception)
 
 def format_pretty(template, min_chars, index, region, snapshot, record, raw):
+    for field_name, formatter in snapshot_formatters.items():
+        if template.find(field_name) == -1:
+            continue
+        txt = formatter(snapshot, record, raw)
+        txt = apply_min_chars(min_chars, field_name, txt)
+        template = template.replace(field_name, txt)
+
     for field_name in region_formatters:
         if template.find(field_name) == -1:
             continue
@@ -84,10 +92,6 @@ def format_pretty(template, min_chars, index, region, snapshot, record, raw):
         txt = apply_min_chars(min_chars, field_name, txt)
         template = template.replace(field_name, txt)
     for field_name in [
-            # for snapshot pretty
-            '<total bytes>', '<monitor duration>',
-            '<monitor start time>', '<monitor end time>',
-            '<monitor start abs time>', '<monitor end abs time>',
             # for record pretty
             '<kdamond index>', '<context index>', '<scheme index>',
             '<target id>', '<record start abs time>', '<record duration>']:
