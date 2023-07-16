@@ -74,7 +74,9 @@ def apply_min_chars(min_chars, field_name, txt):
             return txt
     return txt
 
-def format_pretty(template, min_chars, index, region, snapshot, record, raw):
+def format_pr(template, min_chars, index, region, snapshot, record, raw):
+    if template == '':
+        return
     for field_name, formatter in record_formatters.items():
         if template.find(field_name) == -1:
             continue
@@ -96,13 +98,7 @@ def format_pretty(template, min_chars, index, region, snapshot, record, raw):
         txt = apply_min_chars(min_chars, field_name, txt)
         template = template.replace(field_name, txt)
     template = template.replace('\\n', '\n')
-    return template
-
-def format_pr(template, min_chars, index, region, snapshot, record, raw):
-    if template == '':
-        return
-    print(format_pretty(template, min_chars, index, region, snapshot, record,
-        raw))
+    print(template)
 
 def set_formats(args, records):
     if args.format_record_head == None:
