@@ -59,6 +59,12 @@ region_formatters = {
             _damo_fmt_str.format_time_us(region.age.usec, raw)
         }
 
+formatters = {
+        'record': record_formatters,
+        'snapshot': snapshot_formatters,
+        'region': region_formatters
+        }
+
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
     for name, nr in min_chars:
@@ -77,26 +83,18 @@ def apply_min_chars(min_chars, field_name, txt):
 def format_pr(template, min_chars, index, region, snapshot, record, raw):
     if template == '':
         return
-    for field_name, formatter in record_formatters.items():
-        if template.find(field_name) == -1:
-            continue
-        txt = formatter(record, raw)
-        txt = apply_min_chars(min_chars, field_name, txt)
-        template = template.replace(field_name, txt)
-
-    for field_name, formatter in snapshot_formatters.items():
-        if template.find(field_name) == -1:
-            continue
-        txt = formatter(snapshot, record, raw)
-        txt = apply_min_chars(min_chars, field_name, txt)
-        template = template.replace(field_name, txt)
-
-    for field_name in region_formatters:
-        if template.find(field_name) == -1:
-            continue
-        txt = region_formatters[field_name](index, region, raw)
-        txt = apply_min_chars(min_chars, field_name, txt)
-        template = template.replace(field_name, txt)
+    for category, category_formatters in formatters.items():
+        for field_name, formatter in category_formatters.items():
+            if template.find(field_name) == -1:
+                continue
+            if category == 'record':
+                txt = formatter(record, raw)
+            elif category == 'snapshot':
+                txt = formatter(snapshot, record, raw)
+            elif category == 'region':
+                txt = formatter(index, region, raw)
+            txt = apply_min_chars(min_chars, field_name, txt)
+            template = template.replace(field_name, txt)
     template = template.replace('\\n', '\n')
     print(template)
 
