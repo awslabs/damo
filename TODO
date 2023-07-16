@@ -19,6 +19,7 @@
 - Implement histogram stat regions output
 - Support DAMOS quotas/watermarks/filters with command line options
 - Deprecate old features
+  - Deprecate stat (done.  Code need to be removed)
   - Deprecate --rbuf and in-kernel record feature support (done.  code also removed)
   - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
   - Deprecate v1-v3 schemes (done.  necessary code moved to _damon_deprecated)
