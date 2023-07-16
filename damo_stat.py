@@ -3,6 +3,7 @@
 import signal
 import time
 
+import _damo_deprecation_notice
 import _damo_subcmds
 import _damon
 import _damon_args
@@ -64,6 +65,9 @@ def run_count_delay(func, args):
         i += 1
 
 def main(args=None):
+    _damo_deprecation_notice.deprecated('\'damo stat\'', 'next week',
+            do_exit=False, exit_code=1,
+            additional_notice='Use \'damo status\' or \'damo show\' instead')
     if not args:
         parser = set_argparser(None)
         args = parser.parse_args()
