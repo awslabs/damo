@@ -42,8 +42,6 @@ region_formatters = {
 def format_field(field_name, index, region, snapshot, record, raw):
     # for snapshot
     if field_name == '<total bytes>':
-        if snapshot.total_bytes == None:
-            snapshot.total_bytes = sum([r.size() for r in snapshot.regions])
         return _damo_fmt_str.format_sz(snapshot.total_bytes, raw)
     elif field_name == '<monitor duration>':
         return _damo_fmt_str.format_time_ns(
