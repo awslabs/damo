@@ -24,6 +24,23 @@ def apply_min_chars(min_chars, field_name, txt):
             return txt
     return txt
 
+record_formatters = {
+        '<kdamond index>': lambda record, raw:
+            '%s' % record.kdamond_idx,
+        '<context index>': lambda record, raw:
+            '%s' % record.context_idx,
+        '<scheme index>': lambda record, raw:
+            '%s' % record.scheme_idx,
+        '<target id>': lambda record, raw:
+            '%s' % record.target_id,
+        '<record start abs time>': lambda record, raw:
+            _dmo_fmt_str.format_ns(record.snapshots[0].start_time, raw),
+        '<record duration>': lambda record, raw:
+            _damo_fmt_str.format_time_ns(
+                record.snapshots[-1].end_time - record.snapshots[0].start_time,
+                raw)
+            }
+
 snapshot_formatters = {
         '<total bytes>': lambda snapshot, record, raw:
             _damo_fmt_str.format_sz(snapshot.total_bytes, raw),
@@ -57,27 +74,14 @@ region_formatters = {
             _damo_fmt_str.format_time_us(region.age.usec, raw)
         }
 
-def format_field(field_name, index, region, snapshot, record, raw):
-    # for record
-    if field_name == '<kdamond index>':
-        return '%s' % record.kdamond_idx
-    elif field_name == '<context index>':
-        return '%s' % record.context_idx
-    elif field_name == '<scheme index>':
-        return '%s' % record.scheme_idx
-    elif field_name == '<target id>':
-        return '%s' % record.target_id
-    elif field_name == '<record start abs time>':
-        return _damo_fmt_str.format_time_ns(record.snapshots[0].start_time, raw)
-    elif field_name == '<record duration>':
-        return _damo_fmt_str.format_time_ns(
-                record.snapshots[-1].end_time - record.snapshots[0].start_time,
-                raw)
-    else:
-        print(field_name)
-        raise(Exception)
-
 def format_pretty(template, min_chars, index, region, snapshot, record, raw):
+    for field_name, formatter in record_formatters.items():
+        if template.find(field_name) == -1:
+            continue
+        txt = formatter(record, raw)
+        txt = apply_min_chars(min_chars, field_name, txt)
+        template = template.replace(field_name, txt)
+
     for field_name, formatter in snapshot_formatters.items():
         if template.find(field_name) == -1:
             continue
@@ -89,15 +93,6 @@ def format_pretty(template, min_chars, index, region, snapshot, record, raw):
         if template.find(field_name) == -1:
             continue
         txt = region_formatters[field_name](index, region, raw)
-        txt = apply_min_chars(min_chars, field_name, txt)
-        template = template.replace(field_name, txt)
-    for field_name in [
-            # for record pretty
-            '<kdamond index>', '<context index>', '<scheme index>',
-            '<target id>', '<record start abs time>', '<record duration>']:
-        if template.find(field_name) == -1:
-            continue
-        txt = format_field(field_name, index, region, snapshot, record, raw)
         txt = apply_min_chars(min_chars, field_name, txt)
         template = template.replace(field_name, txt)
     template = template.replace('\\n', '\n')
