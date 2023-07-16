@@ -239,7 +239,7 @@ def set_argparser(parser):
             default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
             help='region output format')
     parser.add_argument('--min_chars_field', nargs=2,
-            metavar=('<field name> <number>'), action='append',
+            metavar=('<field name>', '<number>'), action='append',
             default=[['<index>', 3],
                 ['<start address>', 12],['<end address>', 11],
                 ['<region size>', 11], ['<access rate>', 5]],
