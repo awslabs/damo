@@ -48,9 +48,9 @@ do
 
 	for i in {1..10}
 	do
-		if ! sudo "$damo" stat schemes_tried_regions &> /dev/null
+		if ! sudo "$damo" status &> /dev/null
 		then
-			echo "FAIL $testname2 stat $i failed"
+			echo "FAIL $testname2 status $i failed"
 			if ! sudo "$damo" stop
 			then
 				echo "failed stopping DAMON"
@@ -58,7 +58,7 @@ do
 			exit 1
 		fi
 	done
-	echo "PASS $testname2 stat $i"
+	echo "PASS $testname2 status $i"
 
 	if ! sudo "$damo" tune --aggr 200000 --ops paddr \
 		--damon_interface "$damon_interface" &> /dev/null
