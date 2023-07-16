@@ -33,7 +33,7 @@ def __pr_schemes_tried_regions(regions, intervals, size_only, sortby,
 def update_pr_schemes_tried_regions(access_pattern, size_only, sortby,
         prio_weights, raw_nr):
     records, err = _damon_result.get_snapshot_records(access_pattern,
-            total_sz_only=False)
+            total_sz_only=False, merge_regions=False)
     if err != None:
         print(err)
     if records == None:
