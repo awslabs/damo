@@ -65,6 +65,18 @@ formatters = {
         'region': region_formatters
         }
 
+def __age_size_heat_box(region, record,
+        usec_per_column, bytes_per_row, nr_per_access_rate_percent):
+    '''
+    Generate a string that represents a box.  The box represents age, size, and
+    heat of the region with length (number of columns), height (number of
+    rows), and number, respectively.
+    '''
+    nr_columns = int(region.age.usec / usec_per_column)
+    nr_rows = int(region.size() / bytes_per_row)
+    heat_nr = int(region.nr_accesses.percent / nr_per_access_rate_percent)
+    return '\n'.join([('%d' % heat_nr) * nr_columns] * nr_rows)
+
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
     for name, nr in min_chars:
