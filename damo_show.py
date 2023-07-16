@@ -226,16 +226,17 @@ def set_argparser(parser):
 
     # don't set default for record head and snapshot head because it depends on
     # given number of record and snapshots.  Decide those in set_formats().
-    parser.add_argument('--format_record_head',
+    parser.add_argument('--format_record_head', metavar='<template>',
             help='record output head format')
-    parser.add_argument('--format_record_tail', default='',
+    parser.add_argument('--format_record_tail', metavar='<template>',
+            default='',
             help='record output tail format')
-    parser.add_argument('--format_snapshot_head',
+    parser.add_argument('--format_snapshot_head', metavar='<template>',
             help='snapshot output tail format')
-    parser.add_argument('--format_snapshot_tail',
+    parser.add_argument('--format_snapshot_tail', metavar='<template>',
             default='total size: <total bytes>',
             help='snapshot output tail format')
-    parser.add_argument('--format_region',
+    parser.add_argument('--format_region', metavar='<template>',
             default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
             help='region output format')
     parser.add_argument('--min_chars_field', nargs=2,
