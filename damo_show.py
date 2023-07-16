@@ -9,21 +9,6 @@ import _damon
 import _damon_args
 import _damon_result
 
-def apply_min_chars(min_chars, field_name, txt):
-    # min_chars: [[<field name>, <number of min chars>]...]
-    for name, nr in min_chars:
-        try:
-            nr = int(nr)
-        except:
-            print('wrong min_chars: %s' % min_chars)
-
-        if name == field_name:
-            if len(txt) >= nr:
-                return txt
-            txt += ' ' * (nr - len(txt))
-            return txt
-    return txt
-
 record_formatters = {
         '<kdamond index>': lambda record, raw:
             '%s' % record.kdamond_idx,
@@ -73,6 +58,21 @@ region_formatters = {
         '<age>': lambda index, region, raw:
             _damo_fmt_str.format_time_us(region.age.usec, raw)
         }
+
+def apply_min_chars(min_chars, field_name, txt):
+    # min_chars: [[<field name>, <number of min chars>]...]
+    for name, nr in min_chars:
+        try:
+            nr = int(nr)
+        except:
+            print('wrong min_chars: %s' % min_chars)
+
+        if name == field_name:
+            if len(txt) >= nr:
+                return txt
+            txt += ' ' * (nr - len(txt))
+            return txt
+    return txt
 
 def format_pretty(template, min_chars, index, region, snapshot, record, raw):
     for field_name, formatter in record_formatters.items():
