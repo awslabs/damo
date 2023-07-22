@@ -230,8 +230,12 @@ def filter_records_by_addr(records, addr_ranges):
             snapshot.regions = filtered_regions
 
 def convert_addr_ranges_input(addr_ranges_input):
-    ranges = [[_damo_fmt_str.text_to_bytes(start),
-        _damo_fmt_str.text_to_bytes(end)] for start, end in addr_ranges_input]
+    try:
+        ranges = [[_damo_fmt_str.text_to_bytes(start),
+            _damo_fmt_str.text_to_bytes(end)]
+            for start, end in addr_ranges_input]
+    except Exception as e:
+        return None, 'conversion to bytes failed (%s)' % e
     for idx, arange in enumerate(ranges):
         start, end = arange
         if start > end:
