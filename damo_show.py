@@ -273,15 +273,19 @@ def main(args=None):
             args.access_rate, _damon.unit_percent, args.age * 1000000,
             _damon.unit_usec)
 
-    if args.input_file == None and args.tried_regions_of == None:
+    if args.input_file == None:
         _damon.ensure_root_and_initialized(args)
-
-        records, err = _damon_result.get_snapshot_records(access_pattern,
-                args.total_sz_only, not args.dont_merge_regions)
+        if args.tried_regions_of == None:
+            records, err = _damon_result.get_snapshot_records(access_pattern,
+                    args.total_sz_only, not args.dont_merge_regions)
+        else:
+             records, err = _damon_result.get_snapshot_records_for_schemes(
+                    args.tried_regions_of, args.total_sz_only,
+                    not args.dont_merge_regions)
         if err != None:
             print(err)
             exit(1)
-    elif args.input_file != None:
+    else:
         if not os.path.isfile(args.input_file):
             print('--input_file (%s) is not file' % args.input_file)
             exit(1)
@@ -293,15 +297,6 @@ def main(args=None):
             exit(1)
         for record in records:
             filter_by_pattern(record, access_pattern)
-    elif args.tried_regions_of != None:
-        _damon.ensure_root_and_initialized(args)
-
-        records, err = _damon_result.get_snapshot_records_for_schemes(
-                args.tried_regions_of, args.total_sz_only,
-                not args.dont_merge_regions)
-        if err != None:
-            print(err)
-            exit(1)
 
     for record in records:
         try:
