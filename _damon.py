@@ -543,7 +543,7 @@ class DamosFilter:
         if self.filter_type == 'memcg':
             plus_str = 'memcg_path %s, ' % self.memcg_path
         if self.filter_type == 'addr':
-            plus_str = 'address_range %s, ' % self.address_range.to_str(raw)
+            plus_str = '%s, ' % self.address_range.to_str(raw)
         return 'filter_type %s, %smatching %s' % (
                 self.filter_type, plus_str, self.matching)
 
