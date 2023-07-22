@@ -40,3 +40,5 @@
   - sort by priority with priority weights (become histogram)
   - collapse by time
   - collapse by priority value (more histogram control)
+  - support target specification
+- Support target DAMOS filter
