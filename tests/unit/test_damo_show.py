@@ -31,5 +31,10 @@ class TestDamoShow(unittest.TestCase):
                 [_damon.DamonRegion(3, 5), _damon.DamonRegion(6, 9),
                     _damon.DamonRegion(10, 12)])
 
+    def test_convert_addr_ranges_input(self):
+        self.assertEqual(
+                damo_show.convert_addr_ranges_input([['1G', '2G']]),
+                ([[1024 * 1024 * 1024, 1024 * 1024 * 1024 * 2]], None))
+
 if __name__ == '__main__':
     unittest.main()
