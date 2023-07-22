@@ -42,6 +42,8 @@ snapshot_formatters = {
             _damo_fmt_str.format_time_ns(snapshot.start_time, raw),
         '<monitor end abs time>': lambda snapshot, record, raw:
             _damo_fmt_str.format_time_ns(snapshot.end_time, raw),
+        '<number of regions>': lambda snapshot, record, raw:
+            _damo_fmt_str.format_nr(len(snapshot.regions), raw),
             }
 
 region_formatters = {
