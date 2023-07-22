@@ -221,6 +221,14 @@ def filter_by_addr(region, addr_ranges):
         regions.append(copied)
     return regions
 
+def filter_records_by_addr(records, addr_ranges):
+    for record in records:
+        for snapshot in record.snapshots:
+            filtered_regions = []
+            for region in snapshot.regions:
+                filtered_regions += filter_by_addr(region, addr_ranges)
+            snapshot.regions = filtered_regions
+
 def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
 
@@ -234,6 +242,9 @@ def set_argparser(parser):
     parser.add_argument('--age', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
             help='min/max age of regions (seconds)')
+    parser.add_argument('--address', metavar=('<start>', '<end>'), nargs=2,
+            action='append',
+            help='address ranges to show for')
 
     parser.add_argument('--input_file', metavar='<file>',
             help='source of the access pattern to show')
@@ -315,6 +326,10 @@ def main(args=None):
             exit(1)
         for record in records:
             filter_by_pattern(record, access_pattern)
+    if args.address:
+        ranges = [[_damo_fmt_str.text_to_bytes(start),
+            _damo_fmt_str.text_to_bytes(end)] for start, end in args.address]
+        filter_records_by_addr(records, ranges)
 
     for record in records:
         try:
