@@ -229,6 +229,14 @@ def filter_records_by_addr(records, addr_ranges):
                 filtered_regions += filter_by_addr(region, addr_ranges)
             snapshot.regions = filtered_regions
 
+def convert_addr_ranges_input(addr_ranges_input):
+    ranges = [[_damo_fmt_str.text_to_bytes(start),
+        _damo_fmt_str.text_to_bytes(end)] for start, end in addr_ranges_input]
+    for idx, arange in enumerate(ranges):
+        if arange[0] > arange[1]:
+            return None, 'start > end (%s)' % arange
+    return ranges, None
+
 def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
 
@@ -327,13 +335,10 @@ def main(args=None):
         for record in records:
             filter_by_pattern(record, access_pattern)
     if args.address:
-        ranges = [[_damo_fmt_str.text_to_bytes(start),
-            _damo_fmt_str.text_to_bytes(end)] for start, end in args.address]
-        for idx, arange in enumerate(ranges):
-            if arange[0] > arange[1]:
-                print('wrong address range')
-                exit(1)
-
+        ranges, err = convert_addr_ranges_input(args.address)
+        if err:
+            print('wrong --address input (%s)' % err)
+            exit(1)
         filter_records_by_addr(records, ranges)
 
     for record in records:
