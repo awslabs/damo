@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
+import copy
 import json
 import os
 
@@ -202,6 +203,23 @@ def filter_by_pattern(record, access_pattern):
                 continue
             filtered.append(region)
         snapshot.regions = filtered
+
+def filter_by_addr(region, addr_ranges):
+    regions = []
+    for start, end in addr_ranges:
+        # out of the range
+        if region.end <= start or end <= region.start:
+            continue
+        # in the range
+        if start <= region.start and region.end <= end:
+            regions.append(copy.deepcopy(region))
+            continue
+        # overlap
+        copied = copy.deepcopy(region)
+        copied.start = max(start, region.start)
+        copied.end = min(end, region.end)
+        regions.append(copied)
+    return regions
 
 def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
