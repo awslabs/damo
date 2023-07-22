@@ -240,6 +240,7 @@ def convert_addr_ranges_input(addr_ranges_input):
         start, end = arange
         if start > end:
             return None, 'start > end (%s)' % arange
+    ranges.sort(key=lambda x: x[0])
     return ranges, None
 
 def set_argparser(parser):
