@@ -329,6 +329,11 @@ def main(args=None):
     if args.address:
         ranges = [[_damo_fmt_str.text_to_bytes(start),
             _damo_fmt_str.text_to_bytes(end)] for start, end in args.address]
+        for idx, arange in enumerate(ranges):
+            if arange[0] > arange[1]:
+                print('wrong address range')
+                exit(1)
+
         filter_records_by_addr(records, ranges)
 
     for record in records:
