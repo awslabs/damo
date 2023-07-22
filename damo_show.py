@@ -236,11 +236,14 @@ def convert_addr_ranges_input(addr_ranges_input):
             for start, end in addr_ranges_input]
     except Exception as e:
         return None, 'conversion to bytes failed (%s)' % e
+
+    ranges.sort(key=lambda x: x[0])
     for idx, arange in enumerate(ranges):
         start, end = arange
         if start > end:
             return None, 'start > end (%s)' % arange
-    ranges.sort(key=lambda x: x[0])
+        if idx > 0 and ranges[idx - 1][1] > start:
+            return None, 'overlapping range'
     return ranges, None
 
 def set_argparser(parser):
