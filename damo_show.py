@@ -228,6 +228,7 @@ def filter_records_by_addr(records, addr_ranges):
             for region in snapshot.regions:
                 filtered_regions += filter_by_addr(region, addr_ranges)
             snapshot.regions = filtered_regions
+            snapshot.update_total_bytes()
 
 def convert_addr_ranges_input(addr_ranges_input):
     try:
