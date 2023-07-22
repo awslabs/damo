@@ -39,6 +39,8 @@ class TestDamoShow(unittest.TestCase):
         self.assertNotEqual(err, None)
         ranges, err = damo_show.convert_addr_ranges_input([[4, 3]])
         self.assertNotEqual(err, None)
+        ranges, err = damo_show.convert_addr_ranges_input([[5, 7], [2, 6]])
+        self.assertEqual(err, 'overlapping range')
 
         self.assertEqual(
                 damo_show.convert_addr_ranges_input([[10, 20], [5, 7]]),
