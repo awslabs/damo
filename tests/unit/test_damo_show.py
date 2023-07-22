@@ -40,5 +40,9 @@ class TestDamoShow(unittest.TestCase):
         ranges, err = damo_show.convert_addr_ranges_input([[4, 3]])
         self.assertNotEqual(err, None)
 
+        self.assertEqual(
+                damo_show.convert_addr_ranges_input([[10, 20], [5, 7]]),
+                ([[5, 7], [10, 20]], None))
+
 if __name__ == '__main__':
     unittest.main()
