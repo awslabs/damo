@@ -29,8 +29,8 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosQuotas(100, 1024, 1000, [80, 76, 24]),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
                     200),
-                [_damon.DamosFilter('memcg', '/foo/bar', True),
-                    _damon.DamosFilter('anon', None, False)],
+                [_damon.DamosFilter('memcg', '/foo/bar', None, True),
+                    _damon.DamosFilter('anon', None, None, False)],
                     None, None)
         damos_kvpairs = damos.to_kvpairs()
         self.assertEqual(type(damos_kvpairs), collections.OrderedDict)
@@ -79,7 +79,7 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(damos, damos2)
 
         damos2.filters = [_damon.DamosFilter(filter_type='memcg',
-                    memcg_path='/foo/bar/', matching=True)]
+                    memcg_path='/foo/bar/', address_range=None, matching=True)]
         self.assertNotEqual(damos, damos2)
 
         intervals = _damon.DamonIntervals(5000, 100000, 1000000)

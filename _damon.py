@@ -527,21 +527,25 @@ class DamosWatermarks:
                 ])
 
 class DamosFilter:
-    filter_type = None  # anon or memcg
+    filter_type = None  # anon, memcg, or addr
     memcg_path = None
+    address_range = None    # DamonRegion
     matching = None
 
-    def __init__(self, filter_type, memcg_path, matching):
+    def __init__(self, filter_type, memcg_path, address_range, matching):
         self.filter_type = filter_type
         self.memcg_path = memcg_path
+        self.address_range = address_range
         self.matching = _damo_fmt_str.text_to_bool(matching)
 
     def to_str(self, raw):
-        memcg_path_str = ''
+        plus_str = ''
         if self.filter_type == 'memcg':
-            memcg_path_str = 'memcg_path %s, ' % self.memcg_path
+            plus_str = 'memcg_path %s, ' % self.memcg_path
+        if self.filter_type == 'addr':
+            plus_str = 'address_range %s, ' % self.address_range.to_str(raw)
         return 'filter_type %s, %smatching %s' % (
-                self.filter_type, memcg_path_str, self.matching)
+                self.filter_type, plus_str, self.matching)
 
     def __str__(self):
         return self.to_str(False)
@@ -553,12 +557,17 @@ class DamosFilter:
     def from_kvpairs(cls, kv):
         return DamosFilter(kv['filter_type'],
                 kv['memcg_path'] if kv['filter_type'] == 'memcg' else '',
+                DamonRegion.from_kvpairs(kv['address_range'])
+                    if kv['filter_type'] == 'addr' else None,
                 kv['matching'])
 
     def to_kvpairs(self, raw=False):
-        return collections.OrderedDict(
-                [(attr, getattr(self, attr)) for attr in [
-                    'filter_type', 'memcg_path', 'matching']])
+        return collections.OrderedDict([
+            ('filter_type', self.filter_type),
+            ('memcg_path', self.memcg_path),
+            ('address_range', self.address_range.to_kvpairs(raw) if
+                self.address_range != None else None),
+            ('matching', self.matching)])
 
 class DamosStats:
     nr_tried = None

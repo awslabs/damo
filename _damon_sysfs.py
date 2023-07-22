@@ -97,12 +97,16 @@ def update_schemes_tried_regions(kdamond_idxs):
 # for stage_kdamonds
 
 def wops_for_scheme_filter(damos_filter):
-    return {
+    wops = {
         'type': '%s' % damos_filter.filter_type,
         'memcg_path': ('%s' % damos_filter.memcg_path
             if damos_filter.memcg_path != None else ''),
         'matching': 'Y' if damos_filter.matching else 'N',
         }
+    if damos_filter.address_range != None:
+        wops['addr_start'] = damos_filter.address_range.start
+        wops['addr_end'] = damos_filter.address_range.end
+    return wops
 
 def wops_for_scheme_filters(filters):
     wops = {}
@@ -356,7 +360,11 @@ def files_content_to_watermarks(files_content):
 
 def files_content_to_damos_filters(files_content):
     return [_damon.DamosFilter(filter_kv['type'].strip(),
-            filter_kv['memcg_path'].strip(), filter_kv['matching'].strip())
+            filter_kv['memcg_path'].strip(),
+            _damon.DamonRegion(filter_kv['addr_start'].strip(),
+                filter_kv['addr_end'].strip())
+                if filter_kv['type'] == 'addr' else None,
+            filter_kv['matching'].strip())
             for filter_kv in numbered_dirs_content(
                 files_content, 'nr_filters')]
 
