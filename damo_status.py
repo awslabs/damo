@@ -5,6 +5,8 @@ Show status of DAMON.
 """
 
 import json
+import random
+import time
 
 import _damo_fmt_str
 import _damon
@@ -64,7 +66,14 @@ def update_pr_kdamonds_summary(json_format, raw_nr):
     print('\n'.join(summary))
 
 def update_pr_kdamonds(json_format, raw_nr):
-    kdamonds, err = _damon.update_read_kdamonds()
+    err = 'assumed error'
+    nr_tries = 0
+    while err != None and nr_tries < 5:
+        nr_tries += 1
+        kdamonds, err = _damon.update_read_kdamonds()
+        if err != None:
+            time.sleep(random.randrange(
+                2**(nr_tries - 1), 2**nr_tries) / 100)
     if err:
         print(err)
         return

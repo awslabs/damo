@@ -4,6 +4,8 @@ import argparse
 import copy
 import json
 import os
+import random
+import time
 
 import _damo_fmt_str
 import _damon
@@ -322,13 +324,20 @@ def main(args=None):
 
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args)
-        if args.tried_regions_of == None:
-            records, err = _damon_result.get_snapshot_records(access_pattern,
-                    args.total_sz_only, not args.dont_merge_regions)
-        else:
-             records, err = _damon_result.get_snapshot_records_for_schemes(
-                    args.tried_regions_of, args.total_sz_only,
-                    not args.dont_merge_regions)
+        err = 'assumed error'
+        nr_tries = 0
+        while err != None and nr_tries < 5:
+            nr_tries += 1
+            if args.tried_regions_of == None:
+                records, err = _damon_result.get_snapshot_records(access_pattern,
+                        args.total_sz_only, not args.dont_merge_regions)
+            else:
+                 records, err = _damon_result.get_snapshot_records_for_schemes(
+                        args.tried_regions_of, args.total_sz_only,
+                        not args.dont_merge_regions)
+            if err != None:
+                time.sleep(random.randrange(
+                    2**(nr_tries - 1), 2**nr_tries) / 100)
         if err != None:
             print(err)
             exit(1)
