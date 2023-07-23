@@ -90,7 +90,10 @@ class MinMaxOfRecords:
     min_age_us = None
     max_age_us = None
 
-    def set_fields(self, region):
+    def set_fields(self, region, intervals):
+        region.nr_accesses.add_unset_unit(intervals)
+        region.age.add_unset_unit(intervals)
+
         if self.min_sz_region == None or region.size() < self.min_sz_region:
             self.min_sz_region = region.size()
         if self.max_sz_region == None or region.size() > self.max_sz_region:
@@ -110,7 +113,7 @@ class MinMaxOfRecords:
         for record in records:
             for snapshot in record.snapshots:
                 for region in snapshot.regions:
-                    self.set_fields(region)
+                    self.set_fields(region, record.intervals)
 
 def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     '''Return a value in new scale
