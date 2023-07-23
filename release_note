@@ -5,7 +5,8 @@ v1.9.1
 - Remove 'damo stat'
 - 'damo show' update
   - Support address range based filtering
-  - Add number of regions per snapshot format for 'damo show'
+  - Add snapshot format keyword for number of regions
+  - Implement '<size bar>' region format keyword (subject to change in future)
 
 v1.9.0
 - Mark 'damo stat' as deprecated
