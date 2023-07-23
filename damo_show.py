@@ -82,6 +82,36 @@ def __age_size_heat_box(region, record,
     heat_nr = int(region.nr_accesses.percent / nr_per_access_rate_percent)
     return '\n'.join([('%d' % heat_nr) * nr_columns] * nr_rows)
 
+class MinMaxOfRecords:
+    min_sz_region = None
+    max_sz_region = None
+    min_access_rate_percent = None
+    max_access_rate_percent = None
+    min_age_us = None
+    max_age_us = None
+
+    def set_fields(self, region):
+        if self.min_sz_region == None or region.size() < self.min_sz_region:
+            self.min_sz_region = region.size()
+        if self.max_sz_region == None or region.size() > self.max_sz_region:
+            self.max_sz_region = region.size()
+        if (self.min_access_rate_percent == None or
+                region.nr_accesses.percent < self.min_access_rate_percent):
+            self.min_access_rate_percent = region.nr_accesses.percent
+        if (self.max_access_rate_percent == None or
+                region.nr_accesses.percent > self.max_access_rate_percent):
+            self.max_access_rate_percent = region.nr_accesses.percent
+        if self.min_age_us == None or region.age.usec < self.min_age_us:
+            self.min_age_us = region.age.usec
+        if self.max_age_us == None or region.age.usec > self.max_age_us:
+            self.max_age_us = region.age.usec
+
+    def __init__(self, records):
+        for record in records:
+            for snapshot in record.snapshots:
+                for region in snapshot.regions:
+                    self.set_fields(region)
+
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
     for name, nr in min_chars:
