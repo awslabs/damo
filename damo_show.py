@@ -50,18 +50,20 @@ snapshot_formatters = {
             }
 
 region_formatters = {
-        '<index>': lambda index, region, raw:
+        '<index>': lambda index, region, raw, mms:
             _damo_fmt_str.format_nr(index, raw),
-        '<start address>': lambda index, region, raw:
+        '<start address>': lambda index, region, raw, mms:
             _damo_fmt_str.format_sz(region.start, raw),
-        '<end address>': lambda index, region, raw:
+        '<end address>': lambda index, region, raw, mms:
             _damo_fmt_str.format_sz(region.end, raw),
-        '<region size>': lambda index, region, raw:
+        '<region size>': lambda index, region, raw, mms:
             _damo_fmt_str.format_sz(region.size(), raw),
-        '<access rate>': lambda index, region, raw:
+        '<access rate>': lambda index, region, raw, mms:
             _damo_fmt_str.format_percent(region.nr_accesses.percent, raw),
-        '<age>': lambda index, region, raw:
-            _damo_fmt_str.format_time_us(region.age.usec, raw)
+        '<age>': lambda index, region, raw, mms:
+            _damo_fmt_str.format_time_us(region.age.usec, raw),
+        '<size_bar>': lambda index, region, raw, mms:
+           size_bar(region, mms, 0, 20),
         }
 
 formatters = {
@@ -137,6 +139,12 @@ def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     ratio = new_length / orig_length
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
+def size_bar(region, minmaxs, min_cols, max_cols):
+    nr_cols = int(rescale_val(region.size(),
+            [minmaxs.min_sz_region, minmaxs.max_sz_region],
+            [min_cols, max_cols]))
+    return '<%s>' % ('-' * nr_cols)
+
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
     for name, nr in min_chars:
@@ -152,7 +160,7 @@ def apply_min_chars(min_chars, field_name, txt):
             return txt
     return txt
 
-def format_pr(template, min_chars, index, region, snapshot, record, raw):
+def format_pr(template, min_chars, index, region, snapshot, record, raw, mms):
     if template == '':
         return
     for category, category_formatters in formatters.items():
@@ -164,7 +172,7 @@ def format_pr(template, min_chars, index, region, snapshot, record, raw):
             elif category == 'snapshot':
                 txt = formatter(snapshot, record, raw)
             elif category == 'region':
-                txt = formatter(index, region, raw)
+                txt = formatter(index, region, raw, mms)
             txt = apply_min_chars(min_chars, field_name, txt)
             template = template.replace(field_name, txt)
     template = template.replace('\\n', '\n')
@@ -211,29 +219,30 @@ def pr_records(args, records):
         exit(0)
 
     set_formats(args, records)
+    mms = MinMaxOfRecords(records)
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_field, None, None,
-                None, record, args.raw_number)
+                None, record, args.raw_number, mms)
         snapshots = record.snapshots
 
         for sidx, snapshot in enumerate(snapshots):
             format_pr(args.format_snapshot_head, args.min_chars_field, None,
-                    None, snapshot, record, args.raw_number)
+                    None, snapshot, record, args.raw_number, mms)
             for r in snapshot.regions:
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
             for idx, r in enumerate(
                     sorted_regions(snapshot.regions, args.sort_regions_by)):
                 format_pr(args.format_region, args.min_chars_field, idx, r,
-                        snapshot, record, args.raw_number)
+                        snapshot, record, args.raw_number, mms)
             format_pr(args.format_snapshot_tail, args.min_chars_field, None,
-                    None, snapshot, record, args.raw_number)
+                    None, snapshot, record, args.raw_number, mms)
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
         format_pr(args.format_record_tail, args.min_chars_field, None, None,
-                None, record, args.raw_number)
+                None, record, args.raw_number, mms)
 
 def filter_by_pattern(record, access_pattern):
     sz_bytes = access_pattern.sz_bytes
