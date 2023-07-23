@@ -122,8 +122,10 @@ class DamonNrAccesses:
     @classmethod
     def from_kvpairs(cls, kv):
         ret = DamonNrAccesses(None, None)
-        ret.samples = kv['samples']
-        ret.percent = kv['percent']
+        if 'samples' in kv and kv['samples'] != None:
+            ret.samples = _damo_fmt_str.text_to_nr(kv['samples'])
+        if 'percent' in kv and kv['percent'] != None:
+            ret.percent = _damo_fmt_str.text_to_percent(kv['percent'])
         return ret
 
     def to_kvpairs(self, raw=False):
