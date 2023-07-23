@@ -112,6 +112,28 @@ class MinMaxOfRecords:
                 for region in snapshot.regions:
                     self.set_fields(region)
 
+def rescale_val(val, orig_scale_minmax, new_scale_minmax):
+    '''Return a value in new scale
+
+    Parameters
+    ----------
+    val : int, float
+        The value to rescale
+    orig_scale_minmax : list
+        min/max values of original scale
+    new_scale_minmax : list
+        min/max values of new scale
+
+    Returns
+    -------
+    float
+        The rescaled value
+    '''
+    orig_length = orig_scale_minmax[1] - orig_scale_minmax[0]
+    new_length = new_scale_minmax[1] - new_scale_minmax[0]
+    ratio = new_length / orig_length
+    return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
+
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
     for name, nr in min_chars:
