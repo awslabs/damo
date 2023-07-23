@@ -9,7 +9,7 @@
 - Support 'cleanup': echo 0 > nr_kdamonds
 - Document new workflow: init-start-show-tune-stop
 - Support ongoing schemes
-- Cleanup schemes test using damo stat
+- Cleanup schemes test using damo status
 - Find a better and consistent rule for feature check
   - Check from subcommands
   - Check from _damon (done)
@@ -19,7 +19,7 @@
 - Implement histogram stat regions output
 - Support DAMOS quotas/watermarks/filters with command line options
 - Deprecate old features
-  - Deprecate stat (done.  Code need to be removed)
+  - Deprecate stat (done.  Code also removed)
   - Deprecate --rbuf and in-kernel record feature support (done.  code also removed)
   - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
   - Deprecate v1-v3 schemes (done.  necessary code moved to _damon_deprecated)
