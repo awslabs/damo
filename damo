@@ -20,7 +20,6 @@ import damo_report
 import damo_schemes
 import damo_show
 import damo_start
-import damo_stat
 import damo_status
 import damo_stop
 import damo_translate_damos
@@ -50,8 +49,6 @@ subcmds = [
             msg='list supported DAMON features in the kernel'),
         _damo_subcmds.DamoSubCmd(name='validate', module=damo_validate,
             msg='validate a given record result file'),
-        _damo_subcmds.DamoSubCmd(name='stat', module=damo_stat,
-            msg='print status of DAMON and the system'),
         _damo_subcmds.DamoSubCmd(name='start', module=damo_start,
             msg='start DAMON with given parameters'),
         _damo_subcmds.DamoSubCmd(name='stop', module=damo_stop,
