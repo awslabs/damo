@@ -205,11 +205,11 @@ def sorted_regions(regions, sort_fields):
         if field == 'address':
             regions = sorted(regions, key=lambda r: r.start)
         elif field == 'access_rate':
-            regions = sorted(regions, key=lambda r: r.nr_accesses.percent)
+            regions = sorted(regions, key=lambda r: r.nr_accesses.percent, reverse=True)
         elif field == 'age':
-            regions = sorted(regions, key=lambda r: r.age.usec)
+            regions = sorted(regions, key=lambda r: r.age.usec, reverse=True)
         elif field == 'size':
-            regions = sorted(regions, key=lambda r: r.size())
+            regions = sorted(regions, key=lambda r: r.size(), reverse=True)
     return regions
 
 def pr_records(args, records):
