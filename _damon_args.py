@@ -101,6 +101,15 @@ def damos_options_to_filters(filters_args):
             memcg_path = fargs[0]
             filters.append(
                     _damon.DamosFilter(ftype, memcg_path, None, fmatching))
+        elif ftype == 'addr':
+            if len(fargs) != 2:
+                return None, 'wrong number of addr arguments (%s)' % fargs
+            try:
+                addr_range = _damon.DamonRegion(fargs[0], fargs[1])
+            except Exception as e:
+                return None, 'wrong addr range (%s, %s)' % (fargs, e)
+            filters.append(
+                    _damon.DamosFilter(ftype, None, addr_range, fmatching))
         else:
             return None, 'unsupported filter type'
     return filters, None
