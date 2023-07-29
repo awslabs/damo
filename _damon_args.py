@@ -77,30 +77,32 @@ def schemes_option_to_damos(schemes):
 
 def damos_options_to_filters(filters_args):
     filters = []
-    if filters_args != None:
-        for fields in filters_args:
-            if len(fields) < 2:
-                return None, '<2 filter field legth (%s)' % fields
-            ftype = fields[0]
-            fmatching = fields[1]
-            fargs = fields[2:]
-            if not fmatching in ['matching', 'nomatching']:
-                return None, 'unsupported matching keyword (%s)' % fmatching
-            fmatching = fmatching == 'matching'
-            if ftype == 'anon':
-                if len(fargs):
-                    return (None, 'anon filter receives no arguments but (%s)'
-                            % fargs)
-                filters.append(
-                        _damon.DamosFilter(ftype, None, None, fmatching))
-            elif ftype == 'memcg':
-                if len(fargs) != 1:
-                    return None, 'wrong number of memcg arguments (%s)' % fargs
-                memcg_path = fargs[0]
-                filters.append(
-                        _damon.DamosFilter(ftype, memcg_path, None, fmatching))
-            else:
-                return None, 'unsupported filter type'
+    if filters_args == None:
+        return filters, None
+
+    for fields in filters_args:
+        if len(fields) < 2:
+            return None, '<2 filter field legth (%s)' % fields
+        ftype = fields[0]
+        fmatching = fields[1]
+        fargs = fields[2:]
+        if not fmatching in ['matching', 'nomatching']:
+            return None, 'unsupported matching keyword (%s)' % fmatching
+        fmatching = fmatching == 'matching'
+        if ftype == 'anon':
+            if len(fargs):
+                return (None, 'anon filter receives no arguments but (%s)'
+                        % fargs)
+            filters.append(
+                    _damon.DamosFilter(ftype, None, None, fmatching))
+        elif ftype == 'memcg':
+            if len(fargs) != 1:
+                return None, 'wrong number of memcg arguments (%s)' % fargs
+            memcg_path = fargs[0]
+            filters.append(
+                    _damon.DamosFilter(ftype, memcg_path, None, fmatching))
+        else:
+            return None, 'unsupported filter type'
     return filters, None
 
 def damos_options_to_scheme(args):
