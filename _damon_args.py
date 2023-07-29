@@ -112,6 +112,16 @@ def damos_options_to_filters(filters_args):
             filters.append(
                     _damon.DamosFilter(ftype, None, addr_range, None,
                         fmatching))
+        elif ftype == 'target':
+            if len(fargs) != 1:
+                return None, 'wrong number of target argument (%s)' % fargs
+            try:
+                filters.append(
+                        _damon.DamosFilter(ftype, None, None, fargs[0],
+                            fmatching))
+            except Exception as e:
+                return None, 'target filter creation failed (%s, %s)' % (
+                        fargs[0], e)
         else:
             return None, 'unsupported filter type'
     return filters, None
