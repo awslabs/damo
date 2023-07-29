@@ -106,6 +106,8 @@ def wops_for_scheme_filter(damos_filter):
     if damos_filter.address_range != None:
         wops['addr_start'] = '%d' % damos_filter.address_range.start
         wops['addr_end'] = '%d' % damos_filter.address_range.end
+    if damos_filter.target_idx != None:
+        wops['damon_target_idx'] = '%d' % damos_filter.target_idx
     return wops
 
 def wops_for_scheme_filters(filters):
@@ -365,7 +367,8 @@ def files_content_to_damos_filters(files_content):
                 filter_kv['addr_end'].strip())
                 if 'addr_start' in filter_kv and 'addr_end' in filter_kv
                 else None,
-            None,
+            filter_kv['damon_target_idx']
+                if 'damon_target_idx' in filter_kv else None,
             filter_kv['matching'].strip())
             for filter_kv in numbered_dirs_content(
                 files_content, 'nr_filters')]
