@@ -94,13 +94,14 @@ def damos_options_to_filters(filters_args):
                 return (None, 'anon filter receives no arguments but (%s)'
                         % fargs)
             filters.append(
-                    _damon.DamosFilter(ftype, None, None, fmatching))
+                    _damon.DamosFilter(ftype, None, None, None, fmatching))
         elif ftype == 'memcg':
             if len(fargs) != 1:
                 return None, 'wrong number of memcg arguments (%s)' % fargs
             memcg_path = fargs[0]
             filters.append(
-                    _damon.DamosFilter(ftype, memcg_path, None, fmatching))
+                    _damon.DamosFilter(ftype, memcg_path, None, None,
+                        fmatching))
         elif ftype == 'addr':
             if len(fargs) != 2:
                 return None, 'wrong number of addr arguments (%s)' % fargs
@@ -109,7 +110,8 @@ def damos_options_to_filters(filters_args):
             except Exception as e:
                 return None, 'wrong addr range (%s, %s)' % (fargs, e)
             filters.append(
-                    _damon.DamosFilter(ftype, None, addr_range, fmatching))
+                    _damon.DamosFilter(ftype, None, addr_range, None,
+                        fmatching))
         else:
             return None, 'unsupported filter type'
     return filters, None

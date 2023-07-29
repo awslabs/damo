@@ -365,6 +365,7 @@ def files_content_to_damos_filters(files_content):
                 filter_kv['addr_end'].strip())
                 if 'addr_start' in filter_kv and 'addr_end' in filter_kv
                 else None,
+            None,
             filter_kv['matching'].strip())
             for filter_kv in numbered_dirs_content(
                 files_content, 'nr_filters')]
