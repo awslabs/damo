@@ -104,8 +104,8 @@ def wops_for_scheme_filter(damos_filter):
         'matching': 'Y' if damos_filter.matching else 'N',
         }
     if damos_filter.address_range != None:
-        wops['addr_start'] = damos_filter.address_range.start
-        wops['addr_end'] = damos_filter.address_range.end
+        wops['addr_start'] = '%d' % damos_filter.address_range.start
+        wops['addr_end'] = '%d' % damos_filter.address_range.end
     return wops
 
 def wops_for_scheme_filters(filters):
