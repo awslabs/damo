@@ -80,7 +80,7 @@ class TestDamon(unittest.TestCase):
 
         damos2.filters = [_damon.DamosFilter(filter_type='memcg',
                     memcg_path='/foo/bar/', address_range=None,
-                    target_idx=None, matching=True)]
+                    damon_target_idx=None, matching=True)]
         self.assertNotEqual(damos, damos2)
 
         intervals = _damon.DamonIntervals(5000, 100000, 1000000)

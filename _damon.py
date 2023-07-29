@@ -532,16 +532,16 @@ class DamosFilter:
     filter_type = None  # anon, memcg, addr, or target
     memcg_path = None
     address_range = None    # DamonRegion
-    target_idx = None
+    damon_target_idx = None
     matching = None
 
-    def __init__(self, filter_type, memcg_path, address_range, target_idx,
-            matching):
+    def __init__(self, filter_type, memcg_path, address_range,
+            damon_target_idx, matching):
         self.filter_type = filter_type
         self.memcg_path = memcg_path
         self.address_range = address_range
-        if target_idx != None:
-            self.target_idx = _damo_fmt_str.text_to_nr(target_idx)
+        if damon_target_idx != None:
+            self.damon_target_idx = _damo_fmt_str.text_to_nr(damon_target_idx)
         self.matching = _damo_fmt_str.text_to_bool(matching)
 
     def to_str(self, raw):
@@ -551,7 +551,8 @@ class DamosFilter:
         if self.filter_type == 'addr':
             plus_str = '%s, ' % self.address_range.to_str(raw)
         if self.filter_type == 'target':
-            plus_str = '%s, ' % _damo_fmt_str.format_nr(self.target_idx, raw)
+            plus_str = '%s, ' % _damo_fmt_str.format_nr(
+                    self.damon_target_idx, raw)
         return 'filter_type %s, %smatching %s' % (
                 self.filter_type, plus_str, self.matching)
 
@@ -567,7 +568,8 @@ class DamosFilter:
                 kv['memcg_path'] if kv['filter_type'] == 'memcg' else '',
                 DamonRegion.from_kvpairs(kv['address_range'])
                     if kv['filter_type'] == 'addr' else None,
-                kv['target_idx'] if kv['filter_type'] == 'target' else None,
+                kv['damon_target_idx']
+                    if kv['filter_type'] == 'target' else None,
                 kv['matching'])
 
     def to_kvpairs(self, raw=False):
@@ -576,8 +578,9 @@ class DamosFilter:
             ('memcg_path', self.memcg_path),
             ('address_range', self.address_range.to_kvpairs(raw) if
                 self.address_range != None else None),
-            ('target_idx', _damo_fmt_str.format_nr(self.target_idx, raw)
-                if self.target_idx != None else None),
+            ('damon_target_idx',
+                _damo_fmt_str.format_nr(self.damon_target_idx, raw)
+                if self.damon_target_idx != None else None),
             ('matching', self.matching)])
 
 class DamosStats:
