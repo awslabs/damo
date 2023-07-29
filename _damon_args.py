@@ -76,12 +76,39 @@ def schemes_option_to_damos(schemes):
         return None, '%s' % json_err
 
 def damos_options_to_scheme(args):
+    filters = []
+    if args.damos_filter != None:
+        for fields in args.damos_filter:
+            if len(fields) < 2:
+                return None, '<2 filter field legth (%s)' % fields
+            ftype = fields[0]
+            fmatching = fields[1]
+            fargs = fields[2:]
+            if not fmatching in ['matching', 'nomatching']:
+                return None, 'unsupported matching keyword (%s)' % fmatching
+            fmatching = fmatching == 'matching'
+            if ftype == 'anon':
+                if len(fargs):
+                    return (None, 'anon filter receives no arguments but (%s)'
+                            % fargs)
+                filters.append(
+                        _damon.DamosFilter(ftype, None, None, fmatching))
+            elif ftype == 'memcg':
+                if len(fargs) != 1:
+                    return None, 'wrong number of memcg arguments (%s)' % fargs
+                memcg_path = fargs[0]
+                filters.append(
+                        _damon.DamosFilter(ftype, memcg_path, None, fmatching))
+            else:
+                return None, 'unsupported filter type'
+
     try:
         return _damon.Damos(
                 access_pattern=_damon.DamosAccessPattern(
                     args.damos_sz_region, args.damos_access_rate,
                     _damon.unit_percent, args.damos_age, _damon.unit_usec),
-                action=args.damos_action), None
+                action=args.damos_action,
+                filters=filters), None
     except Exception as e:
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
 
@@ -305,6 +332,9 @@ def set_damos_argparser(parser):
     parser.add_argument('--damos_action', metavar='<action>',
             choices=_damon.damos_actions,
             help='damos action to apply to the target regions')
+    parser.add_argument('--damos_filter', nargs='+', action='append',
+            metavar='<filter argument>',
+            help='damos filter (type, matching, and optional arguments')
 
 def set_argparser(parser, add_record_options):
     if parser == None:
