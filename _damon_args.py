@@ -75,10 +75,10 @@ def schemes_option_to_damos(schemes):
     except Exception as json_err:
         return None, '%s' % json_err
 
-def damos_options_to_scheme(args):
+def damos_options_to_filters(filters_args):
     filters = []
-    if args.damos_filter != None:
-        for fields in args.damos_filter:
+    if filters_args != None:
+        for fields in filters_args:
             if len(fields) < 2:
                 return None, '<2 filter field legth (%s)' % fields
             ftype = fields[0]
@@ -101,6 +101,12 @@ def damos_options_to_scheme(args):
                         _damon.DamosFilter(ftype, memcg_path, None, fmatching))
             else:
                 return None, 'unsupported filter type'
+    return filters, None
+
+def damos_options_to_scheme(args):
+    filters, err = damos_options_to_filters(args.damos_filter)
+    if err != None:
+        return None, err
 
     try:
         return _damon.Damos(
