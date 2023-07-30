@@ -136,7 +136,7 @@ def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     '''
     orig_length = orig_scale_minmax[1] - orig_scale_minmax[0]
     new_length = new_scale_minmax[1] - new_scale_minmax[0]
-    ratio = new_length / orig_length
+    ratio = new_length / orig_length if orig_length > 0 else 1
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
 def size_bar(region, minmaxs, min_cols, max_cols):
