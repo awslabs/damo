@@ -133,6 +133,16 @@ def damos_options_to_scheme(args):
     else:
         quotas = None
 
+    if args.damos_wmarks != None:
+        wargs = args.damos_wmarks
+        try:
+            wmarks = _damon.DamosWatermarks(wargs[0], wargs[1], wargs[2],
+                    wargs[3], wargs[4])
+        except Exception as e:
+            return None, 'Wrong --damos_wmarks (%s, %s)' % (wargs, e)
+    else:
+        wmarks = None
+
     filters, err = damos_options_to_filters(args.damos_filter)
     if err != None:
         return None, err
@@ -142,7 +152,7 @@ def damos_options_to_scheme(args):
                 access_pattern=_damon.DamosAccessPattern(
                     args.damos_sz_region, args.damos_access_rate,
                     _damon.unit_percent, args.damos_age, _damon.unit_usec),
-                action=args.damos_action, quotas=quotas,
+                action=args.damos_action, quotas=quotas, watermarks=wmarks,
                 filters=filters), None
     except Exception as e:
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
@@ -373,6 +383,11 @@ def set_damos_argparser(parser):
                 '<access rate priority weight> (permil)',
                 '<age priority weight> (permil)'), nargs=6,
             help='damos quotas')
+    parser.add_argument('--damos_wmarks', nargs=5,
+            metavar=('<metric (none|free_mem_rate)>', '<interval (us)>',
+                '<high mark (permil)>', '<mid mark (permil)>',
+                '<low mark (permil)>'),
+            help='damos watermarks')
     parser.add_argument('--damos_filter', nargs='+', action='append',
             metavar='<filter argument>',
             help='damos filter (type, matching, and optional arguments')
