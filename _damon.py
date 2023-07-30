@@ -530,19 +530,19 @@ class DamosWatermarks:
 
 class DamosFilter:
     filter_type = None  # anon, memcg, addr, or target
+    matching = None
     memcg_path = None
     address_range = None    # DamonRegion
     damon_target_idx = None
-    matching = None
 
-    def __init__(self, filter_type, memcg_path, address_range,
-            damon_target_idx, matching):
+    def __init__(self, filter_type, matching, memcg_path=None,
+            address_range=None, damon_target_idx=None):
         self.filter_type = filter_type
+        self.matching = _damo_fmt_str.text_to_bool(matching)
         self.memcg_path = memcg_path
         self.address_range = address_range
         if damon_target_idx != None:
             self.damon_target_idx = _damo_fmt_str.text_to_nr(damon_target_idx)
-        self.matching = _damo_fmt_str.text_to_bool(matching)
 
     def to_str(self, raw):
         plus_str = ''
@@ -564,13 +564,12 @@ class DamosFilter:
 
     @classmethod
     def from_kvpairs(cls, kv):
-        return DamosFilter(kv['filter_type'],
+        return DamosFilter(kv['filter_type'], kv['matching'],
                 kv['memcg_path'] if kv['filter_type'] == 'memcg' else '',
                 DamonRegion.from_kvpairs(kv['address_range'])
                     if kv['filter_type'] == 'addr' else None,
                 kv['damon_target_idx']
-                    if kv['filter_type'] == 'target' else None,
-                kv['matching'])
+                    if kv['filter_type'] == 'target' else None)
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([

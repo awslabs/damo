@@ -362,14 +362,14 @@ def files_content_to_watermarks(files_content):
 
 def files_content_to_damos_filters(files_content):
     return [_damon.DamosFilter(filter_kv['type'].strip(),
+            filter_kv['matching'].strip(),
             filter_kv['memcg_path'].strip(),
             _damon.DamonRegion(filter_kv['addr_start'].strip(),
                 filter_kv['addr_end'].strip())
                 if 'addr_start' in filter_kv and 'addr_end' in filter_kv
                 else None,
             filter_kv['damon_target_idx']
-                if 'damon_target_idx' in filter_kv else None,
-            filter_kv['matching'].strip())
+                if 'damon_target_idx' in filter_kv else None)
             for filter_kv in numbered_dirs_content(
                 files_content, 'nr_filters')]
 

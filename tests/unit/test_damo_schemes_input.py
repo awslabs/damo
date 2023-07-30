@@ -119,9 +119,9 @@ class TestDamoSchemesInput(unittest.TestCase):
                 'stat',
                 _damon.DamosQuotas(0, 0, 0, [0, 0, 0]),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0),
-                [_damon.DamosFilter('anon', '', None, None, True),
-                    _damon.DamosFilter('memcg',
-                        '/all/latency-critical', None, None, False)], None, None)]
+                [_damon.DamosFilter('anon', True, ''),
+                    _damon.DamosFilter('memcg', False,
+                        '/all/latency-critical')], None, None)]
 
         def get_damos_from_damo_schemes(damo_schemes):
             damos, err = _damon_args.schemes_option_to_damos(
