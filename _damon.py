@@ -575,13 +575,13 @@ class DamosFilter:
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
             ('filter_type', self.filter_type),
+            ('matching', self.matching),
             ('memcg_path', self.memcg_path),
             ('address_range', self.address_range.to_kvpairs(raw) if
                 self.address_range != None else None),
             ('damon_target_idx',
                 _damo_fmt_str.format_nr(self.damon_target_idx, raw)
-                if self.damon_target_idx != None else None),
-            ('matching', self.matching)])
+                if self.damon_target_idx != None else None)])
 
 class DamosStats:
     nr_tried = None
