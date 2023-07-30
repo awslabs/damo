@@ -123,6 +123,16 @@ def damos_options_to_filters(filters_args):
     return filters, None
 
 def damos_options_to_scheme(args):
+    if args.damos_quotas != None:
+        qargs = args.damos_quotas
+        try:
+            quotas = _damon.DamosQuotas(qargs[0], qargs[1], qargs[2],
+                    [qargs[3], qargs[4], qargs[5]])
+        except Exception as e:
+            return None, 'Wrong --damos_quotas (%s, %s)' % (qargs, e)
+    else:
+        quotas = None
+
     filters, err = damos_options_to_filters(args.damos_filter)
     if err != None:
         return None, err
@@ -132,7 +142,7 @@ def damos_options_to_scheme(args):
                 access_pattern=_damon.DamosAccessPattern(
                     args.damos_sz_region, args.damos_access_rate,
                     _damon.unit_percent, args.damos_age, _damon.unit_usec),
-                action=args.damos_action,
+                action=args.damos_action, quotas=quotas,
                 filters=filters), None
     except Exception as e:
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
@@ -357,6 +367,12 @@ def set_damos_argparser(parser):
     parser.add_argument('--damos_action', metavar='<action>',
             choices=_damon.damos_actions,
             help='damos action to apply to the target regions')
+    parser.add_argument('--damos_quotas',
+            metavar=('<time (ms)>', '<size (bytes)>', '<reset interval (ms)>',
+                '<size priority weight (permil)>',
+                '<access rate priority weight> (permil)',
+                '<age priority weight> (permil)'), nargs=6,
+            help='damos quotas')
     parser.add_argument('--damos_filter', nargs='+', action='append',
             metavar='<filter argument>',
             help='damos filter (type, matching, and optional arguments')
