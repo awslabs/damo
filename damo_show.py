@@ -64,6 +64,8 @@ region_formatters = {
             _damo_fmt_str.format_time_us(region.age.usec, raw),
         '<size_bar>': lambda index, region, raw, mms:
            size_bar(region, mms, 0, 20),
+        '<size_heat_bar>': lambda index, region, raw, mms:
+           size_heat_bar(region, mms, 1, 20),
         }
 
 formatters = {
@@ -140,10 +142,21 @@ def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
 def size_bar(region, minmaxs, min_cols, max_cols):
+    print(region.size())
     nr_cols = int(rescale_val(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
             [min_cols, max_cols]))
     return '<%s>' % ('-' * nr_cols)
+
+def size_heat_bar(region, minmaxs, min_cols, max_cols):
+    nr_cols = int(rescale_val(region.size(),
+            [minmaxs.min_sz_region, minmaxs.max_sz_region],
+            [min_cols, max_cols]))
+    heat_symbol = int(rescale_val(region.nr_accesses.percent,
+        [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
+        [0, 9]))
+
+    return '<%s>' % ('%d' % heat_symbol * nr_cols)
 
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
