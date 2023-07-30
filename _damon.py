@@ -545,16 +545,17 @@ class DamosFilter:
             self.damon_target_idx = _damo_fmt_str.text_to_nr(damon_target_idx)
 
     def to_str(self, raw):
-        plus_str = ''
+        txt = '%s %s' % (self.filter_type,
+                'matching' if self.matching else 'nomatching')
+        if self.filter_type == 'anon':
+            return txt
         if self.filter_type == 'memcg':
-            plus_str = 'memcg_path %s, ' % self.memcg_path
+            return '%s %s' % (txt, self.memcg_path)
         if self.filter_type == 'addr':
-            plus_str = '%s, ' % self.address_range.to_str(raw)
+            return '%s %s' % (txt, self.address_range.to_str(raw))
         if self.filter_type == 'target':
-            plus_str = '%s, ' % _damo_fmt_str.format_nr(
-                    self.damon_target_idx, raw)
-        return 'filter_type %s, %smatching %s' % (
-                self.filter_type, plus_str, self.matching)
+            return '%s %s' % (txt, _damo_fmt_str.format_nr(
+                    self.damon_target_idx, raw))
 
     def __str__(self):
         return self.to_str(False)
