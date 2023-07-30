@@ -494,12 +494,12 @@ class DamosWatermarks:
 
     def to_str(self, raw):
         return '\n'.join([
-            '%s/%s/%s' % (
+            'metric %s, interval %s' % (self.metric,
+                _damo_fmt_str.format_time_us(self.interval_us, raw)),
+            '%s, %s, %s' % (
                 _damo_fmt_str.format_permil(self.high_permil, raw),
                 _damo_fmt_str.format_permil(self.mid_permil, raw),
                 _damo_fmt_str.format_permil(self.low_permil, raw)),
-            'metric %s, interval %s' % (self.metric,
-                _damo_fmt_str.format_time_us(self.interval_us, raw))
             ])
 
     def __str__(self):
