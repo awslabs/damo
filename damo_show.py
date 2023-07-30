@@ -62,9 +62,9 @@ region_formatters = {
             _damo_fmt_str.format_percent(region.nr_accesses.percent, raw),
         '<age>': lambda index, region, raw, mms:
             _damo_fmt_str.format_time_us(region.age.usec, raw),
-        '<size_bar>': lambda index, region, raw, mms:
+        '<size bar>': lambda index, region, raw, mms:
            size_bar(region, mms, 0, 20),
-        '<size_heat_bar>': lambda index, region, raw, mms:
+        '<size heat bar>': lambda index, region, raw, mms:
            size_heat_bar(region, mms, 1, 20),
         '<size heat age bar>': lambda index, region, raw, mms:
            size_heat_age_bar(region, mms, 1, 20),
