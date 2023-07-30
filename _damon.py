@@ -444,7 +444,7 @@ class DamosQuotas:
     def to_str(self, raw):
         return '\n'.join([
             '%s / %s per %s' % (
-                _damo_fmt_str.format_sz(self.time_ms * 1000000, raw),
+                _damo_fmt_str.format_time_ns(self.time_ms * 1000000, raw),
                 _damo_fmt_str.format_time_ns(self.sz_bytes, raw),
                 _damo_fmt_str.format_time_ms(self.reset_interval_ms, raw)),
             'priority: sz %s, nr_accesses %s, age %s' % (
