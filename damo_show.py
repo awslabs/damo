@@ -66,6 +66,9 @@ region_formatters = {
            size_bar(region, mms, 0, 20),
         '<size_heat_bar>': lambda index, region, raw, mms:
            size_heat_bar(region, mms, 1, 20),
+        '<size heat age bar>': lambda index, region, raw, mms:
+           size_heat_age_bar(region, mms, 1, 20),
+
         }
 
 formatters = {
@@ -157,6 +160,20 @@ def size_heat_bar(region, minmaxs, min_cols, max_cols):
         [0, 9]))
 
     return '<%s>' % ('%d' % heat_symbol * nr_cols)
+
+def size_heat_age_bar(region, minmaxs, min_cols, max_cols):
+    nr_cols = int(rescale_val(region.size(),
+            [minmaxs.min_sz_region, minmaxs.max_sz_region],
+            [min_cols, max_cols]))
+    heat_symbol = int(rescale_val(region.nr_accesses.percent,
+        [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
+        [0, 9]))
+    nr_rows = int(rescale_val(region.age.usec,
+        [minmaxs.min_age_us, minmaxs.max_age_us],
+        [1, 5]))
+
+    row = '<%s>' % ('%d' % heat_symbol * nr_cols)
+    return '\n'.join([row] * nr_rows) + '\n'
 
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
