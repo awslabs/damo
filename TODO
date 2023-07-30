@@ -42,4 +42,3 @@
   - collapse by priority value (more histogram control)
   - support target specification
   - use address ranges damos filter if available
-- Support target DAMOS filter
