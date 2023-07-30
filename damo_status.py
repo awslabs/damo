@@ -65,18 +65,7 @@ def update_pr_kdamonds_summary(json_format, raw_nr):
         return
     print('\n'.join(summary))
 
-def update_pr_kdamonds(json_format, raw_nr):
-    err = 'assumed error'
-    nr_tries = 0
-    while err != None and nr_tries < 5:
-        nr_tries += 1
-        kdamonds, err = _damon.update_read_kdamonds()
-        if err != None:
-            time.sleep(random.randrange(
-                2**(nr_tries - 1), 2**nr_tries) / 100)
-    if err:
-        print(err)
-        return
+def pr_kdamonds(kdamonds, json_format, raw_nr):
     if json_format:
         print(json.dumps([k.to_kvpairs(raw_nr) for k in kdamonds], indent=4))
     else:
@@ -100,7 +89,11 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    update_pr_kdamonds(args.json, args.raw)
+    kdamonds, err = _damon.update_read_kdamonds(nr_retries=5)
+    if err != None:
+        print('cannot update and read kdamonds: %s' % err)
+        exit(1)
+    pr_kdamonds(kdamonds, args.json, args.raw)
 
 if __name__ == '__main__':
     main()
