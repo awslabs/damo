@@ -73,7 +73,8 @@ class TestDamon(unittest.TestCase):
                 action='stat',
                 quotas=_damon.DamosQuotas(time_ms=0, sz_bytes=584792941,
                     reset_interval_ms=1000, weights=[0,0,0]),
-                watermarks=_damon.DamosWatermarks(0,0,0,0,0),
+                watermarks=_damon.DamosWatermarks(
+                    _damon.damos_wmarks_metric_none,0,0,0,0),
                 filters=[], stats=None)
         damos2 = copy.deepcopy(damos)
         self.assertEqual(damos, damos2)

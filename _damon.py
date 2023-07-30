@@ -483,6 +483,9 @@ class DamosWatermarks:
     def __init__(self, metric=damos_wmarks_metric_none, interval_us=0,
             high='0 %', mid='0 %', low='0 %'):
         # 'none' or 'free_mem_rate'
+        if not metric in [damos_wmarks_metric_none,
+                damos_wmarks_metric_free_mem_rate]:
+            raise Exception('wrong watermark metric (%s)' % metric)
         self.metric = metric
         self.interval_us = _damo_fmt_str.text_to_us(interval_us)
         self.high_permil = _damo_fmt_str.text_to_permil(high)
