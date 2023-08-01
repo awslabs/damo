@@ -7,6 +7,7 @@ Contains core functions for DAMON control.
 import collections
 import copy
 import os
+import random
 import time
 
 import _damo_fmt_str
