@@ -965,7 +965,7 @@ def update_schemes_status(stats=True, tried_regions=True):
         err = update_schemes_stats(idxs)
         if err != None:
             return err
-    if tried_regions:
+    if tried_regions and feature_supported('schemes_tried_regions'):
         return update_schemes_tried_regions(idxs)
     return None
 
