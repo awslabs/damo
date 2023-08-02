@@ -120,7 +120,7 @@ def add_region(regions, region, nr_acc_to_add):
             if region.start < r.start:
                 new_regions.append(_damon.DamonRegion(
                     region.start, r.start,
-                    region.nr_accesses.samples, _damon.unit_samepls,
+                    region.nr_accesses.samples, _damon.unit_samples,
                     region.age.aggr_intervals, _damon.unit_aggr_intervals))
             if r.end < region.end:
                 new_regions.append(_damon.DamonRegion(
