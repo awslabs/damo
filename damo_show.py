@@ -126,10 +126,12 @@ class MinMaxOfRecords:
 class RegionBarArgs:
     record_minmaxs = None
     min_max_cols = None
+    min_max_rows = None
 
-    def __init__(self, record_minmaxs, min_max_cols):
+    def __init__(self, record_minmaxs, min_max_cols, min_max_rows):
         self.record_minmaxs = record_minmaxs
         self.min_max_cols = min_max_cols
+        self.min_max_rows = min_max_rows
 
 def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     '''Return a value in new scale
@@ -223,7 +225,7 @@ def size_heat_age_bar(region, region_bar_args):
         [0, 9]))
     nr_rows = int(rescale_val_logscale(region.age.usec,
         [minmaxs.min_age_us, minmaxs.max_age_us],
-        [1, 5]))
+        region_bar_args.min_max_rows))
 
     row = '<%s>' % colored('%d' % heat_symbol * nr_cols,
             colorsets['gray'], heat_symbol)
@@ -305,7 +307,8 @@ def pr_records(args, records):
 
     set_formats(args, records)
     mms = MinMaxOfRecords(records)
-    region_bar_args = RegionBarArgs(mms, args.region_bar_min_max_cols)
+    region_bar_args = RegionBarArgs(mms, args.region_bar_min_max_cols,
+            args.region_bar_min_max_rows)
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_field, None, None,
@@ -446,6 +449,9 @@ def set_argparser(parser):
     parser.add_argument('--region_bar_min_max_cols', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 30],
             help='minimum and maximum number of columns for region bar')
+    parser.add_argument('--region_bar_min_max_rows', nargs=2, type=int,
+            metavar=('<min>', '<max>'), default=[1, 5],
+            help='minimum and maximum number of rows for region bar')
     parser.add_argument('--min_chars_field', nargs=2,
             metavar=('<field name>', '<number>'), action='append',
             default=[['<index>', 3],
