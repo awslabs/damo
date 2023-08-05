@@ -147,7 +147,7 @@ def rescale_val(val, orig_scale_minmax, new_scale_minmax):
 
 def size_bar(region, minmaxs, min_cols, max_cols):
     print(region.size())
-    nr_cols = int(rescale_val(region.size(),
+    nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
             [min_cols, max_cols]))
     return '<%s>' % ('-' * nr_cols)
@@ -194,7 +194,7 @@ def colored(txt, colorset, level):
     return color_prefix + txt + color_suffix
 
 def size_heat_bar(region, minmaxs, min_cols, max_cols):
-    nr_cols = int(rescale_val(region.size(),
+    nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
             [min_cols, max_cols]))
     heat_symbol = int(rescale_val(region.nr_accesses.percent,
@@ -205,13 +205,13 @@ def size_heat_bar(region, minmaxs, min_cols, max_cols):
             colorsets['gray'], heat_symbol)
 
 def size_heat_age_bar(region, minmaxs, min_cols, max_cols):
-    nr_cols = int(rescale_val(region.size(),
+    nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
             [min_cols, max_cols]))
     heat_symbol = int(rescale_val(region.nr_accesses.percent,
         [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
         [0, 9]))
-    nr_rows = int(rescale_val(region.age.usec,
+    nr_rows = int(rescale_val_logscale(region.age.usec,
         [minmaxs.min_age_us, minmaxs.max_age_us],
         [1, 5]))
 
