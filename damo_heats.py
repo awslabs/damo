@@ -97,18 +97,6 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
         return
     heat_unit = float(highest_heat + 1 - lowest_heat) / 9
 
-    colorsets = {
-        'gray':[
-            [232] * 10,
-            [237, 239, 241, 243, 245, 247, 249, 251, 253, 255]],
-        'flame':[
-            [232, 1, 1, 2, 3, 3, 20, 21,26, 27, 27],
-            [239, 235, 237, 239, 243, 245, 247, 249, 251, 255]],
-        'emotion':[
-            [232, 234, 20, 21, 26, 2, 3, 1, 1, 1],
-            [239, 235, 237, 239, 243, 245, 247, 249, 251, 255]],
-        }
-    colors = colorsets[colorset]
     for snapshot in pixels:
         chars = []
         for pixel in snapshot:
