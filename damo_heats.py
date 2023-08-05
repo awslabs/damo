@@ -113,7 +113,7 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
         chars = []
         for pixel in snapshot:
             heat = int(float(pixel.heat - lowest_heat) / heat_unit)
-            heat = min(heat, len(colors[0]) - 1)
+            heat = min(heat, _damo_ascii_color.max_color_level())
             chars.append('%s%d' %
                     (_damo_ascii_color.color_mode_start_txt(colorset, heat),
                         heat))
