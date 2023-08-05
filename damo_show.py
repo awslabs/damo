@@ -8,6 +8,7 @@ import os
 import random
 import time
 
+import _damo_ascii_color
 import _damo_fmt_str
 import _damon
 import _damon_args
@@ -185,26 +186,6 @@ def rescale_val_logscale(val, orig_scale_minmax, new_scale_minmax):
     log_minmax = [math.log(v, 2) if v > 0 else 0 for v in orig_scale_minmax]
     return rescale_val(log_val, log_minmax, new_scale_minmax)
 
-# {name: [[background colors], [foreground colors]]}
-colorsets = {
-    'gray':[
-        [232] * 10,
-        [237, 239, 241, 243, 245, 247, 249, 251, 253, 255]],
-    'flame':[
-        [232, 1, 1, 2, 3, 3, 20, 21,26, 27, 27],
-        [239, 235, 237, 239, 243, 245, 247, 249, 251, 255]],
-    'emotion':[
-        [232, 234, 20, 21, 26, 2, 3, 1, 1, 1],
-        [239, 235, 237, 239, 243, 245, 247, 249, 251, 255]],
-    }
-
-def colored(txt, colorset, level):
-    bg = colorset[0][level]
-    fg = colorset[1][level]
-    color_prefix = u'\u001b[48;5;%dm\u001b[38;5;%dm' % (bg, fg)
-    color_suffix = u'\u001b[0m'
-    return color_prefix + txt + color_suffix
-
 def size_heat_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
@@ -214,7 +195,7 @@ def size_heat_bar(region, region_bar_args):
         [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
         [0, 9]))
 
-    return '<%s>' % colored(('%d' % heat_symbol * nr_cols),
+    return '<%s>' % _damo_ascii_color.colored(('%d' % heat_symbol * nr_cols),
             region_bar_args.colorset, heat_symbol)
 
 def size_heat_age_bar(region, region_bar_args):
@@ -229,7 +210,7 @@ def size_heat_age_bar(region, region_bar_args):
         [minmaxs.min_age_us, minmaxs.max_age_us],
         region_bar_args.min_max_rows))
 
-    row = '<%s>' % colored('%d' % heat_symbol * nr_cols,
+    row = '<%s>' % _damo_ascii_color.colored('%d' % heat_symbol * nr_cols,
             region_bar_args.colorset, heat_symbol)
     return '\n'.join([row] * nr_rows) + '\n'
 
@@ -310,7 +291,8 @@ def pr_records(args, records):
     set_formats(args, records)
     mms = MinMaxOfRecords(records)
     region_bar_args = RegionBarArgs(mms, args.region_bar_min_max_cols,
-            args.region_bar_min_max_rows, colorsets[args.region_bar_colorset])
+            args.region_bar_min_max_rows,
+            _damo_ascii_color.colorsets[args.region_bar_colorset])
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_field, None, None,
