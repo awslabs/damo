@@ -118,9 +118,7 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
                     (_damo_ascii_color.color_mode_start_txt(colorset, heat),
                         heat))
         print(''.join(chars) + _damo_ascii_color.color_mode_end_txt())
-    color_samples = [u'\u001b[48;5;%dm\u001b[38;5;%dm %d ' %
-            (colors[0][i], colors[1][i], i) for i in range(10)]
-    print('# access_frequency: %s' % ''.join(color_samples) + u'\u001b[0m')
+    print('# access_frequency: %s' % _damo_ascii_color.color_samples(colorset))
     print('# x-axis: space (%d-%d: %s)' % (addr_range[0], addr_range[1],
         _damo_fmt_str.format_sz(addr_range[1] - addr_range[0], False)))
     print('# y-axis: time (%d-%d: %s)' % (time_range[0], time_range[1],
