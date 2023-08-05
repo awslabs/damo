@@ -361,6 +361,8 @@ def set_argparser(parser):
     parser.add_argument('--ascii_color',
             choices=['gray', 'flame', 'emotion'],
             help='another name of stdout_heatmap_color')
+    parser.add_argument('--plot_ascii', action='store_true',
+            help='shortcut of \'--heatmap stdout\'')
 
 def main(args=None):
     if not args:
@@ -368,9 +370,12 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    # --ascii_color is used in the demo screenshop[1].  Support it.
+    # --plot_ascii and --ascii_color is used in the demo screenshop[1].
+    # Support those.
     #
     # [1] https://sjp38.github.io/img/masim_stairs_heatmap_ascii.png
+    if args.heatmap == None and args.plot_ascii:
+        args.heatmap = 'stdout'
     if args.ascii_color != None and args.stdout_heatmap_color == None:
         args.stdout_heatmap_color = args.ascii_color
     if args.ascii_color == None and args.stdout_heatmap_color == None:
