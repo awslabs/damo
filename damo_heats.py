@@ -17,6 +17,7 @@ import subprocess
 import sys
 import tempfile
 
+import _damo_ascii_color
 import _damo_fmt_str
 import _damon_result
 
@@ -113,11 +114,10 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
         for pixel in snapshot:
             heat = int(float(pixel.heat - lowest_heat) / heat_unit)
             heat = min(heat, len(colors[0]) - 1)
-            bg = colors[0][heat]
-            fg = colors[1][heat]
-            chars.append(u'\u001b[48;5;%dm\u001b[38;5;%dm%d' %
-                    (bg, fg, heat))
-        print(''.join(chars) + u'\u001b[0m')
+            chars.append('%s%d' %
+                    (_damo_ascii_color.color_mode_start_txt(colorset, heat),
+                        heat))
+        print(''.join(chars) + _damo_ascii_color.color_mode_end_txt())
     color_samples = [u'\u001b[48;5;%dm\u001b[38;5;%dm %d ' %
             (colors[0][i], colors[1][i], i) for i in range(10)]
     print('# access_frequency: %s' % ''.join(color_samples) + u'\u001b[0m')
