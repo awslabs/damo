@@ -51,24 +51,24 @@ snapshot_formatters = {
             }
 
 region_formatters = {
-        '<index>': lambda index, region, raw, mms:
+        '<index>': lambda index, region, raw, rbargs:
             _damo_fmt_str.format_nr(index, raw),
-        '<start address>': lambda index, region, raw, mms:
+        '<start address>': lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.start, raw),
-        '<end address>': lambda index, region, raw, mms:
+        '<end address>': lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.end, raw),
-        '<region size>': lambda index, region, raw, mms:
+        '<region size>': lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.size(), raw),
-        '<access rate>': lambda index, region, raw, mms:
+        '<access rate>': lambda index, region, raw, rbargs:
             _damo_fmt_str.format_percent(region.nr_accesses.percent, raw),
-        '<age>': lambda index, region, raw, mms:
+        '<age>': lambda index, region, raw, rbargs:
             _damo_fmt_str.format_time_us(region.age.usec, raw),
-        '<size bar>': lambda index, region, raw, mms:
-           size_bar(region, mms, 0, 20),
-        '<size heat bar>': lambda index, region, raw, mms:
-           size_heat_bar(region, mms, 1, 20),
-        '<size heat age bar>': lambda index, region, raw, mms:
-           size_heat_age_bar(region, mms, 1, 20),
+        '<size bar>': lambda index, region, raw, rbargs:
+           size_bar(region, rbargs, 0, 20),
+        '<size heat bar>': lambda index, region, raw, rbargs:
+           size_heat_bar(region, rbargs, 1, 20),
+        '<size heat age bar>': lambda index, region, raw, rbargs:
+           size_heat_age_bar(region, rbargs, 1, 20),
 
         }
 
@@ -123,6 +123,12 @@ class MinMaxOfRecords:
                 for region in snapshot.regions:
                     self.set_fields(region, record.intervals)
 
+class RegionBarArgs:
+    record_minmaxs = None
+
+    def __init__(self, record_minmaxs):
+        self.record_minmaxs = record_minmaxs
+
 def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     '''Return a value in new scale
 
@@ -145,8 +151,9 @@ def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     ratio = new_length / orig_length if orig_length > 0 else 1
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
-def size_bar(region, minmaxs, min_cols, max_cols):
+def size_bar(region, rebion_bar_args, min_cols, max_cols):
     print(region.size())
+    minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
             [min_cols, max_cols]))
@@ -193,7 +200,8 @@ def colored(txt, colorset, level):
     color_suffix = u'\u001b[0m'
     return color_prefix + txt + color_suffix
 
-def size_heat_bar(region, minmaxs, min_cols, max_cols):
+def size_heat_bar(region, region_bar_args, min_cols, max_cols):
+    minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
             [min_cols, max_cols]))
@@ -204,7 +212,8 @@ def size_heat_bar(region, minmaxs, min_cols, max_cols):
     return '<%s>' % colored(('%d' % heat_symbol * nr_cols),
             colorsets['gray'], heat_symbol)
 
-def size_heat_age_bar(region, minmaxs, min_cols, max_cols):
+def size_heat_age_bar(region, region_bar_args, min_cols, max_cols):
+    minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
             [min_cols, max_cols]))
@@ -234,7 +243,8 @@ def apply_min_chars(min_chars, field_name, txt):
             return txt
     return txt
 
-def format_pr(template, min_chars, index, region, snapshot, record, raw, mms):
+def format_pr(template, min_chars, index, region, snapshot, record, raw, mms,
+        region_bar_args):
     if template == '':
         return
     for category, category_formatters in formatters.items():
@@ -246,7 +256,7 @@ def format_pr(template, min_chars, index, region, snapshot, record, raw, mms):
             elif category == 'snapshot':
                 txt = formatter(snapshot, record, raw)
             elif category == 'region':
-                txt = formatter(index, region, raw, mms)
+                txt = formatter(index, region, raw, region_bar_args)
             txt = apply_min_chars(min_chars, field_name, txt)
             template = template.replace(field_name, txt)
     template = template.replace('\\n', '\n')
@@ -294,29 +304,33 @@ def pr_records(args, records):
 
     set_formats(args, records)
     mms = MinMaxOfRecords(records)
+    region_bar_args = RegionBarArgs(mms)
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_field, None, None,
-                None, record, args.raw_number, mms)
+                None, record, args.raw_number, mms, region_bar_args)
         snapshots = record.snapshots
 
         for sidx, snapshot in enumerate(snapshots):
             format_pr(args.format_snapshot_head, args.min_chars_field, None,
-                    None, snapshot, record, args.raw_number, mms)
+                    None, snapshot, record, args.raw_number, mms,
+                    region_bar_args)
             for r in snapshot.regions:
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
             for idx, r in enumerate(
                     sorted_regions(snapshot.regions, args.sort_regions_by)):
                 format_pr(args.format_region, args.min_chars_field, idx, r,
-                        snapshot, record, args.raw_number, mms)
+                        snapshot, record, args.raw_number, mms,
+                        region_bar_args)
             format_pr(args.format_snapshot_tail, args.min_chars_field, None,
-                    None, snapshot, record, args.raw_number, mms)
+                    None, snapshot, record, args.raw_number, mms,
+                    region_bar_args)
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
         format_pr(args.format_record_tail, args.min_chars_field, None, None,
-                None, record, args.raw_number, mms)
+                None, record, args.raw_number, mms, region_bar_args)
 
 def filter_by_pattern(record, access_pattern):
     sz_bytes = access_pattern.sz_bytes
