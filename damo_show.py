@@ -68,6 +68,8 @@ region_formatters = {
            size_bar(region, rbargs),
         '<size heat bar>': lambda index, region, raw, rbargs:
            size_heat_bar(region, rbargs),
+        '<age heat bar>': lambda index, region, raw, rbargs:
+           age_heat_bar(region, rbargs),
         '<size heat age bar>': lambda index, region, raw, rbargs:
            size_heat_age_bar(region, rbargs),
 
@@ -190,6 +192,18 @@ def size_heat_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
+            region_bar_args.min_max_cols))
+    heat_symbol = int(rescale_val(region.nr_accesses.percent,
+        [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
+        [0, 9]))
+
+    return '<%s>' % _damo_ascii_color.colored(('%d' % heat_symbol * nr_cols),
+            region_bar_args.colorset, heat_symbol)
+
+def age_heat_bar(region, region_bar_args):
+    minmaxs = region_bar_args.record_minmaxs
+    nr_cols = int(rescale_val_logscale(region.age.usec,
+            [minmaxs.min_age_us, minmaxs.max_age_us],
             region_bar_args.min_max_cols))
     heat_symbol = int(rescale_val(region.nr_accesses.percent,
         [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
