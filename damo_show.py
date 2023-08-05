@@ -291,8 +291,7 @@ def pr_records(args, records):
     set_formats(args, records)
     mms = MinMaxOfRecords(records)
     region_bar_args = RegionBarArgs(mms, args.region_bar_min_max_cols,
-            args.region_bar_min_max_rows,
-            _damo_ascii_color.colorsets[args.region_bar_colorset])
+            args.region_bar_min_max_rows, args.region_bar_colorset)
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_field, None, None,
