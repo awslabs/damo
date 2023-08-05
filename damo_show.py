@@ -64,11 +64,11 @@ region_formatters = {
         '<age>': lambda index, region, raw, rbargs:
             _damo_fmt_str.format_time_us(region.age.usec, raw),
         '<size bar>': lambda index, region, raw, rbargs:
-           size_bar(region, rbargs, 0, 20),
+           size_bar(region, rbargs),
         '<size heat bar>': lambda index, region, raw, rbargs:
-           size_heat_bar(region, rbargs, 1, 20),
+           size_heat_bar(region, rbargs),
         '<size heat age bar>': lambda index, region, raw, rbargs:
-           size_heat_age_bar(region, rbargs, 1, 20),
+           size_heat_age_bar(region, rbargs),
 
         }
 
@@ -125,9 +125,11 @@ class MinMaxOfRecords:
 
 class RegionBarArgs:
     record_minmaxs = None
+    min_max_cols = None
 
-    def __init__(self, record_minmaxs):
+    def __init__(self, record_minmaxs, min_max_cols):
         self.record_minmaxs = record_minmaxs
+        self.min_max_cols = min_max_cols
 
 def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     '''Return a value in new scale
@@ -151,11 +153,11 @@ def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     ratio = new_length / orig_length if orig_length > 0 else 1
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
-def size_bar(region, rebion_bar_args, min_cols, max_cols):
+def size_bar(region, rebion_bar_args):
     minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
-            [min_cols, max_cols]))
+            region_bar_args.min_max_cols))
     return '<%s>' % ('-' * nr_cols)
 
 def rescale_val_logscale(val, orig_scale_minmax, new_scale_minmax):
@@ -199,11 +201,11 @@ def colored(txt, colorset, level):
     color_suffix = u'\u001b[0m'
     return color_prefix + txt + color_suffix
 
-def size_heat_bar(region, region_bar_args, min_cols, max_cols):
+def size_heat_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
-            [min_cols, max_cols]))
+            region_bar_args.min_max_cols))
     heat_symbol = int(rescale_val(region.nr_accesses.percent,
         [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
         [0, 9]))
@@ -211,11 +213,11 @@ def size_heat_bar(region, region_bar_args, min_cols, max_cols):
     return '<%s>' % colored(('%d' % heat_symbol * nr_cols),
             colorsets['gray'], heat_symbol)
 
-def size_heat_age_bar(region, region_bar_args, min_cols, max_cols):
+def size_heat_age_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
-            [min_cols, max_cols]))
+            region_bar_args.min_max_cols))
     heat_symbol = int(rescale_val(region.nr_accesses.percent,
         [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
         [0, 9]))
@@ -303,7 +305,7 @@ def pr_records(args, records):
 
     set_formats(args, records)
     mms = MinMaxOfRecords(records)
-    region_bar_args = RegionBarArgs(mms)
+    region_bar_args = RegionBarArgs(mms, args.region_bar_min_max_cols)
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_field, None, None,
@@ -441,6 +443,9 @@ def set_argparser(parser):
     parser.add_argument('--format_region', metavar='<template>',
             default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
             help='region output format')
+    parser.add_argument('--region_bar_min_max_cols', nargs=2, type=int,
+            metavar=('<min>', '<max>'), default=[1, 30],
+            help='minimum and maximum number of columns for region bar')
     parser.add_argument('--min_chars_field', nargs=2,
             metavar=('<field name>', '<number>'), action='append',
             default=[['<index>', 3],
