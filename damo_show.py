@@ -152,7 +152,6 @@ def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
 def size_bar(region, rebion_bar_args, min_cols, max_cols):
-    print(region.size())
     minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
