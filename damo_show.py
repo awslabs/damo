@@ -180,7 +180,8 @@ def size_heat_bar(region, minmaxs, min_cols, max_cols):
         [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
         [0, 9]))
 
-    return '<%s>' % ('%d' % heat_symbol * nr_cols)
+    return '<%s>' % colored(('%d' % heat_symbol * nr_cols),
+            colorsets['gray'], heat_symbol)
 
 def size_heat_age_bar(region, minmaxs, min_cols, max_cols):
     nr_cols = int(rescale_val(region.size(),
@@ -193,7 +194,8 @@ def size_heat_age_bar(region, minmaxs, min_cols, max_cols):
         [minmaxs.min_age_us, minmaxs.max_age_us],
         [1, 5]))
 
-    row = '<%s>' % ('%d' % heat_symbol * nr_cols)
+    row = '<%s>' % colored('%d' % heat_symbol * nr_cols,
+            colorsets['gray'], heat_symbol)
     return '\n'.join([row] * nr_rows) + '\n'
 
 def apply_min_chars(min_chars, field_name, txt):
