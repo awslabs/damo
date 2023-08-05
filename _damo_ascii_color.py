@@ -39,3 +39,11 @@ def color_samples(colorset_name):
             '%d' % level))
     samples.append(color_mode_end_txt())
     return ''.join(samples)
+
+def main():
+    for colorset_name in colorsets:
+        print('colorset_name')
+        print(color_samples(colorset_name))
+
+if __name__ == '__main__':
+    main()
