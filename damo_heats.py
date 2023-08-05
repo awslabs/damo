@@ -356,14 +356,25 @@ def set_argparser(parser):
     parser.add_argument('--heatmap', metavar='<file>', type=str,
             help='heatmap image file to create.  stdout for terminal output')
     parser.add_argument('--stdout_heatmap_color',
-            choices=['gray', 'flame', 'emotion'], default='gray',
+            choices=['gray', 'flame', 'emotion'],
             help='color theme for access frequencies')
+    parser.add_argument('--ascii_color',
+            choices=['gray', 'flame', 'emotion'],
+            help='another name of stdout_heatmap_color')
 
 def main(args=None):
     if not args:
         parser = argparse.ArgumentParser()
         set_argparser(parser)
         args = parser.parse_args()
+
+    # --ascii_color is used in the demo screenshop[1].  Support it.
+    #
+    # [1] https://sjp38.github.io/img/masim_stairs_heatmap_ascii.png
+    if args.ascii_color != None and args.stdout_heatmap_color == None:
+        args.stdout_heatmap_color = args.ascii_color
+    if args.ascii_color == None and args.stdout_heatmap_color == None:
+        args.stdout_heatmap_color = 'gray'
 
     records, err = _damon_result.parse_records_file(args.input)
     if err != None:
