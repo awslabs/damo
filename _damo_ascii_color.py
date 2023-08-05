@@ -31,3 +31,11 @@ def color_mode_end_txt():
 def colored(txt, colorset_name, level):
     return ''.join([color_mode_start_txt(colorset_name, level), txt,
         color_mode_end_txt()])
+
+def color_samples(colorset_name):
+    samples = []
+    for level in range(max_color_level() + 1):
+        samples.append('%s%s' % (color_mode_start_txt(colorset_name, level),
+            '%d' % level))
+    samples.append(color_mode_end_txt())
+    return ''.join(samples)
