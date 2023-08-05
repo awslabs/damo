@@ -436,14 +436,20 @@ def set_argparser(parser):
     parser.add_argument('--format_record_tail', metavar='<template>',
             default='',
             help='record output tail format')
+    parser.add_argument('--ls_record_format_keywords', action='store_true',
+            help='list available record format keywords')
     parser.add_argument('--format_snapshot_head', metavar='<template>',
             help='snapshot output tail format')
     parser.add_argument('--format_snapshot_tail', metavar='<template>',
             default='total size: <total bytes>',
             help='snapshot output tail format')
+    parser.add_argument('--ls_snapshot_format_keywords', action='store_true',
+            help='list available snapshot format keywords')
     parser.add_argument('--format_region', metavar='<template>',
             default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
             help='region output format')
+    parser.add_argument('--ls_region_format_keywords', action='store_true',
+            help='list available region format keywords')
     parser.add_argument('--region_bar_min_max_cols', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 30],
             help='minimum and maximum number of columns for region bar')
@@ -484,6 +490,16 @@ def main(args=None):
     access_pattern = _damon.DamosAccessPattern(args.sz_region,
             args.access_rate, _damon.unit_percent, args.age * 1000000,
             _damon.unit_usec)
+
+    if args.ls_record_format_keywords:
+        print('\n'.join(record_formatters.keys()))
+        return
+    if args.ls_snapshot_format_keywords:
+        print('\n'.join(snapshot_formatters.keys()))
+        return
+    if args.ls_region_format_keywords:
+        print('\n'.join(region_formatters.keys()))
+        return
 
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args)
