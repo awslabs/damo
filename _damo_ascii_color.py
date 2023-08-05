@@ -16,7 +16,7 @@ colorsets = {
 def max_color_level():
     return len(colorsets['gray'][0]) - 1
 
-def colored(txt, colorset_name, level):
+def colored(txt, colorset_name, level, reset_color_mode=True):
     if not colorset_name in colorsets:
         raise Exception('wrong colorset (%s)' % colorset)
 
@@ -24,5 +24,7 @@ def colored(txt, colorset_name, level):
     bg = colorset[0][level]
     fg = colorset[1][level]
     color_prefix = u'\u001b[48;5;%dm\u001b[38;5;%dm' % (bg, fg)
+    if not reset_color_mode:
+        return color_prefix + txt
     color_suffix = u'\u001b[0m'
     return color_prefix + txt + color_suffix
