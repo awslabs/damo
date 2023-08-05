@@ -13,6 +13,9 @@ colorsets = {
         [239, 235, 237, 239, 243, 245, 247, 249, 251, 255]],
     }
 
+def max_color_level():
+    return len(colorsets['gray'][0]) - 1
+
 def colored(txt, colorset_name, level):
     if not colorset_name in colorsets:
         raise Exception('wrong colorset (%s)' % colorset)
