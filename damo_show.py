@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
+import collections
 import copy
 import json
 import math
@@ -14,7 +15,7 @@ import _damon
 import _damon_args
 import _damon_result
 
-record_formatters = {
+record_formatters = collections.OrderedDict({
         '<kdamond index>': lambda record, raw:
             '%s' % record.kdamond_idx,
         '<context index>': lambda record, raw:
@@ -29,9 +30,9 @@ record_formatters = {
             _damo_fmt_str.format_time_ns(
                 record.snapshots[-1].end_time - record.snapshots[0].start_time,
                 raw)
-            }
+            })
 
-snapshot_formatters = {
+snapshot_formatters = collections.OrderedDict({
         '<total bytes>': lambda snapshot, record, raw:
             _damo_fmt_str.format_sz(snapshot.total_bytes, raw),
         '<monitor duration>': lambda snapshot, record, raw:
@@ -49,9 +50,9 @@ snapshot_formatters = {
             _damo_fmt_str.format_time_ns(snapshot.end_time, raw),
         '<number of regions>': lambda snapshot, record, raw:
             _damo_fmt_str.format_nr(len(snapshot.regions), raw),
-            }
+            })
 
-region_formatters = {
+region_formatters = collections.OrderedDict({
         '<index>': lambda index, region, raw, rbargs:
             _damo_fmt_str.format_nr(index, raw),
         '<start address>': lambda index, region, raw, rbargs:
@@ -73,7 +74,7 @@ region_formatters = {
         '<size heat age bar>': lambda index, region, raw, rbargs:
            size_heat_age_bar(region, rbargs),
 
-        }
+        })
 
 formatters = {
         'record': record_formatters,
