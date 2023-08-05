@@ -127,11 +127,13 @@ class RegionBarArgs:
     record_minmaxs = None
     min_max_cols = None
     min_max_rows = None
+    colorset = None
 
-    def __init__(self, record_minmaxs, min_max_cols, min_max_rows):
+    def __init__(self, record_minmaxs, min_max_cols, min_max_rows, colorset):
         self.record_minmaxs = record_minmaxs
         self.min_max_cols = min_max_cols
         self.min_max_rows = min_max_rows
+        self.colorset = colorset
 
 def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     '''Return a value in new scale
@@ -213,7 +215,7 @@ def size_heat_bar(region, region_bar_args):
         [0, 9]))
 
     return '<%s>' % colored(('%d' % heat_symbol * nr_cols),
-            colorsets['gray'], heat_symbol)
+            region_bar_args.colorset, heat_symbol)
 
 def size_heat_age_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
@@ -228,7 +230,7 @@ def size_heat_age_bar(region, region_bar_args):
         region_bar_args.min_max_rows))
 
     row = '<%s>' % colored('%d' % heat_symbol * nr_cols,
-            colorsets['gray'], heat_symbol)
+            region_bar_args.colorset, heat_symbol)
     return '\n'.join([row] * nr_rows) + '\n'
 
 def apply_min_chars(min_chars, field_name, txt):
@@ -308,7 +310,7 @@ def pr_records(args, records):
     set_formats(args, records)
     mms = MinMaxOfRecords(records)
     region_bar_args = RegionBarArgs(mms, args.region_bar_min_max_cols,
-            args.region_bar_min_max_rows)
+            args.region_bar_min_max_rows, colorsets[args.region_bar_colorset])
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_field, None, None,
@@ -452,6 +454,9 @@ def set_argparser(parser):
     parser.add_argument('--region_bar_min_max_rows', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 5],
             help='minimum and maximum number of rows for region bar')
+    parser.add_argument('--region_bar_colorset', default='gray',
+            choices=['gray', 'flame', 'emotion'],
+            help='colorset to use for region bars')
     parser.add_argument('--min_chars_field', nargs=2,
             metavar=('<field name>', '<number>'), action='append',
             default=[['<index>', 3],
