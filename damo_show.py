@@ -253,10 +253,10 @@ def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
     else:
         nr_rows = 1
     if type(yval) == str:
-        row = yval * nr_cols
+        row = '<%s>' % (yval * nr_cols)
     else:
         color_level = int(rescale_val(yval, yval_minmaxs[0], [0, 9]))
-        row =_damo_ascii_color.colored(('%d' % color_level) * nr_cols,
+        row = '<%s>' % _damo_ascii_color.colored(('%d' % color_level) * nr_cols,
                 colorset, char)
     return '\n'.join([row] * nr_rows) + '\n'
 
