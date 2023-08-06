@@ -3,10 +3,10 @@ picked by human sense, so could be incomplete and missing many things.
 
 v1.9.3
 - Restore --ascii_color and --plot_ascii of 'damo report heat'
-- Support coloring of region bars
-- Implement '<age heat bar>'
-- Make region bar to use logscale for columns and rows
-- Support more region bar handling
+- damo show: Support coloring of region box
+- damo show: Implement '<age heat bar>'
+- damo show: Make region box to use logscale for columns and rows
+- damo show: Support more region box customizations
 
 v1.9.2
 - Support DAMOS filters, quotas, and watermarks via command line
