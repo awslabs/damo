@@ -283,15 +283,14 @@ def size_heat_bar(region, region_bar_args):
 
 def age_heat_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
-    nr_cols = int(rescale_val_logscale(region.age.usec,
-            [minmaxs.min_age_us, minmaxs.max_age_us],
-            region_bar_args.min_max_cols))
-    heat_symbol = int(rescale_val(region.nr_accesses.percent,
-        [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
-        [0, 9]))
-
-    return '<%s>' % _damo_ascii_color.colored(('%d' % heat_symbol * nr_cols),
-            region_bar_args.colorset, heat_symbol)
+    return ascii_box(region.age.usec,
+            [[minmaxs.min_age_us, minmaxs.max_age_us],
+                region_bar_args.min_max_cols],
+            region.nr_accesses.percent,
+            [[minmaxs.min_access_rate_percent,
+                minmaxs.max_access_rate_percent], [0, 9]],
+            region_bar_args.colorset,
+            None, None)
 
 def size_heat_age_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
