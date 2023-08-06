@@ -265,10 +265,10 @@ def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
 
 def size_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
-    nr_cols = int(rescale_val_logscale(region.size(),
-            [minmaxs.min_sz_region, minmaxs.max_sz_region],
-            region_bar_args.min_max_cols))
-    return '<%s>' % ('-' * nr_cols)
+    return ascii_box(region.size(), '-', None,
+            [[minmaxs.min_sz_region, minmaxs.max_sz_region],
+                region_bar_args.min_max_cols],
+            None, None, None)
 
 def size_heat_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
