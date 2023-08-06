@@ -218,6 +218,58 @@ def rescale_val_logscale(val, orig_scale_minmax, new_scale_minmax):
     log_minmax = [math.log(v, 2) if v > 0 else 0 for v in orig_scale_minmax]
     return rescale_val(log_val, log_minmax, new_scale_minmax)
 
+class ColoredBox:
+    column_val = None
+    column_val_minmaxs = None
+
+    color_val = None
+    color_val_minmaxs = None
+    colorset = None
+
+    row_val = None
+    row_val_minmaxs = None
+
+    nr_columns_minmaxs = None
+    nr_rows_minmaxs = None
+
+    def __init__(self, column_val, column_val_minmaxs, nr_columns_minmaxs,
+            color_val, color_val_minmaxs, colorset,
+            row_val, row_val_minmaxs, nr_rows_minmaxs):
+        self.column_val = column_val
+        self.column_val_minmaxs = column_val_minmaxs
+        self.nr_columns_minmaxs = nr_columns_minmaxs
+
+        self.color_val = color_val
+        self.color_val_minmaxs = column_val_minmaxs
+        self.colorset = colorset
+
+        self.row_val = row_val
+        self.row_val_minmaxs = row_val_minmaxs
+        self.nr_rows_minmaxs = nr_rows_minmaxs
+
+    def __str__(self):
+        nr_cols = int(rescale_val_logscale(self.column_val,
+            self.column_val_minmaxs, self.nr_columns_minmaxs))
+
+        if self.row_val != None:
+            nr_rows = int(rescale_val_logscale(self.row_val,
+                self.row_val_minmaxs, self.nr_rows_minmaxs))
+        else:
+            nr_rows = 1
+
+        if type(self.color_val) == str:
+            row = '<%s>' % (self.color_val * nr_cols)
+        else:
+            color_level = int(rescale_val(self.color_val,
+                self.color_val_minmaxs, [0, 9]))
+            row = '<%s>' % _damo_ascii_color.colored(
+                    ('%d' % color_level) * nr_cols, self.colorset, color_level)
+
+        rows = '\n'.join([row] * nr_rows)
+        if nr_rows > 1:
+            rows += '\n'
+        return rows
+
 def ascii_box(xval, xval_minmaxs, yval, yval_minmaxs, colorset,
         zval, zval_minmaxs):
     '''Create ascii box with x/y/z values
