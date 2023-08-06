@@ -197,13 +197,6 @@ def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     ratio = new_length / orig_length if orig_length > 0 else 1
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
-def size_bar(region, rebion_bar_args):
-    minmaxs = region_bar_args.record_minmaxs
-    nr_cols = int(rescale_val_logscale(region.size(),
-            [minmaxs.min_sz_region, minmaxs.max_sz_region],
-            region_bar_args.min_max_cols))
-    return '<%s>' % ('-' * nr_cols)
-
 def rescale_val_logscale(val, orig_scale_minmax, new_scale_minmax):
     '''Return a value in new scale, in logscale
 
@@ -224,6 +217,13 @@ def rescale_val_logscale(val, orig_scale_minmax, new_scale_minmax):
     log_val = math.log(val, 2) if val > 0 else 0
     log_minmax = [math.log(v, 2) if v > 0 else 0 for v in orig_scale_minmax]
     return rescale_val(log_val, log_minmax, new_scale_minmax)
+
+def size_bar(region, rebion_bar_args):
+    minmaxs = region_bar_args.record_minmaxs
+    nr_cols = int(rescale_val_logscale(region.size(),
+            [minmaxs.min_sz_region, minmaxs.max_sz_region],
+            region_bar_args.min_max_cols))
+    return '<%s>' % ('-' * nr_cols)
 
 def size_heat_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
