@@ -25,66 +25,101 @@ class Formatter:
             self.format_fn = format_fn
             self.help_msg = help_msg
 
-record_formatters = collections.OrderedDict({
-        '<kdamond index>': lambda record, raw:
-            '%s' % record.kdamond_idx,
-        '<context index>': lambda record, raw:
-            '%s' % record.context_idx,
-        '<scheme index>': lambda record, raw:
-            '%s' % record.scheme_idx,
-        '<target id>': lambda record, raw:
-            '%s' % record.target_id,
-        '<record start abs time>': lambda record, raw:
+record_formatters = [
+        Formatter('<kdamond index>',
+            lambda record, raw: '%s' % record.kdamond_idx,
+            'index of the record\'s kdamond'),
+        Formatter('<context index>',
+            lambda record, raw: '%s' % record.context_idx,
+            'index of the record\'s DAMON context'),
+        Formatter('<scheme index>',
+            lambda record, raw: '%s' % record.scheme_idx,
+            'index of the record\'s DAMOS scheme'),
+        Formatter('<target id>',
+            lambda record, raw: '%s' % record.target_id,
+            'index of the record\'s DAMON target'),
+        Formatter('<record start abs time>',
+            lambda record, raw:
             _dmo_fmt_str.format_ns(record.snapshots[0].start_time, raw),
-        '<record duration>': lambda record, raw:
+            'absolute time of the start of the record'),
+        Formatter('<record duration>',
+            lambda record, raw:
             _damo_fmt_str.format_time_ns(
                 record.snapshots[-1].end_time - record.snapshots[0].start_time,
-                raw)
-            })
+                raw),
+            'duration of the record'),
+        ]
 
-snapshot_formatters = collections.OrderedDict({
-        '<total bytes>': lambda snapshot, record, raw:
+snapshot_formatters = [
+        Formatter('<total bytes>',
+            lambda snapshot, record, raw:
             _damo_fmt_str.format_sz(snapshot.total_bytes, raw),
-        '<monitor duration>': lambda snapshot, record, raw:
-            _damo_fmt_str.format_time_ns(
+            ''),
+        Formatter('<monitor duration>',
+            lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
                 snapshot.end_time - snapshot.start_time, raw),
-        '<monitor start time>': lambda snapshot, record, raw:
-            _damo_fmt_str.format_time_ns(
+            ''),
+        Formatter('<monitor start time>',
+            lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
                 snapshot.start_time - record.snapshots[0].start_time, raw),
-        '<monitor end time>': lambda snapshot, record, raw:
-            _damo_fmt_str.format_time_ns(
+            ''),
+        Formatter('<monitor end time>',
+            lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
                 snapshot.end_time - record.snapshots[0].start_time, raw),
-        '<monitor start abs time>': lambda snapshot, record, raw:
+            ''),
+        Formatter('<monitor start abs time>',
+            lambda snapshot, record, raw:
             _damo_fmt_str.format_time_ns(snapshot.start_time, raw),
-        '<monitor end abs time>': lambda snapshot, record, raw:
+            ''),
+        Formatter('<monitor end abs time>',
+            lambda snapshot, record, raw:
             _damo_fmt_str.format_time_ns(snapshot.end_time, raw),
-        '<number of regions>': lambda snapshot, record, raw:
+            ''),
+        Formatter('<number of regions>',
+            lambda snapshot, record, raw:
             _damo_fmt_str.format_nr(len(snapshot.regions), raw),
-            })
+            ''),
+        ]
 
-region_formatters = collections.OrderedDict({
-        '<index>': lambda index, region, raw, rbargs:
+region_formatters = [
+        Formatter('<index>',
+            lambda index, region, raw, rbargs:
             _damo_fmt_str.format_nr(index, raw),
-        '<start address>': lambda index, region, raw, rbargs:
+            ''),
+        Formatter('<start address>',
+            lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.start, raw),
-        '<end address>': lambda index, region, raw, rbargs:
+            ''),
+        Formatter('<end address>',
+            lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.end, raw),
-        '<region size>': lambda index, region, raw, rbargs:
+            ''),
+        Formatter('<region size>',
+            lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.size(), raw),
-        '<access rate>': lambda index, region, raw, rbargs:
+            ''),
+        Formatter('<access rate>',
+            lambda index, region, raw, rbargs:
             _damo_fmt_str.format_percent(region.nr_accesses.percent, raw),
-        '<age>': lambda index, region, raw, rbargs:
+            ''),
+        Formatter('<age>',
+            lambda index, region, raw, rbargs:
             _damo_fmt_str.format_time_us(region.age.usec, raw),
-        '<size bar>': lambda index, region, raw, rbargs:
-           size_bar(region, rbargs),
-        '<size heat bar>': lambda index, region, raw, rbargs:
-           size_heat_bar(region, rbargs),
-        '<age heat bar>': lambda index, region, raw, rbargs:
-           age_heat_bar(region, rbargs),
-        '<size heat age bar>': lambda index, region, raw, rbargs:
-           size_heat_age_bar(region, rbargs),
-
-        })
+            ''),
+        Formatter('<size bar>',
+            lambda index, region, raw, rbargs: size_bar(region, rbargs),
+            ''),
+        Formatter('<size heat bar>',
+            lambda index, region, raw, rbargs: size_heat_bar(region, rbargs),
+           ''),
+        Formatter('<age heat bar>',
+            lambda index, region, raw, rbargs: age_heat_bar(region, rbargs),
+            ''),
+        Formatter('<size heat age bar>',
+            lambda index, region, raw, rbargs: size_heat_age_bar(region,
+                rbargs),
+            ''),
+        ]
 
 formatters = {
         'record': record_formatters,
@@ -259,15 +294,16 @@ def format_pr(template, min_chars, index, region, snapshot, record, raw, mms,
     if template == '':
         return
     for category, category_formatters in formatters.items():
-        for field_name, formatter in category_formatters.items():
+        for formatter in category_formatters:
+            field_name = formatter.keyword
             if template.find(field_name) == -1:
                 continue
             if category == 'record':
-                txt = formatter(record, raw)
+                txt = formatter.format_fn(record, raw)
             elif category == 'snapshot':
-                txt = formatter(snapshot, record, raw)
+                txt = formatter.format_fn(snapshot, record, raw)
             elif category == 'region':
-                txt = formatter(index, region, raw, region_bar_args)
+                txt = formatter.format_fn(index, region, raw, region_bar_args)
             txt = apply_min_chars(min_chars, field_name, txt)
             template = template.replace(field_name, txt)
     template = template.replace('\\n', '\n')
@@ -502,13 +538,13 @@ def main(args=None):
             _damon.unit_usec)
 
     if args.ls_record_format_keywords:
-        print('\n'.join(record_formatters.keys()))
+        print('\n'.join([f.keyword for f in record_formatters]))
         return
     if args.ls_snapshot_format_keywords:
-        print('\n'.join(snapshot_formatters.keys()))
+        print('\n'.join([f.keyword for f in snapshot_formatters]))
         return
     if args.ls_region_format_keywords:
-        print('\n'.join(region_formatters.keys()))
+        print('\n'.join([f.keyword for f in region_formatters]))
         return
 
     if args.input_file == None:
