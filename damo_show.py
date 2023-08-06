@@ -15,6 +15,16 @@ import _damon
 import _damon_args
 import _damon_result
 
+class Formatter:
+    keyword = None
+    format_fn = None
+    help_msg = None
+
+    def __init__(self, keyword, format_fn, help_msg):
+            self.keyword = keyword
+            self.format_fn = format_fn
+            self.help_msg = help_msg
+
 record_formatters = collections.OrderedDict({
         '<kdamond index>': lambda record, raw:
             '%s' % record.kdamond_idx,
