@@ -85,40 +85,40 @@ region_formatters = [
         Formatter('<index>',
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_nr(index, raw),
-            ''),
+            'index of the region in the regions of the snapshot'),
         Formatter('<start address>',
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.start, raw),
-            ''),
+            'start address of the region'),
         Formatter('<end address>',
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.end, raw),
-            ''),
+            'end address of the region'),
         Formatter('<region size>',
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.size(), raw),
-            ''),
+            'size of the region'),
         Formatter('<access rate>',
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_percent(region.nr_accesses.percent, raw),
-            ''),
+            'monitored access rate of the region'),
         Formatter('<age>',
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_time_us(region.age.usec, raw),
-            ''),
+            'how long the access pattern of the region has maintained'),
         Formatter('<size bar>',
             lambda index, region, raw, rbargs: size_bar(region, rbargs),
-            ''),
+            'character box representing relative size of the region'),
         Formatter('<size heat bar>',
             lambda index, region, raw, rbargs: size_heat_bar(region, rbargs),
-           ''),
+           'character box representing relative size and access frequency of the region'),
         Formatter('<age heat bar>',
             lambda index, region, raw, rbargs: age_heat_bar(region, rbargs),
-            ''),
+            'character box represeting relative age and access frequency of the region'),
         Formatter('<size heat age bar>',
             lambda index, region, raw, rbargs: size_heat_age_bar(region,
                 rbargs),
-            ''),
+            'character box representing relative size, access frequency, and the age of the region'),
         ]
 
 formatters = {
