@@ -54,31 +54,31 @@ snapshot_formatters = [
         Formatter('<total bytes>',
             lambda snapshot, record, raw:
             _damo_fmt_str.format_sz(snapshot.total_bytes, raw),
-            ''),
+            'total bytes of regions in the snapshot'),
         Formatter('<monitor duration>',
             lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
                 snapshot.end_time - snapshot.start_time, raw),
-            ''),
+            'access monitoring duration for the snapshot'),
         Formatter('<monitor start time>',
             lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
                 snapshot.start_time - record.snapshots[0].start_time, raw),
-            ''),
+            'access monitoring start time for the snapshot, relative to the record start time'),
         Formatter('<monitor end time>',
             lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
                 snapshot.end_time - record.snapshots[0].start_time, raw),
-            ''),
+            'access monitoring end time for the snapshot, relative to the record end time'),
         Formatter('<monitor start abs time>',
             lambda snapshot, record, raw:
             _damo_fmt_str.format_time_ns(snapshot.start_time, raw),
-            ''),
+            'absolute access monitoring start time for the snapshot'),
         Formatter('<monitor end abs time>',
             lambda snapshot, record, raw:
             _damo_fmt_str.format_time_ns(snapshot.end_time, raw),
-            ''),
+            'absolute access monitoring end time for the snapshot'),
         Formatter('<number of regions>',
             lambda snapshot, record, raw:
             _damo_fmt_str.format_nr(len(snapshot.regions), raw),
-            ''),
+            'the number of regions in the snapshot'),
         ]
 
 region_formatters = [
