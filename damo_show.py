@@ -267,11 +267,19 @@ class RegionBoxArgs:
     min_max_rows = None
     colorset = None
 
-    def __init__(self, record_minmaxs, min_max_cols, min_max_rows, colorset):
+    col_val_name = None
+    color_val_name = None
+    row_val_name = None
+
+    def __init__(self, record_minmaxs, min_max_cols, min_max_rows, colorset,
+            col_val_name=None, color_val_name=None, row_val_name=None):
         self.record_minmaxs = record_minmaxs
         self.min_max_cols = min_max_cols
         self.min_max_rows = min_max_rows
         self.colorset = colorset
+        self.col_val_name = col_val_name
+        self.color_val_name = color_val_name
+        self.row_val_name = row_val_name
 
     def val_minmax(self, region, value_name):
         mms = self.record_minmaxs
@@ -285,6 +293,13 @@ class RegionBoxArgs:
         return None, None
 
     def to_str(self, region, col_val_name, color_val_name, row_val_name):
+        if col_val_name == None:
+            col_val_name = self.col_val_name
+        if color_val_name == None:
+            color_val_name = self.color_val_name
+        if row_val_name == None:
+            row_val_name = self.row_val_name
+
         cval, cval_minmax = self.val_minmax(region, col_val_name)
         clval, clval_minmax = self.val_minmax(region, color_val_name)
         if clval == None:
