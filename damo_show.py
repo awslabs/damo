@@ -218,6 +218,39 @@ def rescale_val_logscale(val, orig_scale_minmax, new_scale_minmax):
     log_minmax = [math.log(v, 2) if v > 0 else 0 for v in orig_scale_minmax]
     return rescale_val(log_val, log_minmax, new_scale_minmax)
 
+def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
+        colorset):
+    '''Create ascii box with x/y/z values
+
+    Parameters
+    ----------
+    xval : int, float
+        The value to be represented by the number of columns of the box
+    yval : int, float
+        The value to be represented by the character and color of the hox
+    zval : int, float
+        The value to be represented by the number of rows of the box
+    xval_minmaxs : list
+        A list of min/max values of original x value and columns of the box
+    yval_minmaxs : list
+        A list of min/max values of original z value and character of the box
+    zval_minmaxs : list
+        A list of min/max values of original y value and rows of the box
+    colorset : str
+        colorset string that _damo_ascii_color accepts
+
+    Returns
+    -------
+    str
+        The string representing the box
+    '''
+    nr_cols = int(rescale_val_logscale(xval, xval_minmaxs[0], xval_minmaxs[1]))
+    color_level = int(rescale_val(yval, yval_minmaxs[0], [0, 9]))
+    nr_rows = int(rescale_val_logscale(zval, zval_minmaxs[0], zval_minmaxs[1]))
+    row =_damo_ascii_color.colored(('%d' % color_level) * nr_cols, colorset,
+            char)
+    return '\n'.join([row] * nr_rows) + '\n'
+
 def size_bar(region, rebion_bar_args):
     minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
