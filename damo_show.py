@@ -218,28 +218,28 @@ def rescale_val_logscale(val, orig_scale_minmax, new_scale_minmax):
     log_minmax = [math.log(v, 2) if v > 0 else 0 for v in orig_scale_minmax]
     return rescale_val(log_val, log_minmax, new_scale_minmax)
 
-def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
-        colorset):
+def ascii_box(xval, xval_minmaxs, yval, yval_minmaxs, colorset,
+        zval, zval_minmaxs):
     '''Create ascii box with x/y/z values
 
     Parameters
     ----------
     xval : int, float
         The value to be represented by the number of columns of the box
+    xval_minmaxs : list
+        A list of min/max values of original x value and columns of the box
     yval : int, float, str
         The value to be represented by the character and color of the hox.
         If it's str, it's the character with no color.
+    yval_minmaxs : list
+        A list of min/max values of original z value and character of the box.
+    colorset : str
+        colorset string that _damo_ascii_color accepts
     zval : int, float
         The value to be represented by the number of rows of the box.
         If this is None, number of rows becomes one.
-    xval_minmaxs : list
-        A list of min/max values of original x value and columns of the box
-    yval_minmaxs : list
-        A list of min/max values of original z value and character of the box
     zval_minmaxs : list
         A list of min/max values of original y value and rows of the box
-    colorset : str
-        colorset string that _damo_ascii_color accepts
 
     Returns
     -------
@@ -265,13 +265,14 @@ def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
 
 def size_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
-    return ascii_box(region.size(), '-', None,
+    return ascii_box(region.size(),
             [[minmaxs.min_sz_region, minmaxs.max_sz_region],
                 region_bar_args.min_max_cols],
-            None, None, None)
+            '-', None, None, None, None)
 
 def size_heat_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
+
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
             region_bar_args.min_max_cols))
