@@ -25,6 +25,9 @@ class Formatter:
             self.format_fn = format_fn
             self.help_msg = help_msg
 
+    def __str__(self):
+        return '%s\n%s' % (self.keyword, self.help_msg)
+
 record_formatters = [
         Formatter('<kdamond index>',
             lambda record, raw: '%s' % record.kdamond_idx,
@@ -538,13 +541,13 @@ def main(args=None):
             _damon.unit_usec)
 
     if args.ls_record_format_keywords:
-        print('\n'.join([f.keyword for f in record_formatters]))
+        print('\n\n'.join(['%s' % f for f in record_formatters]))
         return
     if args.ls_snapshot_format_keywords:
-        print('\n'.join([f.keyword for f in snapshot_formatters]))
+        print('\n\n'.join(['%s' % f for f in snapshot_formatters]))
         return
     if args.ls_region_format_keywords:
-        print('\n'.join([f.keyword for f in region_formatters]))
+        print('\n\n'.join(['%s' % f for f in region_formatters]))
         return
 
     if args.input_file == None:
