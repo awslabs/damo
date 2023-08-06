@@ -257,7 +257,7 @@ def ascii_box(xval, xval_minmaxs, yval, yval_minmaxs, colorset,
     else:
         color_level = int(rescale_val(yval, yval_minmaxs[0], [0, 9]))
         row = '<%s>' % _damo_ascii_color.colored(('%d' % color_level) * nr_cols,
-                colorset, char)
+                colorset, color_level)
     box = '\n'.join([row] * nr_rows)
     if nr_rows > 1:
         box += '\n'
