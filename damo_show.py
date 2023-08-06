@@ -122,8 +122,8 @@ region_formatters = [
             rbargs.to_str(region, 'age', 'heat', None),
             'character box represeting relative age and access frequency of the region'),
         Formatter('<size heat age bar>',
-            lambda index, region, raw, rbargs: size_heat_age_bar(region,
-                rbargs),
+            lambda index, region, raw, rbargs:
+            rbargs.to_str(region, 'size', 'heat', 'age'),
             'character box representing relative size, access frequency, and the age of the region'),
         ]
 
