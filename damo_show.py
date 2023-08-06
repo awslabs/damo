@@ -230,7 +230,8 @@ def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
         The value to be represented by the character and color of the hox.
         If it's str, it's the character with no color.
     zval : int, float
-        The value to be represented by the number of rows of the box
+        The value to be represented by the number of rows of the box.
+        If this is None, number of rows becomes one.
     xval_minmaxs : list
         A list of min/max values of original x value and columns of the box
     yval_minmaxs : list
@@ -246,7 +247,11 @@ def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
         The string representing the box
     '''
     nr_cols = int(rescale_val_logscale(xval, xval_minmaxs[0], xval_minmaxs[1]))
-    nr_rows = int(rescale_val_logscale(zval, zval_minmaxs[0], zval_minmaxs[1]))
+    if zval != None:
+        nr_rows = int(rescale_val_logscale(zval, zval_minmaxs[0],
+            zval_minmaxs[1]))
+    else:
+        nr_rows = 1
     if type(yval) == str:
         row = yval * nr_cols
     else:
