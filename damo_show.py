@@ -258,7 +258,10 @@ def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
         color_level = int(rescale_val(yval, yval_minmaxs[0], [0, 9]))
         row = '<%s>' % _damo_ascii_color.colored(('%d' % color_level) * nr_cols,
                 colorset, char)
-    return '\n'.join([row] * nr_rows) + '\n'
+    box = '\n'.join([row] * nr_rows)
+    if nr_rows > 1:
+        box += '\n'
+    return box
 
 def size_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
