@@ -175,6 +175,27 @@ class RegionBoxArgs:
         self.min_max_rows = min_max_rows
         self.colorset = colorset
 
+    def val_minmax(self, region, value_name):
+        mms = self.record_minmaxs
+        if value_name == 'size':
+            return region.size(), [mms.min_sz_region, mms.max_sz_region]
+        elif value_name == 'heat':
+            return region.nr_accesses.percent, [
+                    mms.min_access_rate_percent, mms.max_access_rate_percent]
+        elif value_name == 'age':
+            return region.age.usec, [mms.min_age_us, mms.max_age_us]
+        return None, None
+
+    def to_str(self, region, col_val_name, color_val_name, row_val_name):
+        cval, cval_minmax = self.val_minmax(region, col_val_name)
+        clval, clval_minmax = self.val_minmax(region, color_val_name)
+        if clval == None:
+            clval = '-'
+        rval, rval_minmax = self.val_minmax(region, row_val_name)
+        return '%s' % ColoredBox(cval, cval_minmax, self.min_max_cols,
+                clval, clval_minmax, self.colorset,
+                rval, rval_minmax, self.min_max_rows)
+
 def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     '''Return a value in new scale
 
