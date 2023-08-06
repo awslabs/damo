@@ -270,51 +270,6 @@ class ColoredBox:
             rows += '\n'
         return rows
 
-def ascii_box(xval, xval_minmaxs, yval, yval_minmaxs, colorset,
-        zval, zval_minmaxs):
-    '''Create ascii box with x/y/z values
-
-    Parameters
-    ----------
-    xval : int, float
-        The value to be represented by the number of columns of the box
-    xval_minmaxs : list
-        A list of min/max values of original x value and columns of the box
-    yval : int, float, str
-        The value to be represented by the character and color of the hox.
-        If it's str, it's the character with no color.
-    yval_minmaxs : list
-        A list of min/max values of original z value and character of the box.
-    colorset : str
-        colorset string that _damo_ascii_color accepts
-    zval : int, float
-        The value to be represented by the number of rows of the box.
-        If this is None, number of rows becomes one.
-    zval_minmaxs : list
-        A list of min/max values of original y value and rows of the box
-
-    Returns
-    -------
-    str
-        The string representing the box
-    '''
-    nr_cols = int(rescale_val_logscale(xval, xval_minmaxs[0], xval_minmaxs[1]))
-    if zval != None:
-        nr_rows = int(rescale_val_logscale(zval, zval_minmaxs[0],
-            zval_minmaxs[1]))
-    else:
-        nr_rows = 1
-    if type(yval) == str:
-        row = '<%s>' % (yval * nr_cols)
-    else:
-        color_level = int(rescale_val(yval, yval_minmaxs[0], [0, 9]))
-        row = '<%s>' % _damo_ascii_color.colored(('%d' % color_level) * nr_cols,
-                colorset, color_level)
-    box = '\n'.join([row] * nr_rows)
-    if nr_rows > 1:
-        box += '\n'
-    return box
-
 def size_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
     return '%s' % ColoredBox(region.size(), [minmaxs.min_sz_region,
