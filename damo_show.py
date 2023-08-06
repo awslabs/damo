@@ -317,10 +317,9 @@ def ascii_box(xval, xval_minmaxs, yval, yval_minmaxs, colorset,
 
 def size_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
-    return ascii_box(region.size(),
-            [[minmaxs.min_sz_region, minmaxs.max_sz_region],
-                region_bar_args.min_max_cols],
-            '-', None, None, None, None)
+    return '%s' % ColoredBox(region.size(), [minmaxs.min_sz_region,
+        minmaxs.max_sz_region], region_bar_args.min_max_cols, '-', None, None,
+        None, None, None)
 
 def size_heat_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
