@@ -110,7 +110,8 @@ region_formatters = [
             _damo_fmt_str.format_time_us(region.age.usec, raw),
             'how long the access pattern of the region has maintained'),
         Formatter('<size bar>',
-            lambda index, region, raw, rbargs: size_bar(region, rbargs),
+            lambda index, region, raw, rbargs:
+            rbargs.to_str(region, 'size', None, None),
             'character box representing relative size of the region'),
         Formatter('<size heat bar>',
             lambda index, region, raw, rbargs: size_heat_bar(region, rbargs),
