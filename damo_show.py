@@ -332,14 +332,13 @@ def size_heat_bar(region, region_bar_args):
 
 def age_heat_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
-    return ascii_box(region.age.usec,
-            [[minmaxs.min_age_us, minmaxs.max_age_us],
-                region_bar_args.min_max_cols],
+    return '%s' % ColoredBox(region.age.usec,
+            [minmaxs.min_age_us, minmaxs.max_age_us],
+            region_bar_args.min_max_cols,
             region.nr_accesses.percent,
-            [[minmaxs.min_access_rate_percent,
-                minmaxs.max_access_rate_percent], [0, 9]],
+            [minmaxs.min_access_rate_percent, minmaxs.max_access_rate_percent],
             region_bar_args.colorset,
-            None, None)
+            None, None, None)
 
 def size_heat_age_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
