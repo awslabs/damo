@@ -163,7 +163,7 @@ class MinMaxOfRecords:
                 for region in snapshot.regions:
                     self.set_fields(region, record.intervals)
 
-class RegionBarArgs:
+class RegionBoxArgs:
     record_minmaxs = None
     min_max_cols = None
     min_max_rows = None
@@ -382,7 +382,7 @@ def pr_records(args, records):
 
     set_formats(args, records)
     mms = MinMaxOfRecords(records)
-    region_bar_args = RegionBarArgs(mms, args.region_bar_min_max_cols,
+    region_bar_args = RegionBoxArgs(mms, args.region_bar_min_max_cols,
             args.region_bar_min_max_rows, args.region_bar_colorset)
 
     for record in records:
