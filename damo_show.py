@@ -133,72 +133,6 @@ formatters = {
         'region': region_formatters
         }
 
-class MinMaxOfRecords:
-    min_sz_region = None
-    max_sz_region = None
-    min_access_rate_percent = None
-    max_access_rate_percent = None
-    min_age_us = None
-    max_age_us = None
-
-    def set_fields(self, region, intervals):
-        region.nr_accesses.add_unset_unit(intervals)
-        region.age.add_unset_unit(intervals)
-
-        if self.min_sz_region == None or region.size() < self.min_sz_region:
-            self.min_sz_region = region.size()
-        if self.max_sz_region == None or region.size() > self.max_sz_region:
-            self.max_sz_region = region.size()
-        if (self.min_access_rate_percent == None or
-                region.nr_accesses.percent < self.min_access_rate_percent):
-            self.min_access_rate_percent = region.nr_accesses.percent
-        if (self.max_access_rate_percent == None or
-                region.nr_accesses.percent > self.max_access_rate_percent):
-            self.max_access_rate_percent = region.nr_accesses.percent
-        if self.min_age_us == None or region.age.usec < self.min_age_us:
-            self.min_age_us = region.age.usec
-        if self.max_age_us == None or region.age.usec > self.max_age_us:
-            self.max_age_us = region.age.usec
-
-    def __init__(self, records):
-        for record in records:
-            for snapshot in record.snapshots:
-                for region in snapshot.regions:
-                    self.set_fields(region, record.intervals)
-
-class RegionBoxArgs:
-    record_minmaxs = None
-    min_max_cols = None
-    min_max_rows = None
-    colorset = None
-
-    def __init__(self, record_minmaxs, min_max_cols, min_max_rows, colorset):
-        self.record_minmaxs = record_minmaxs
-        self.min_max_cols = min_max_cols
-        self.min_max_rows = min_max_rows
-        self.colorset = colorset
-
-    def val_minmax(self, region, value_name):
-        mms = self.record_minmaxs
-        if value_name == 'size':
-            return region.size(), [mms.min_sz_region, mms.max_sz_region]
-        elif value_name == 'heat':
-            return region.nr_accesses.percent, [
-                    mms.min_access_rate_percent, mms.max_access_rate_percent]
-        elif value_name == 'age':
-            return region.age.usec, [mms.min_age_us, mms.max_age_us]
-        return None, None
-
-    def to_str(self, region, col_val_name, color_val_name, row_val_name):
-        cval, cval_minmax = self.val_minmax(region, col_val_name)
-        clval, clval_minmax = self.val_minmax(region, color_val_name)
-        if clval == None:
-            clval = '-'
-        rval, rval_minmax = self.val_minmax(region, row_val_name)
-        return '%s' % ColoredBox(cval, cval_minmax, self.min_max_cols,
-                clval, clval_minmax, self.colorset,
-                rval, rval_minmax, self.min_max_rows)
-
 def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     '''Return a value in new scale
 
@@ -293,6 +227,72 @@ class ColoredBox:
         if nr_rows > 1:
             rows += '\n'
         return rows
+
+class MinMaxOfRecords:
+    min_sz_region = None
+    max_sz_region = None
+    min_access_rate_percent = None
+    max_access_rate_percent = None
+    min_age_us = None
+    max_age_us = None
+
+    def set_fields(self, region, intervals):
+        region.nr_accesses.add_unset_unit(intervals)
+        region.age.add_unset_unit(intervals)
+
+        if self.min_sz_region == None or region.size() < self.min_sz_region:
+            self.min_sz_region = region.size()
+        if self.max_sz_region == None or region.size() > self.max_sz_region:
+            self.max_sz_region = region.size()
+        if (self.min_access_rate_percent == None or
+                region.nr_accesses.percent < self.min_access_rate_percent):
+            self.min_access_rate_percent = region.nr_accesses.percent
+        if (self.max_access_rate_percent == None or
+                region.nr_accesses.percent > self.max_access_rate_percent):
+            self.max_access_rate_percent = region.nr_accesses.percent
+        if self.min_age_us == None or region.age.usec < self.min_age_us:
+            self.min_age_us = region.age.usec
+        if self.max_age_us == None or region.age.usec > self.max_age_us:
+            self.max_age_us = region.age.usec
+
+    def __init__(self, records):
+        for record in records:
+            for snapshot in record.snapshots:
+                for region in snapshot.regions:
+                    self.set_fields(region, record.intervals)
+
+class RegionBoxArgs:
+    record_minmaxs = None
+    min_max_cols = None
+    min_max_rows = None
+    colorset = None
+
+    def __init__(self, record_minmaxs, min_max_cols, min_max_rows, colorset):
+        self.record_minmaxs = record_minmaxs
+        self.min_max_cols = min_max_cols
+        self.min_max_rows = min_max_rows
+        self.colorset = colorset
+
+    def val_minmax(self, region, value_name):
+        mms = self.record_minmaxs
+        if value_name == 'size':
+            return region.size(), [mms.min_sz_region, mms.max_sz_region]
+        elif value_name == 'heat':
+            return region.nr_accesses.percent, [
+                    mms.min_access_rate_percent, mms.max_access_rate_percent]
+        elif value_name == 'age':
+            return region.age.usec, [mms.min_age_us, mms.max_age_us]
+        return None, None
+
+    def to_str(self, region, col_val_name, color_val_name, row_val_name):
+        cval, cval_minmax = self.val_minmax(region, col_val_name)
+        clval, clval_minmax = self.val_minmax(region, color_val_name)
+        if clval == None:
+            clval = '-'
+        rval, rval_minmax = self.val_minmax(region, row_val_name)
+        return '%s' % ColoredBox(cval, cval_minmax, self.min_max_cols,
+                clval, clval_minmax, self.colorset,
+                rval, rval_minmax, self.min_max_rows)
 
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
