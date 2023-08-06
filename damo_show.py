@@ -121,7 +121,7 @@ region_formatters = [
             lambda index, region, raw, rbargs:
             rbargs.to_str(region, 'age', 'heat', None),
             'character box represeting relative age and access frequency of the region'),
-        Formatter('<size heat age bar>',
+        Formatter('<size heat age box>',
             lambda index, region, raw, rbargs:
             rbargs.to_str(region, 'size', 'heat', 'age'),
             'character box representing relative size, access frequency, and the age of the region'),
@@ -335,7 +335,7 @@ def apply_min_chars(min_chars, field_name, txt):
     return txt
 
 def format_pr(template, min_chars, index, region, snapshot, record, raw, mms,
-        region_bar_args):
+        region_box_args):
     if template == '':
         return
     for category, category_formatters in formatters.items():
@@ -348,7 +348,7 @@ def format_pr(template, min_chars, index, region, snapshot, record, raw, mms,
             elif category == 'snapshot':
                 txt = formatter.format_fn(snapshot, record, raw)
             elif category == 'region':
-                txt = formatter.format_fn(index, region, raw, region_bar_args)
+                txt = formatter.format_fn(index, region, raw, region_box_args)
             txt = apply_min_chars(min_chars, field_name, txt)
             template = template.replace(field_name, txt)
     template = template.replace('\\n', '\n')
@@ -396,20 +396,20 @@ def pr_records(args, records):
 
     set_formats(args, records)
     mms = MinMaxOfRecords(records)
-    region_bar_args = RegionBoxArgs(mms, args.region_bar_min_max_cols,
-            args.region_bar_min_max_rows, args.region_bar_colorset,
+    region_box_args = RegionBoxArgs(mms, args.region_box_min_max_cols,
+            args.region_box_min_max_rows, args.region_box_colorset,
             args.region_box_values[0], args.region_box_values[1],
             args.region_box_values[2])
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_field, None, None,
-                None, record, args.raw_number, mms, region_bar_args)
+                None, record, args.raw_number, mms, region_box_args)
         snapshots = record.snapshots
 
         for sidx, snapshot in enumerate(snapshots):
             format_pr(args.format_snapshot_head, args.min_chars_field, None,
                     None, snapshot, record, args.raw_number, mms,
-                    region_bar_args)
+                    region_box_args)
             for r in snapshot.regions:
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
@@ -417,15 +417,15 @@ def pr_records(args, records):
                     sorted_regions(snapshot.regions, args.sort_regions_by)):
                 format_pr(args.format_region, args.min_chars_field, idx, r,
                         snapshot, record, args.raw_number, mms,
-                        region_bar_args)
+                        region_box_args)
             format_pr(args.format_snapshot_tail, args.min_chars_field, None,
                     None, snapshot, record, args.raw_number, mms,
-                    region_bar_args)
+                    region_box_args)
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
         format_pr(args.format_record_tail, args.min_chars_field, None, None,
-                None, record, args.raw_number, mms, region_bar_args)
+                None, record, args.raw_number, mms, region_box_args)
 
 def filter_by_pattern(record, access_pattern):
     sz_bytes = access_pattern.sz_bytes
@@ -547,15 +547,15 @@ def set_argparser(parser):
             choices=['size', 'access_rate', 'age', 'none'], nargs=3,
             default=['none', 'none', 'none'],
             help='values to show via the box\'s length, color, and height')
-    parser.add_argument('--region_bar_min_max_cols', nargs=2, type=int,
+    parser.add_argument('--region_box_min_max_cols', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 30],
-            help='minimum and maximum number of columns for region bar')
-    parser.add_argument('--region_bar_min_max_rows', nargs=2, type=int,
+            help='minimum and maximum number of columns for region box')
+    parser.add_argument('--region_box_min_max_rows', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 5],
-            help='minimum and maximum number of rows for region bar')
-    parser.add_argument('--region_bar_colorset', default='gray',
+            help='minimum and maximum number of rows for region box')
+    parser.add_argument('--region_box_colorset', default='gray',
             choices=['gray', 'flame', 'emotion'],
-            help='colorset to use for region bars')
+            help='colorset to use for region box')
     parser.add_argument('--min_chars_field', nargs=2,
             metavar=('<field name>', '<number>'), action='append',
             default=[['<index>', 3],
