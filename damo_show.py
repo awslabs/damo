@@ -125,6 +125,10 @@ region_formatters = [
             lambda index, region, raw, rbargs:
             rbargs.to_str(region, 'size', 'heat', 'age'),
             'character box representing relative size, access frequency, and the age of the region'),
+        Formatter('<box>',
+            lambda index, region, raw, rbargs:
+            rbargs.to_str(region, None, None, None),
+            'user-customizable (via --region_box_*) box (size-heat-age by default)'),
         ]
 
 formatters = {
@@ -285,7 +289,7 @@ class RegionBoxArgs:
         mms = self.record_minmaxs
         if value_name == 'size':
             return region.size(), [mms.min_sz_region, mms.max_sz_region]
-        elif value_name == 'heat':
+        elif value_name in ['heat', 'access_rate']:
             return region.nr_accesses.percent, [
                     mms.min_access_rate_percent, mms.max_access_rate_percent]
         elif value_name == 'age':
@@ -299,6 +303,12 @@ class RegionBoxArgs:
             color_val_name = self.color_val_name
         if row_val_name == None:
             row_val_name = self.row_val_name
+
+        if (col_val_name == None and color_val_name == None and
+                row_val_name == None):
+            col_val_name = 'size'
+            color_val_name = 'heat'
+            row_val_name = 'age'
 
         cval, cval_minmax = self.val_minmax(region, col_val_name)
         clval, clval_minmax = self.val_minmax(region, color_val_name)
@@ -387,7 +397,9 @@ def pr_records(args, records):
     set_formats(args, records)
     mms = MinMaxOfRecords(records)
     region_bar_args = RegionBoxArgs(mms, args.region_bar_min_max_cols,
-            args.region_bar_min_max_rows, args.region_bar_colorset)
+            args.region_bar_min_max_rows, args.region_bar_colorset,
+            args.region_box_values[0], args.region_box_values[1],
+            args.region_box_values[2])
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_field, None, None,
@@ -531,6 +543,10 @@ def set_argparser(parser):
             help='region output format')
     parser.add_argument('--ls_region_format_keywords', action='store_true',
             help='list available region format keywords')
+    parser.add_argument('--region_box_values',
+            choices=['size', 'access_rate', 'age', 'none'], nargs=3,
+            default=['none', 'none', 'none'],
+            help='values to show via the box\'s length, color, and height')
     parser.add_argument('--region_bar_min_max_cols', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 30],
             help='minimum and maximum number of columns for region bar')
@@ -567,6 +583,9 @@ def main(args=None):
         parser = argparse.ArgumentParser()
         set_argparser(parser)
         args = parser.parse_args()
+
+    args.region_box_values = [v if v != 'none' else None
+            for v in args.region_box_values]
 
     access_pattern = _damon.DamosAccessPattern(args.sz_region,
             args.access_rate, _damon.unit_percent, args.age * 1000000,
