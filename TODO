@@ -33,12 +33,9 @@
 - damo status features implementation
   - specify target to show
 - damo show features implementation
-  - support heat bar
   - time based filtering
-  - printing heatbar (bar of the size colored with access rate)
-  - printing only heatbars (becomes heatmap)
-  - sort by priority with priority weights (become histogram)
   - collapse by time
   - collapse by priority value (more histogram control)
   - support target specification
   - use address ranges damos filter if available
+  - let user select logscale or linearscale
