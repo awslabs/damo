@@ -226,8 +226,9 @@ def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
     ----------
     xval : int, float
         The value to be represented by the number of columns of the box
-    yval : int, float
-        The value to be represented by the character and color of the hox
+    yval : int, float, str
+        The value to be represented by the character and color of the hox.
+        If it's str, it's the character with no color.
     zval : int, float
         The value to be represented by the number of rows of the box
     xval_minmaxs : list
@@ -245,10 +246,13 @@ def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
         The string representing the box
     '''
     nr_cols = int(rescale_val_logscale(xval, xval_minmaxs[0], xval_minmaxs[1]))
-    color_level = int(rescale_val(yval, yval_minmaxs[0], [0, 9]))
     nr_rows = int(rescale_val_logscale(zval, zval_minmaxs[0], zval_minmaxs[1]))
-    row =_damo_ascii_color.colored(('%d' % color_level) * nr_cols, colorset,
-            char)
+    if type(yval) == str:
+        row = yval * nr_cols
+    else:
+        color_level = int(rescale_val(yval, yval_minmaxs[0], [0, 9]))
+        row =_damo_ascii_color.colored(('%d' % color_level) * nr_cols,
+                colorset, char)
     return '\n'.join([row] * nr_rows) + '\n'
 
 def size_bar(region, rebion_bar_args):
