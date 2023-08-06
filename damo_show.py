@@ -260,7 +260,7 @@ def ascii_box(xval, yval, zval, xval_minmaxs, yval_minmaxs, zval_minmaxs,
                 colorset, char)
     return '\n'.join([row] * nr_rows) + '\n'
 
-def size_bar(region, rebion_bar_args):
+def size_bar(region, region_bar_args):
     minmaxs = region_bar_args.record_minmaxs
     nr_cols = int(rescale_val_logscale(region.size(),
             [minmaxs.min_sz_region, minmaxs.max_sz_region],
