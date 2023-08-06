@@ -240,7 +240,7 @@ class ColoredBox:
         self.nr_columns_minmaxs = nr_columns_minmaxs
 
         self.color_val = color_val
-        self.color_val_minmaxs = column_val_minmaxs
+        self.color_val_minmaxs = color_val_minmaxs
         self.colorset = colorset
 
         self.row_val = row_val
