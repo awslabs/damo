@@ -101,10 +101,12 @@ class TestDamoShow(unittest.TestCase):
         self.assertEqual(mm.min_age_us, 100000)
         self.assertEqual(mm.max_age_us, 3000000)
 
-    def test_rescale_val(self):
-        self.assertEqual(damo_show.rescale_val(10, [0, 100], [0, 10]), 1)
-        self.assertEqual(damo_show.rescale_val(10, [0, 100], [1, 11]), 2)
-        self.assertEqual(damo_show.rescale_val(20, [10, 110], [1, 11]), 2)
+    def test_rescale(self):
+        self.assertEqual(damo_show.rescale(10, [0, 100], [0, 10], False), 1)
+        self.assertEqual(
+                damo_show.rescale(10, [0, 100], [1, 11], False), 2)
+        self.assertEqual(
+                damo_show.rescale(20, [10, 110], [1, 11], False), 2)
 
 if __name__ == '__main__':
     unittest.main()

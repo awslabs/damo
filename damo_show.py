@@ -224,16 +224,16 @@ class ColoredBox:
             self.column_val_minmaxs, self.nr_columns_minmaxs))
 
         if self.row_val != None:
-            nr_rows = int(rescale_val(self.row_val,
-                self.row_val_minmaxs, self.nr_rows_minmaxs))
+            nr_rows = int(rescale(self.row_val,
+                self.row_val_minmaxs, self.nr_rows_minmaxs, logscale=False))
         else:
             nr_rows = 1
 
         if type(self.color_val) == str:
             row = '<%s>' % (self.color_val * nr_cols)
         else:
-            color_level = int(rescale_val(self.color_val,
-                self.color_val_minmaxs, [0, 9]))
+            color_level = int(rescale(self.color_val,
+                self.color_val_minmaxs, [0, 9], logscale=False))
             row = '<%s>' % _damo_ascii_color.colored(
                     ('%d' % color_level) * nr_cols, self.colorset, color_level)
 
