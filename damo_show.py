@@ -82,6 +82,18 @@ snapshot_formatters = [
             lambda snapshot, record, raw:
             _damo_fmt_str.format_nr(len(snapshot.regions), raw),
             'the number of regions in the snapshot'),
+        Formatter('<gray colors>',
+            lambda snapshot, record, raw:
+            _damo_ascii_color.color_samples('gray'),
+            'gray color sets'),
+        Formatter('<flame colors>',
+            lambda snapshot, record, raw:
+            _damo_ascii_color.color_samples('flame'),
+            'flame color sets'),
+        Formatter('<emotion colors>',
+            lambda snapshot, record, raw:
+            _damo_ascii_color.color_samples('emotion'),
+            'emotion color sets'),
         ]
 
 region_formatters = [
