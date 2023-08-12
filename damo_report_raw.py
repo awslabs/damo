@@ -73,6 +73,7 @@ def set_argparser(parser):
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
             help='print in json format')
+    parser.description='Show raw data of the monitoring results record file'
 
 def main(args=None):
     if not args:

@@ -349,6 +349,7 @@ def set_argparser(parser):
             help='another name of stdout_heatmap_color')
     parser.add_argument('--plot_ascii', action='store_true',
             help='shortcut of \'--heatmap stdout\'')
+    parser.description='Show when which address ranges were how frequently accessed'
 
 def main(args=None):
     if not args:

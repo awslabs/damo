@@ -100,6 +100,7 @@ def set_argparser(parser):
             help='use machine-friendly raw numbers')
     parser.add_argument('--all_wss', action='store_true',
             help='Do not print percentile but all calculated wss')
+    parser.description='Show distribution of working set size'
 
 def main(args=None):
     if not args:
