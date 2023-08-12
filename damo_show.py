@@ -137,30 +137,8 @@ formatters = {
         'region': region_formatters
         }
 
-def rescale_val(val, orig_scale_minmax, new_scale_minmax):
-    '''Return a value in new scale
-
-    Parameters
-    ----------
-    val : int, float
-        The value to rescale
-    orig_scale_minmax : list
-        min/max values of original scale
-    new_scale_minmax : list
-        min/max values of new scale
-
-    Returns
-    -------
-    float
-        The rescaled value
-    '''
-    orig_length = orig_scale_minmax[1] - orig_scale_minmax[0]
-    new_length = new_scale_minmax[1] - new_scale_minmax[0]
-    ratio = new_length / orig_length if orig_length > 0 else 1
-    return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
-
 def rescale(val, orig_scale_minmax, new_scale_minmax, logscale=True):
-    t '''Return a value in new scale
+    '''Return a value in new scale
 
     Parameters
     ----------
