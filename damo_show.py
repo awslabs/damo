@@ -159,29 +159,8 @@ def rescale_val(val, orig_scale_minmax, new_scale_minmax):
     ratio = new_length / orig_length if orig_length > 0 else 1
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
-def rescale_val_logscale(val, orig_scale_minmax, new_scale_minmax):
-    '''Return a value in new scale, in logscale
-
-    Parameters
-    ----------
-    val : int, float
-        The value to rescale
-    orig_scale_minmax : list
-        min/max values of original scale
-    new_scale_minmax : list
-        min/max values of new scale
-
-    Returns
-    -------
-    float
-        The rescaled value
-    '''
-    log_val = math.log(val, 2) if val > 0 else 0
-    log_minmax = [math.log(v, 2) if v > 0 else 0 for v in orig_scale_minmax]
-    return rescale_val(log_val, log_minmax, new_scale_minmax)
-
 def rescale(val, orig_scale_minmax, new_scale_minmax, logscale=True):
-    '''Return a value in new scale
+    t '''Return a value in new scale
 
     Parameters
     ----------
