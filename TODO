@@ -39,3 +39,5 @@
   - support target specification
   - use address ranges damos filter if available
   - let user select logscale or linearscale
+  - Shortening keyword names in each formatters group
+  - Implement min/max snapshot format keyword
