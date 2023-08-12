@@ -521,6 +521,12 @@ def set_argparser(parser):
             help='show tried regions of given schemes')
 
     # how to show
+    parser.add_argument('--sort_regions_by',
+            choices=['address', 'access_rate', 'age', 'size'], nargs='+',
+            default=['address'],
+            help='fields to sort regions by')
+    parser.add_argument('--dont_merge_regions', action='store_true',
+            help='don\'t merge contiguous regions of same access pattern')
 
     # don't set default for record head and snapshot head because it depends on
     # given number of record and snapshots.  Decide those in set_formats().
@@ -568,12 +574,6 @@ def set_argparser(parser):
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
             help='print in json format')
-    parser.add_argument('--sort_regions_by',
-            choices=['address', 'access_rate', 'age', 'size'], nargs='+',
-            default=['address'],
-            help='fields to sort regions by')
-    parser.add_argument('--dont_merge_regions', action='store_true',
-            help='don\'t merge contiguous regions of same access pattern')
 
     parser.description='Show DAMON-monitored access pattern'
     parser.epilog='If --input_file is not provided, capture snapshot'
