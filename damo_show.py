@@ -273,8 +273,12 @@ class RegionBoxArgs:
     color_val_name = None
     row_val_name = None
 
+    # linear or log scales for column, color, and row
+    col_color_row_scales = None
+
     def __init__(self, record_minmaxs, min_max_cols, min_max_rows, colorset,
-            col_val_name=None, color_val_name=None, row_val_name=None):
+            col_val_name=None, color_val_name=None, row_val_name=None,
+            col_color_row_scales=['log', 'linear', 'log']):
         self.record_minmaxs = record_minmaxs
         self.min_max_cols = min_max_cols
         self.min_max_rows = min_max_rows
@@ -282,6 +286,7 @@ class RegionBoxArgs:
         self.col_val_name = col_val_name
         self.color_val_name = color_val_name
         self.row_val_name = row_val_name
+        self.col_color_row_scales = col_color_row_scales
 
     def val_minmax(self, region, value_name):
         mms = self.record_minmaxs
@@ -313,9 +318,11 @@ class RegionBoxArgs:
         if clval == None:
             clval = '-'
         rval, rval_minmax = self.val_minmax(region, row_val_name)
+
         return '%s' % ColoredBox(cval, cval_minmax, self.min_max_cols,
                 clval, clval_minmax, self.colorset,
-                rval, rval_minmax, self.min_max_rows)
+                rval, rval_minmax, self.min_max_rows,
+                self.col_color_row_scales)
 
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
