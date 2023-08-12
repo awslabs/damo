@@ -402,12 +402,12 @@ def pr_records(args, records):
             args.region_box_values[2])
 
     for record in records:
-        format_pr(args.format_record_head, args.min_chars_field, None, None,
+        format_pr(args.format_record_head, args.min_chars_for, None, None,
                 None, record, args.raw_number, mms, region_box_args)
         snapshots = record.snapshots
 
         for sidx, snapshot in enumerate(snapshots):
-            format_pr(args.format_snapshot_head, args.min_chars_field, None,
+            format_pr(args.format_snapshot_head, args.min_chars_for, None,
                     None, snapshot, record, args.raw_number, mms,
                     region_box_args)
             for r in snapshot.regions:
@@ -415,16 +415,16 @@ def pr_records(args, records):
                 r.age.add_unset_unit(record.intervals)
             for idx, r in enumerate(
                     sorted_regions(snapshot.regions, args.sort_regions_by)):
-                format_pr(args.format_region, args.min_chars_field, idx, r,
+                format_pr(args.format_region, args.min_chars_for, idx, r,
                         snapshot, record, args.raw_number, mms,
                         region_box_args)
-            format_pr(args.format_snapshot_tail, args.min_chars_field, None,
+            format_pr(args.format_snapshot_tail, args.min_chars_for, None,
                     None, snapshot, record, args.raw_number, mms,
                     region_box_args)
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
-        format_pr(args.format_record_tail, args.min_chars_field, None, None,
+        format_pr(args.format_record_tail, args.min_chars_for, None, None,
                 None, record, args.raw_number, mms, region_box_args)
 
 def filter_by_pattern(record, access_pattern):
@@ -556,12 +556,12 @@ def set_argparser(parser):
     parser.add_argument('--region_box_colorset', default='gray',
             choices=['gray', 'flame', 'emotion'],
             help='colorset to use for region box')
-    parser.add_argument('--min_chars_field', nargs=2,
-            metavar=('<field name>', '<number>'), action='append',
+    parser.add_argument('--min_chars_for', nargs=2,
+            metavar=('<keyword>', '<number>'), action='append',
             default=[['<index>', 3],
                 ['<start address>', 12],['<end address>', 11],
                 ['<region size>', 11], ['<access rate>', 5]],
-            help='minimum character for each field')
+            help='minimum character for each keyword of the format')
     parser.add_argument('--total_sz_only', action='store_true',
             help='print only total size of the regions')
     parser.add_argument('--raw_number', action='store_true',
