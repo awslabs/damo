@@ -8,6 +8,7 @@ import _damon
 import _damon_args
 
 def set_argparser(parser):
+    parser.description='Update DAMON parameters'
     return _damon_args.set_argparser(parser, add_record_options=False)
 
 def main(args=None):
