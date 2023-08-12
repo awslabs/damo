@@ -404,7 +404,7 @@ def pr_records(args, records):
     region_box_args = RegionBoxArgs(mms, args.region_box_min_max_cols,
             args.region_box_min_max_rows, args.region_box_colorset,
             args.region_box_values[0], args.region_box_values[1],
-            args.region_box_values[2])
+            args.region_box_values[2], args.region_box_scales)
 
     for record in records:
         format_pr(args.format_record_head, args.min_chars_for, None, None,
@@ -567,6 +567,9 @@ def set_argparser(parser):
     parser.add_argument('--region_box_colorset', default='gray',
             choices=['gray', 'flame', 'emotion'],
             help='colorset to use for region box')
+    parser.add_argument('--region_box_scales', choices=['linear', 'log'],
+            nargs=3, default=['log', 'linear', 'log'],
+            help='scale of region box\' length, color, and height')
     parser.add_argument('--min_chars_for', nargs=2,
             metavar=('<keyword>', '<number>'), action='append',
             default=[['<index>', 3],
