@@ -563,7 +563,7 @@ def set_argparser(parser):
                 ['<region size>', 11], ['<access rate>', 5]],
             help='minimum character for each keyword of the format')
     parser.add_argument('--total_sz_only', action='store_true',
-            help='print only total size of the regions')
+            help='print only total size of the regions for each snapshot')
     parser.add_argument('--raw_number', action='store_true',
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
