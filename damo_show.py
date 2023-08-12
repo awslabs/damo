@@ -143,12 +143,6 @@ region_formatters = [
             'user-customizable (via --region_box_*) box (size-heat-age by default)'),
         ]
 
-formatters = {
-        'record': record_formatters,
-        'snapshot': snapshot_formatters,
-        'region': region_formatters
-        }
-
 def rescale(val, orig_scale_minmax, new_scale_minmax, logscale=True):
     '''Return a value in new scale
 
