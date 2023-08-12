@@ -217,13 +217,14 @@ class ColoredBox:
             nr_rows = 1
 
         if type(self.color_val) == str:
-            row = '<%s>' % (self.color_val * nr_cols)
+            row = '%s' % (self.color_val * nr_cols)
         else:
             color_level = int(rescale(self.color_val,
                 self.color_val_minmaxs, [0, 9],
                 self.color_scale == 'log'))
-            row = '<%s>' % _damo_ascii_color.colored(
+            row = '%s' % _damo_ascii_color.colored(
                     ('%d' % color_level) * nr_cols, self.colorset, color_level)
+        row = '|%s|' % row
 
         rows = '\n'.join([row] * nr_rows)
         if nr_rows > 1:
