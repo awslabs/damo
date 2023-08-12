@@ -525,28 +525,28 @@ def set_argparser(parser):
     # don't set default for record head and snapshot head because it depends on
     # given number of record and snapshots.  Decide those in set_formats().
     parser.add_argument('--format_record_head', metavar='<template>',
-            help='record output head format')
+            help='output format to show at the beginning of each record')
     parser.add_argument('--format_record_tail', metavar='<template>',
             default='',
-            help='record output tail format')
+            help='output format to show at the end of each record')
     parser.add_argument('--ls_record_format_keywords', action='store_true',
             help='list available record format keywords')
     parser.add_argument('--format_snapshot_head', metavar='<template>',
-            help='snapshot output tail format')
+            help='output format to show at the beginning of each snapshot')
     parser.add_argument('--format_snapshot_tail', metavar='<template>',
             default='total size: <total bytes>',
-            help='snapshot output tail format')
+            help='output format to show at the end of each snapshot')
     parser.add_argument('--ls_snapshot_format_keywords', action='store_true',
             help='list available snapshot format keywords')
     parser.add_argument('--format_region', metavar='<template>',
             default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
-            help='region output format')
+            help='output format to show for each memory region')
     parser.add_argument('--ls_region_format_keywords', action='store_true',
             help='list available region format keywords')
     parser.add_argument('--region_box_values',
             choices=['size', 'access_rate', 'age', 'none'], nargs=3,
             default=['none', 'none', 'none'],
-            help='values to show via the box\'s length, color, and height')
+            help='values to show via the <box>\'s length, color, and height')
     parser.add_argument('--region_box_min_max_cols', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 30],
             help='minimum and maximum number of columns for region box')
