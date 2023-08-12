@@ -241,11 +241,11 @@ class ColoredBox:
         self.nr_rows_minmaxs = nr_rows_minmaxs
 
     def __str__(self):
-        nr_cols = int(rescale_val_logscale(self.column_val,
+        nr_cols = int(rescale(self.column_val,
             self.column_val_minmaxs, self.nr_columns_minmaxs))
 
         if self.row_val != None:
-            nr_rows = int(rescale_val_logscale(self.row_val,
+            nr_rows = int(rescale_val(self.row_val,
                 self.row_val_minmaxs, self.nr_rows_minmaxs))
         else:
             nr_rows = 1
