@@ -339,7 +339,7 @@ def apply_min_chars(min_chars, field_name, txt):
     return txt
 
 def format_pr(template, formatters, min_chars, index, region, snapshot, record,
-        raw, mms, region_box_args):
+        raw, region_box_args):
     if template == '':
         return
     for formatter in formatters:
@@ -407,13 +407,13 @@ def pr_records(args, records):
     for record in records:
         format_pr(args.format_record_head, record_formatters,
                 args.min_chars_for, None, None, None, record, args.raw_number,
-                mms, region_box_args)
+                region_box_args)
         snapshots = record.snapshots
 
         for sidx, snapshot in enumerate(snapshots):
             format_pr(args.format_snapshot_head, snapshot_formatters,
                     args.min_chars_for, None, None, snapshot, record,
-                    args.raw_number, mms, region_box_args)
+                    args.raw_number, region_box_args)
             for r in snapshot.regions:
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
@@ -421,16 +421,16 @@ def pr_records(args, records):
                     sorted_regions(snapshot.regions, args.sort_regions_by)):
                 format_pr(args.format_region, region_formatters,
                         args.min_chars_for, idx, r, snapshot, record,
-                        args.raw_number, mms, region_box_args)
+                        args.raw_number, region_box_args)
             format_pr(args.format_snapshot_tail, snapshot_formatters,
                     args.min_chars_for, None, None, snapshot, record,
-                    args.raw_number, mms, region_box_args)
+                    args.raw_number, region_box_args)
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
         format_pr(args.format_record_tail, record_formatters,
                 args.min_chars_for, None, None, None, record, args.raw_number,
-                mms, region_box_args)
+                region_box_args)
 
 def filter_by_pattern(record, access_pattern):
     sz_bytes = access_pattern.sz_bytes
