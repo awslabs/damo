@@ -289,7 +289,6 @@ class MinMaxOfRecords:
 
 class RegionBoxArgs:
     sorted_access_patterns = None
-    record_minmaxs = None
     min_max_cols = None
     min_max_rows = None
     colorset = None
@@ -301,11 +300,10 @@ class RegionBoxArgs:
     # linear or log scales for column, color, and row
     col_color_row_scales = None
 
-    def __init__(self, sorted_access_patterns, record_minmaxs, min_max_cols,
+    def __init__(self, sorted_access_patterns, min_max_cols,
             min_max_rows, colorset, col_val_name=None, color_val_name=None,
             row_val_name=None, col_color_row_scales=['log', 'linear', 'log']):
         self.sorted_access_patterns = sorted_access_patterns
-        self.record_minmaxs = record_minmaxs
         self.min_max_cols = min_max_cols
         self.min_max_rows = min_max_rows
         self.colorset = colorset
@@ -429,8 +427,7 @@ def pr_records(args, records):
 
     set_formats(args, records)
     sorted_access_patterns = SortedAccessPatterns(records)
-    mms = MinMaxOfRecords(records)
-    region_box_args = RegionBoxArgs(sorted_access_patterns, mms,
+    region_box_args = RegionBoxArgs(sorted_access_patterns,
             args.region_box_min_max_length, args.region_box_min_max_height,
             args.region_box_colorset,
             args.region_box_values[0], args.region_box_values[1],
