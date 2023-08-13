@@ -311,9 +311,9 @@ class RegionBoxArgs:
 
         if (length_val_name == None and color_val_name == None and
                 height_val_name == None):
-            length_val_name = 'size'
+            length_val_name = 'age'
             color_val_name = 'heat'
-            height_val_name = 'age'
+            height_val_name = 'size'
 
         cval, cval_minmax = self.val_minmax(region, length_val_name)
         clval, clval_minmax = self.val_minmax(region, color_val_name)
