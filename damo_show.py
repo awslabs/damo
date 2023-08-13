@@ -303,15 +303,18 @@ class RegionBoxArgs:
             color_val_name = 'heat'
             height_val_name = 'size'
 
-        cval, cval_minmax = self.val_minmax(region, length_val_name)
-        clval, clval_minmax = self.val_minmax(region, color_val_name)
-        if clval == None:
-            clval = '-'
-        rval, rval_minmax = self.val_minmax(region, height_val_name)
+        length_val, length_val_minmax = self.val_minmax(region,
+                length_val_name)
+        color_val, color_val_minmax = self.val_minmax(region, color_val_name)
+        if color_val == None:
+            color_val = '-'
+        height_val, height_val_minmax = self.val_minmax(region,
+                height_val_name)
 
-        return '%s' % ColoredBox(cval, cval_minmax, self.min_max_lengths,
-                clval, clval_minmax, self.colorset,
-                rval, rval_minmax, self.min_max_heights,
+        return '%s' % ColoredBox(length_val, length_val_minmax,
+                self.min_max_lengths,
+                color_val, color_val_minmax, self.colorset,
+                height_val, height_val_minmax, self.min_max_heights,
                 self.length_color_height_scales)
 
 def apply_min_chars(min_chars, field_name, txt):
