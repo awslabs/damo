@@ -55,45 +55,37 @@ record_formatters = [
 
 snapshot_formatters = [
         Formatter('<total bytes>',
-            lambda snapshot, record, raw:
+            lambda snapshot, record, raw, rbargs:
             _damo_fmt_str.format_sz(snapshot.total_bytes, raw),
             'total bytes of regions in the snapshot'),
         Formatter('<duration>',
-            lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
+            lambda snapshot, record, raw, rbargs: _damo_fmt_str.format_time_ns(
                 snapshot.end_time - snapshot.start_time, raw),
             'access monitoring duration for the snapshot'),
         Formatter('<start time>',
-            lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
+            lambda snapshot, record, raw, rbargs: _damo_fmt_str.format_time_ns(
                 snapshot.start_time - record.snapshots[0].start_time, raw),
             'access monitoring start time for the snapshot, relative to the record start time'),
         Formatter('<end time>',
-            lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
+            lambda snapshot, record, raw, rbargs: _damo_fmt_str.format_time_ns(
                 snapshot.end_time - record.snapshots[0].start_time, raw),
             'access monitoring end time for the snapshot, relative to the record end time'),
         Formatter('<abs start time>',
-            lambda snapshot, record, raw:
+            lambda snapshot, record, raw, rbargs:
             _damo_fmt_str.format_time_ns(snapshot.start_time, raw),
             'absolute access monitoring start time for the snapshot'),
         Formatter('<abs end time>',
-            lambda snapshot, record, raw:
+            lambda snapshot, record, raw, rbargs:
             _damo_fmt_str.format_time_ns(snapshot.end_time, raw),
             'absolute access monitoring end time for the snapshot'),
         Formatter('<number of regions>',
-            lambda snapshot, record, raw:
+            lambda snapshot, record, raw, rbargs:
             _damo_fmt_str.format_nr(len(snapshot.regions), raw),
             'the number of regions in the snapshot'),
-        Formatter('<gray colors>',
-            lambda snapshot, record, raw:
-            _damo_ascii_color.color_samples('gray'),
-            'gray color sets'),
-        Formatter('<flame colors>',
-            lambda snapshot, record, raw:
-            _damo_ascii_color.color_samples('flame'),
-            'flame color sets'),
-        Formatter('<emotion colors>',
-            lambda snapshot, record, raw:
-            _damo_ascii_color.color_samples('emotion'),
-            'emotion color sets'),
+        Formatter('<box colors>',
+            lambda snapshot, record, raw, rbargs:
+            _damo_ascii_color.color_samples(rbargs.colorset),
+            'colors for the region box'),
         ]
 
 region_formatters = [
@@ -357,7 +349,7 @@ def format_pr(template, formatters, min_chars, index, region, snapshot, record,
         if formatters == record_formatters:
             txt = formatter.format_fn(record, raw)
         elif formatters == snapshot_formatters:
-            txt = formatter.format_fn(snapshot, record, raw)
+            txt = formatter.format_fn(snapshot, record, raw, region_box_args)
         elif formatters == region_formatters:
             txt = formatter.format_fn(index, region, raw, region_box_args)
         txt = apply_min_chars(min_chars, field_name, txt)
