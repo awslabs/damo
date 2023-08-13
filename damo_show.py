@@ -315,14 +315,17 @@ class RegionBoxArgs:
         self.col_color_row_scales = col_color_row_scales
 
     def val_minmax(self, region, value_name):
-        mms = self.record_minmaxs
+        sorted_vals = self.sorted_access_patterns
         if value_name == 'size':
-            return region.size(), [mms.min_sz_region, mms.max_sz_region]
+            return region.size(), [
+                    sorted_vals.sz_regions[0], sorted_vals.sz_regions[-1]]
         elif value_name in ['heat', 'access_rate']:
             return region.nr_accesses.percent, [
-                    mms.min_access_rate_percent, mms.max_access_rate_percent]
+                    sorted_vals.access_rates_percent[0],
+                    sorted_vals.access_rates_percent[-1]]
         elif value_name == 'age':
-            return region.age.usec, [mms.min_age_us, mms.max_age_us]
+            return region.age.usec, [sorted_vals.ages_us[0],
+                    sorted_vals.ages_us[-1]]
         return None, None
 
     def to_str(self, region, col_val_name, color_val_name, row_val_name):
