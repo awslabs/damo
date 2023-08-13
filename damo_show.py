@@ -254,39 +254,6 @@ class SortedAccessPatterns:
         self.access_rates_percent.sort()
         self.ages_us.sort()
 
-class MinMaxOfRecords:
-    min_sz_region = None
-    max_sz_region = None
-    min_access_rate_percent = None
-    max_access_rate_percent = None
-    min_age_us = None
-    max_age_us = None
-
-    def set_fields(self, region, intervals):
-        region.nr_accesses.add_unset_unit(intervals)
-        region.age.add_unset_unit(intervals)
-
-        if self.min_sz_region == None or region.size() < self.min_sz_region:
-            self.min_sz_region = region.size()
-        if self.max_sz_region == None or region.size() > self.max_sz_region:
-            self.max_sz_region = region.size()
-        if (self.min_access_rate_percent == None or
-                region.nr_accesses.percent < self.min_access_rate_percent):
-            self.min_access_rate_percent = region.nr_accesses.percent
-        if (self.max_access_rate_percent == None or
-                region.nr_accesses.percent > self.max_access_rate_percent):
-            self.max_access_rate_percent = region.nr_accesses.percent
-        if self.min_age_us == None or region.age.usec < self.min_age_us:
-            self.min_age_us = region.age.usec
-        if self.max_age_us == None or region.age.usec > self.max_age_us:
-            self.max_age_us = region.age.usec
-
-    def __init__(self, records):
-        for record in records:
-            for snapshot in record.snapshots:
-                for region in snapshot.regions:
-                    self.set_fields(region, record.intervals)
-
 class RegionBoxArgs:
     sorted_access_patterns = None
     min_max_cols = None
