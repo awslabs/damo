@@ -41,11 +41,11 @@ record_formatters = [
         Formatter('<target id>',
             lambda record, raw: '%s' % record.target_id,
             'index of the record\'s DAMON target'),
-        Formatter('<record start abs time>',
+        Formatter('<abs start time>',
             lambda record, raw:
             _dmo_fmt_str.format_ns(record.snapshots[0].start_time, raw),
             'absolute time of the start of the record'),
-        Formatter('<record duration>',
+        Formatter('<duration>',
             lambda record, raw:
             _damo_fmt_str.format_time_ns(
                 record.snapshots[-1].end_time - record.snapshots[0].start_time,
@@ -368,7 +368,7 @@ def format_pr(template, formatters, min_chars, index, region, snapshot, record,
 def set_formats(args, records):
     if args.format_record_head == None:
         if len(records) > 1:
-            args.format_record_head = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <record duration> from <record start abs time>'
+            args.format_record_head = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <duration> from <abs start time>'
         else:
             args.format_record_head = ''
 
