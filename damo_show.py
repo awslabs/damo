@@ -229,6 +229,31 @@ class ColoredBox:
             rows += '\n'
         return rows
 
+class AccessPatternDistribution:
+    sz_regions = None
+    access_rates_percent = None
+    ages_us = None
+
+    def __init__(self, records):
+        self.sz_regions = []
+        self.access_rates_percent = []
+        self.ages_us = []
+
+        for record in records:
+            for snapshot in record.snapshots:
+                for region in snapshot.regions:
+                    self.sz_regions.append(region.size())
+
+                    region.nr_accesses.add_unset_unit(record.intervals)
+                    self.access_rates_percent.append(
+                            region.nr_accesses.percent)
+
+                    region.age.add_unset_unit(record.intervals)
+                    self.ages_us.append(region.age.usec)
+        self.sz_regions.sort()
+        self.access_rates_percent.sort()
+        self.ages_us.sort()
+
 class MinMaxOfRecords:
     min_sz_region = None
     max_sz_region = None
