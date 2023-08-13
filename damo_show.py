@@ -167,67 +167,70 @@ def rescale(val, orig_scale_minmax, new_scale_minmax, logscale=True):
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
 class ColoredBox:
-    column_val = None
-    column_val_minmaxs = None
-    column_scale = None
+    # original values and their min/max
+    length_val = None
+    length_val_minmaxs = None
 
     color_val = None
     color_val_minmaxs = None
+
+    height_val = None
+    height_val_minmaxs = None
+
+    # final values to show
+    length_minmaxs = None
+    height_minmaxs = None
     colorset = None
+
+    length_scale = None
     color_scale = None
+    height_scale = None
 
-    row_val = None
-    row_val_minmaxs = None
-
-    nr_columns_minmaxs = None
-    nr_rows_minmaxs = None
-    row_scale = None
-
-    def __init__(self, column_val, column_val_minmaxs, nr_columns_minmaxs,
+    def __init__(self, length_val, length_val_minmaxs, length_minmaxs,
             color_val, color_val_minmaxs, colorset,
-            row_val, row_val_minmaxs, nr_rows_minmaxs,
-            col_color_row_scales=['log', 'linear', 'log']):
-        self.column_val = column_val
-        self.column_val_minmaxs = column_val_minmaxs
-        self.nr_columns_minmaxs = nr_columns_minmaxs
-        self.column_scale = col_color_row_scales[0]
+            height_val, height_val_minmaxs, height_minmaxs,
+            length_color_height_scales=['log', 'linear', 'log']):
+        self.length_val = length_val
+        self.length_val_minmaxs = length_val_minmaxs
+        self.length_minmaxs = length_minmaxs
+        self.length_scale = length_color_height_scales[0]
 
         self.color_val = color_val
         self.color_val_minmaxs = color_val_minmaxs
         self.colorset = colorset
-        self.color_scale = col_color_row_scales[1]
+        self.color_scale = length_color_height_scales[1]
 
-        self.row_val = row_val
-        self.row_val_minmaxs = row_val_minmaxs
-        self.nr_rows_minmaxs = nr_rows_minmaxs
-        self.row_scale = col_color_row_scales[2]
+        self.height_val = height_val
+        self.height_val_minmaxs = height_val_minmaxs
+        self.height_minmaxs = height_minmaxs
+        self.height_scale = length_color_height_scales[2]
 
     def __str__(self):
-        nr_cols = int(rescale(self.column_val,
-            self.column_val_minmaxs, self.nr_columns_minmaxs,
-            self.column_scale == 'log'))
+        length = int(rescale(self.length_val,
+            self.length_val_minmaxs, self.length_minmaxs,
+            self.length_scale == 'log'))
 
-        if self.row_val != None:
-            nr_rows = int(rescale(self.row_val,
-                self.row_val_minmaxs, self.nr_rows_minmaxs,
-                self.row_scale == 'log'))
+        if self.height_val != None:
+            height = int(rescale(self.height_val,
+                self.height_val_minmaxs, self.height_minmaxs,
+                self.height_scale == 'log'))
         else:
-            nr_rows = 1
+            height = 1
 
         if type(self.color_val) == str:
-            row = '%s' % (self.color_val * nr_cols)
+            row = '%s' % (self.color_val * length)
         else:
             color_level = int(rescale(self.color_val,
                 self.color_val_minmaxs, [0, 9],
                 self.color_scale == 'log'))
             row = '%s' % _damo_ascii_color.colored(
-                    ('%d' % color_level) * nr_cols, self.colorset, color_level)
+                    ('%d' % color_level) * length, self.colorset, color_level)
         row = '|%s|' % row
 
-        rows = '\n'.join([row] * nr_rows)
-        if nr_rows > 1:
-            rows += '\n'
-        return rows
+        box = '\n'.join([row] * height)
+        if height > 1:
+            box += '\n'
+        return box
 
 class SortedAccessPatterns:
     sz_regions = None
