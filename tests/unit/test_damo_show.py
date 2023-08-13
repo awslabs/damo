@@ -47,7 +47,7 @@ class TestDamoShow(unittest.TestCase):
                 damo_show.convert_addr_ranges_input([[10, 20], [5, 7]]),
                 ([[5, 7], [10, 20]], None))
 
-    def test_min_max_of_record(self):
+    def test_sorted_access_pattern(self):
         record = _damon_result.DamonRecord.from_kvpairs(
             {
                 "kdamond_idx": 0, "context_idx": 0,
@@ -93,14 +93,6 @@ class TestDamoShow(unittest.TestCase):
                         }
                     ]
                 })
-        mm = damo_show.MinMaxOfRecords([record])
-        self.assertEqual(mm.min_sz_region, 4096)
-        self.assertEqual(mm.max_sz_region, 8192)
-        self.assertEqual(mm.min_access_rate_percent, 0)
-        self.assertEqual(mm.max_access_rate_percent, 95)
-        self.assertEqual(mm.min_age_us, 100000)
-        self.assertEqual(mm.max_age_us, 3000000)
-
         sorted_vals = damo_show.SortedAccessPatterns([record])
         self.assertEqual(sorted_vals.sz_regions[0], 4096)
         self.assertEqual(sorted_vals.sz_regions[-1], 8192)
