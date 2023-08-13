@@ -113,26 +113,14 @@ region_formatters = [
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_time_us(region.age.usec, raw),
             'how long the access pattern of the region has maintained'),
-        Formatter('<size bar>',
+        Formatter('<age heat size box>',
             lambda index, region, raw, rbargs:
-            rbargs.to_str(region, 'size', None, None),
-            'character box representing relative size of the region'),
-        Formatter('<size heat bar>',
-            lambda index, region, raw, rbargs:
-            rbargs.to_str(region, 'size', 'heat', None),
-           'character box representing relative size and access frequency of the region'),
-        Formatter('<age heat bar>',
-            lambda index, region, raw, rbargs:
-            rbargs.to_str(region, 'age', 'heat', None),
-            'character box represeting relative age and access frequency of the region'),
-        Formatter('<size heat age box>',
-            lambda index, region, raw, rbargs:
-            rbargs.to_str(region, 'size', 'heat', 'age'),
-            'character box representing relative size, access frequency, and the age of the region'),
+            rbargs.to_str(region, 'age', 'heat', 'size'),
+            'box representing age, heat, and size of each region via length, color, and height'),
         Formatter('<box>',
             lambda index, region, raw, rbargs:
             rbargs.to_str(region, None, None, None),
-            'user-customizable (via --region_box_*) box (size-heat-age by default)'),
+            'user-customizable (via --region_box_*) box (age-heat-size by default)'),
         ]
 
 def rescale(val, orig_scale_minmax, new_scale_minmax, logscale=True):
