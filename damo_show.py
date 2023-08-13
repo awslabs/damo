@@ -263,28 +263,29 @@ def nth_percentile(sorted_values, percentile):
 
 class RegionBoxArgs:
     sorted_access_patterns = None
-    min_max_cols = None
-    min_max_rows = None
+    min_max_lengths = None
+    min_max_heights = None
     colorset = None
 
-    col_val_name = None
+    length_val_name = None
     color_val_name = None
-    row_val_name = None
+    height_val_name = None
 
-    # linear or log scales for column, color, and row
-    col_color_row_scales = None
+    # linear or log scales for length, color, and height
+    length_color_height_scales = None
 
-    def __init__(self, sorted_access_patterns, min_max_cols,
-            min_max_rows, colorset, col_val_name=None, color_val_name=None,
-            row_val_name=None, col_color_row_scales=['log', 'linear', 'log']):
+    def __init__(self, sorted_access_patterns, min_max_lengths,
+            min_max_heights, colorset, length_val_name=None,
+            color_val_name=None, height_val_name=None,
+            length_color_height_scales=['log', 'linear', 'log']):
         self.sorted_access_patterns = sorted_access_patterns
-        self.min_max_cols = min_max_cols
-        self.min_max_rows = min_max_rows
+        self.min_max_lengths = min_max_lengths
+        self.min_max_heights = min_max_heights
         self.colorset = colorset
-        self.col_val_name = col_val_name
+        self.length_val_name = length_val_name
         self.color_val_name = color_val_name
-        self.row_val_name = row_val_name
-        self.col_color_row_scales = col_color_row_scales
+        self.height_val_name = height_val_name
+        self.length_color_height_scales = length_color_height_scales
 
     def val_minmax(self, region, value_name):
         sorted_vals = self.sorted_access_patterns
@@ -300,30 +301,30 @@ class RegionBoxArgs:
                     sorted_vals.ages_us[-1]]
         return None, None
 
-    def to_str(self, region, col_val_name, color_val_name, row_val_name):
-        if col_val_name == None:
-            col_val_name = self.col_val_name
+    def to_str(self, region, length_val_name, color_val_name, height_val_name):
+        if length_val_name == None:
+            length_val_name = self.length_val_name
         if color_val_name == None:
             color_val_name = self.color_val_name
-        if row_val_name == None:
-            row_val_name = self.row_val_name
+        if height_val_name == None:
+            height_val_name = self.height_val_name
 
-        if (col_val_name == None and color_val_name == None and
-                row_val_name == None):
-            col_val_name = 'size'
+        if (length_val_name == None and color_val_name == None and
+                height_val_name == None):
+            length_val_name = 'size'
             color_val_name = 'heat'
-            row_val_name = 'age'
+            height_val_name = 'age'
 
-        cval, cval_minmax = self.val_minmax(region, col_val_name)
+        cval, cval_minmax = self.val_minmax(region, length_val_name)
         clval, clval_minmax = self.val_minmax(region, color_val_name)
         if clval == None:
             clval = '-'
-        rval, rval_minmax = self.val_minmax(region, row_val_name)
+        rval, rval_minmax = self.val_minmax(region, height_val_name)
 
-        return '%s' % ColoredBox(cval, cval_minmax, self.min_max_cols,
+        return '%s' % ColoredBox(cval, cval_minmax, self.min_max_lengths,
                 clval, clval_minmax, self.colorset,
-                rval, rval_minmax, self.min_max_rows,
-                self.col_color_row_scales)
+                rval, rval_minmax, self.min_max_heights,
+                self.length_color_height_scales)
 
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
