@@ -82,10 +82,10 @@ snapshot_formatters = [
             lambda snapshot, record, raw, rbargs:
             _damo_fmt_str.format_nr(len(snapshot.regions), raw),
             'the number of regions in the snapshot'),
-        Formatter('<box colors>',
+        Formatter('<region box colors>',
             lambda snapshot, record, raw, rbargs:
             _damo_ascii_color.color_samples(rbargs.colorset),
-            'colors for the region box'),
+            'available colors for the region box'),
         ]
 
 region_formatters = [
