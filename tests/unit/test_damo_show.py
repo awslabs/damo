@@ -101,6 +101,14 @@ class TestDamoShow(unittest.TestCase):
         self.assertEqual(mm.min_age_us, 100000)
         self.assertEqual(mm.max_age_us, 3000000)
 
+        sorted_vals = damo_show.SortedAccessPatterns([record])
+        self.assertEqual(sorted_vals.sz_regions[0], 4096)
+        self.assertEqual(sorted_vals.sz_regions[-1], 8192)
+        self.assertEqual(sorted_vals.access_rates_percent[0], 0)
+        self.assertEqual(sorted_vals.access_rates_percent[-1], 95)
+        self.assertEqual(sorted_vals.ages_us[0], 100000)
+        self.assertEqual(sorted_vals.ages_us[-1], 3000000)
+
     def test_rescale(self):
         self.assertEqual(damo_show.rescale(10, [0, 100], [0, 10], False), 1)
         self.assertEqual(
