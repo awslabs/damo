@@ -203,6 +203,7 @@ class ColoredBox:
                 self.height_val_minmaxs, self.height_minmaxs,
                 self.height_scale == 'log'))
         else:
+            self.height_minmaxs = [1, 1]
             height = 1
 
         if type(self.color_val) == str:
