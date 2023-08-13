@@ -216,7 +216,7 @@ class ColoredBox:
         row = '|%s|' % row
 
         box = '\n'.join([row] * height)
-        if height > 1:
+        if self.height_minmaxs[1] > 1:
             box += '\n'
         return box
 
