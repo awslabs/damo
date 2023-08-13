@@ -58,23 +58,23 @@ snapshot_formatters = [
             lambda snapshot, record, raw:
             _damo_fmt_str.format_sz(snapshot.total_bytes, raw),
             'total bytes of regions in the snapshot'),
-        Formatter('<monitor duration>',
+        Formatter('<duration>',
             lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
                 snapshot.end_time - snapshot.start_time, raw),
             'access monitoring duration for the snapshot'),
-        Formatter('<monitor start time>',
+        Formatter('<start time>',
             lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
                 snapshot.start_time - record.snapshots[0].start_time, raw),
             'access monitoring start time for the snapshot, relative to the record start time'),
-        Formatter('<monitor end time>',
+        Formatter('<end time>',
             lambda snapshot, record, raw: _damo_fmt_str.format_time_ns(
                 snapshot.end_time - record.snapshots[0].start_time, raw),
             'access monitoring end time for the snapshot, relative to the record end time'),
-        Formatter('<monitor start abs time>',
+        Formatter('<abs start time>',
             lambda snapshot, record, raw:
             _damo_fmt_str.format_time_ns(snapshot.start_time, raw),
             'absolute access monitoring start time for the snapshot'),
-        Formatter('<monitor end abs time>',
+        Formatter('<abs end time>',
             lambda snapshot, record, raw:
             _damo_fmt_str.format_time_ns(snapshot.end_time, raw),
             'absolute access monitoring end time for the snapshot'),
@@ -378,7 +378,7 @@ def set_formats(args, records):
             if len(record.snapshots) > 1:
                 need_snapshot_head = True
         if need_snapshot_head:
-            args.format_snapshot_head = 'monitored time: [<monitor start time>, <monitor end time>] (<monitor duration>)'
+            args.format_snapshot_head = 'monitored time: [<start time>, <end time>] (<duration>)'
         else:
             args.format_snapshot_head = ''
 
