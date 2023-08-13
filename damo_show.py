@@ -109,7 +109,7 @@ region_formatters = [
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.end, raw),
             'end address of the region'),
-        Formatter('<region size>',
+        Formatter('<size>',
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_sz(region.size(), raw),
             'size of the region'),
@@ -558,7 +558,7 @@ def set_argparser(parser):
     parser.add_argument('--ls_snapshot_format_keywords', action='store_true',
             help='list available snapshot format keywords')
     parser.add_argument('--format_region', metavar='<template>',
-            default='<index> addr [<start address>, <end address>) (<region size>) access <access rate> age <age>',
+            default='<index> addr [<start address>, <end address>) (<size>) access <access rate> age <age>',
             help='output format to show for each memory region')
     parser.add_argument('--ls_region_format_keywords', action='store_true',
             help='list available region format keywords')
@@ -582,7 +582,7 @@ def set_argparser(parser):
             metavar=('<keyword>', '<number>'), action='append',
             default=[['<index>', 3],
                 ['<start address>', 12],['<end address>', 11],
-                ['<region size>', 11], ['<access rate>', 5]],
+                ['<size>', 11], ['<access rate>', 5]],
             help='minimum character for each keyword of the format')
     parser.add_argument('--total_sz_only', action='store_true',
             help='print only total size of the regions for each snapshot')
