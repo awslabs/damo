@@ -181,15 +181,16 @@ class ColoredBox:
     colorset = None
 
     def __init__(self, length, color, colorset, height):
-        self.length = legnth
+        self.length = length
         self.color = color
         self.colorset = colorset
+        self.height = height
 
     def __str__(self):
-        length = self.length.display_value()
+        length = int(self.length.display_value())
 
         if self.height.val != None:
-            height = self.height.display_value()
+            height = int(self.height.display_value())
         else:
             self.height.display_min, self.height.display_max = [1, 1]
             height = 1
@@ -197,13 +198,13 @@ class ColoredBox:
         if type(self.color.val) == str:
             row = '%s' % (self.color_val * length)
         else:
-            color_level = self.color.display_value()
+            color_level = int(self.color.display_value())
             row = '%s' % _damo_ascii_color.colored(
                     ('%d' % color_level) * length, self.colorset, color_level)
         row = '|%s|' % row
 
         box = '\n'.join([row] * height)
-        if self.height_minmaxs[1] > 1:
+        if self.height.display_max > 1:
             box += '\n'
         return box
 
@@ -295,18 +296,12 @@ class RegionBoxArgs:
                 height_val_name)
 
         return '%s' % ColoredBox(
-                BoxValue(length_val,
-                    length_val_minmax[0], length_val_minmax[1],
-                    self.min_max_lengths[0], self.min_max_lengths[1],
+                BoxValue(length_val, length_val_minmax, self.min_max_lengths,
                     self.length_color_height_scales[0] == 'log'),
-                BoxValue(color_val,
-                    color_val_minmax[0], color_val_minmax[1],
-                    self.min_max_colors[0], self.min_max_colors[1],
+                BoxValue(color_val, color_val_minmax, [0, 9],
                     self.length_color_height_scales[0] == 'log'),
                 self.colorset,
-                BoxValue(height_val,
-                    height_val_minmax[0], height_val_minmax[1],
-                    self.min_max_heights[0], self.min_max_heights[1],
+                BoxValue(height_val, height_val_minmax, self.min_max_heights,
                     self.length_color_height_scales[0] == 'log'))
 
 def apply_min_chars(min_chars, field_name, txt):
