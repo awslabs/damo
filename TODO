@@ -38,6 +38,8 @@
   - collapse by priority value (more histogram control)
   - support target specification
   - use address ranges damos filter if available
-  - let user select logscale or linearscale
-  - Shortening keyword names in each formatters group
   - Implement min/max snapshot format keyword
+  - Consider removing <size access_rate age box> region format
+    - Default <box> is it.  Why we have it?
+  - Consider <box><size> <access rate> <age> as default
+    - Current default region format might make sense to be optional?
