@@ -154,6 +154,20 @@ def rescale(val, orig_scale_minmax, new_scale_minmax, logscale=True):
     ratio = new_length / orig_length if orig_length > 0 else 1
     return (val - orig_scale_minmax[0]) * ratio + new_scale_minmax[0]
 
+class BoxValue:
+    val = None
+    val_min = None
+    val_max = None
+    display_min = None
+    display_max = None
+    display_logscale = None # bool
+
+    def __init__(self, val, val_min_max, display_min_max, display_logscale):
+        self.val = val
+        self.val_min, self.val_max = val_min_max
+        self.display_min, self.display_max = display_min_max
+        self.display_logscale = display_logscale
+
 class ColoredBox:
     # original values and their min/max
     length_val = None
