@@ -245,29 +245,18 @@ class RegionBoxValArgs:
 
 class RegionBoxArgs:
     sorted_access_patterns = None
-    min_max_lengths = None
-    min_max_heights = None
+    length = None
+    color = None
     colorset = None
+    height = None
 
-    length_val_name = None
-    color_val_name = None
-    height_val_name = None
-
-    # linear or log scales for length, color, and height
-    length_color_height_scales = None
-
-    def __init__(self, sorted_access_patterns, min_max_lengths,
-            min_max_heights, colorset, length_val_name=None,
-            color_val_name=None, height_val_name=None,
-            length_color_height_scales=['log', 'linear', 'log']):
+    def __init__(self, sorted_access_patterns, length, color, colorset,
+            height):
         self.sorted_access_patterns = sorted_access_patterns
-        self.min_max_lengths = min_max_lengths
-        self.min_max_heights = min_max_heights
+        self.length = length
+        self.color = color
         self.colorset = colorset
-        self.length_val_name = length_val_name
-        self.color_val_name = color_val_name
-        self.height_val_name = height_val_name
-        self.length_color_height_scales = length_color_height_scales
+        self.height = height
 
     def val_minmax(self, region, value_name):
         sorted_vals = self.sorted_access_patterns
@@ -285,11 +274,11 @@ class RegionBoxArgs:
 
     def to_str(self, region, length_val_name, color_val_name, height_val_name):
         if length_val_name == None:
-            length_val_name = self.length_val_name
+            length_val_name = self.length.value_name
         if color_val_name == None:
-            color_val_name = self.color_val_name
+            color_val_name = self.color.value_name
         if height_val_name == None:
-            height_val_name = self.height_val_name
+            height_val_name = self.height.value_name
 
         if (length_val_name == None and color_val_name == None and
                 height_val_name == None):
@@ -306,13 +295,13 @@ class RegionBoxArgs:
                 height_val_name)
 
         return '%s' % ColoredBox(
-                BoxValue(length_val, length_val_minmax, self.min_max_lengths,
-                    self.length_color_height_scales[0] == 'log'),
+                BoxValue(length_val, length_val_minmax,
+                    self.length.display_min_max, self.length.display_logscale),
                 BoxValue(color_val, color_val_minmax, [0, 9],
-                    self.length_color_height_scales[0] == 'log'),
+                    self.color.display_logscale),
                 self.colorset,
-                BoxValue(height_val, height_val_minmax, self.min_max_heights,
-                    self.length_color_height_scales[0] == 'log'))
+                BoxValue(height_val, height_val_minmax,
+                    self.height.display_min_max, self.height.display_logscale))
 
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
@@ -390,10 +379,15 @@ def pr_records(args, records):
     set_formats(args, records)
     sorted_access_patterns = SortedAccessPatterns(records)
     region_box_args = RegionBoxArgs(sorted_access_patterns,
-            args.region_box_min_max_length, args.region_box_min_max_height,
+            RegionBoxValArgs(args.region_box_values[0],
+                args.region_box_min_max_length,
+                args.region_box_scales[0] == 'log'),
+            RegionBoxValArgs(args.region_box_values[1],
+                [0, 9], args.region_box_scales[1] == 'log'),
             args.region_box_colorset,
-            args.region_box_values[0], args.region_box_values[1],
-            args.region_box_values[2], args.region_box_scales)
+            RegionBoxValArgs(args.region_box_values[2],
+                args.region_box_min_max_height,
+                args.region_box_scales[2] == 'log'))
 
     for record in records:
         format_pr(args.format_record_head, record_formatters,
