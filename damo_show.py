@@ -168,6 +168,10 @@ class BoxValue:
         self.display_min, self.display_max = display_min_max
         self.display_logscale = display_logscale
 
+    def display_value(self):
+        return rescale(self.val, [self.val_min, self.val_max],
+                [self.display_min, self.display_max], self.display_logscale)
+
 class ColoredBox:
     # original values and their min/max
     length_val = None
