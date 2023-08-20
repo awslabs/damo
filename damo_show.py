@@ -329,8 +329,7 @@ def format_pr(template, formatters, min_chars, index, region, snapshot, record,
     if template == '':
         return
     for formatter in formatters:
-        field_name = formatter.keyword
-        if template.find(field_name) == -1:
+        if template.find(formatter.keyword) == -1:
             continue
         if formatters == record_formatters:
             txt = formatter.format_fn(record, raw)
@@ -338,8 +337,8 @@ def format_pr(template, formatters, min_chars, index, region, snapshot, record,
             txt = formatter.format_fn(snapshot, record, raw, region_box_args)
         elif formatters == region_formatters:
             txt = formatter.format_fn(index, region, raw, region_box_args)
-        txt = apply_min_chars(min_chars, field_name, txt)
-        template = template.replace(field_name, txt)
+        txt = apply_min_chars(min_chars, formatter.keyword, txt)
+        template = template.replace(formatter.keyword, txt)
     template = template.replace('\\n', '\n')
     print(template)
 
