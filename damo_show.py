@@ -233,6 +233,16 @@ class SortedAccessPatterns:
         self.access_rates_percent.sort()
         self.ages_us.sort()
 
+class RegionBoxValArgs:
+    value_name = None
+    display_min_max = None
+    display_logscale = None
+
+    def __init__(self, value_name, display_min_max, display_logscale):
+        self.value_name = value_name
+        self.display_min_max = display_min_max
+        self.display_logscale = display_logscale
+
 class RegionBoxArgs:
     sorted_access_patterns = None
     min_max_lengths = None
