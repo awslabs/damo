@@ -232,10 +232,6 @@ class SortedAccessPatterns:
         self.access_rates_percent.sort()
         self.ages_us.sort()
 
-def nth_percentile(sorted_values, percentile):
-    return sorted_values[min(
-        int(percentile * 100 / len(sorted_vals)), len(sorted_vals) - 1)]
-
 class RegionBoxArgs:
     sorted_access_patterns = None
     min_max_lengths = None
