@@ -113,14 +113,14 @@ region_formatters = [
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_time_us(region.age.usec, raw),
             'how long the access pattern of the region has maintained'),
-        Formatter('<age heat size box>',
+        Formatter('<age access_rate size box>',
             lambda index, region, raw, rbargs:
-            rbargs.to_str(region, 'age', 'heat', 'size'),
-            'box representing age, heat, and size of each region via length, color, and height'),
+            rbargs.to_str(region, 'age', 'access_rate', 'size'),
+            'box representing age, access_rate, and size of each region via length, color, and height'),
         Formatter('<box>',
             lambda index, region, raw, rbargs:
             rbargs.to_str(region, None, None, None),
-            'user-customizable (via --region_box_*) box (age-heat-size by default)'),
+            'user-customizable (via --region_box_*) box (age/access_rate/size by default)'),
         ]
 
 def rescale(val, orig_scale_minmax, new_scale_minmax, logscale=True):
@@ -264,7 +264,7 @@ class RegionBoxArgs:
         if value_name == 'size':
             return region.size(), [
                     sorted_vals.sz_regions[0], sorted_vals.sz_regions[-1]]
-        elif value_name in ['heat', 'access_rate']:
+        elif value_name == 'access_rate':
             return region.nr_accesses.percent, [
                     sorted_vals.access_rates_percent[0],
                     sorted_vals.access_rates_percent[-1]]
@@ -284,7 +284,7 @@ class RegionBoxArgs:
         if (length_val_name == None and color_val_name == None and
                 height_val_name == None):
             length_val_name = 'age'
-            color_val_name = 'heat'
+            color_val_name = 'access_rate'
             height_val_name = 'size'
 
         length_val, length_val_minmax = self.val_minmax(region,
