@@ -113,10 +113,6 @@ region_formatters = [
             lambda index, region, raw, rbargs:
             _damo_fmt_str.format_time_us(region.age.usec, raw),
             'how long the access pattern of the region has maintained'),
-        Formatter('<age access_rate size box>',
-            lambda index, region, raw, rbargs:
-            rbargs.to_str(region, 'age', 'access_rate', 'size'),
-            'box representing age, access_rate, and size of each region via length, color, and height'),
         Formatter('<box>',
             lambda index, region, raw, rbargs:
             rbargs.to_str(region, None, None, None),
