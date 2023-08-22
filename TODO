@@ -39,7 +39,5 @@
   - support target specification
   - use address ranges damos filter if available
   - Implement min/max snapshot format keyword
-  - Consider removing <size access_rate age box> region format
-    - Default <box> is it.  Why we have it?
   - Consider <box><size> <access rate> <age> as default
     - Current default region format might make sense to be optional?
