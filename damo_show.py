@@ -152,21 +152,19 @@ def rescale(val, orig_scale_minmax, new_scale_minmax, logscale=True):
 
 class BoxValue:
     val = None
-    val_min = None
-    val_max = None
-    display_min = None
-    display_max = None
+    val_min_max = None      # list of min/max
+    display_min_max = None  # list of min/max
     display_logscale = None # bool
 
     def __init__(self, val, val_min_max, display_min_max, display_logscale):
         self.val = val
-        self.val_min, self.val_max = val_min_max
-        self.display_min, self.display_max = display_min_max
+        self.val_min_max = val_min_max
+        self.display_min_max = display_min_max
         self.display_logscale = display_logscale
 
     def display_value(self):
-        return rescale(self.val, [self.val_min, self.val_max],
-                [self.display_min, self.display_max], self.display_logscale)
+        return rescale(self.val, self.val_min_max, self.display_min_max,
+                self.display_logscale)
 
 class ColoredBox:
     # BoxValue
@@ -200,7 +198,7 @@ class ColoredBox:
         row = '|%s|' % row
 
         box = '\n'.join([row] * height)
-        if self.height.display_max > 1:
+        if self.height.display_min_max[1] > 1:
             box += '\n'
         return box
 
