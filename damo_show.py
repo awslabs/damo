@@ -119,6 +119,10 @@ region_formatters = [
             'user-customizable (via --region_box_*) box (age/access_rate/size by default)'),
         ]
 
+default_record_head_format = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <duration> from <abs start time>'
+default_snapshot_head_format = 'monitored time: [<start time>, <end time>] (<duration>)'
+default_region_format = '<index> addr [<start address>, <end address>) (<size>) access <access rate> age <age>'
+
 def rescale(val, orig_scale_minmax, new_scale_minmax, logscale=True):
     '''Return a value in new scale
 
@@ -333,7 +337,7 @@ def format_pr(template, formatters, min_chars, index, region, snapshot, record,
 def set_formats(args, records):
     if args.format_record_head == None:
         if len(records) > 1:
-            args.format_record_head = 'kdamond <kdamond index> / context <context index> / scheme <scheme index> / target id <target id> / recorded for <duration> from <abs start time>'
+            args.format_record_head = default_record_head_format
         else:
             args.format_record_head = ''
 
@@ -343,7 +347,7 @@ def set_formats(args, records):
             if len(record.snapshots) > 1:
                 need_snapshot_head = True
         if need_snapshot_head:
-            args.format_snapshot_head = 'monitored time: [<start time>, <end time>] (<duration>)'
+            args.format_snapshot_head = default_snapshot_head_format
         else:
             args.format_snapshot_head = ''
 
@@ -534,7 +538,7 @@ def set_argparser(parser):
     parser.add_argument('--ls_snapshot_format_keywords', action='store_true',
             help='list available snapshot format keywords')
     parser.add_argument('--format_region', metavar='<template>',
-            default='<index> addr [<start address>, <end address>) (<size>) access <access rate> age <age>',
+            default=default_region_format,
             help='output format to show for each memory region')
     parser.add_argument('--ls_region_format_keywords', action='store_true',
             help='list available region format keywords')
