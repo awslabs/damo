@@ -354,16 +354,18 @@ def set_formats(args, records):
         args.format_region = ''
         args.format_snapshot_tail = '<total bytes>'
 
-def sorted_regions(regions, sort_fields):
+def sorted_regions(regions, sort_fields, sort_dsc):
     for field in sort_fields:
         if field == 'address':
-            regions = sorted(regions, key=lambda r: r.start)
+            regions = sorted(regions, key=lambda r: r.start, reverse=sort_dsc)
         elif field == 'access_rate':
-            regions = sorted(regions, key=lambda r: r.nr_accesses.percent)
+            regions = sorted(regions, key=lambda r: r.nr_accesses.percent,
+                    reverse=sort_dsc)
         elif field == 'age':
-            regions = sorted(regions, key=lambda r: r.age.usec)
+            regions = sorted(regions, key=lambda r: r.age.usec,
+                    reverse=sort_dsc)
         elif field == 'size':
-            regions = sorted(regions, key=lambda r: r.size())
+            regions = sorted(regions, key=lambda r: r.size(), reverse=sort_dsc)
     return regions
 
 def pr_records(args, records):
@@ -399,7 +401,8 @@ def pr_records(args, records):
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
             for idx, r in enumerate(
-                    sorted_regions(snapshot.regions, args.sort_regions_by)):
+                    sorted_regions(snapshot.regions, args.sort_regions_by,
+                        args.sort_regions_dsc)):
                 format_pr(args.format_region, region_formatters,
                         args.min_chars_for, idx, r, snapshot, record,
                         args.raw_number, region_box_args)
@@ -511,6 +514,8 @@ def set_argparser(parser):
             choices=['address', 'access_rate', 'age', 'size'], nargs='+',
             default=['address'],
             help='fields to sort regions by')
+    parser.add_argument('--sort_regions_dsc', action='store_true',
+            help='sort regions in descending order')
     parser.add_argument('--dont_merge_regions', action='store_true',
             help='don\'t merge contiguous regions of same access pattern')
 
