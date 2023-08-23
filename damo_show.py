@@ -194,7 +194,7 @@ class ColoredBox:
             height = 1
 
         if type(self.color.val) == str:
-            row = '%s' % (self.color_val * length)
+            row = '%s' % (self.color.val * length)
         else:
             color_level = int(self.color.display_value())
             row = '%s' % _damo_ascii_color.colored(
