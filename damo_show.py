@@ -294,6 +294,50 @@ class RegionBoxArgs:
                 BoxValue(height_val, height_val_minmax,
                     self.height.display_min_max, self.height.display_logscale))
 
+    def format_min_max(self, minval, maxval, value_name, raw):
+        if value_name == 'size':
+            return '%s-%s' % (_damo_fmt_str.format_sz(minval, raw),
+                    _damo_fmt_str.format_sz(maxval, raw))
+        if value_name == 'age':
+            return '%s-%s' % (_damo_fmt_str.format_time_us(minval, raw),
+                    _damo_fmt_str.format_time_us(maxval, raw))
+        if value_name == 'access_rate':
+            return '%s-%s' % (_damo_fmt_str.format_percent(minval, raw),
+                    _damo_fmt_str.format_percent(maxval, raw))
+
+    def description_msg(self, raw):
+        lines = []
+        minval, maxval = self.minmax(self.length.value_name)
+        lines.append('# length: %s (represents %s with columns %d-%d in %s)'
+                % (self.length.value_name,
+                    self.format_min_max(minval, maxval,
+                        self.length.value_name, raw),
+                    self.length.display_min_max[0],
+                    self.length.display_min_max[1],
+                    'logscale'
+                    if self.length.display_logscale else 'linearscale'))
+
+        minval, maxval = self.minmax(self.color.value_name)
+        lines.append('# color: %s (represents %s with number %d-%d in %s)'
+                % (self.color.value_name,
+                    self.format_min_max(minval, maxval,
+                        self.color.value_name, raw),
+                    self.color.display_min_max[0],
+                    self.color.display_min_max[1],
+                    'logscale'
+                    if self.color.display_logscale else 'linearscale'))
+
+        minval, maxval = self.minmax(self.height.value_name)
+        lines.append('# height: %s (represents %s with number %d-%d in %s)'
+                % (self.height.value_name,
+                    self.format_min_max(minval, maxval,
+                        self.height.value_name, raw),
+                    self.height.display_min_max[0],
+                    self.height.display_min_max[1],
+                    'logscale'
+                    if self.height.display_logscale else 'linearscale'))
+        return '\n'.join(lines)
+
 def apply_min_chars(min_chars, field_name, txt):
     # min_chars: [[<field name>, <number of min chars>]...]
     for name, nr in min_chars:
