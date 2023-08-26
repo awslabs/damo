@@ -400,6 +400,9 @@ def set_formats(args, records):
 
     if args.region_box:
         args.format_region = '<box>%s' % default_region_format
+        if args.format_snapshot_tail.find('<region box description>') == -1:
+            args.format_snapshot_tail = ('%s\n<region box description>' %
+                    args.format_record_tail)
 
 def sorted_regions(regions, sort_fields, sort_dsc):
     for field in sort_fields:
