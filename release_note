@@ -1,6 +1,12 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v1.9.6
+- Remove '<age access_rate size> region format keyword
+  - Should use only '<box>'
+- Add '<region box description>' snapshot keyword
+- Add '--region_box' option for shortcut of box-based representation
+
 v1.9.5
 - Code cleanup
 
