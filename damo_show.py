@@ -115,7 +115,7 @@ region_formatters = [
             'how long the access pattern of the region has maintained'),
         Formatter('<box>',
             lambda index, region, raw, rbargs:
-            rbargs.to_str(region, None, None, None),
+            rbargs.to_str(region),
             'user-customizable (via --region_box_*) box (age/access_rate/size by default)'),
         ]
 
@@ -275,27 +275,15 @@ class RegionBoxArgs:
             return region.age.usec, [minval, maxval]
         return None, None
 
-    def to_str(self, region, length_val_name, color_val_name, height_val_name):
-        if length_val_name == None:
-            length_val_name = self.length.value_name
-        if color_val_name == None:
-            color_val_name = self.color.value_name
-        if height_val_name == None:
-            height_val_name = self.height.value_name
-
-        if (length_val_name == None and color_val_name == None and
-                height_val_name == None):
-            length_val_name = 'age'
-            color_val_name = 'access_rate'
-            height_val_name = 'size'
-
+    def to_str(self, region):
         length_val, length_val_minmax = self.val_minmax(region,
-                length_val_name)
-        color_val, color_val_minmax = self.val_minmax(region, color_val_name)
+                self.length.value_name)
+        color_val, color_val_minmax = self.val_minmax(region,
+                self.color.value_name)
         if color_val == None:
             color_val = '-'
         height_val, height_val_minmax = self.val_minmax(region,
-                height_val_name)
+                self.height.value_name)
 
         return '%s' % ColoredBox(
                 BoxValue(length_val, length_val_minmax,
