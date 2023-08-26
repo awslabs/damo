@@ -357,6 +357,9 @@ def set_formats(args, records):
         args.format_region = ''
         args.format_snapshot_tail = '<total bytes>'
 
+    if args.region_box:
+        args.format_region = '<box>%s' % default_region_format
+
 def sorted_regions(regions, sort_fields, sort_dsc):
     for field in sort_fields:
         if field == 'address':
@@ -565,6 +568,8 @@ def set_argparser(parser):
                 ['<start address>', 12],['<end address>', 11],
                 ['<size>', 11], ['<access rate>', 5]],
             help='minimum character for each keyword of the format')
+    parser.add_argument('--region_box', action='store_true',
+            help='show region access pattern as a box')
     parser.add_argument('--total_sz_only', action='store_true',
             help='print only total size of the regions for each snapshot')
     parser.add_argument('--raw_number', action='store_true',
