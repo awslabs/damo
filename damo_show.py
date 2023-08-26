@@ -256,18 +256,23 @@ class RegionBoxArgs:
         self.colorset = colorset
         self.height = height
 
-    def val_minmax(self, region, value_name):
-        sorted_vals = self.sorted_access_patterns
+    def minmax(self, value_name):
         if value_name == 'size':
-            return region.size(), [
-                    sorted_vals.sz_regions[0], sorted_vals.sz_regions[-1]]
+            sorted_vals = self.sorted_access_patterns.sz_regions
         elif value_name == 'access_rate':
-            return region.nr_accesses.percent, [
-                    sorted_vals.access_rates_percent[0],
-                    sorted_vals.access_rates_percent[-1]]
+            sorted_vals = self.sorted_access_patterns.access_rates_percent
         elif value_name == 'age':
-            return region.age.usec, [sorted_vals.ages_us[0],
-                    sorted_vals.ages_us[-1]]
+            sorted_vals = self.sorted_access_patterns.ages_us
+        return sorted_vals[0], sorted_vals[-1]
+
+    def val_minmax(self, region, value_name):
+        minval, maxval = self.minmax(value_name)
+        if value_name == 'size':
+            return region.size(), [minval, maxval]
+        elif value_name == 'access_rate':
+            return region.nr_accesses.percent, [minval, maxval]
+        elif value_name == 'age':
+            return region.age.usec, [minval, maxval]
         return None, None
 
     def to_str(self, region, length_val_name, color_val_name, height_val_name):
