@@ -553,7 +553,7 @@ def set_argparser(parser):
             help='list available region format keywords')
     parser.add_argument('--region_box_values',
             choices=['size', 'access_rate', 'age', 'none'], nargs=3,
-            default=['none', 'none', 'none'],
+            default=['age', 'access_rate', 'size'],
             help='values to show via the <box>\'s length, color, and height')
     parser.add_argument('--region_box_min_max_length', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 30],
