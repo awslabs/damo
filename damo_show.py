@@ -346,6 +346,7 @@ def set_formats(args, records):
         for record in records:
             if len(record.snapshots) > 1:
                 need_snapshot_head = True
+                break
         if need_snapshot_head:
             args.format_snapshot_head = default_snapshot_head_format
         else:
