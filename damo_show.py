@@ -300,19 +300,19 @@ class RegionBoxArgs:
 
     def format_min_max(self, minval, maxval, value_name, raw):
         if value_name == 'size':
-            return '%s-%s' % (_damo_fmt_str.format_sz(minval, raw),
+            return '[%s, %s]' % (_damo_fmt_str.format_sz(minval, raw),
                     _damo_fmt_str.format_sz(maxval, raw))
         if value_name == 'age':
-            return '%s-%s' % (_damo_fmt_str.format_time_us(minval, raw),
+            return '[%s, %s] ' % (_damo_fmt_str.format_time_us(minval, raw),
                     _damo_fmt_str.format_time_us(maxval, raw))
         if value_name == 'access_rate':
-            return '%s-%s' % (_damo_fmt_str.format_percent(minval, raw),
+            return '[%s, %s]' % (_damo_fmt_str.format_percent(minval, raw),
                     _damo_fmt_str.format_percent(maxval, raw))
 
     def description_msg(self, raw):
         lines = []
         minval, maxval = self.minmax(self.length.value_name)
-        lines.append('# length: %s (represents %s with columns %d-%d in %s)'
+        lines.append('# length: %s (represents %s with [%d, %d] columns in %s)'
                 % (self.length.value_name,
                     self.format_min_max(minval, maxval,
                         self.length.value_name, raw),
@@ -322,7 +322,7 @@ class RegionBoxArgs:
                     if self.length.display_logscale else 'linearscale'))
 
         minval, maxval = self.minmax(self.color.value_name)
-        lines.append('# color: %s (represents %s with number %d-%d in %s)'
+        lines.append('# color: %s (represents %s with [%d, %d] number/color in %s)'
                 % (self.color.value_name,
                     self.format_min_max(minval, maxval,
                         self.color.value_name, raw),
@@ -332,7 +332,7 @@ class RegionBoxArgs:
                     if self.color.display_logscale else 'linearscale'))
 
         minval, maxval = self.minmax(self.height.value_name)
-        lines.append('# height: %s (represents %s with number %d-%d in %s)'
+        lines.append('# height: %s (represents %s with [%d, %d] rows in %s)'
                 % (self.height.value_name,
                     self.format_min_max(minval, maxval,
                         self.height.value_name, raw),
