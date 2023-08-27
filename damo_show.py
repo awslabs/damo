@@ -404,18 +404,26 @@ def set_formats(args, records):
             args.format_snapshot_tail = ('%s\n<region box description>' %
                     args.format_record_tail)
 
-def sorted_regions(regions, sort_fields, sort_dsc):
+def sorted_regions(regions, sort_fields, sort_dsc_keys):
     for field in sort_fields:
         if field == 'address':
-            regions = sorted(regions, key=lambda r: r.start, reverse=sort_dsc)
+            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
+                    'address' in sort_dsc_keys)
+            regions = sorted(regions, key=lambda r: r.start, reverse=dsc)
         elif field == 'access_rate':
+            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
+                    'access_rate' in sort_dsc_keys)
             regions = sorted(regions, key=lambda r: r.nr_accesses.percent,
-                    reverse=sort_dsc)
+                    reverse=dsc)
         elif field == 'age':
+            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
+                    'age' in sort_dsc_keys)
             regions = sorted(regions, key=lambda r: r.age.usec,
-                    reverse=sort_dsc)
+                    reverse=dsc)
         elif field == 'size':
-            regions = sorted(regions, key=lambda r: r.size(), reverse=sort_dsc)
+            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
+                    'size' in sort_dsc_keys)
+            regions = sorted(regions, key=lambda r: r.size(), reverse=dsc)
     return regions
 
 def pr_records(args, records):
@@ -564,8 +572,10 @@ def set_argparser(parser):
             choices=['address', 'access_rate', 'age', 'size'], nargs='+',
             default=['address'],
             help='fields to sort regions by')
-    parser.add_argument('--sort_regions_dsc', action='store_true',
-            help='sort regions in descending order')
+    parser.add_argument('--sort_regions_dsc',
+            choices=['address', 'access_rate', 'age', 'size', 'all'],
+            nargs='+',
+            help='sort regions in descending order for the given keys')
     parser.add_argument('--dont_merge_regions', action='store_true',
             help='don\'t merge contiguous regions of same access pattern')
 
