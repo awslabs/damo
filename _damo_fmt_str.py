@@ -313,6 +313,13 @@ def text_to_ratio(txt):
         ratio /= 100.0
     return ratio
 
+def text_to_bp(txt):
+    success, number = try_common_input(txt, 0)
+    if success:
+        return number
+
+    return text_to_ratio(txt) * 10000
+
 def text_to_permil(txt):
     success, number = try_common_input(txt, 0)
     if success:
