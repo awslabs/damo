@@ -174,6 +174,12 @@ def format_permil(permil, machine_friendly):
 
     return format_ratio(float(permil) / 1000, machine_friendly)
 
+def format_bp(bp, machine_friendly):
+    if machine_friendly:
+        return '%f' % permil
+
+    return format_ratio(float(bp) / 10000, machine_friendly)
+
 def indent_lines(string, indent_width):
     return '\n'.join([' ' * indent_width + l for l in string.split('\n')])
 
