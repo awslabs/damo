@@ -193,10 +193,11 @@ class DamonRegion:
     end = None
     # nr_accesses and age could be None
     nr_accesses = None
+    moving_accesses_bp = None
     age = None
 
     def __init__(self, start, end, nr_accesses=None, nr_accesses_unit=None,
-            age=None, age_unit=None):
+            age=None, age_unit=None, moving_accesses_bp=None):
         self.start = _damo_fmt_str.text_to_bytes(start)
         self.end = _damo_fmt_str.text_to_bytes(end)
 
@@ -204,6 +205,9 @@ class DamonRegion:
             return
         self.nr_accesses = DamonNrAccesses(nr_accesses, nr_accesses_unit)
         self.age = DamonAge(age, age_unit)
+        if moving_accesses_bp != None:
+            self.moving_accesses_bp = _damo_fmt_str.text_to_bp(
+                    moving_accesses_bp)
 
     def to_str(self, raw, intervals=None):
         if self.nr_accesses == None:
@@ -219,10 +223,12 @@ class DamonRegion:
         else:
             nr_accesses_unit = unit_samples
             age_unit = unit_aggr_intervals
-        return '%s: nr_accesses: %s, age: %s' % (
+        return '%s: nr_accesses: %s, age: %s, moving_accesses_rate: %s' % (
                 _damo_fmt_str.format_addr_range(self.start, self.end, raw),
                 self.nr_accesses.to_str(nr_accesses_unit, raw),
-                self.age.to_str(age_unit, raw))
+                self.age.to_str(age_unit, raw),
+                _damo_fmt_str.format_bp(self.moving_accesses_bp, raw)
+                if self.moving_accesses_bp != None else None)
 
     def __str__(self):
         return self.to_str(False)
@@ -244,6 +250,10 @@ class DamonRegion:
         region.nr_accesses = DamonNrAccesses.from_kvpairs(
                 kvpairs['nr_accesses'])
         region.age = DamonAge.from_kvpairs(kvpairs['age'])
+        if 'moving_accesses_bp' in kvpairs:
+            region.moving_accesses_bp = (_damo_fmt_str.text_to_bp(
+                    kvpairs['moving_accesses_bp'])
+            if kvpairs['moving_accesses_bp'] != None else None)
         return region
 
     def to_kvpairs(self, raw=False):
@@ -255,7 +265,11 @@ class DamonRegion:
             ('start', _damo_fmt_str.format_nr(self.start, raw)),
             ('end', _damo_fmt_str.format_nr(self.end, raw)),
             ('nr_accesses', self.nr_accesses.to_kvpairs(raw)),
-            ('age', self.age.to_kvpairs(raw))])
+            ('age', self.age.to_kvpairs(raw)),
+            ('moving_accesses_bp',
+                _damo_fmt_str.format_bp(self.moving_accesses_bp, raw)
+                if self.moving_accesses_bp != None else None),
+            ])
 
     def size(self):
         return self.end - self.start
