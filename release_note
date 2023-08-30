@@ -6,6 +6,8 @@ v1.9.6
   - Should use only '<box>'
 - Add '<region box description>' snapshot keyword
 - Add '--region_box' option for shortcut of box-based representation
+- Allow per-key reverse sorting of regions
+- Minimul support of DAMON's moving access rate
 
 v1.9.5
 - Code cleanup
