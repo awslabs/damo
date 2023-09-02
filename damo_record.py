@@ -20,7 +20,11 @@ class DataForCleanup:
 
 data_for_cleanup = DataForCleanup()
 
+cleaning = False
 def cleanup_exit(exit_code):
+    if cleaning == True:
+        return
+    cleaning = True
     if data_for_cleanup.kdamonds_idxs != None:
         # ignore returning error, as kdamonds may already finished
         _damon.turn_damon_off(data_for_cleanup.kdamonds_idxs)
