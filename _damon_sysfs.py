@@ -385,9 +385,7 @@ def files_content_to_damos_tried_regions(files_content):
     return [_damon.DamonRegion(
             int(kv['start']), int(kv['end']),
             int(kv['nr_accesses']), _damon.unit_samples,
-            int(kv['age']), _damon.unit_aggr_intervals,
-            int(kv['accesses_bp'])
-            if 'accesses_bp' in kv else None)
+            int(kv['age']), _damon.unit_aggr_intervals)
             for kv in number_sorted_dirs(files_content)]
 
 def files_content_to_scheme(files_content):
