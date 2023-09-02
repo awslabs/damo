@@ -10,7 +10,11 @@ import signal
 import _damon
 import _damon_args
 
+cleaning = False
 def cleanup_exit(exit_code):
+    if cleaning == True:
+        return
+    cleaning = True
     # ignore returning error, as kdamonds may already finished
     _damon.turn_damon_off(kdamonds_idxs)
     err = _damon.stage_kdamonds(orig_kdamonds)
