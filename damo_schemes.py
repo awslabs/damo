@@ -12,6 +12,7 @@ import _damon_args
 
 cleaning = False
 def cleanup_exit(exit_code):
+    global cleaning
     if cleaning == True:
         return
     cleaning = True

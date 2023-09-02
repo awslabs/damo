@@ -22,6 +22,7 @@ data_for_cleanup = DataForCleanup()
 
 cleaning = False
 def cleanup_exit(exit_code):
+    global cleaning
     if cleaning == True:
         return
     cleaning = True
