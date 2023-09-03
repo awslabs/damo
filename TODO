@@ -43,3 +43,6 @@
     - Current default region format might make sense to be optional?
 - Support DAMOS tried regions tracepoint
 - Support DAMOS interval
+- Make memory efficient record format
+  - Current json format takes too much memory for parsing, if record was for
+    long time.
