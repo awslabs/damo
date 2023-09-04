@@ -14,7 +14,7 @@ import _damo_fmt_str
 import _damon
 
 PERF = 'perf'
-PERF_EVENT = 'damon:damon_aggregated'
+perf_event_damon_aggregated = 'damon:damon_aggregated'
 
 class DamonSnapshot:
     '''
@@ -352,7 +352,8 @@ def set_perf_path(perf_path):
         subprocess.check_output(['which', PERF])
         try:
             subprocess.check_output(
-                    [PERF, 'record', '-e', PERF_EVENT, '--', 'sleep', '0'],
+                    [PERF, 'record', '-e', perf_event_damon_aggregated, '--',
+                        'sleep', '0'],
                     stderr=subprocess.PIPE)
         except:
             err = 'perf record not working with "%s"' % PERF
@@ -557,7 +558,8 @@ stop_monitoring_record() later.
 def start_monitoring_record(file_path, file_format, file_permission,
         monitoring_intervals):
     pipe = subprocess.Popen(
-            [PERF, 'record', '-a', '-e', PERF_EVENT, '-o', file_path])
+            [PERF, 'record', '-a', '-e', perf_event_damon_aggregated,
+                '-o', file_path])
     record_requests[pipe] = [file_path, file_format, file_permission,
             monitoring_intervals]
     return pipe
