@@ -173,7 +173,7 @@ def wops_for_schemes(ctx):
             'access_pattern': wops_for_scheme_access_pattern(
                 scheme.access_pattern, ctx),
             'action': scheme.action,
-            'apply_interval_us': '%s' % scheme.apply_interval_us,
+            'apply_interval_us': '%d' % scheme.apply_interval_us,
             'quotas': wops_for_scheme_quotas(scheme.quotas),
             'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
         }
