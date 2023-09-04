@@ -173,6 +173,7 @@ def wops_for_schemes(ctx):
             'access_pattern': wops_for_scheme_access_pattern(
                 scheme.access_pattern, ctx),
             'action': scheme.action,
+            'apply_interval_us': '%s' % scheme.apply_interval_us,
             'quotas': wops_for_scheme_quotas(scheme.quotas),
             'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
         }
@@ -392,7 +393,8 @@ def files_content_to_scheme(files_content):
     return _damon.Damos(
             files_content_to_access_pattern(files_content['access_pattern']),
             files_content['action'].strip(),
-            None,
+            files_content['apply_interval_us'].strip()
+                if 'apply_interval_us' in files_content else None,
             files_content_to_quotas(files_content['quotas']),
             files_content_to_watermarks(files_content['watermarks']),
             files_content_to_damos_filters(files_content['filters'])

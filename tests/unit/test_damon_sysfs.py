@@ -111,6 +111,7 @@ class TestDamonSysfs(unittest.TestCase):
                                             "sz": {"max": "0", "min": "0"}
                                             },
                                         "action": "stat",
+                                        "apply_interval_us": "0",
                                         "quotas": {
                                             "bytes": "0", "ms": "0",
                                             "reset_interval_ms": "0",
