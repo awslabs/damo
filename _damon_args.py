@@ -122,8 +122,8 @@ def damos_options_to_filters(filters_args):
             return None, 'unsupported filter type'
     return filters, None
 
-def damos_options_to_scheme(sz_region, access_rate, age, action, quotas,
-        wmarks, filters):
+def damos_options_to_scheme(sz_region, access_rate, age, action,
+        apply_interval, quotas, wmarks, filters):
     if quotas != None:
         qargs = quotas
         try:
@@ -148,7 +148,7 @@ def damos_options_to_scheme(sz_region, access_rate, age, action, quotas,
         return _damon.Damos(
                 access_pattern=_damon.DamosAccessPattern(sz_region,
                     access_rate, _damon.unit_percent, age, _damon.unit_usec),
-                action=action, apply_interval_us=None, quotas=quotas,
+                action=action, apply_interval_us=apply_interval, quotas=quotas,
                 watermarks=wmarks, filters=filters), None
     except Exception as e:
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
@@ -161,6 +161,8 @@ def damos_options_to_schemes(args):
         return [], 'too much --damos_access_rate'
     if len(args.damos_age) > nr_schemes:
         return [], 'too much --damos_age'
+    if len(args.damos_apply_interval) > nr_schemes:
+        return [], 'too much --damos_apply_interval'
     if len(args.damos_quotas) > nr_schemes:
         return [], 'too much --damos_quotas'
     if len(args.damos_wmarks) > nr_schemes:
@@ -179,6 +181,8 @@ def damos_options_to_schemes(args):
     args.damos_access_rate += [['min', 'max']] * (
             nr_schemes - len(args.damos_access_rate))
     args.damos_age += [['min', 'max']] * (nr_schemes - len(args.damos_age))
+    args.damos_apply_interval += [0] * (
+            nr_schemes - len(args.damos_apply_interval))
     args.damos_quotas += [None] * (nr_schemes - len(args.damos_quotas))
     args.damos_wmarks += [None] * (nr_schemes - len(args.damos_wmarks))
     schemes = []
@@ -190,8 +194,8 @@ def damos_options_to_schemes(args):
             filters = args.damos_filter[filter_start_index:filter_end_index]
         scheme, err = damos_options_to_scheme(args.damos_sz_region[i],
                 args.damos_access_rate[i], args.damos_age[i],
-                args.damos_action[i], args.damos_quotas[i],
-                args.damos_wmarks[i], filters)
+                args.damos_action[i], args.damos_apply_interval[i],
+                args.damos_quotas[i], args.damos_wmarks[i], filters)
         if err != None:
             return [], err
         schemes.append(scheme)
@@ -417,6 +421,9 @@ def set_damos_argparser(parser):
     parser.add_argument('--damos_action', metavar='<action>',
             choices=_damon.damos_actions, action='append', default=[],
             help='damos action to apply to the target regions')
+    parser.add_argument('--damos_apply_interval', metavar='<microseconds>',
+            action='append', default=[],
+            help='the apply interval for the scheme')
     parser.add_argument('--damos_quotas', default=[],
             metavar=('<time (ms)>', '<size (bytes)>', '<reset interval (ms)>',
                 '<size priority weight (permil)>',
