@@ -678,7 +678,7 @@ class Damos:
 
     def to_str(self, raw):
         lines = ['action: %s per %s' % (self.action,
-            _damo_fmt_str.format_time_us(self.apply_interval_us)
+            _damo_fmt_str.format_time_us(self.apply_interval_us, raw)
             if self.apply_interval_us != 0 else 'aggr interval')]
         lines.append('target access pattern')
         lines.append(_damo_fmt_str.indent_lines(
