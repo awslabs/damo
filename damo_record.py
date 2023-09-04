@@ -172,6 +172,7 @@ def main(args=None):
                 0].contexts[0].intervals
 
     data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
+            _damon_result.perf_event_damon_aggregated,
             args.out, args.output_type, args.output_permission,
             monitoring_intervals)
     print('Press Ctrl+C to stop')

@@ -15,6 +15,7 @@ import _damon
 
 PERF = 'perf'
 perf_event_damon_aggregated = 'damon:damon_aggregated'
+perf_event_damos_applied = 'damon:damos_before_apply'
 
 class DamonSnapshot:
     '''
@@ -555,11 +556,10 @@ Start recording DAMON's monitoring results using perf.
 Returns pipe for the perf.  The pipe should be passed to
 stop_monitoring_record() later.
 '''
-def start_monitoring_record(file_path, file_format, file_permission,
-        monitoring_intervals):
+def start_monitoring_record(tracepoint, file_path, file_format,
+        file_permission, monitoring_intervals):
     pipe = subprocess.Popen(
-            [PERF, 'record', '-a', '-e', perf_event_damon_aggregated,
-                '-o', file_path])
+            [PERF, 'record', '-a', '-e', tracepoint, '-o', file_path])
     record_requests[pipe] = [file_path, file_format, file_permission,
             monitoring_intervals]
     return pipe
