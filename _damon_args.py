@@ -148,8 +148,8 @@ def damos_options_to_scheme(sz_region, access_rate, age, action, quotas,
         return _damon.Damos(
                 access_pattern=_damon.DamosAccessPattern(sz_region,
                     access_rate, _damon.unit_percent, age, _damon.unit_usec),
-                action=action, quotas=quotas, watermarks=wmarks,
-                filters=filters), None
+                action=action, apply_interval_us=None, quotas=quotas,
+                watermarks=wmarks, filters=filters), None
     except Exception as e:
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
 

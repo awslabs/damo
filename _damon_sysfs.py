@@ -392,6 +392,7 @@ def files_content_to_scheme(files_content):
     return _damon.Damos(
             files_content_to_access_pattern(files_content['access_pattern']),
             files_content['action'].strip(),
+            None,
             files_content_to_quotas(files_content['quotas']),
             files_content_to_watermarks(files_content['watermarks']),
             files_content_to_damos_filters(files_content['filters'])

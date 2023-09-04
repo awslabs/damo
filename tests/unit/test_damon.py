@@ -26,6 +26,7 @@ class TestDamon(unittest.TestCase):
                 _damon.DamosAccessPattern([0, 10], [5, 8], _damon.unit_percent,
                     [54, 88], _damon.unit_usec),
                 'pageout',
+                None,
                 _damon.DamosQuotas(100, 1024, 1000, [80, 76, 24]),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
                     200),
@@ -35,8 +36,8 @@ class TestDamon(unittest.TestCase):
         damos_kvpairs = damos.to_kvpairs()
         self.assertEqual(type(damos_kvpairs), collections.OrderedDict)
         self.assertEqual(list(damos_kvpairs.keys()),
-                ['action', 'access_pattern', 'quotas', 'watermarks',
-                    'filters'])
+                ['action', 'access_pattern', 'apply_interval_us', 'quotas',
+                    'watermarks', 'filters'])
         self.assertEqual(damos, _damon.Damos.from_kvpairs(damos_kvpairs))
 
         ctx = _damon.DamonCtx(
@@ -71,6 +72,7 @@ class TestDamon(unittest.TestCase):
                     18446744073709551615], [0.0, 0.0], _damon.unit_percent,
                     [1000000, 4294900000], _damon.unit_usec),
                 action='stat',
+                apply_interval_us=None,
                 quotas=_damon.DamosQuotas(time_ms=0, sz_bytes=584792941,
                     reset_interval_ms=1000, weights=[0,0,0]),
                 watermarks=_damon.DamosWatermarks(

@@ -637,6 +637,7 @@ damos_action_stat = damos_actions[7]
 class Damos:
     access_pattern = None
     action = None
+    apply_interval_us = None
     quotas = None
     watermarks = None
     filters = None
@@ -646,6 +647,7 @@ class Damos:
 
     # for monitoring only by default
     def __init__(self, access_pattern=None, action=damos_action_stat,
+            apply_interval_us=None,
             quotas=None, watermarks=None, filters=None, stats=None,
             tried_regions=None, tried_bytes=None):
         self.access_pattern = (access_pattern
@@ -653,6 +655,11 @@ class Damos:
         if not action in damos_actions:
             raise Exception('wrong damos action: %s' % action)
         self.action = action
+        if apply_interval_us != None:
+            self.apply_interval_us = _damo_fmt_str.text_to_us(
+                    apply_interval_us)
+        else:
+            self.apply_interval_us = 0
         self.quotas = quotas if quotas != None else DamosQuotas()
         self.watermarks = (watermarks
                 if watermarks != None else DamosWatermarks())
@@ -670,7 +677,9 @@ class Damos:
                 self.tried_bytes += region.size()
 
     def to_str(self, raw):
-        lines = ['action: %s' % self.action]
+        lines = ['action: %s per %s' % (self.action,
+            _damo_fmt_str.format_time_us(self.apply_interval_us)
+            if self.apply_interval_us != 0 else 'aggr interval')]
         lines.append('target access pattern')
         lines.append(_damo_fmt_str.indent_lines(
             self.access_pattern.to_str(raw), 4))
@@ -702,7 +711,9 @@ class Damos:
     def __eq__(self, other):
         return (type(self) == type(other) and
                 self.access_pattern == other.access_pattern and
-                self.action == other.action and self.quotas == other.quotas and
+                self.action == other.action and
+                self.apply_interval_us == other.apply_interval_us and
+                self.quotas == other.quotas and
                 self.watermarks == other.watermarks and
                 self.filters == other.filters)
 
@@ -715,6 +726,7 @@ class Damos:
         return Damos(DamosAccessPattern.from_kvpairs(kv['access_pattern'])
                     if 'access_pattern' in kv else DamosAccessPattern(),
                 kv['action'] if 'action' in kv else damos_action_stat,
+                kv['apply_interval_us'] if 'apply_interval_us' in kv else None,
                 DamosQuotas.from_kvpairs(kv['quotas'])
                     if 'quotas' in kv else DamosQuotas(),
                 DamosWatermarks.from_kvpairs(kv['watermarks'])
@@ -726,6 +738,7 @@ class Damos:
         kv = collections.OrderedDict()
         kv['action'] = self.action
         kv['access_pattern'] = self.access_pattern.to_kvpairs(raw)
+        kv['apply_interval_us'] = self.apply_interval_us
         kv['quotas'] = self.quotas.to_kvpairs(raw)
         kv['watermarks'] = self.watermarks.to_kvpairs(raw)
         filters = []
@@ -738,7 +751,9 @@ class Damos:
         return (type(self) == type(other) and
                 self.access_pattern.effectively_equal(
                     other.access_pattern, intervals) and
-                self.action == other.action and self.quotas == other.quotas and
+                self.action == other.action and
+                self.apply_interval_us == other.apply_interval_us and
+                self.quotas == other.quotas and
                 self.watermarks == other.watermarks and
                 self.filters == other.filters)
 

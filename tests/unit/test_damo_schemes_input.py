@@ -110,6 +110,7 @@ class TestDamoSchemesInput(unittest.TestCase):
                     [0, 0], _damon.unit_samples,
                     [0, 0], _damon.unit_aggr_intervals),
                 'stat',
+                None,
                 _damon.DamosQuotas(0, 0, 0, [0, 0, 0]),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None, None)]
         expected_damos_w_filters = [_damon.Damos(
@@ -117,6 +118,7 @@ class TestDamoSchemesInput(unittest.TestCase):
                     [0, 0], _damon.unit_samples,
                     [0, 0], _damon.unit_aggr_intervals),
                 'stat',
+                None,
                 _damon.DamosQuotas(0, 0, 0, [0, 0, 0]),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0),
                 [_damon.DamosFilter('anon', True, ''),
