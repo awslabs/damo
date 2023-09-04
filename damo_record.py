@@ -132,6 +132,8 @@ def set_argparser(parser):
             help='path of perf tool ')
     parser.add_argument('--include_child_tasks', action='store_true',
             help='record accesses of child processes')
+    parser.add_argument('--schemes_applied', action='store_true',
+            help='record schemes tried to be applied regions')
     parser.description='Record monitoring results'
     return parser
 
@@ -171,9 +173,13 @@ def main(args=None):
         monitoring_intervals = data_for_cleanup.orig_kdamonds[
                 0].contexts[0].intervals
 
+    if args.schemes_applied == False:
+        tracepoint = _damon_result.perf_event_damon_aggregated
+    else:
+        tracepoint = _damon_result.perf_event_damos_applied
+
     data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
-            _damon_result.perf_event_damon_aggregated,
-            args.out, args.output_type, args.output_permission,
+            tracepoint, args.out, args.output_type, args.output_permission,
             monitoring_intervals)
     print('Press Ctrl+C to stop')
 
