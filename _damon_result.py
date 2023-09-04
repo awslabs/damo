@@ -286,29 +286,41 @@ def parse_perf_script_line(line):
 
         Note that the last field is not in the early version[1].
 
+        line is like below for damos_before_apply:
+
+        kdamond.0 47293 [000] 80801.060214: damon:damos_before_apply: \
+                ctx_idx=0 scheme_idx=0 target_idx=0 nr_regions=11 \
+                121932607488-135128711168: 0 136
+
         [1] https://lore.kernel.org/linux-mm/df8d52f1fb2f353a62ff34dc09fe99e32ca1f63f.1636610337.git.xhao@linux.alibaba.com/
         '''
         fields = line.strip().split()
-        if not len(fields) in [9, 10]:
+        if not len(fields) > 5:
             return None, None, None, None
-        if fields[4] != 'damon:damon_aggregated:':
-            return None, None, None, None
-
-        end_time = int(float(fields[3][:-1]) * 1000000000)
-        target_id = int(fields[5].split('=')[1])
-        nr_regions = int(fields[6].split('=')[1])
-
-        start_addr, end_addr = [int(x) for x in fields[7][:-1].split('-')]
-        nr_accesses = int(fields[8])
-        if len(fields) == 10:
-            age = int(fields[9])
+        traceevent = fields[4][:-1]
+        if traceevent == perf_event_damon_aggregated:
+            return parse_damon_aggregated_perf_script_fields(fields)
         else:
-            age = None
-        region = _damon.DamonRegion(start_addr, end_addr,
-                nr_accesses, _damon.unit_samples,
-                age, _damon.unit_aggr_intervals)
+            return None, None, None, None
 
-        return region, end_time, target_id, nr_regions
+def parse_damon_aggregated_perf_script_fields(fields):
+    if not len(fields) in [9, 10]:
+        return None, None, None, None
+
+    end_time = int(float(fields[3][:-1]) * 1000000000)
+    target_id = int(fields[5].split('=')[1])
+    nr_regions = int(fields[6].split('=')[1])
+
+    start_addr, end_addr = [int(x) for x in fields[7][:-1].split('-')]
+    nr_accesses = int(fields[8])
+    if len(fields) == 10:
+        age = int(fields[9])
+    else:
+        age = None
+    region = _damon.DamonRegion(start_addr, end_addr, nr_accesses,
+            _damon.unit_samples, age, _damon.unit_aggr_intervals)
+
+    return region, end_time, target_id, nr_regions
 
 def parse_perf_script(script_output, monitoring_intervals):
     records = []
