@@ -322,12 +322,13 @@ class RegionBoxArgs:
                     if self.length.display_logscale else 'linearscale'))
 
         minval, maxval = self.minmax(self.color.value_name)
-        lines.append('# color: %s (represents %s with [%d, %d] number/color in %s)'
+        lines.append('# color: %s (represents %s with [%d, %d] number and color (%s) in %s)'
                 % (self.color.value_name,
                     self.format_min_max(minval, maxval,
                         self.color.value_name, raw),
                     self.color.display_min_max[0],
                     self.color.display_min_max[1],
+                    _damo_ascii_color.color_samples(self.colorset),
                     'logscale'
                     if self.color.display_logscale else 'linearscale'))
 
