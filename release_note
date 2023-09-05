@@ -1,6 +1,11 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v1.9.7
+- Reverse unnecessary support of DAMON's moving access rate
+- Support DAMOS apply intrvals (feature on damon/next only as of this release)
+- Support DAMOS recording (feature on damon/next only as of this release)
+
 v1.9.6
 - Remove '<age access_rate size> region format keyword
   - Should use only '<box>'
