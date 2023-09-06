@@ -84,7 +84,8 @@ def heat_pixels_from_snapshots(snapshots, time_range, addr_range, resols):
             time_idx += 1
     return pixels
 
-def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
+def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset,
+        print_colorset):
     highest_heat = None
     lowest_heat = None
     for snapshot in pixels:
@@ -106,7 +107,9 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset):
                     (_damo_ascii_color.color_mode_start_txt(colorset, heat),
                         heat))
         print(''.join(chars) + _damo_ascii_color.color_mode_end_txt())
-    print('# access_frequency: %s' % _damo_ascii_color.color_samples(colorset))
+    if print_colorset:
+        print('# access_frequency: %s' %
+                _damo_ascii_color.color_samples(colorset))
     print('# x-axis: space (%d-%d: %s)' % (addr_range[0], addr_range[1],
         _damo_fmt_str.format_sz(addr_range[1] - addr_range[0], False)))
     print('# y-axis: time (%d-%d: %s)' % (time_range[0], time_range[1],
@@ -147,7 +150,8 @@ def pr_heats(args, __records):
 
         if args.heatmap == 'stdout':
             heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax],
-                    [tres, ares], args.stdout_heatmap_color)
+                    [tres, ares], args.stdout_heatmap_color, not
+                    args.stdout_heatmap_skip_color_example)
             return
 
         for row in pixels:
@@ -349,6 +353,9 @@ def set_argparser(parser):
             help='another name of stdout_heatmap_color')
     parser.add_argument('--plot_ascii', action='store_true',
             help='shortcut of \'--heatmap stdout\'')
+    parser.add_argument('--stdout_heatmap_skip_color_example',
+            action='store_true',
+            help='skip printing example colors at the output')
     parser.description='Show when which address ranges were how frequently accessed'
 
 def main(args=None):
