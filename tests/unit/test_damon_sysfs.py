@@ -24,6 +24,7 @@ class TestDamonSysfs(unittest.TestCase):
                 'schemes_tried_regions': True,
                 'schemes_wmarks': True,
                 'schemes_filters': True,
+                'schemes_apply_interval': True,
                 'vaddr': True}
 
         sysfs_dict = {

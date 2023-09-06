@@ -173,13 +173,15 @@ def wops_for_schemes(ctx):
             'access_pattern': wops_for_scheme_access_pattern(
                 scheme.access_pattern, ctx),
             'action': scheme.action,
-            'apply_interval_us': '%d' % scheme.apply_interval_us,
             'quotas': wops_for_scheme_quotas(scheme.quotas),
             'watermarks': wops_for_scheme_watermarks(scheme.watermarks),
         }
         if feature_supported('schemes_filters'):
             schemes_wops[dirname]['filters'] = wops_for_scheme_filters(
                     scheme.filters)
+        if feature_supported('schemes_apply_interval'):
+            schemes_wops[dirname]['apply_interval_us'] = (
+                    '%d' % scheme.apply_interval_us)
     return schemes_wops
 
 def wops_for_regions(regions):
@@ -549,6 +551,9 @@ def update_supported_features():
 
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'filters')):
         feature_supports['schemes_filters'] = True
+
+    if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'apply_interval_us')):
+        feature_supports['schemes_apply_interval'] = True
 
     avail_ops, err = _avail_ops()
     if err == None:
