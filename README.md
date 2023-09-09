@@ -168,8 +168,8 @@ use `damo convert_record_format` to convert your old record binary format
 monitoring results files to the new format.
 
 
-`Python2 support
-----------------
+Python2 support
+---------------
 
 Deprecated.  Use Python3.
 
