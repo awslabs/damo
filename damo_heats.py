@@ -320,7 +320,10 @@ def plot_heatmap(data_file, output_file, args):
     set ylabel 'Address (bytes)';
     plot '%s' using 1:2:3 with image;""" % (terminal, output_file, x_range[0],
             x_range[1], y_range[0], y_range[1], data_file)
-    subprocess.call(['gnuplot', '-e', gnuplot_cmd])
+    try:
+        subprocess.call(['gnuplot', '-e', gnuplot_cmd])
+    except Exception as e:
+        print('executing gnuplot failed (%s)' % e)
     os.remove(data_file)
 
 def set_argparser(parser):
