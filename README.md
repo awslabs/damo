@@ -113,9 +113,9 @@ Visualizing Recorded Patterns
 Below three commands visualize the recorded access patterns into three
 image files.
 
-    $ damo report heats --heatmap access_pattern_heatmap.png
-    $ damo report wss --range 0 101 1 --plot wss_dist.png
-    $ damo report wss --range 0 101 1 --sortby time --plot wss_chron_change.png
+    $ damo report heats --heatmap stdout
+    $ damo report wss --range 0 101 1
+    $ damo report wss --range 0 101 1 --sortby time --plot
 
 - ``access_pattern_heatmap.png`` will show the data access pattern in a
   heatmap, which shows when (x-axis) what memory region (y-axis) is how
