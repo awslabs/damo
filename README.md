@@ -90,6 +90,27 @@ notice and grace priods.  The documented features could also be deprecated, but
 those will provide some notification and grace periods.
 
 
+Snapshot Data Access Pattern
+============================
+
+Below commands repeatedly get a snapshot of the access pattern of a program for
+every second.
+
+    $ git clone https://github.com/sjp38/masim
+    $ cd masim; make; ./masim ./configs/zigzag.cfg --silent &
+    $ sudo damo start --target_pid $(pidof masim)
+    $ while :; do sudo damo show; sleep 1; done
+
+The first two lines of the commands get an artificial memory access generator
+program and run it in the background.  It will repeatedly access two 100
+MiB-sized memory regions one by one.  You can substitute this with your real
+workload.
+
+The third line asks ``damo`` to start monitoring the access pattern of the
+process.  Finally, the last line retries a snapshot of the monitoring results
+every second and show on terminal.
+
+
 Recording Data Access Patterns
 ==============================
 
