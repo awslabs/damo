@@ -118,7 +118,7 @@ Below commands record memory access patterns of a program and save the
 monitoring results in `damon.data` file.
 
     $ git clone https://github.com/sjp38/masim
-    $ cd masim; make; ./masim ./configs/zigzag.cfg &
+    $ cd masim; make; ./masim ./configs/zigzag.cfg --silent &
     $ sudo damo record -o damon.data $(pidof masim)
 
 The first two lines of the commands get an artificial memory access generator
