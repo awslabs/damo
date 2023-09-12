@@ -405,7 +405,8 @@ def set_monitoring_attrs_argparser(parser):
 def set_monitoring_argparser(parser):
     parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
             help='monitoring operations set')
-    parser.add_argument('--target_pid', type=int, help='target pid')
+    parser.add_argument('--target_pid', type=int, metavar='<pid>',
+            help='pid of monitoring target process')
     parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
             type=str, default='', help='monitoring target address regions')
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
@@ -457,8 +458,8 @@ def set_argparser(parser, add_record_options):
     parser.add_argument('--kdamonds', metavar='<json string or file>',
             help='json format kdamonds specification to run DAMON for')
     parser.add_argument('deducible_target', type=str,
-            metavar='<deducible target>', nargs='?',
-            help='the target (command, pid, or special keywords) to monitor')
+            metavar='<command, pid, special keywords, or kdamonds json spec>', nargs='?',
+            help='the implicit monitoring requests')
     if add_record_options:
         parser.add_argument('-o', '--out', metavar='<file path>', type=str,
                 default='damon.data', help='output file path')
