@@ -413,6 +413,9 @@ def set_monitoring_argparser(parser):
     set_monitoring_attrs_argparser(parser)
 
 def set_damos_argparser(parser):
+    parser.add_argument('--damos_action', metavar='<action>',
+            choices=_damon.damos_actions, action='append', default=[],
+            help='damos action to apply to the target regions')
     parser.add_argument('--damos_sz_region', metavar=('<min>', '<max>'),
             nargs=2, default=[], action='append',
             help='min/max size of damos target regions (bytes)')
@@ -422,9 +425,6 @@ def set_damos_argparser(parser):
     parser.add_argument('--damos_age', metavar=('<min>', '<max>'), nargs=2,
             default=[], action='append',
             help='min/max age of damos target regions (microseconds)')
-    parser.add_argument('--damos_action', metavar='<action>',
-            choices=_damon.damos_actions, action='append', default=[],
-            help='damos action to apply to the target regions')
     parser.add_argument('--damos_apply_interval', metavar='<microseconds>',
             action='append', default=[],
             help='the apply interval for the scheme')
