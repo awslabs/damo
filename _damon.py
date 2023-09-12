@@ -807,9 +807,9 @@ class DamonCtx:
 
     def to_kvpairs(self, raw=False):
         kv = collections.OrderedDict({})
+        kv['ops'] = self.ops
         kv['intervals'] = self.intervals.to_kvpairs(raw)
         kv['nr_regions'] = self.nr_regions.to_kvpairs(raw)
-        kv['ops'] = self.ops
         kv['targets'] = [t.to_kvpairs(raw) for t in self.targets]
         kv['schemes'] = [s.to_kvpairs(raw) for s in self.schemes]
         return kv
