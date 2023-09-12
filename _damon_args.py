@@ -255,7 +255,8 @@ def kdamonds_from_json_arg(arg):
         else:
             kdamonds_str = arg
         kdamonds_kvpairs = json.loads(kdamonds_str)['kdamonds']
-        return [kdamond.from_kvpairs(kvp) for kvp in kdamonds_kvpairs], None
+        return [_damon.Kdamond.from_kvpairs(kvp)
+                for kvp in kdamonds_kvpairs], None
     except Exception as e:
         return None, e
 
