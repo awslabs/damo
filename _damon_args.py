@@ -379,7 +379,7 @@ def set_common_argparser(parser):
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')
 
-def set_monitoring_attrs_argparser(parser):
+def set_monitoring_attrs_pinpoint_argparser(parser):
     # for easier pinpoint setup
     parser.add_argument('-s', '--sample', metavar='<microseconds>',
             default=5000, help='sampling interval (us)')
@@ -392,6 +392,7 @@ def set_monitoring_attrs_argparser(parser):
     parser.add_argument('-m', '--maxr', metavar='<# regions>',
             default=1000, help='maximum number of regions')
 
+def set_monitoring_attrs_argparser(parser):
     # for easier total setup
     parser.add_argument('--monitoring_intervals', nargs=3,
             default=['5ms', '100ms', '1s'],
@@ -402,11 +403,14 @@ def set_monitoring_attrs_argparser(parser):
             help='min/max number of monitoring regions')
 
 def set_monitoring_argparser(parser):
-    set_monitoring_attrs_argparser(parser)
+    parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
+            help='monitoring operations set')
+    parser.add_argument('--target_pid', type=int, help='target pid')
     parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
             type=str, default='', help='monitoring target address regions')
     parser.add_argument('--numa_node', metavar='<node id>', type=int,
             help='if target is \'paddr\', limit it to the numa node')
+    set_monitoring_attrs_argparser(parser)
 
 def set_damos_argparser(parser):
     parser.add_argument('--damos_sz_region', metavar=('<min>', '<max>'),
@@ -447,9 +451,6 @@ def set_argparser(parser, add_record_options):
     if parser == None:
         parser = argparse.ArgumentParser()
     set_monitoring_argparser(parser)
-    parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
-            help='monitoring operations set')
-    parser.add_argument('--target_pid', type=int, help='target pid')
     set_damos_argparser(parser)
     parser.add_argument('-c', '--schemes', metavar='<json string or file>',
 	    help='data access monitoring-based operation schemes')
@@ -462,4 +463,5 @@ def set_argparser(parser, add_record_options):
         parser.add_argument('-o', '--out', metavar='<file path>', type=str,
                 default='damon.data', help='output file path')
     set_common_argparser(parser)
+    set_monitoring_attrs_pinpoint_argparser(parser)
     return parser

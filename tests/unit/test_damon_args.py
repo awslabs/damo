@@ -82,6 +82,7 @@ class TestDamonArgs(unittest.TestCase):
     def test_damon_intervals_for(self):
         parser = argparse.ArgumentParser()
         _damon_args.set_monitoring_attrs_argparser(parser)
+        _damon_args.set_monitoring_attrs_pinpoint_argparser(parser)
 
         args = parser.parse_args(
                 '--monitoring_intervals 4ms 120ms 1.5s'.split())
@@ -96,6 +97,7 @@ class TestDamonArgs(unittest.TestCase):
     def test_damon_nr_regions_range_for(self):
         parser = argparse.ArgumentParser()
         _damon_args.set_monitoring_attrs_argparser(parser)
+        _damon_args.set_monitoring_attrs_pinpoint_argparser(parser)
 
         args = parser.parse_args(
                 '--monitoring_nr_regions_range 25 5000'.split())
