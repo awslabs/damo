@@ -97,6 +97,7 @@ class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
 
 def main():
     parser = argparse.ArgumentParser(formatter_class=SubCmdHelpFormatter)
+    parser.description = 'Control DAMON and show its results'
 
     subparser = parser.add_subparsers(title='command', dest='command',
             metavar='<command>')
