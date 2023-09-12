@@ -16,8 +16,7 @@ def set_argparser(parser):
 
 def main(args=None):
     if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
+        parser = set_argparser(parser)
         args = parser.parse_args()
 
     kdamonds, err = _damon_args.kdamonds_for(args)
