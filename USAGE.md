@@ -29,6 +29,11 @@ You can install `damo` via the official Python packages system, PyPi:
 
     $ sudo pip3 install damo
 
+Or, you can use your distribution's package manager if available.  Refer to
+below to show the packaging status of `damo`.
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/damo.svg)](https://repology.org/project/damo/versions)
+
 Or, you can simply download the source code and make `$PATH` to point the
 source code directory.
 
