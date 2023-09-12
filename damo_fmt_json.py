@@ -7,6 +7,7 @@ Convert args to DAMON json input.
 import argparse
 import json
 
+import _damon
 import _damon_args
 
 def set_argparser(parser):
@@ -18,6 +19,8 @@ def main(args=None):
     if not args:
         parser = set_argparser(parser)
         args = parser.parse_args()
+
+    _damon.ensure_root_permission()
 
     kdamonds, err = _damon_args.kdamonds_for(args)
     if err:
