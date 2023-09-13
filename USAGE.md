@@ -64,10 +64,115 @@ Overview
 ========
 
 `damo` provides a subcommands-based interface.  You can show the list of the
-available commands and brief descripton of those via `damo --help`.
+available commands and brief descripton of those via `damo --help`.  The
+commands can be categorized as below:
+
+- For controlling DAMON (monitoring and monitoring-based system optimization)
+  - `start`, `tune`, and `stop` are included
+- For snapshot and visualization of DAMON's monitoring results and running
+  status
+  - `show`, and `status` are included
+- For recording the access monitoring results and visualizing those
+  - `record` and `report` are included
+- For convenient use of `damo`
+  `version`, `fmt_json`, `schemes`, and `monitor` are included
 
 Every subcommand also provides `--help` option, which shows the basic usage of
-it.
+it.  Below sections introduce more details about major subcommands among those.
+
+Note that some of the subcommands that not described in this document would be
+in experimental stage.  Those could be deprecated and removed without any
+notice and grace periods.
+
+
+DAMON Control (Access Monitoring and Monitoring-based System Optimization)
+==========================================================================
+
+
+`damo start`
+------------
+
+`damo start` starts DAMON as users request.  Specifically, users can specify
+DAMON how and to what address spaces to monitor, and what access
+monitoring-based system optimization to do.  The request can be made via
+several command line options of the command.  You can get the full list of the
+options via `damo start --help`.
+
+The command exits immediately after starting DAMON as requested.  It exits with
+exit value `0` if it successfully started DAMON.  Otherwise, the exit value
+will be non-zero.
+
+### Partial DAMON Parameters Update
+
+The command line options basically support specification of partial DAMON
+parameters such as monitoring intervals and DAMOS action, assuming single
+kdamond and single DAMON context.  With understanding of DAMON's core concepts,
+understanding what each of such options mean with their brief description on
+the help message wouldn't be that difficult.  If you don't feel so, please let
+the developer know (open issues on GitHub or send mails to
+damon@lists.linux.dev).
+
+### Partial DAMOS Parameters Update
+
+Command line options having prefix of `--damos_` are for DAMON-based operation
+schemes.  Those options are allowed to be specified multiple times for
+requesting multiple schemes.  For example, below shows how you can start DAMON
+with two DAMOS schemes, one for proactive LRU-prioritization of hot pages and
+the other one for proactive LRU-deprioritization of cold pages.
+
+    # damo start \
+        --damos_action lru_prio --damos_access_rate 50% max --damos_age 5s max \
+        --damos_action lru_deprio --damos_access_rate 0% 0% --damos_age 5s max
+
+### Full DAMON Parameters Update
+
+As mentioned above, the partial DAMON parameters update command line options
+support only single kdamond and single DAMON context.  That should be enough
+for many use cases, but for system-wide dynamic DAMON usages, that could be
+restrictive.  Also, specifying each parameter that different from their default
+values could be not convenient.  Users may want to specify full parameters at
+once in such cases.  For such users, the command supports `--kdamonds` option.
+It receives a json-format specification of kdamonds that you want DAMON to run
+with.  For the format of the specification, please refer to `damo fmt_json`
+documentation below, or simply try the command.
+
+Note that multiple DAMON contexts per kdamond is not supported as of
+2023-09-12, though.
+
+### Full DAMOS Parameters Update
+
+The Partial DAMOS parameters update options support multiple schemes as abovely
+mentioned.  However, it could be still too manual in some cases and users may
+want to provide all inputs at once.  For such cases, `--schemes` option
+receives a json-format specification of DAMOS schemes.  The format is same to
+schemes part of the `--kdamonds` input.
+
+
+`damo tune`
+-----------
+
+`damo tune` updates the DAMON parameters while DAMON is running.  It supports
+command line options that same to those of `damo start`.  Note that users
+should provide the full request specification to this command.  If only a
+partial parameters are specified via command line options of this command,
+unspecified parameters of the running DAMON will be updated to their default
+values.
+
+The command exits immediately after updating DAMON parameters as requested.  It
+exits with exit value `0` if it successfully started DAMON.  Otherwise, the
+exit value will be non-zero.
+
+
+`damo stop`
+-----------
+
+`damo stop` stops the running DAMON.
+
+
+Snapshot and Visualization of DAMON Monitoring Results and Running Status
+=========================================================================
+
+To be written
 
 
 Recording Data Access Pattern
@@ -260,6 +365,12 @@ duration spikes could be more easily found.
 
 Similar to that of ``heats --heatmap``, it also supports 'gnuplot' based simple
 visualization of the distribution via ``--plot`` option.
+
+
+Miscelleneous Helper Commands
+=============================
+
+To be written
 
 
 DAMON-based Operation Schemes
