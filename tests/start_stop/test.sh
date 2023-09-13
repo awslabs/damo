@@ -60,6 +60,20 @@ do
 	done
 	echo "PASS $testname2 status $i"
 
+	for i in {1..10}
+	do
+		if ! sudo "$damo" show &> /dev/null
+		then
+			echo "FAIL $testname2 show $i failed"
+			if ! sudo "$damo" stop
+			then
+				echo "failed stopping DAMON"
+			fi
+			exit 1
+		fi
+	done
+	echo "PASS $testname2 show $i"
+
 	if ! sudo "$damo" tune --aggr 200000 --ops paddr \
 		--damon_interface "$damon_interface" &> /dev/null
 	then
