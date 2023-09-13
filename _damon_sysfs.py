@@ -305,8 +305,6 @@ def ensure_dirs_populated_for(kdamonds):
         exit(1)
 
 def stage_kdamonds(kdamonds):
-    if len(kdamonds) > 1:
-        return 'currently only <=one kdamond is supported'
     if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
         return 'currently only <=one damon_ctx is supported'
     ensure_dirs_populated_for(kdamonds)
