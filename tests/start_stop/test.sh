@@ -98,6 +98,34 @@ do
 	fi
 	echo "PASS $testname2 tune-record-ongoing-validate"
 
+	for i in {1..10}
+	do
+		if ! sudo "$damo" status &> /dev/null
+		then
+			echo "FAIL $testname2 tune-status $i failed"
+			if ! sudo "$damo" stop
+			then
+				echo "failed stopping DAMON"
+			fi
+			exit 1
+		fi
+	done
+	echo "PASS $testname2 tune-status $i"
+
+	for i in {1..10}
+	do
+		if ! sudo "$damo" show &> /dev/null
+		then
+			echo "FAIL $testname2 tune-show $i failed"
+			if ! sudo "$damo" stop
+			then
+				echo "failed stopping DAMON"
+			fi
+			exit 1
+		fi
+	done
+	echo "PASS $testname2 tune-show $i"
+
 	sudo "$damo" stop --damon_interface "$damon_interface" 2> /dev/null
 	if pgrep kdamond.0 > /dev/null
 	then
