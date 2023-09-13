@@ -22,6 +22,15 @@ cannot use sysfs interface, report your usecase to sj@kernel.org,
 damon@lists.linux.dev and linux-mm@kvack.org.
 
 
+Perf
+----
+
+`damo` uses `perf`[1] for recording DAMON's access monitoring results.  Please
+ensure your system is having it.
+
+[1] https://perf.wiki.kernel.org/index.php/Main_Page
+
+
 Install
 -------
 
