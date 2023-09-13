@@ -32,7 +32,7 @@ ensure your system is having it.
 
 
 Install
--------
+=======
 
 You can install `damo` via the official Python packages system, PyPi:
 
