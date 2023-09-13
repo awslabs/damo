@@ -50,8 +50,11 @@ source code directory.
 Overview
 ========
 
-`damo` provides a subcommands-based interface. Every subcommand provides `-h`
-option, which shows the minimal usage of it.
+`damo` provides a subcommands-based interface.  You can show the list of the
+available commands and brief descripton of those via `damo --help`.
+
+Every subcommand also provides `--help` option, which shows the basic usage of
+it.
 
 
 Recording Data Access Pattern
