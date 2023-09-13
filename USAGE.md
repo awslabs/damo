@@ -31,6 +31,19 @@ ensure your system is having it.
 [1] https://perf.wiki.kernel.org/index.php/Main_Page
 
 
+Basic Concepts of DAMON
+-----------------------
+
+`damo` is a user space tool for `DAMON`.  Hence, for advanced and optimized use
+of `damo` rather than simple "Getting Started" tutorial, you should first
+understand the concepts of DAMON.  The official design
+[document](https://docs.kernel.org/mm/damon/design.html) is recommended for the
+purpose.  There are more resources to DAMON introduction talks and publications
+at the project [site](https://damonitor.githubio).  The documents wouldn't
+perfect, though.  Please don't hesitate at asking questions to the community
+(damon@lists.linux.dev).
+
+
 Install
 =======
 
