@@ -269,7 +269,22 @@ Users can further customize the box using `damo show` options that having
 be represented by the length, color, and height, and whether the values should
 be represented in logscale or linearscale.
 
-To be written
+
+`damo status`
+-------------
+
+`damo status` shows the running status of DAMON.  It shows every kdamond with
+the parameters that applied to it, running status (`on` or `off`), and DAMOS
+schemes status including its statistics and detailed applied regions
+information.
+
+Note that users can use `--json` to represent the status in a json format.  And
+the json format output can again be used for `--kdamonds` or the positional
+options of DAMON control commands (`start` and `tune`).
+
+The command exits immediately after showing the current status.  It exists with
+exit value `0` if it successfully retrieved and shown the status of DAMON.
+Otherwise, the exit value will be non-zero.
 
 
 Recording Data Access Pattern
