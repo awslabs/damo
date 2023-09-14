@@ -157,12 +157,11 @@ workloads are also available [2,3,4].
 Data Access Pattern Aware Memory Management
 ===========================================
 
-Below three commands make every memory region of size >=4K that hasn't accessed
-for >=60 seconds in your workload to be swapped out.  By doing this, you can
-make your workload more memory efficient with only a modest performance
-overhead.
+Below command makes every memory region of size >=4K that hasn't accessed for
+>=60 seconds in your workload to be swapped out.  By doing this, you can make
+your workload more memory efficient with only modest performance overhead.
 
-    $ sudo damo schemes --damos_access_rate 0 0 --damos_sz_region 4K max \
+    $ sudo damo start --damos_access_rate 0 0 --damos_sz_region 4K max \
                         --damos_age 60s max --damos_action pageout \
                         <pid of your workload>
 
