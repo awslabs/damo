@@ -327,49 +327,46 @@ exit value `0` if it successfully retrieved and shown the status of DAMON.
 Otherwise, the exit value will be non-zero.
 
 
+For recording the access monitoring results and visualizing those
+=================================================================
+
+`damo show` shows only a snapshot.  Since it contains the `age` of each region,
+it can be useful for online profiling or debugging.  For offline profiling or
+debugging, though, recording changing monitoring results and analyzing the
+record could be more helpful.  In this case, the `record` would same to that
+for `damo show`, but simply contains multiple `snapshot`s.
+
 Recording Data Access Pattern
-=============================
+-----------------------------
 
 The ``record`` subcommand records the data access pattern of target workloads
-in a file (``./damon.data`` by default).  Note that the file will be owned by
-``root`` and have ``600`` permission by default, so only root can read it.  You
-can change the permission via ``--output_permission`` option.  You can specify
-the monitoring target with 1) the command for execution of the monitoring
-target process, 2) pid of running target process, or 3) the special keyword,
-`paddr`, if you want to monitor the system's physical memory address space.
-Below example shows a command target usage:
+in a file (``./damon.data`` by default).  The path to the file can be set with
+`--out` option.  The output file will be owned by ``root`` and have ``600``
+permission by default, so only root can read it.  Users can change the
+permission via ``--output_permission`` option.
+
+Other than the two options, `damo record` receives command line options that
+same to those for `damo start` and `damo tune`.  If DAMON is already running,
+you can simply record the monitoring results of the running DAMON by providing
+no DAMON parameter options.  For example, below will start DAMON for physical
+address space monitoring, record the monitoring results, and save the records
+in `damon.data` file.
+
+    # damo start
+    # damo record
+
+Or, you can ask `damo start` to also start DAMON, together with the monitoring
+target command, like below:
 
     # damo record "sleep 5"
 
-The tool will execute ``sleep 5`` by itself and record the data access patterns
-of the process.  Below example shows a pid target usage:
+or, for already running process, like below:
 
-    # sleep 5 &
-    # damo record $(pidof sleep)
-
-Finally, the below example shows the use of the special keyword, `paddr`:
-
-    # damo record paddr
-
-In this case, the monitoring target regions defaults to the largest 'System
-RAM' region specified in `/proc/iomem` file.  Note that the initial monitoring
-target region is maintained rather than dynamically updated like the virtual
-memory address spaces monitoring case.
-
-The location of the recorded file can be explicitly set using ``-o`` option.
-You can further tune this by setting the monitoring attributes.  To know about
-the monitoring attributes in detail, please refer to the DAMON design
-[doc](https://damonitor.github.io/doc/html/latest/vm/damon/design.html).
-
-Note that the ``record`` subcommand executes the target command as a root.
-Therefore, the user could execute arbitrary commands with root permission.
-Hence, sysadmins should allow only trusted users to use ``damo``.  This is the
-same as the ``schemes`` subcommand which is mentioned below.  Please take care
-of that, either.
+    # damo record $(pidof my_workload)
 
 
-Analyzing Data Access Pattern
-=============================
+Visualizing Recorded Data Access Pattern
+----------------------------------------
 
 The ``report`` subcommand reads a data access pattern record file (if not
 explicitly specified using ``-i`` option, reads ``./damon.data`` file by
