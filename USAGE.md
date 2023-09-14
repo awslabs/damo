@@ -170,6 +170,10 @@ exit value will be non-zero.
 
 `damo stop` stops the running DAMON.
 
+The command exits immediately after stopping DAMON.  It exists with exit value
+`0` if it successfully terminated DAMON.  Otherwise, the exit value will be
+non-zero.
+
 
 Snapshot and Visualization of DAMON Monitoring Results and Running Status
 =========================================================================
