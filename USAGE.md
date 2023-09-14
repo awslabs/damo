@@ -178,6 +178,97 @@ non-zero.
 Snapshot and Visualization of DAMON Monitoring Results and Running Status
 =========================================================================
 
+`damo show`
+-----------
+
+`damo show` take a snapshot of running DAMON's monitoring results and show it.
+
+For example:
+
+    # damo start
+    # damo show
+    0   addr [4.000 GiB   , 16.245 GiB ) (12.245 GiB ) access 0 %   age 7 m 32.100 s
+    1   addr [16.245 GiB  , 28.529 GiB ) (12.284 GiB ) access 0 %   age 12 m 40.500 s
+    2   addr [28.529 GiB  , 40.800 GiB ) (12.271 GiB ) access 0 %   age 15 m 10.100 s
+    3   addr [40.800 GiB  , 52.866 GiB ) (12.066 GiB ) access 0 %   age 15 m 58.600 s
+    4   addr [52.866 GiB  , 65.121 GiB ) (12.255 GiB ) access 0 %   age 16 m 15.900 s
+    5   addr [65.121 GiB  , 77.312 GiB ) (12.191 GiB ) access 0 %   age 16 m 22.400 s
+    6   addr [77.312 GiB  , 89.537 GiB ) (12.225 GiB ) access 0 %   age 16 m 24.200 s
+    7   addr [89.537 GiB  , 101.824 GiB) (12.287 GiB ) access 0 %   age 16 m 25 s
+    8   addr [101.824 GiB , 126.938 GiB) (25.114 GiB ) access 0 %   age 16 m 25.300 s
+    total size: 122.938 GiB
+
+### DAMON Monitoring Results Structure
+
+The unit of the monitoring result is called as a record.  Each record contains
+monitoring results snapshot that retrieved for each
+kdamond/context/DAMOS scheme/target combination.  DAMOS scheme is in the
+combination because `damo` uses `DAMOS applied regions` feature of DAMON for
+efficient monitoring results retrieval.  Hence, the number of records that
+`damo show` will show to users would depend on how many kdamond/context/target
+combination is being used by them.
+
+Each record contains multiple snapshots of the monitoring results that
+retrieved for each `aggregation interval`.  For `damo show`, therefore, each
+record will contain only single snapshot.
+
+Each snapshot is configured with regions information.  Each region information
+contains the monitoring results including the start and end addresses of the
+memory region, `nr_accesses`, and `age`.  Number of regions per snapshot would
+depend on the `min_nr_regions` and `max_nr_regions` DAMON parameters and actual
+data access pattern of the monitoring target address space.
+
+### `damo`'s way of showing DAMON Monitoring Results
+
+`damo show` shows the information in a hierarchical way like below:
+
+    <record 0 head>
+        <snapshot 0 head>
+            <region 0 information>
+            [...]
+        <snapshot 0 tail>
+        [...]
+     <record 0 tail>
+     [...]
+
+That is, each information of the levels (record, snapshot and region) can be
+shown twice, once at the beginning (before showing it's internal data), and
+once at the end.  By default, record and snapshot head/tail are skipped if
+there is only one record and snapshot.  That's why above `damo show` example
+output shows only regions information.
+
+### Customization of The Output
+
+Users can customize what information to be shown in which way for the each
+position using `--format_{record,snapshot,region}[_{head,tail}]` option.  Each
+of the option receives a string for the template.  The template can have
+special format keywords for each position, e.g., `<start address>`, `<end
+address>`, `<access rate>`, or `<age>` keywords is available to be used for
+`--foramt_region` option's value.  The template can also have arbitrary
+strings.  The newline character (`\n`) is also supported.  Each of the keywords
+for each position can be shown via
+`--ls_{record,snapshot,region}_format_keywords` option.  Actually, `damo show`
+also internally uses the customization feature with its default templates.
+
+#### Region Visualization
+
+For region information customization, a special keyword called `<box>` is
+provided.  It represents each region's access pattern with its length, color,
+and height.  By default it represents each region's age, access rate
+(`nr_accesses`), and size with its length, color, and height.  That is,
+`damo show --format_region "<box>"` shows visualization of the access pattern,
+by showing location of each region in Y-axis, the hotness with color of each
+box, and how long the hotness has continued in X-axis.
+
+For convenient use of it with a default format, `damo show` provides
+`--region_box` option.  Output of the command with the option would help users
+better to understand.
+
+Users can further customize the box using `damo show` options that having
+`--region_box_` prefix.  For example, users can set what access information to
+be represented by the length, color, and height, and whether the values should
+be represented in logscale or linearscale.
+
 To be written
 
 
