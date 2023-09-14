@@ -104,6 +104,44 @@ The command exits immediately after starting DAMON as requested.  It exits with
 exit value `0` if it successfully started DAMON.  Otherwise, the exit value
 will be non-zero.
 
+### Simple Target Argument
+
+The command recieves one positional argument called deducible target.  It could
+be used for specifying monitoring target, or full DAMON parameters in a json
+format.  The command will try oto deduce the type of the argument value and use
+it.
+
+With the argument, users can specify the monitoring target with 1) the command
+for execution of the monitoring target process, 2) pid of running target
+process, or 3) the special keyword, `paddr`, if you want to monitor the
+system's physical memory address space.  Below example shows a command target
+usage:
+
+    # damo start "sleep 5"
+
+The command will execute ``sleep 5`` by itself and start monitoring the data
+access patterns of the process.  Below example shows a pid target usage:
+
+Note that the command executes the monitoring target command as a root.
+Therefore, the user could execute arbitrary commands with root permission.
+Hence, sysadmins should allow only trusted users to use ``damo``.
+
+    # sleep 5 &
+    # damo start $(pidof sleep)
+
+Finally, the below example shows the use of the special keyword, `paddr`:
+
+    # damo start paddr
+
+In this case, the monitoring target regions defaults to the largest 'System
+RAM' region specified in `/proc/iomem` file.  Note that the initial monitoring
+target region is maintained rather than dynamically updated like the virtual
+memory address spaces monitoring case.
+
+Users can specify full DAMON parameters at once in json format, by passing the
+json string of a path to a file containing the json string.  Refer to "Full
+DAMON Parameters Update" section below for the detail.
+
 ### Partial DAMON Parameters Update
 
 The command line options basically support specification of partial DAMON
@@ -136,7 +174,9 @@ values could be not convenient.  Users may want to specify full parameters at
 once in such cases.  For such users, the command supports `--kdamonds` option.
 It receives a json-format specification of kdamonds that you want DAMON to run
 with.  For the format of the specification, please refer to `damo fmt_json`
-documentation below, or simply try the command.
+documentation below, or simply try the command.  The `--kdamonds` option can
+also simply omitted because the option value can used for the `deducible
+target` (refer to "Simple Target Argument" section above).
 
 Note that multiple DAMON contexts per kdamond is not supported as of
 2023-09-12, though.
