@@ -374,9 +374,7 @@ default) and generates human-readable reports.  You can specify what type of
 report you want using a sub-subcommand to ``report`` subcommand.  ``raw``,
 ``heats``, and ``wss`` report types are supported for now.
 
-
-raw
----
+### raw
 
 ``raw`` sub-subcommand simply transforms the binary record into a
 human-readable text.  For example:
@@ -414,8 +412,7 @@ and a number of monitored address regions in this access pattern
 size, and the number of observed accesses of each region.
 
 
-heats
------
+### heats
 
 The ``raw`` output is very detailed but hard to manually read.  ``heats``
 sub-subcommand plots the data in 3-dimensional form, which represents the time
@@ -471,8 +468,7 @@ union.  If no axis boundary option is given, it will automatically find the
 biggest union in ``--guide`` output and set the boundary in it.
 
 
-wss
----
+### wss
 
 The ``wss`` type extracts the distribution and chronological working set size
 changes from the records.  For example:
