@@ -77,7 +77,7 @@ commands can be categorized as below:
 - For recording the access monitoring results and visualizing those
   - `record` and `report` are included
 - For convenient use of `damo`
-  `version`, `fmt_json`, `schemes`, and `monitor` are included
+  - `version` and `fmt_json` are included
 
 Every subcommand also provides `--help` option, which shows the basic usage of
 it.  Below sections introduce more details about major subcommands among those.
