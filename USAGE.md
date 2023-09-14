@@ -547,9 +547,8 @@ DAMON configuration that same to one that can be made with `damo start
 --damos_action stat`.  In other words, `damo start $(damo fmt_json
 --damos_action stat)` will be same to `damo start --damos_action stat`.
 
-
-DAMON-based Operation Schemes
-=============================
+`damo schemes`
+--------------
 
 The ``schemes`` subcommand allows users to do DAMON-based memory management
 optimizations in a few seconds.  Similar to ``record``, it receives monitoring
