@@ -429,7 +429,7 @@ types are supported.
 
 ### raw
 
-``raw`` sub-subcommand simply transforms the binary record into a
+`raw` sub-subcommand directly transforms the binary record into a
 human-readable text.  For example:
 
     $ damo report raw
@@ -467,13 +467,13 @@ size, and the number of observed accesses of each region.
 
 ### heats
 
-The ``raw`` output is very detailed but hard to manually read.  ``heats``
+The `raw` output is very detailed but hard to manually read.  `heats`
 sub-subcommand plots the data in 3-dimensional form, which represents the time
 in x-axis, address of regions in y-axis, and the access frequency in z-axis.
-Users can optionally set the resolution of the map (``--resol``) and start/end
-point of each axis (``--time_range`` and ``--address_range``).  For example:
+Users can optionally set the resolution of the map (`--resol`) and start/end
+point of each axis (`--time_range` and `--address_range`).  For example:
 
-    $ damo report heats --resol 3 3
+    # damo report heats --resol 3 3
     0               0               0.0
     0               7609002         0.0
     0               15218004        0.0
@@ -484,28 +484,28 @@ point of each axis (``--time_range`` and ``--address_range``).  For example:
     132225241702    7609002         0.0
     132225241702    15218004        0.0
 
-This command shows a recorded access pattern in heatmap of 3x3 resolution.
+This command shows a recorded access pattern in a heatmap of 3x3 resolution.
 Therefore it shows 9 data points in total.  Each line shows each of the data
 points.  The three numbers in each line represent time in nanoseconds, address
 in bytes and the observed access frequency.
 
 Users can convert this text output into a heatmap image (represents z-axis
 values with colors) or other 3D representations using various tools such as
-'gnuplot'.  For more convenience, ``heats`` sub-subcommand provides the
-'gnuplot' based heatmap image creation.  For this, you can use ``--heatmap``
-option.  Also, note that because it uses 'gnuplot' internally, it will fail if
-'gnuplot' is not installed on your system.  For example:
+'gnuplot'.  For more convenience, `heats` sub-subcommand provides the 'gnuplot'
+based heatmap image creation.  For this, `--heatmap` option can be used.  Also,
+note that because it uses 'gnuplot' internally, it will fail if 'gnuplot' is
+not installed on your system.  For example:
 
     $ ./damo report heats --heatmap heatmap.png
 
 Creates the heatmap image in ``heatmap.png`` file.  It supports ``pdf``,
 ``png``, ``jpeg``, and ``svg``.
 
-If the target address space is virtual memory address space and you plot the
-entire address space, the huge unmapped regions will make the picture looks
-only black.  Therefore you should do proper zoom in / zoom out using the
-resolution and axis boundary-setting arguments.  To make this effort minimal,
-you can use ``--guide`` option as below:
+If the target address space is a virtual memory address space and the user
+plots the entire address space, the huge unmapped regions will make the picture
+looks only black.  Therefore the user should do proper zoom in / zoom out using
+the resolution and axis boundary-setting arguments.  To make this effort
+minimal, `--guide` option can be used as below:
 
     $ ./damo report heats --guide
     target_id:18446623438842320000
