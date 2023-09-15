@@ -217,16 +217,16 @@ any `.json` files in `damon-tests`
 `damo tune`
 -----------
 
-`damo tune` updates the DAMON parameters while DAMON is running.  It supports
-command line options that same to those of `damo start`.  Note that users
-should provide the full request specification to this command.  If only a
-partial parameters are specified via command line options of this command,
-unspecified parameters of the running DAMON will be updated to their default
+`damo tune` updates the DAMON parameters while DAMON is running.  It provides
+the set of command line options that same to that of `damo start`.  Note that
+users should provide the full request specification to this command.  If only a
+partial parameters are specified via the command line options of this command,
+unspecified parameters of running DAMON will be updated to their default
 values.
 
 The command exits immediately after updating DAMON parameters as requested.  It
-exits with exit value `0` if it successfully started DAMON.  Otherwise, the
-exit value will be non-zero.
+exits with exit value `0` if the update successed.  Otherwise, the exit value
+will be non-zero.
 
 
 `damo stop`
