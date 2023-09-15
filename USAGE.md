@@ -418,14 +418,14 @@ or, for already running process, like below:
     # damo record $(pidof my_workload)
 
 
-Visualizing Recorded Data Access Pattern
-----------------------------------------
+`damo report` (Visualizing Recorded Data Access Pattern)
+--------------------------------------------------------
 
-The ``report`` subcommand reads a data access pattern record file (if not
-explicitly specified using ``-i`` option, reads ``./damon.data`` file by
-default) and generates human-readable reports.  You can specify what type of
-report you want using a sub-subcommand to ``report`` subcommand.  ``raw``,
-``heats``, and ``wss`` report types are supported for now.
+`damo report` reads a data access pattern record file (if not explicitly
+specified using ``-i`` option, reads ``./damon.data`` file by default) and
+generates human-readable reports.  Users can specify what type of report they
+want using a sub-subcommand to `damo report`.  `raw`, `heats`, and `wss` report
+types are supported.
 
 ### raw
 
