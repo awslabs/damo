@@ -105,8 +105,8 @@ DAMON and retrieval/interpretation of the results.
 ------------
 
 `damo start` starts DAMON as users request.  Specifically, users can specify
-DAMON how and to what address spaces to monitor, and what access
-monitoring-based system optimization to do.  The request can be made via
+how and to what address spaces DAMON should do monitor accesses, and what
+access monitoring-based system optimization to do.  The request can be made via
 several command line options of the command.  You can get the full list of the
 options via `damo start --help`.
 
@@ -118,28 +118,32 @@ will be non-zero.
 
 The command recieves one positional argument called deducible target.  It could
 be used for specifying monitoring target, or full DAMON parameters in a json
-format.  The command will try oto deduce the type of the argument value and use
+format.  The command will try to deduce the type of the argument value and use
 it.
 
 With the argument, users can specify the monitoring target with 1) the command
 for execution of the monitoring target process, 2) pid of running target
 process, or 3) the special keyword, `paddr`, if you want to monitor the
-system's physical memory address space.  Below example shows a command target
-usage:
+system's physical memory address space.
+
+Below example shows a command target usage:
 
     # damo start "sleep 5"
 
 The command will execute ``sleep 5`` by itself and start monitoring the data
-access patterns of the process.  Below example shows a pid target usage:
+access patterns of the process.
 
-Note that the command executes the monitoring target command as a root.
-Therefore, the user could execute arbitrary commands with root permission.
-Hence, sysadmins should allow only trusted users to use ``damo``.
+Note that the command requires root permission, and hence executes the
+monitoring target command as a root.  This means that the user could execute
+arbitrary commands with root permission.  Hence, sysadmins should allow only
+trusted users to use ``damo``.
+
+Below example shows a pid target usage:
 
     # sleep 5 &
     # damo start $(pidof sleep)
 
-Finally, the below example shows the use of the special keyword, `paddr`:
+Finally, below example shows the use of the special keyword, `paddr`:
 
     # damo start paddr
 
@@ -150,17 +154,16 @@ memory address spaces monitoring case.
 
 Users can specify full DAMON parameters at once in json format, by passing the
 json string of a path to a file containing the json string.  Refer to "Full
-DAMON Parameters Update" section below for the detail.
+DAMON Parameters Update" section below for the detail of the concept, and
+"`damo fmt_json`" section below for the format of the json input.
 
 ### Partial DAMON Parameters Update
 
 The command line options basically support specification of partial DAMON
 parameters such as monitoring intervals and DAMOS action, assuming single
-kdamond and single DAMON context.  With understanding of DAMON's core concepts,
-understanding what each of such options mean with their brief description on
-the help message wouldn't be that difficult.  If you don't feel so, please let
-the developer know (open issues on GitHub or send mails to
-damon@lists.linux.dev).
+kdamond and single DAMON context.  With a good understanding of DAMON's core
+concepts, understanding what each of such options mean with their brief
+description on the help message wouldn't be that difficult.
 
 ### Partial DAMOS Parameters Update
 
@@ -174,6 +177,11 @@ the other one for proactive LRU-deprioritization of cold pages.
         --damos_action lru_prio --damos_access_rate 50% max --damos_age 5s max \
         --damos_action lru_deprio --damos_access_rate 0% 0% --damos_age 5s max
 
+This command will ask DAMON to find memory regions that showing >=50% access
+rate for >=5 seconds and prioritize the pages of the regions on the Linux
+kernel's LRU lists, while finding memory regions that not accessed for >=5
+seconds and deprioritizes the pages of the regions from the LRU lists.
+
 ### Full DAMON Parameters Update
 
 As mentioned above, the partial DAMON parameters update command line options
@@ -182,11 +190,13 @@ for many use cases, but for system-wide dynamic DAMON usages, that could be
 restrictive.  Also, specifying each parameter that different from their default
 values could be not convenient.  Users may want to specify full parameters at
 once in such cases.  For such users, the command supports `--kdamonds` option.
-It receives a json-format specification of kdamonds that you want DAMON to run
-with.  For the format of the specification, please refer to `damo fmt_json`
-documentation below, or simply try the command.  The `--kdamonds` option can
-also simply omitted because the option value can used for the `deducible
-target` (refer to "Simple Target Argument" section above).
+It receives a json-format specification of kdamonds that would contains all
+DAMON parameters.  Then, `damo` starts DAMON with the specification.
+
+For the format of the json input, please refer to `damo fmt_json` documentation
+below, or simply try the command.  The `--kdamonds` option keyword can also
+simply omitted because the json input can used as is for the `deducible target`
+(refer to "Simple Target Argument" section above).
 
 Note that multiple DAMON contexts per kdamond is not supported as of
 2023-09-12, though.
@@ -198,6 +208,10 @@ mentioned.  However, it could be still too manual in some cases and users may
 want to provide all inputs at once.  For such cases, `--schemes` option
 receives a json-format specification of DAMOS schemes.  The format is same to
 schemes part of the `--kdamonds` input.
+
+You could get some example json format input for `--schemes` option from
+any `.json` files in `damon-tests`
+[repo](https://github.com/awslabs/damon-tests/tree/next/perf/schemes).
 
 
 `damo tune`
