@@ -577,7 +577,7 @@ Miscelleneous Helper Commands
 
 Abovely explained commands are all core functions of `damo`.  For more
 convenient use of `damo` and debugging of DAMON or `damo` itself, `damo`
-support more commands.  This section explains some of those that could be
+supports more commands.  This section explains some of those that could be
 useful for some cases.
 
 `damo version`
@@ -586,7 +586,7 @@ useful for some cases.
 `damo version` shows the version of the installed `damo`.  The version number
 is constructed with three numbers.  `damo` is doing chronological release
 (about once per week), so the version number means nothing but the relative
-time of the release.
+time of the release.  Later one would have more features and bug fixes.
 
 `damo fmt_json`
 ---------------
@@ -594,7 +594,7 @@ time of the release.
 As mentioned for `damo start` above, DAMON control commands including `start`,
 `tune`, and additionally `record` allows passing DAMON parameters or DAMOS
 specification all at once via a json format.  That's for making specifying and
-managing complex request easier, but writing the whole json manually could be
+managing complex requests easier, but writing the whole json manually could be
 annoying, while the partial DAMON/DAMOS parameters setup command line options
 are easy for simple use case.  To help formatting the json input easier, `damo
 fmt_json` receives the partial DMAON/DAMOS parameters setup options and print
@@ -606,3 +606,8 @@ prints json format DAMON parameters specification that will be result in a
 DAMON configuration that same to one that can be made with `damo start
 --damos_action stat`.  In other words, `damo start $(damo fmt_json
 --damos_action stat)` will be same to `damo start --damos_action stat`.
+
+Note that starting DAMON with the partial DAMON parameter command line option
+and then getting the DAMON parameters in the json format using `damo status`
+could also be one way for easily starting write of the json format
+specification.
