@@ -305,14 +305,22 @@ information.
 
 Users can customize what information to be shown in which way for the each
 position using `--format_{record,snapshot,region}[_{head,tail}]` option.  Each
-of the option receives a string for the template.  The template can have
-special format keywords for each position, e.g., `<start address>`, `<end
-address>`, `<access rate>`, or `<age>` keywords is available to be used for
+of the option receives a string for the template.  The template can have any words and
+special format keywords for each position.  For example, `<start address>`, `<end
+address>`, `<access rate>`, or `<age>` keywords are available for
 `--foramt_region` option's value.  The template can also have arbitrary
 strings.  The newline character (`\n`) is also supported.  Each of the keywords
-for each position can be shown via
+for each position and their brief description can be shown via
 `--ls_{record,snapshot,region}_format_keywords` option.  Actually, `damo show`
 also internally uses the customization feature with its default templates.
+
+For example:
+
+    # damo start
+    # damo show --format_region "region that starts from <start address> and ends at <end address> was having <access rate> access rate for <age>."
+    region that starts from 4.000 GiB    and ends at 16.251 GiB  was having 0 %   access rate for 40.700 s.
+    region that starts from 16.251 GiB   and ends at 126.938 GiB was having 0 %   access rate for 47.300 s.
+    total size: 122.938 GiB
 
 #### Region Visualization
 
