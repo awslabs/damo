@@ -1,4 +1,8 @@
-This document describes the detailed usage of `damo`.
+This document describes the detailed usage of `damo`.  This doesn't cover all
+details of `damo` but major features.  This document may not complete and up to
+date sometimes.  Please don't hesitate at asking questions and improvement of
+this document via GitHub [issues](https://github.com/awslabs/damo/issues) or
+[mails](https://lore.kernel.org/damon).
 
 
 Prerequisites
@@ -38,12 +42,12 @@ Basic Concepts of DAMON
 
 `damo` is a user space tool for `DAMON`.  Hence, for advanced and optimized use
 of `damo` rather than simple "Getting Started" tutorial, you should first
-understand the concepts of DAMON.  The official design
-[document](https://docs.kernel.org/mm/damon/design.html) is recommended for the
-purpose.  There are more resources to DAMON introduction talks and publications
-at the project [site](https://damonitor.githubio).  The documents wouldn't
-perfect, though.  Please don't hesitate at asking questions to the community
-(damon@lists.linux.dev).
+understand the concepts of DAMON.  There are a number of links to resources
+including DAMON introduction talks and publications at the project
+[site](https://damonitor.githubio).  The official design
+[document](https://docs.kernel.org/mm/damon/design.html) is recommended among
+those, since we will try to keep it up to date always, and appropriate for
+DAMON users.
 
 
 Install
@@ -54,12 +58,14 @@ You can install `damo` via the official Python packages system, PyPi:
     $ sudo pip3 install damo
 
 Or, you can use your distribution's package manager if available.  Refer to
-below to show the packaging status of `damo`.
+below [repology](https://repology.org/project/damo) data to show the packaging
+status of `damo` for each distribution.
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/damo.svg)](https://repology.org/project/damo/versions)
 
-Or, you can simply download the source code and make `$PATH` to point the
-source code directory.
+If none of above options work for you, you can simply download the source code
+and use `damo` file at the root of the source tree.  Optionally, you could add
+the path to the source code directory to your `$PATH`.
 
 
 Overview
