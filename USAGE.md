@@ -523,8 +523,15 @@ biggest union in ``--guide`` output and set the boundary in it.
 
 ### wss
 
-The ``wss`` type extracts the distribution and chronological working set size
-changes from the records.  For example:
+The `wss` type extracts the distribution and chronological working set size
+changes from the record.
+
+By default, the working set is defined as memory regions shown any access
+within each snapshot.  Hence, for example, if a record is having N snapshots,
+the record is having N working set size values, and `wss` report type shows the
+distribution of the N values in size order, or chronological order.
+
+For example:
 
     $ ./damo report wss
     # <percentile> <wss>
