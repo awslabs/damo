@@ -96,6 +96,10 @@ could be deprecated and removed without any notice and grace periods.
 DAMON Control (Access Monitoring and Monitoring-based System Optimization)
 ==========================================================================
 
+The main purposes of `damo` is operating DAMON, as the name says (DAMO: Data
+Access Monitor Operator).  In other words, `damo` is for helping control of
+DAMON and retrieval/interpretation of the results.
+
 
 `damo start`
 ------------
