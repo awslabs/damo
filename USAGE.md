@@ -72,7 +72,7 @@ Overview
 ========
 
 `damo` provides a subcommands-based interface.  You can show the list of the
-available commands and brief descripton of those via `damo --help`.  The
+available commands and brief descripton of those via `damo --help`.  The major
 commands can be categorized as below:
 
 - For controlling DAMON (monitoring and monitoring-based system optimization)
@@ -82,15 +82,15 @@ commands can be categorized as below:
   - `show`, and `status` are included
 - For recording the access monitoring results and visualizing those
   - `record` and `report` are included
-- For convenient use of `damo`
+- For more convenient use of `damo`
   - `version` and `fmt_json` are included
 
 Every subcommand also provides `--help` option, which shows the basic usage of
-it.  Below sections introduce more details about major subcommands among those.
+it.  Below sections introduce more details about the major subcommands.
 
 Note that some of the subcommands that not described in this document would be
-in experimental stage.  Those could be deprecated and removed without any
-notice and grace periods.
+in experimental stage, or not assumed to be used in major use cases.  Those
+could be deprecated and removed without any notice and grace periods.
 
 
 DAMON Control (Access Monitoring and Monitoring-based System Optimization)
