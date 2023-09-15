@@ -343,6 +343,24 @@ Users can further customize the box using `damo show` options that having
 be represented by the length, color, and height, and whether the values should
 be represented in logscale or linearscale.
 
+#### Sorting and Filtering Regions Based on Access Pattern
+
+By default, `damo show` shows all regions that sorted by their start address.
+Different users would have different interest to regions having specific access
+pattern.  Someone would be interested in hot and small regions, while some
+others are interested in cold and big regions.
+
+For such cases, users can make it to sort regions with specific access pattern
+values as keys including `access_rate`, `age`, and `size` via
+`--sort_regions_by` option.  `--sort_regions_dsc` option can be used to do
+desscending order sorting.
+
+Further, users can make `damo show` to show only regions of specific access
+pattern and address ranges using options including `--sz_region`,
+`--access_rate`, `--age`, and `--address`.  Note that the filtering could
+reduce DAMON's overhead, and therefore recommended to be used if you don't need
+full results and your system is sensitive to any resource waste.
+
 
 `damo status`
 -------------
