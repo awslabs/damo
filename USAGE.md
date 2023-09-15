@@ -365,16 +365,16 @@ full results and your system is sensitive to any resource waste.
 `damo status`
 -------------
 
-`damo status` shows the running status of DAMON.  It shows every kdamond with
-the parameters that applied to it, running status (`on` or `off`), and DAMOS
-schemes status including its statistics and detailed applied regions
+`damo status` shows the status of DAMON.  It shows every kdamond with the
+parameters that applied to it, running status (`on` or `off`), and DAMOS
+schemes status including their statistics and detailed applied regions
 information.
 
 Note that users can use `--json` to represent the status in a json format.  And
 the json format output can again be used for `--kdamonds` or the positional
-options of DAMON control commands (`start` and `tune`).
+option of some DAMON control commands including `damo start` and `damo tune`.
 
-The command exits immediately after showing the current status.  It exists with
+The command exits immediately after showing the current status.  It exits with
 exit value `0` if it successfully retrieved and shown the status of DAMON.
 Otherwise, the exit value will be non-zero.
 
