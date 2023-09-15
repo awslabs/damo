@@ -245,7 +245,7 @@ Snapshot and Visualization of DAMON Monitoring Results and Running Status
 `damo show`
 -----------
 
-`damo show` take a snapshot of running DAMON's monitoring results and show it.
+`damo show` takes a snapshot of running DAMON's monitoring results and show it.
 
 For example:
 
@@ -264,23 +264,21 @@ For example:
 
 ### DAMON Monitoring Results Structure
 
-The unit of the monitoring result is called as a record.  Each record contains
-monitoring results snapshot that retrieved for each
-kdamond/context/DAMOS scheme/target combination.  DAMOS scheme is in the
-combination because `damo` uses `DAMOS applied regions` feature of DAMON for
-efficient monitoring results retrieval.  Hence, the number of records that
-`damo show` will show to users would depend on how many kdamond/context/target
-combination is being used by them.
+The biggest unit of the monitoring result is called 'record'.  Each record
+contains monitoring results snapshot that retrieved for each
+kdamond/context/target combination.  Hence, the number of records that `damo
+show` will show depends on how many kdamond/context/target combination exists.
 
 Each record contains multiple snapshots of the monitoring results that
 retrieved for each `aggregation interval`.  For `damo show`, therefore, each
-record will contain only single snapshot.
+record will contain only one single snapshot.
 
-Each snapshot is configured with regions information.  Each region information
-contains the monitoring results including the start and end addresses of the
-memory region, `nr_accesses`, and `age`.  Number of regions per snapshot would
-depend on the `min_nr_regions` and `max_nr_regions` DAMON parameters and actual
-data access pattern of the monitoring target address space.
+Each snapshot contains regions information.  Each region information contains
+the monitoring results for the region including the start and end addresses of
+the memory region, `nr_accesses`, and `age`.  The number of regions per
+snapshot would depend on the `min_nr_regions` and `max_nr_regions` DAMON
+parameters, and actual data access pattern of the monitoring target address
+space.
 
 ### `damo`'s way of showing DAMON Monitoring Results
 
