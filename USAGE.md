@@ -383,10 +383,11 @@ For recording the access monitoring results and visualizing those
 =================================================================
 
 `damo show` shows only a snapshot.  Since it contains the `age` of each region,
-it can be useful for online profiling or debugging.  For offline profiling or
-debugging, though, recording changing monitoring results and analyzing the
-record could be more helpful.  In this case, the `record` would same to that
-for `damo show`, but simply contains multiple `snapshot`s.
+it can be useful enough for online profiling or debugging.  For detailed
+offline profiling or debugging, though, recording every changing monitoring
+results and analyzing the record could be more helpful.  In this case, the
+`record` would same to that for `damo show`, but simply contains multiple
+`snapshot`s.
 
 Recording Data Access Pattern
 -----------------------------
