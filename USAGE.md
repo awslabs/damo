@@ -389,27 +389,27 @@ results and analyzing the record could be more helpful.  In this case, the
 `record` would same to that for `damo show`, but simply contains multiple
 `snapshot`s.
 
-Recording Data Access Pattern
------------------------------
+`damo record` (Recording Data Access Pattern)
+---------------------------------------------
 
-The ``record`` subcommand records the data access pattern of target workloads
-in a file (``./damon.data`` by default).  The path to the file can be set with
-`--out` option.  The output file will be owned by ``root`` and have ``600``
-permission by default, so only root can read it.  Users can change the
-permission via ``--output_permission`` option.
+`damo record` records the data access pattern of target workloads in a file
+(`./damon.data` by default).  The path to the file can be set with `--out`
+option.  The command requires root permission.  The output file will be owned
+by `root` and have `600` permission by default, so only root can read it.
+Users can change the permission via `--output_permission` option.
 
 Other than the two options, `damo record` receives command line options that
 same to those for `damo start` and `damo tune`.  If DAMON is already running,
-you can simply record the monitoring results of the running DAMON by providing
-no DAMON parameter options.  For example, below will start DAMON for physical
-address space monitoring, record the monitoring results, and save the records
-in `damon.data` file.
+users can simply record the monitoring results of the running DAMON by
+providing no DAMON parameter options.  For example, below will start DAMON for
+physical address space monitoring, record the monitoring results, and save the
+records in `damon.data` file.
 
     # damo start
     # damo record
 
-Or, you can ask `damo start` to also start DAMON, together with the monitoring
-target command, like below:
+Or, users can ask `damo record` to start DAMON by themselves, together with the
+monitoring target command, like below:
 
     # damo record "sleep 5"
 
