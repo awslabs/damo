@@ -282,7 +282,7 @@ space.
 
 ### `damo`'s way of showing DAMON Monitoring Results
 
-`damo show` shows the information in a hierarchical way like below:
+`damo show` shows the information in an enclosed hierarchical way like below:
 
     <record 0 head>
         <snapshot 0 head>
@@ -293,11 +293,13 @@ space.
      <record 0 tail>
      [...]
 
-That is, each information of the levels (record, snapshot and region) can be
+That is, information of record and snapshot can be
 shown twice, once at the beginning (before showing it's internal data), and
-once at the end.  By default, record and snapshot head/tail are skipped if
-there is only one record and snapshot.  That's why above `damo show` example
-output shows only regions information.
+once at the end.  Meanwhile, the information of regions can be shown only once
+since it is the lowest level that not encloses anything.  By default, record
+and snapshot head/tail are skipped if there is only one record and one
+snapshot.  That's why above `damo show` example output shows only regions
+information.
 
 ### Customization of The Output
 
