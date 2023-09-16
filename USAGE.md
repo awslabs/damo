@@ -1,7 +1,8 @@
 This document describes the detailed usage of `damo`.  This doesn't cover all
-details of `damo` but major features.  This document may not complete and up to
-date sometimes.  Please don't hesitate at asking questions and improvement of
-this document via GitHub [issues](https://github.com/awslabs/damo/issues) or
+details of `damo` but only major features.  This document may not complete and
+up to date sometimes.  Please don't hesitate at asking questions and
+improvement of this document via GitHub
+[issues](https://github.com/awslabs/damo/issues) or
 [mails](https://lore.kernel.org/damon).
 
 
