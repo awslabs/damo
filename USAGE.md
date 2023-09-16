@@ -5,7 +5,6 @@ improvement of this document via GitHub
 [issues](https://github.com/awslabs/damo/issues) or
 [mails](https://lore.kernel.org/damon).
 
-
 Prerequisites
 =============
 
@@ -16,7 +15,6 @@ You should first ensure your system is running on a kernel built with at least
 ``CONFIG_DAMON``, ``CONFIG_DAMON_VADDR``, ``CONFIG_DAMON_PADDR``,
 ``CONFIG_DAMON_SYSFS``, and ``CONFIG_DAMON_DBGFS``.
 
-
 Sysfs or Debugfs
 ----------------
 
@@ -25,7 +23,6 @@ ensure at least one of those is mounted.  Note that DAMON debugfs interface is
 deprecated.  Please use sysfs.  If you depend on DAMON debugfs interface and
 cannot use sysfs interface, report your usecase to sj@kernel.org,
 damon@lists.linux.dev and linux-mm@kvack.org.
-
 
 Perf
 ----
@@ -36,7 +33,6 @@ monitoring resluts.  If you will not do the recording, you don't need to
 install `perf` on your system, though.
 
 [1] https://perf.wiki.kernel.org/index.php/Main_Page
-
 
 Basic Concepts of DAMON
 -----------------------
@@ -49,7 +45,6 @@ including DAMON introduction talks and publications at the project
 [document](https://docs.kernel.org/mm/damon/design.html) is recommended among
 those, since we will try to keep it up to date always, and appropriate for
 DAMON users.
-
 
 Install
 =======
@@ -67,7 +62,6 @@ status of `damo` for each distribution.
 If none of above options work for you, you can simply download the source code
 and use `damo` file at the root of the source tree.  Optionally, you could add
 the path to the source code directory to your `$PATH`.
-
 
 Overview
 ========
@@ -93,14 +87,12 @@ Note that some of the subcommands that not described in this document would be
 in experimental stage, or not assumed to be used in major use cases.  Those
 could be deprecated and removed without any notice and grace periods.
 
-
 DAMON Control (Access Monitoring and Monitoring-based System Optimization)
 ==========================================================================
 
 The main purposes of `damo` is operating DAMON, as the name says (DAMO: Data
 Access Monitor Operator).  In other words, `damo` is for helping control of
 DAMON and retrieval/interpretation of the results.
-
 
 `damo start`
 ------------
@@ -214,7 +206,6 @@ You could get some example json format input for `--schemes` option from
 any `.json` files in `damon-tests`
 [repo](https://github.com/awslabs/damon-tests/tree/next/perf/schemes).
 
-
 `damo tune`
 -----------
 
@@ -229,7 +220,6 @@ The command exits immediately after updating DAMON parameters as requested.  It
 exits with exit value `0` if the update successed.  Otherwise, the exit value
 will be non-zero.
 
-
 `damo stop`
 -----------
 
@@ -238,7 +228,6 @@ will be non-zero.
 The command exits immediately after stopping DAMON.  It exists with exit value
 `0` if it successfully terminated DAMON.  Otherwise, the exit value will be
 non-zero.
-
 
 Snapshot and Visualization of DAMON Monitoring Results and Running Status
 =========================================================================
@@ -362,7 +351,6 @@ pattern and address ranges using options including `--sz_region`,
 reduce DAMON's overhead, and therefore recommended to be used if you don't need
 full results and your system is sensitive to any resource waste.
 
-
 `damo status`
 -------------
 
@@ -378,7 +366,6 @@ option of some DAMON control commands including `damo start` and `damo tune`.
 The command exits immediately after showing the current status.  It exits with
 exit value `0` if it successfully retrieved and shown the status of DAMON.
 Otherwise, the exit value will be non-zero.
-
 
 For recording the access monitoring results and visualizing those
 =================================================================
@@ -417,7 +404,6 @@ monitoring target command, like below:
 or, for already running process, like below:
 
     # damo record $(pidof my_workload)
-
 
 `damo report` (Visualizing Recorded Data Access Pattern)
 --------------------------------------------------------
@@ -521,7 +507,6 @@ each target task.  Therefore, it would be wise to plot the data points in each
 union.  If no axis boundary option is given, it will automatically find the
 biggest union in ``--guide`` output and set the boundary in it.
 
-
 ### wss
 
 The `wss` type extracts the distribution and chronological working set size
@@ -571,7 +556,6 @@ duration spikes could be more easily found.
 
 Similar to that of ``heats --heatmap``, it also supports 'gnuplot' based simple
 visualization of the distribution via ``--plot`` option.
-
 
 Miscelleneous Helper Commands
 =============================
