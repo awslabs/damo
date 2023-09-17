@@ -153,10 +153,15 @@ DAMON Parameters Update" section below for the detail of the concept, and
 ### Partial DAMON Parameters Update
 
 The command line options basically support specification of partial DAMON
-parameters such as monitoring intervals and DAMOS action, assuming single
-kdamond and single DAMON context.  With a good understanding of DAMON's core
-concepts, understanding what each of such options mean with their brief
-description on the help message wouldn't be that difficult.
+parameters such as monitoring intervals and DAMOS action.  With a good
+understanding of DAMON's core concepts, understanding what each of such options
+mean with their brief description on the help message wouldn't be that
+difficult.
+
+Note that these command line options support only single kdamond, single DAMON
+context, and single monitoring target case at the moment.  Users can make
+requests without such limitation using json format input.  Refer to 'Full DAMON
+Parameters Update' section below for the detail.
 
 ### Partial DAMOS Parameters Update
 
