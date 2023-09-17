@@ -242,7 +242,7 @@ def damon_ctx_for(args):
         return None, err
 
     try:
-        ctx = _damon.DamonCtx(intervals, nr_regions, ops, [target], schemes)
+        ctx = _damon.DamonCtx(ops, [target], intervals, nr_regions, schemes)
         return ctx, None
     except Exception as e:
         return None, 'Creating context from arguments failed (%s)' % e

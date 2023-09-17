@@ -40,10 +40,10 @@ class TestDamon(unittest.TestCase):
                     'watermarks', 'filters'])
         self.assertEqual(damos, _damon.Damos.from_kvpairs(damos_kvpairs))
 
-        ctx = _damon.DamonCtx(
+        ctx = _damon.DamonCtx('paddr', [target],
                 _damon.DamonIntervals(5000, 100000, 1000000),
                 _damon.DamonNrRegionsRange(10, 1000),
-                'paddr', [target], [damos])
+                [damos])
         ctx_kvpairs = ctx.to_kvpairs()
         self.assertEqual(type(ctx_kvpairs), collections.OrderedDict)
         self.assertEqual(list(ctx_kvpairs.keys()),

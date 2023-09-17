@@ -758,17 +758,17 @@ class Damos:
                 self.filters == other.filters)
 
 class DamonCtx:
-    intervals = None
-    nr_regions = None
     ops = None
     targets = None
+    intervals = None
+    nr_regions = None
     schemes = None
 
-    def __init__(self, intervals, nr_regions, ops, targets, schemes):
-        self.intervals = intervals
-        self.nr_regions = nr_regions
+    def __init__(self, ops, targets, intervals, nr_regions, schemes):
         self.ops = ops
         self.targets = targets
+        self.intervals = intervals
+        self.nr_regions = nr_regions
         self.schemes = schemes
 
     def to_str(self, raw):
@@ -795,12 +795,12 @@ class DamonCtx:
     @classmethod
     def from_kvpairs(cls, kv):
         ctx = DamonCtx(
+                kv['ops'],
+                [DamonTarget.from_kvpairs(t) for t in kv['targets']],
                 DamonIntervals.from_kvpairs(kv['intervals'])
                     if 'intervals' in kv else DamonIntervals(),
                 DamonNrRegionsRange.from_kvpairs(kv['nr_regions'])
                     if 'nr_regions' in kv else DAmonNrRegionsRange(),
-                kv['ops'],
-                [DamonTarget.from_kvpairs(t) for t in kv['targets']],
                 [Damos.from_kvpairs(s) for s in kv['schemes']]
                     if 'schemes' in kv else [])
         return ctx
