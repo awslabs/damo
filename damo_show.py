@@ -660,6 +660,9 @@ def main(args=None):
 
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args)
+        if not _damon.feature_supported('schemes_tried_regions'):
+            print('damos tried regions feature not supported')
+            exit(0)
         err = 'assumed error'
         nr_tries = 0
         while err != None and nr_tries < 5:
