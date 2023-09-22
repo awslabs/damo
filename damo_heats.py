@@ -359,7 +359,7 @@ def set_argparser(parser):
     parser.add_argument('--stdout_heatmap_skip_color_example',
             action='store_true',
             help='skip printing example colors at the output')
-    parser.description='Show when which address ranges were how frequently accessed'
+    parser.description = 'Show when which address ranges were how frequently accessed'
 
 def main(args=None):
     if not args:

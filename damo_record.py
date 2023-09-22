@@ -134,7 +134,7 @@ def set_argparser(parser):
             help='record accesses of child processes')
     parser.add_argument('--schemes_applied', action='store_true',
             help='record schemes tried to be applied regions')
-    parser.description='Record monitoring results'
+    parser.description = 'Record monitoring results'
     return parser
 
 def main(args=None):

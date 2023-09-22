@@ -22,7 +22,7 @@ def set_argparser(parser):
     subparsers = parser.add_subparsers(title='report type', dest='report_type',
             metavar='<report type>', help='the type of the report to generate')
     subparsers.required = True
-    parser.description='Format a report for recorded DAMON monitoring results'
+    parser.description = 'Format a report for recorded DAMON monitoring results'
 
     for subcmd in subcmds:
         subcmd.add_parser(subparsers)
