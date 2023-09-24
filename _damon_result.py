@@ -276,6 +276,22 @@ def parse_binary_format_record(file_path, monitoring_intervals):
     set_first_snapshot_start_time(records)
     return records, None
 
+def parse_damos_applied_perf_script_fields(fields):
+    if len(fields) != 12:
+        return None, None, None, None
+
+    end_time = int(float(fields[3][:-1]) * 1000000000)
+    target_id = int(fields[7].split('=')[1])
+    nr_regions = int(fields[8].split('=')[1])
+
+    start_addr, end_addr = [int(x) for x in fields[9][:-1].split('-')]
+    nr_accesses = int(fields[10])
+    age = int(fields[11])
+    region = _damon.DamonRegion(start_addr, end_addr, nr_accesses,
+            _damon.unit_samples, age, _damon.unit_aggr_intervals)
+
+    return region, end_time, target_id, nr_regions
+
 def parse_perf_script_line(line):
         '''
         line is like below for damon_aggregated tracepoint:
@@ -304,22 +320,6 @@ def parse_perf_script_line(line):
             return parse_damos_applied_perf_script_fields(fields)
         else:
             return None, None, None, None
-
-def parse_damos_applied_perf_script_fields(fields):
-    if len(fields) != 12:
-        return None, None, None, None
-
-    end_time = int(float(fields[3][:-1]) * 1000000000)
-    target_id = int(fields[7].split('=')[1])
-    nr_regions = int(fields[8].split('=')[1])
-
-    start_addr, end_addr = [int(x) for x in fields[9][:-1].split('-')]
-    nr_accesses = int(fields[10])
-    age = int(fields[11])
-    region = _damon.DamonRegion(start_addr, end_addr, nr_accesses,
-            _damon.unit_samples, age, _damon.unit_aggr_intervals)
-
-    return region, end_time, target_id, nr_regions
 
 def parse_damon_aggregated_perf_script_fields(fields):
     if not len(fields) in [9, 10]:
