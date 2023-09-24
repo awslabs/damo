@@ -544,7 +544,7 @@ def update_supported_features():
         feature_supports['schemes_tried_regions'] = True
 
     if os.path.isfile(os.path.join(scheme_tried_regions_dir_of(0, 0, 0),
-            'sz_regions_sum')):
+            'total_bytes')):
         feature_supports['schemes_tried_regions_sz'] = True
 
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'filters')):
