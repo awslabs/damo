@@ -277,6 +277,18 @@ def parse_binary_format_record(file_path, monitoring_intervals):
     return records, None
 
 def parse_damon_aggregated_perf_script_fields(fields):
+    '''
+    The line is like below:
+
+    kdamond.0  4452 [000] 82877.315633: damon:damon_aggregated: \
+            target_id=18446623435582458880 nr_regions=17 \
+            140731667070976-140731668037632: 0 3
+
+    Note that the last field is not in the early version[1].
+
+    [1] https://lore.kernel.org/linux-mm/df8d52f1fb2f353a62ff34dc09fe99e32ca1f63f.1636610337.git.xhao@linux.alibaba.com/
+    '''
+
     if not len(fields) in [9, 10]:
         return None, None, None, None
 
@@ -296,6 +308,24 @@ def parse_damon_aggregated_perf_script_fields(fields):
     return region, end_time, target_id, nr_regions
 
 def parse_damos_before_apply_perf_script_fields(fields):
+    '''
+    The line is like below:
+
+    kdamond.0  4452 [000] 82877.315633: damon:damon_aggregated: \
+            target_id=18446623435582458880 nr_regions=17 \
+            140731667070976-140731668037632: 0 3
+
+    Note that the last field is not in the early version[1].
+
+    line is like below for damos_before_apply:
+
+    kdamond.0 47293 [000] 80801.060214: damon:damos_before_apply: \
+            ctx_idx=0 scheme_idx=0 target_idx=0 nr_regions=11 \
+            121932607488-135128711168: 0 136
+
+    [1] https://lore.kernel.org/linux-mm/df8d52f1fb2f353a62ff34dc09fe99e32ca1f63f.1636610337.git.xhao@linux.alibaba.com/
+    '''
+
     if len(fields) != 12:
         return None, None, None, None
 
@@ -313,21 +343,7 @@ def parse_damos_before_apply_perf_script_fields(fields):
 
 def parse_perf_script_line(line):
         '''
-        line is like below for damon_aggregated tracepoint:
-
-        kdamond.0  4452 [000] 82877.315633: damon:damon_aggregated: \
-                target_id=18446623435582458880 nr_regions=17 \
-                140731667070976-140731668037632: 0 3
-
-        Note that the last field is not in the early version[1].
-
-        line is like below for damos_before_apply:
-
-        kdamond.0 47293 [000] 80801.060214: damon:damos_before_apply: \
-                ctx_idx=0 scheme_idx=0 target_idx=0 nr_regions=11 \
-                121932607488-135128711168: 0 136
-
-        [1] https://lore.kernel.org/linux-mm/df8d52f1fb2f353a62ff34dc09fe99e32ca1f63f.1636610337.git.xhao@linux.alibaba.com/
+        line could be that for damon_aggregated or damos_before_apply events
         '''
         fields = line.strip().split()
         if not len(fields) > 5:
