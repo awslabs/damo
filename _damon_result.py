@@ -276,7 +276,7 @@ def parse_binary_format_record(file_path, monitoring_intervals):
     set_first_snapshot_start_time(records)
     return records, None
 
-def parse_damos_applied_perf_script_fields(fields):
+def parse_damos_before_apply_perf_script_fields(fields):
     if len(fields) != 12:
         return None, None, None, None
 
@@ -317,7 +317,7 @@ def parse_perf_script_line(line):
         if traceevent == perf_event_damon_aggregated:
             return parse_damon_aggregated_perf_script_fields(fields)
         elif traceevent == perf_event_damos_before_apply:
-            return parse_damos_applied_perf_script_fields(fields)
+            return parse_damos_before_apply_perf_script_fields(fields)
         else:
             return None, None, None, None
 
