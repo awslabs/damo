@@ -342,19 +342,19 @@ def parse_damos_before_apply_perf_script_fields(fields):
     return region, end_time, target_id, nr_regions
 
 def parse_perf_script_line(line):
-        '''
-        line could be that for damon_aggregated or damos_before_apply events
-        '''
-        fields = line.strip().split()
-        if not len(fields) > 5:
-            return None, None, None, None
-        traceevent = fields[4][:-1]
-        if traceevent == perf_event_damon_aggregated:
-            return parse_damon_aggregated_perf_script_fields(fields)
-        elif traceevent == perf_event_damos_before_apply:
-            return parse_damos_before_apply_perf_script_fields(fields)
-        else:
-            return None, None, None, None
+    '''
+    line could be that for damon_aggregated or damos_before_apply events
+    '''
+    fields = line.strip().split()
+    if not len(fields) > 5:
+        return None, None, None, None
+    traceevent = fields[4][:-1]
+    if traceevent == perf_event_damon_aggregated:
+        return parse_damon_aggregated_perf_script_fields(fields)
+    elif traceevent == perf_event_damos_before_apply:
+        return parse_damos_before_apply_perf_script_fields(fields)
+    else:
+        return None, None, None, None
 
 def parse_perf_script(script_output, monitoring_intervals):
     records = []
