@@ -358,8 +358,8 @@ def apply_min_chars(min_chars, field_name, txt):
             return txt
     return txt
 
-def format_pr(template, formatters, min_chars, index, region, snapshot, record,
-        raw, region_box_args):
+def format_template(template, formatters, min_chars, index, region, snapshot,
+        record, raw, region_box_args):
     if template == '':
         return
     for formatter in formatters:
@@ -374,7 +374,14 @@ def format_pr(template, formatters, min_chars, index, region, snapshot, record,
         txt = apply_min_chars(min_chars, formatter.keyword, txt)
         template = template.replace(formatter.keyword, txt)
     template = template.replace('\\n', '\n')
-    print(template)
+    return template
+
+def format_pr(template, formatters, min_chars, index, region, snapshot, record,
+        raw, region_box_args):
+    if template == '':
+        return
+    print(format_template(template, formatters, min_chars, index, region,
+        snapshot, record, raw, region_box_args))
 
 def set_formats(args, records):
     if args.format_record_head == None:
