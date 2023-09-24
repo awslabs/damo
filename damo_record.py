@@ -176,7 +176,7 @@ def main(args=None):
     if args.schemes_applied == False:
         tracepoint = _damon_result.perf_event_damon_aggregated
     else:
-        tracepoint = _damon_result.perf_event_damos_applied
+        tracepoint = _damon_result.perf_event_damos_before_apply
 
     data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
             tracepoint, args.out, args.output_type, args.output_permission,

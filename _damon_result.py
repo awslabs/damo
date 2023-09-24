@@ -15,7 +15,7 @@ import _damon
 
 PERF = 'perf'
 perf_event_damon_aggregated = 'damon:damon_aggregated'
-perf_event_damos_applied = 'damon:damos_before_apply'
+perf_event_damos_before_apply = 'damon:damos_before_apply'
 
 class DamonSnapshot:
     '''
@@ -300,7 +300,7 @@ def parse_perf_script_line(line):
         traceevent = fields[4][:-1]
         if traceevent == perf_event_damon_aggregated:
             return parse_damon_aggregated_perf_script_fields(fields)
-        elif traceevent == perf_event_damos_applied:
+        elif traceevent == perf_event_damos_before_apply:
             return parse_damos_applied_perf_script_fields(fields)
         else:
             return None, None, None, None
