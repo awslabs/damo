@@ -550,7 +550,7 @@ def update_supported_features():
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'filters')):
         feature_supports['schemes_filters'] = True
 
-    if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'apply_interval_us')):
+    if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'apply_interval_us')):
         feature_supports['schemes_apply_interval'] = True
 
     avail_ops, err = _avail_ops()
