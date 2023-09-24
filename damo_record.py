@@ -132,7 +132,7 @@ def set_argparser(parser):
             help='path of perf tool ')
     parser.add_argument('--include_child_tasks', action='store_true',
             help='record accesses of child processes')
-    parser.add_argument('--schemes_applied', action='store_true',
+    parser.add_argument('--schemes_target_regions', action='store_true',
             help='record schemes tried to be applied regions')
     parser.description = 'Record monitoring results'
     return parser
@@ -173,7 +173,7 @@ def main(args=None):
         monitoring_intervals = data_for_cleanup.orig_kdamonds[
                 0].contexts[0].intervals
 
-    if args.schemes_applied == False:
+    if args.schemes_target_regions == False:
         tracepoint = _damon_result.perf_event_damon_aggregated
     else:
         tracepoint = _damon_result.perf_event_damos_before_apply
