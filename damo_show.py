@@ -43,7 +43,7 @@ record_formatters = [
             'index of the record\'s DAMON target'),
         Formatter('<abs start time>',
             lambda record, raw:
-            _dmo_fmt_str.format_ns(record.snapshots[0].start_time, raw),
+            _damo_fmt_str.format_time_ns(record.snapshots[0].start_time, raw),
             'absolute time of the start of the record'),
         Formatter('<duration>',
             lambda record, raw:
