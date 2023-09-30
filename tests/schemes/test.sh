@@ -295,6 +295,14 @@ test_wmarks() {
 
 test_filters() {
 	testname="schemes-filters $damon_interface"
+
+	nr_swap_devs=$(( $(wc -l /proc/swaps | awk '{print $1}') - 1 ))
+	if [ "$nr_swap_devs" -eq 0 ]
+	then
+		echo "SKIP $testname (no swap)"
+		return
+	fi
+
 	workload="alloc_1gb_spin"
 	workload_src="${workload}.c"
 	if ! gcc -o "$workload" "$workload_src"
