@@ -1,6 +1,10 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v2.0.1
+- Deprecate DAMON results record binary file format
+- 'damo status': Support scheme statistic only output
+
 v2.0.0
 - Trivial fixes and cleanups
 
