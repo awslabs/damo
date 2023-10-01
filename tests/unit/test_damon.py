@@ -37,7 +37,7 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(type(damos_kvpairs), collections.OrderedDict)
         self.assertEqual(list(damos_kvpairs.keys()),
                 ['action', 'access_pattern', 'apply_interval_us', 'quotas',
-                    'watermarks', 'filters'])
+                    'watermarks', 'filters', 'stats'])
         self.assertEqual(damos, _damon.Damos.from_kvpairs(damos_kvpairs))
 
         ctx = _damon.DamonCtx('paddr', [target],

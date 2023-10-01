@@ -755,6 +755,7 @@ class Damos:
         for damos_filter in self.filters:
             filters.append(damos_filter.to_kvpairs(raw))
         kv['filters'] = filters
+        kv['stats'] = self.stats.to_kvpairs(raw)
         return kv
 
     def effectively_equal(self, other, intervals):
