@@ -80,8 +80,12 @@ def pr_kdamonds(kdamonds, json_format, raw_nr, scheme_statistic):
             print('too high scheme index')
             exit(1)
         scheme = ctx.schemes[sidx]
-        print(scheme.stats.to_str(raw_nr))
-        exit(0)
+
+        if json_format:
+            print(json.dumps(scheme.stats.to_kvpairs(raw_nr), indent=4))
+        else:
+            print(scheme.stats.to_str(raw_nr))
+        return
 
     if json_format:
         print(json.dumps([k.to_kvpairs(raw_nr) for k in kdamonds], indent=4))
