@@ -665,7 +665,7 @@ class Damos:
         self.watermarks = (watermarks
                 if watermarks != None else DamosWatermarks())
         self.filters = filters if filters != None else []
-        self.stats = stats
+        self.stats = stats if stats != None else DamosStats()
         self.tried_regions = tried_regions
         if self.tried_regions == None:
             self.tried_regions = []
