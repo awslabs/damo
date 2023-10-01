@@ -229,7 +229,7 @@ def set_first_snapshot_start_time(records):
             del record.snapshots[-1]
 
 def warn_record_type_deprecation():
-    _damo_deprecation_notice.will_be_deprecated(
+    _damo_deprecation_notice.deprecated(
             feature='\'record\' file type support',
             deadline='2023-Q3',
             additional_notice='use json_compressed type instead.')
