@@ -65,9 +65,9 @@ def update_pr_kdamonds_summary(json_format, raw_nr):
         return
     print('\n'.join(summary))
 
-def pr_kdamonds(kdamonds, json_format, raw_nr, scheme_statistic):
-    if scheme_statistic:
-        kidx, cidx, sidx = scheme_statistic
+def pr_kdamonds(kdamonds, json_format, raw_nr, damos_stat_indices):
+    if damos_stat_indices:
+        kidx, cidx, sidx = damos_stat_indices
         if kidx >= len(kdamonds):
             print('too high kdamond index')
             exit(1)
@@ -100,7 +100,7 @@ def set_argparser(parser):
             help='print output in json format')
     parser.add_argument('--raw', action='store_true', default=False,
             help='print raw numbers')
-    parser.add_argument('--scheme_statistic', nargs=3, type=int,
+    parser.add_argument('--damos_stat', nargs=3, type=int,
             metavar=('<kdamond index>', '<context index>', '<scheme index>'),
             help='print statistics of specific scheme')
     _damon_args.set_common_argparser(parser)
@@ -117,7 +117,7 @@ def main(args=None):
     if err != None:
         print('cannot update and read kdamonds: %s' % err)
         exit(1)
-    pr_kdamonds(kdamonds, args.json, args.raw, args.scheme_statistic)
+    pr_kdamonds(kdamonds, args.json, args.raw, args.damos_stat)
 
 if __name__ == '__main__':
     main()
