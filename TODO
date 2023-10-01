@@ -25,7 +25,7 @@
   - Deprecate scheme subcommand
     - Can be replaced by start or tune
   - Deprecate old scheme usages in tests
-  - Deprecate DAMON results record binary format (noticing as deprecated)
+  - Deprecate DAMON results record binary format (noticing as deprecatedt)
 - Refactor heats code
 - Add test for translate_damos and convert_record_format
 - damo status features implementation
