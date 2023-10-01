@@ -594,7 +594,8 @@ class DamosStats:
     sz_applied = None
     qt_exceeds = None
 
-    def __init__(self, nr_tried, sz_tried, nr_applied, sz_applied, qt_exceeds):
+    def __init__(self, nr_tried=0, sz_tried=0, nr_applied=0, sz_applied=0,
+            qt_exceeds=0):
         self.nr_tried = nr_tried
         self.sz_tried = sz_tried
         self.nr_applied = nr_applied
