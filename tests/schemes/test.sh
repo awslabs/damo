@@ -39,8 +39,8 @@ __test_stat() {
 
 	python ./stairs.py &
 	stairs_pid=$!
-	sudo "$damo" schemes -c "$scheme" "$stairs_pid" \
-		--damon_interface "$damon_interface" &> /dev/null &
+	sudo "$damo" start -c "$scheme" "$stairs_pid" \
+		--damon_interface "$damon_interface"
 
 	start_time=$SECONDS
 	applied=0
