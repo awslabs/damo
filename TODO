@@ -19,15 +19,13 @@
 - Implement histogram stat regions output
 - Support DAMOS quotas/watermarks/filters with command line options
 - Deprecate old features
-  - Deprecate stat (done.  Code also removed)
-  - Deprecate --rbuf and in-kernel record feature support (done.  code also removed)
   - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
   - Deprecate v1-v3 schemes (done.  necessary code moved to _damon_deprecated)
   - Deprecate python2 support (done.  code moved to _damon_deprecated)
   - Deprecate scheme subcommand
     - Can be replaced by start or tune
   - Deprecate old scheme usages in tests
-  - Deprecate DAMON results record binary format (noticing for Q3 deprecation)
+  - Deprecate DAMON results record binary format (noticing as deprecated)
 - Refactor heats code
 - Add test for translate_damos and convert_record_format
 - damo status features implementation
