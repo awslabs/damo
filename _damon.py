@@ -614,6 +614,15 @@ class DamosStats:
     def __str__(self):
         return self.to_str(False)
 
+    def to_kvpairs(self, raw=False):
+        kv = collections.OrderedDict()
+        kv['nr_tried'] = _damo_fmt_str.format_nr(self.nr_tried, raw)
+        kv['sz_tried'] = _damo_fmt_str.format_sz(self.sz_tried, raw)
+        kv['nr_applied'] = _damo_fmt_str.format_nr(self.nr_applied, raw)
+        kv['sz_applied'] = _damo_fmt_str.format_sz(self.sz_applied, raw)
+        kv['qt_exceeds'] = _damo_fmt_str.format_nr(self.qt_exceeds, raw)
+        return kv
+
 # TODO: check support of pageout and lru_(de)prio
 damos_actions = [
         'willneed',
