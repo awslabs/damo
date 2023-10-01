@@ -38,6 +38,9 @@ class TestDamon(unittest.TestCase):
         self.assertEqual(list(damos_kvpairs.keys()),
                 ['action', 'access_pattern', 'apply_interval_us', 'quotas',
                     'watermarks', 'filters', 'stats'])
+        self.assertEqual(list(damos_kvpairs['stats'].keys()),
+                ['nr_tried', 'sz_tried', 'nr_applied', 'sz_applied',
+                    'qt_exceeds'])
         self.assertEqual(damos, _damon.Damos.from_kvpairs(damos_kvpairs))
 
         ctx = _damon.DamonCtx('paddr', [target],
