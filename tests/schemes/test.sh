@@ -141,19 +141,8 @@ __measure_scheme_applied() {
 			awk '{if (NF==23) print $20; else print $NF;}'
 	elif [ "$damon_interface" = "sysfs" ]
 	then
-		i=0
-		while [ "$(cat /sys/kernel/mm/damon/admin/kdamonds/0/state)" = "off" ]
-		do
-			i=$((i + 1))
-			if [ $i -gt 50 ]
-			then
-				>&2 echo "Seems kdamond already finished"
-				exit
-			fi
-			sleep 0.1
-		done
-		echo update_schemes_stats > "/sys/kernel/mm/damon/admin/kdamonds/0/state"
-		sudo cat "/sys/kernel/mm/damon/admin/kdamonds/0/contexts/0/schemes/0/stats/sz_tried"
+		sudo "$damo" status --damon_interface "$damon_interface" \
+			--damos_stat 0 0 0 --damos_stat_field sz_tried --raw
 	else
 		echo "wrong damon_interface ($damon_interface)"
 		exit 1
