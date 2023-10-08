@@ -11,6 +11,8 @@ def set_argparser(parser):
             choices=_damon_result.self_write_supported_file_types,
             default=_damon_result.file_type_json_compressed,
             help='new file format')
+    parser.add_argument('--output_file', metavar='<file>',
+            help='the path to converted file')
 
 def main(args=None):
     if not args:
@@ -22,7 +24,11 @@ def main(args=None):
         print('record file (%s) is not exist' % args.record_file)
         exit(1)
 
-    err = _damon_result.update_records_file(args.record_file, args.format)
+    if not args.output_file:
+        args.output_file = args.record_file
+
+    err = _damon_result.rewrite_record_file(args.record_file,
+            args.output_file, args.format)
     if err != None:
         print('converting format failed (%s)' % err)
         exit(1)
