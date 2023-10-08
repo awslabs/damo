@@ -117,23 +117,6 @@ set_current_free_mem_permil() {
 	current_free_mem_permil=$((mem_free * 1000 / mem_total))
 }
 
-ensure_free_mem_ratio() {
-	upperbound=$1
-	lowerbound=$2
-
-	mem_total=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-	mem_free=$(grep MemFree /proc/meminfo | awk '{print $2}')
-	mem_free_rate=$((mem_free * 1000 / mem_total))
-
-	if [ "$mem_free_rate" -gt "$upperbound" ] || \
-		[ "$mem_free_rate" -lt "$lowerbound" ]
-	then
-		echo "SKIP schemes-wmarks ($mem_free_rate free mem rate)"
-		return 1
-	fi
-	return 0
-}
-
 __measure_scheme_applied() {
 	if [ $# -ne 1 ]
 	then
