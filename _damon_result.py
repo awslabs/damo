@@ -461,7 +461,8 @@ def parse_records_file(result_file, monitoring_intervals=None):
             pass
     if perf_script_output != None:
         return parse_perf_script(perf_script_output, monitoring_intervals)
-    return parse_binary_format_record(result_file, monitoring_intervals)
+    else:
+        return None, 'parsing %s failed' % result_file
 
 # for writing monitoring results to a file
 
