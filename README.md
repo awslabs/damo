@@ -177,7 +177,7 @@ issue, sj@kernel.org, damon@lists.linux.dev, and/or linux-mm@kvack.org.
 DAMON record binary format
 --------------------------
 
-Will be deprecated by 2023 Q3.
+Deprecated.  Use `json_compressed` format instead.
 
 At the beginning, DAMO used its special binary format, namely `record`.  It is
 designed for lightweight saving of the monitoring results.  It is difficult to
