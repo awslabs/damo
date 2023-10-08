@@ -174,37 +174,6 @@ def adjust_records(records, aggregate_interval, nr_snapshots_to_skip):
 
 # For reading monitoring results from a file
 
-def read_record_format_version(f):
-    # read record format version
-    mark = f.read(16)
-    if mark == b'damon_recfmt_ver':
-        return struct.unpack('i', f.read(4))[0]
-    else:
-        f.seek(0)
-        return 0
-
-def read_end_time_from_record_file(f):
-    timebin = f.read(16)
-    if len(timebin) != 16:
-        return None
-    sec = struct.unpack('l', timebin[0:8])[0]
-    nsec = struct.unpack('l', timebin[8:16])[0]
-    end_time = sec * 1000000000 + nsec
-    return end_time
-
-def read_snapshot_from_record_file(f, start_time, end_time):
-    nr_regions = struct.unpack('I', f.read(4))[0]
-    regions = []
-    for r in range(nr_regions):
-        start_addr = struct.unpack('L', f.read(8))[0]
-        end_addr = struct.unpack('L', f.read(8))[0]
-        nr_accesses = struct.unpack('I', f.read(4))[0]
-        region = _damon.DamonRegion(start_addr, end_addr,
-                nr_accesses, _damon.unit_samples,
-                None, _damon.unit_aggr_intervals)
-        regions.append(region)
-    return DamonSnapshot(start_time, end_time, regions, None)
-
 # if number of snapshots is one and the file type is record or perf script,
 # write_damon_records() adds a fake snapshot for snapshot start time deduction.
 def is_fake_snapshot(snapshot):
@@ -228,12 +197,6 @@ def set_first_snapshot_start_time(records):
         if is_fake_snapshot(snapshots[-1]):
             del record.snapshots[-1]
 
-def warn_record_type_deprecation():
-    _damo_deprecation_notice.deprecated(
-            feature='\'record\' file type support',
-            deadline='2023-Q3',
-            additional_notice='use json_compressed type instead.')
-
 def record_of(target_id, records, intervals):
     for record in records:
         if record.target_id == target_id:
@@ -241,40 +204,6 @@ def record_of(target_id, records, intervals):
     record = DamonRecord(None, None, intervals, None, target_id)
     records.append(record)
     return record
-
-def parse_binary_format_record(file_path, monitoring_intervals):
-    warn_record_type_deprecation()
-    with open(file_path, 'rb') as f:
-        fmt_version = read_record_format_version(f)
-        records = []
-        while True:
-            end_time = read_end_time_from_record_file(f)
-            if end_time == None:
-                break
-
-            nr_tasks = struct.unpack('I', f.read(4))[0]
-            for t in range(nr_tasks):
-                if fmt_version == 1:
-                    target_id = struct.unpack('i', f.read(4))[0]
-                else:
-                    target_id = struct.unpack('L', f.read(8))[0]
-
-                record = record_of(target_id, records, monitoring_intervals)
-                if len(record.snapshots) == 0:
-                    start_time = None
-                else:
-                    start_time = record.snapshots[-1].end_time
-                    if end_time < start_time:
-                        return None, 'snapshot is not sorted by time'
-                try:
-                    snapshot = read_snapshot_from_record_file(f,
-                            start_time, end_time)
-                except Exception as e:
-                    return None, 'snapshot reading failead: %s' % e
-                record.snapshots.append(snapshot)
-
-    set_first_snapshot_start_time(records)
-    return records, None
 
 def parse_damon_aggregated_perf_script_fields(fields):
     '''

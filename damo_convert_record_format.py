@@ -2,6 +2,7 @@
 
 import os
 
+import _damo_deprecated
 import _damon_result
 
 def set_argparser(parser):
@@ -27,8 +28,8 @@ def main(args=None):
     if not args.output_file:
         args.output_file = args.record_file
 
-    records, err = _damon_result.parse_binary_format_record(args.record_file,
-            None)
+    records, err = _damo_deprecated.parse_binary_format_record(
+            args.record_file, None)
     if err != None:
         print('parsing record file failed (%s)' % err)
         exit(1)
