@@ -287,6 +287,8 @@ test_wmarks() {
 		exit 1
 	fi
 
+	echo "PASS $testname-high-wmark"
+
 	# Test mid-low watermarks-based activation
 	set_current_free_mem_permil
 	high_wmark=1000
@@ -307,6 +309,8 @@ test_wmarks() {
 		exit 1
 	fi
 
+	echo "PASS $testname-mid-wmark"
+
 	# Test low watermark-based deactivation
 	applied=42
 
@@ -322,6 +326,8 @@ test_wmarks() {
 		echo "FAIL $testname (low watermark doesn't works)"
 		exit 1
 	fi
+
+	echo "PASS $testname-low-wmark"
 
 	echo "PASS $testname"
 }
