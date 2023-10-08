@@ -361,7 +361,7 @@ test_filters() {
 	kill -9 "$workload_pid"
 	sudo "$damo" stop 2> /dev/null
 
-	cgroup="/sys/fs/cgroup/unified/"
+	cgroup="/sys/fs/cgroup/"
 	memcg_support="false"
 	for controller in $(sudo cat "$cgroup/cgroup.controllers")
 	do
