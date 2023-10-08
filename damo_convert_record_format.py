@@ -27,10 +27,16 @@ def main(args=None):
     if not args.output_file:
         args.output_file = args.record_file
 
-    err = _damon_result.rewrite_record_file(args.record_file,
-            args.output_file, args.format)
+    records, err = _damon_result.parse_binary_format_record(args.record_file,
+            None)
     if err != None:
-        print('converting format failed (%s)' % err)
+        print('parsing record file failed (%s)' % err)
+        exit(1)
+
+    err = _damon_result.write_damon_records(records, args.output_file,
+            args.format)
+    if err != None:
+        print('writing records again failed (%s)' % err)
         exit(1)
 
 if __name__ == '__main__':
