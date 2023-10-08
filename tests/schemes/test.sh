@@ -111,6 +111,12 @@ test_stat() {
 	echo "PASS $testname ($speed < $speed_limit)"
 }
 
+set_current_free_mem_permil() {
+	local mem_total=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+	local mem_free=$(grep MemFree /proc/meminfo | awk '{print $2}')
+	current_free_mem_permil=$((mem_free * 1000 / mem_total))
+}
+
 ensure_free_mem_ratio() {
 	upperbound=$1
 	lowerbound=$2
@@ -262,17 +268,16 @@ test_wmarks() {
 	scheme_template=$(cat "cold_mem_stat_damos_template_for_wmarks.json")
 
 	# Test high watermark-based deactivation
-	ensure_free_mem_ratio 990 100
-	if [ "$?" -ne 0 ]
-	then
-		return
-	fi
+	set_current_free_mem_permil
+	high_wmark=$(( current_free_mem_permil / 2 ))
+	mid_wmark=$(( high_wmark - high_wmark / 10 ))
+	low_wmark=$(( high_wmark - high_wmark / 5 ))
 	applied=42
 
 	scheme=$(echo "$scheme_template" | \
-		sed "s/wmarks_high_to_be_replaced/50/" | \
-		sed "s/wmarks_mid_to_be_replaced/40/" | \
-		sed "s/wmarks_low_to_be_replaced/30/")
+		sed "s/wmarks_high_to_be_replaced/$high_wmark/" | \
+		sed "s/wmarks_mid_to_be_replaced/$mid_wmark/" | \
+		sed "s/wmarks_low_to_be_replaced/$low_wmark/")
 
 	measure_scheme_applied "$scheme" "paddr" 3 \
 		"$damon_interface"
@@ -283,17 +288,16 @@ test_wmarks() {
 	fi
 
 	# Test mid-low watermarks-based activation
-	ensure_free_mem_ratio 990 100
-	if [ "$?" -ne 0 ]
-	then
-		return
-	fi
+	set_current_free_mem_permil
+	high_wmark=1000
+	mid_wmark=1000
+	low_wmark=$((current_free_mem_permil / 2))
 	applied=0
 
 	scheme=$(echo "$scheme_template" | \
-		sed "s/wmarks_high_to_be_replaced/999/" | \
-		sed "s/wmarks_mid_to_be_replaced/995/" | \
-		sed "s/wmarks_low_to_be_replaced/100/")
+		sed "s/wmarks_high_to_be_replaced/$high_wmark/" | \
+		sed "s/wmarks_mid_to_be_replaced/$mid_wmark/" | \
+		sed "s/wmarks_low_to_be_replaced/$low_wmark/")
 
 	measure_scheme_applied "$scheme" "paddr" 3 \
 		"$damon_interface"
@@ -304,17 +308,12 @@ test_wmarks() {
 	fi
 
 	# Test low watermark-based deactivation
-	ensure_free_mem_ratio 990 100
-	if [ "$?" -ne 0 ]
-	then
-		return
-	fi
 	applied=42
 
 	scheme=$(echo "$scheme_template" | \
-		sed "s/wmarks_high_to_be_replaced/999/" | \
-		sed "s/wmarks_mid_to_be_replaced/998/" | \
-		sed "s/wmarks_low_to_be_replaced/995/")
+		sed "s/wmarks_high_to_be_replaced/1000/" | \
+		sed "s/wmarks_mid_to_be_replaced/1000/" | \
+		sed "s/wmarks_low_to_be_replaced/1000/")
 
 	measure_scheme_applied "$scheme" "paddr" 3 \
 		"$damon_interface"
