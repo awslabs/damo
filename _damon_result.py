@@ -556,16 +556,15 @@ def parse_file_permission_str(file_permission_str):
         return None, 'out of available permission range'
     return file_permission, None
 
-file_type_record = 'record'             # damo defined binary format
 file_type_perf_script = 'perf_script'   # perf script output
 file_type_perf_data = 'perf_data'       # perf record result file
 file_type_json = 'json'                 # list of DamonRecord objects in json
 file_type_json_compressed = 'json_compressed'
 
 file_types = [file_type_json_compressed, file_type_json, file_type_perf_script,
-        file_type_perf_data, file_type_record]
+        file_type_perf_data]
 self_write_supported_file_types = [file_type_json_compressed, file_type_json,
-        file_type_perf_script, file_type_record]
+        file_type_perf_script]
 
 def write_damon_records(records, file_path, file_type, file_permission=None):
     '''Returns None if success, an error string otherwise'''
@@ -578,8 +577,6 @@ def write_damon_records(records, file_path, file_type, file_permission=None):
         write_json(records, file_path)
     elif file_type == file_type_perf_script:
         write_perf_script(records, file_path)
-    elif file_type == file_type_record:
-        write_binary(records, file_path, 2)
 
     if file_permission != None:
         os.chmod(file_path, file_permission)
