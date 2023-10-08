@@ -149,6 +149,45 @@ __measure_scheme_applied() {
 	fi
 }
 
+# debugfs cannot do damo stop at the moment.  Should fix it.
+measure_scheme_applied_sysfs() {
+	if [ $# -ne 3 ]
+	then
+		echo" Usage: $0 <scheme> <target> <wait_for>"
+		exit 1
+	fi
+	scheme=$1
+	target=$2
+	wait_for=$3
+	local damon_interface=sysfs
+
+	sudo "$damo" start -c "$scheme" --damon_interface "$damon_interface" \
+		"$target"
+
+	while true
+	do
+		# wait kdamond
+		if ! pgrep kdamond.0 > /dev/null
+		then
+			sleep 0.1
+		else
+			break
+		fi
+	done
+
+	before=$(__measure_scheme_applied "$damon_interface")
+	if [ "$before" = "" ]
+	then
+		before=0
+	fi
+	sleep "$wait_for"
+	after=$(__measure_scheme_applied "$damon_interface")
+
+	sudo "$damo" stop --damon_interface "$damon_interface"
+
+	applied=$((after - before))
+}
+
 measure_scheme_applied() {
 	if [ $# -ne 4 ]
 	then
@@ -159,6 +198,12 @@ measure_scheme_applied() {
 	target=$2
 	wait_for=$3
 	local damon_interface=$4
+
+	if [ "$damon_interface" = "sysfs" ]
+	then
+		measure_scheme_applied_sysfs "$scheme" "$target" "$wait_for"
+		return
+	fi
 
 	timeout_after=$((wait_for + 2))
 	sudo timeout "$timeout_after" \
