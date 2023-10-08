@@ -924,8 +924,6 @@ def initialize(args):
     if args.debug_damon:
         pr_debug_log = True
 
-    return _damon_fs.update_supported_features()
-
 initialized = False
 def ensure_initialized(args):
     global initialized
