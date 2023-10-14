@@ -28,11 +28,13 @@ def main(args=None):
     if not args.output_file:
         args.output_file = args.record_file
 
-    records, err = _damo_deprecated.parse_binary_format_record(
-            args.record_file, None)
-    if err != None:
-        print('parsing record file failed (%s)' % err)
-        exit(1)
+    records, err = _damon_result.parse_records_file(args.record_file, None)
+    if err:
+        records, err = _damo_deprecated.parse_binary_format_record(
+                args.record_file, None)
+        if err != None:
+            print('parsing record file failed (%s)' % err)
+            exit(1)
 
     err = _damon_result.write_damon_records(records, args.output_file,
             args.format)
