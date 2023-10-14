@@ -25,7 +25,7 @@ __test_stat() {
 	fi
 
 	python ./stairs.py &
-	stairs_pid=$!
+	local stairs_pid=$!
 	sudo "$damo" start "$stairs_pid" --damos_action stat \
 		--damos_sz_region 4K max --damos_access_rate 0% 0% \
 		--damos_age 1s max \
@@ -33,7 +33,7 @@ __test_stat() {
 			100% 100% 100% \
 		--damon_interface "$damon_interface"
 
-	start_time=$SECONDS
+	local start_time=$SECONDS
 	applied=0
 	while ps --pid "$stairs_pid" > /dev/null
 	do
