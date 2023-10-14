@@ -127,13 +127,6 @@ def damos_to_debugfs_input(damos, intervals, quotas_wmarks_supported):
                 watermarks.mid_permil, watermarks.low_permil])
     return scheme_input
 
-def get_scheme_version():
-    '''Return the scheme version that the running kernel supports'''
-    scheme_version = 0      # 5.15-based DAMON implementation
-    if feature_supported('schemes_quotas'):
-        scheme_version = 4  # 5.16-based DAMON implementation
-    return scheme_version
-
 def wops_for_schemes(schemes, intervals):
     scheme_file_input_lines = []
     for scheme in schemes:
