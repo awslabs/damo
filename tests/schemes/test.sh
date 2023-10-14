@@ -34,15 +34,15 @@ __test_stat() {
 		--damon_interface "$damon_interface"
 
 	local start_time=$SECONDS
-	applied=0
+	test_stat_applied=0
 	while ps --pid "$stairs_pid" > /dev/null
 	do
-		applied=$(sudo "$damo" status \
+		test_stat_applied=$(sudo "$damo" status \
 			--damon_interface "$damon_interface" \
 			--damos_stat 0 0 0 --damos_stat_field sz_tried --raw)
 		sleep 1
 	done
-	measure_time=$((SECONDS - start_time))
+	test_stat_measure_time=$((SECONDS - start_time))
 }
 
 test_stat() {
@@ -56,12 +56,12 @@ test_stat() {
 	testname="schemes-stat $damon_interface"
 
 	__test_stat 0 "$damon_interface"
-	if [ "$applied" -eq 0 ]
+	if [ "$test_stat_applied" -eq 0 ]
 	then
 		echo "FAIL $testname"
 		exit 1
 	fi
-	echo "PASS $testname ($applied cold memory found)"
+	echo "PASS $testname ($test_stat_applied cold memory found)"
 
 	testname="schemes-speed-limit $damon_interface"
 	if ! sudo "$damo" features supported \
@@ -72,7 +72,7 @@ test_stat() {
 		return
 	fi
 
-	speed=$((applied / measure_time))
+	speed=$((test_stat_applied / test_stat_measure_time))
 	if [ "$speed" -lt $((4 * 1024 * 100)) ]
 	then
 		echo "SKIP $testname (too slow detection: $speed)"
@@ -81,7 +81,7 @@ test_stat() {
 	speed_limit=$((speed / 2))
 
 	__test_stat $speed_limit "$damon_interface"
-	speed=$((applied / measure_time))
+	speed=$((test_stat_applied / test_stat_measure_time))
 	if [ "$speed" -gt $((speed_limit * 11 / 10)) ]
 	then
 		echo "FAIL $testname ($speed > $speed_limit)"
