@@ -46,7 +46,9 @@ __test_stat() {
 	applied=0
 	while ps --pid "$stairs_pid" > /dev/null
 	do
-		applied=$(__measure_scheme_applied "$damon_interface")
+		applied=$(sudo "$damo" status \
+			--damon_interface "$damon_interface" \
+			--damos_stat 0 0 0 --damos_stat_field sz_tried --raw)
 		sleep 1
 	done
 	measure_time=$((SECONDS - start_time))
@@ -117,17 +119,6 @@ set_current_free_mem_permil() {
 	current_free_mem_permil=$((mem_free * 1000 / mem_total))
 }
 
-__measure_scheme_applied() {
-	if [ $# -ne 1 ]
-	then
-		echo "Usage: $0 <damon_interface>"
-		exit 1
-	fi
-	local damon_interface=$1
-	sudo "$damo" status --damon_interface "$damon_interface" \
-		--damos_stat 0 0 0 --damos_stat_field sz_tried --raw
-}
-
 measure_scheme_applied() {
 	if [ $# -ne 4 ]
 	then
@@ -153,13 +144,15 @@ measure_scheme_applied() {
 		fi
 	done
 
-	before=$(__measure_scheme_applied "$damon_interface")
+	before=$(sudo "$damo" status --damon_interface "$damon_interface" \
+		--damos_stat 0 0 0 --damos_stat_field sz_tried --raw)
 	if [ "$before" = "" ]
 	then
 		before=0
 	fi
 	sleep "$wait_for"
-	after=$(__measure_scheme_applied "$damon_interface")
+	after=$(sudo "$damo" status --damon_interface "$damon_interface" \
+		--damos_stat 0 0 0 --damos_stat_field sz_tried --raw)
 
 	sudo "$damo" stop --damon_interface "$damon_interface"
 
