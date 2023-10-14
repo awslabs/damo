@@ -97,7 +97,7 @@ def file_content_to_damos_wmarks_metric(metric_file_content):
         if damos_wmark_metric_to_int[metric_str] == metric_file_content:
             return metric_str
 
-def damos_to_debugfs_input(damos, intervals, scheme_version):
+def damos_to_debugfs_input(damos, intervals, quotas_wmarks_supported):
     pattern = damos.access_pattern.converted_for_units(
             _damon.unit_samples, _damon.unit_aggr_intervals,
             intervals)
@@ -105,17 +105,17 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
     watermarks = damos.watermarks
 
     max_nr_accesses = intervals.aggr / intervals.sample
-    v0_scheme = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
+    scheme_input = '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (
             pattern.sz_bytes[0], pattern.sz_bytes[1],
             pattern.nr_acc_min_max[0].samples,
             pattern.nr_acc_min_max[1].samples,
             pattern.age_min_max[0].aggr_intervals,
             pattern.age_min_max[1].aggr_intervals,
             damos_action_to_file_input(damos.action))
-    if scheme_version == 0:
-        return v0_scheme
+    if not quotas_wmarks_supported:
+        return scheme_input
 
-    v4_scheme = '%s\t' % v0_scheme + '\t'.join(
+    scheme_input = '%s\t' % scheme_input + '\t'.join(
             '%d' % x for x in [
                 # quotas
                 quotas.time_ms, quotas.sz_bytes, quotas.reset_interval_ms,
@@ -125,10 +125,7 @@ def damos_to_debugfs_input(damos, intervals, scheme_version):
                 damos_wmarks_metric_to_file_input(watermarks.metric),
                 watermarks.interval_us, watermarks.high_permil,
                 watermarks.mid_permil, watermarks.low_permil])
-    if scheme_version == 4:
-        return v4_scheme
-
-    raise Exception('Unsupported scheme version: %d' % scheme_version)
+    return scheme_input
 
 def get_scheme_version():
     '''Return the scheme version that the running kernel supports'''
@@ -141,7 +138,7 @@ def wops_for_schemes(schemes, intervals):
     scheme_file_input_lines = []
     for scheme in schemes:
         scheme_file_input_lines.append(damos_to_debugfs_input(scheme,
-            intervals, get_scheme_version()))
+            intervals, feature_supported('schemes_quotas')))
     scheme_file_input = '\n'.join(scheme_file_input_lines)
     if scheme_file_input == '':
         scheme_file_input = '\n'

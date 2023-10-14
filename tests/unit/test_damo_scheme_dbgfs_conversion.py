@@ -148,7 +148,7 @@ min max     5 max       min max     hugepage
                 lines = []
                 for damos in damos_list:
                     lines.append(_damon_dbgfs.damos_to_debugfs_input(damos,
-                        intervals, version))
+                        intervals, False if version == 0 else True))
                 self.assertEqual('\n'.join(lines),
                         expects['%s.v%d' % (input_name, version)])
 
