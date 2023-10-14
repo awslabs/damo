@@ -8,15 +8,14 @@ damon_debugfs="/sys/kernel/debug/damon"
 damo="../../damo"
 
 __test_stat() {
-	if [ $# -ne 3 ]
+	if [ $# -ne 2 ]
 	then
-		echo "Usage: $0 <speed limit> <use scheme file> <damon interface>"
+		echo "Usage: $0 <speed limit> <damon interface>"
 		exit 1
 	fi
 
 	local speed_limit=$1
-	local use_scheme_file=$2
-	local damon_interface=$3
+	local damon_interface=$2
 
 	scheme=$(cat cold_mem_stat_damos_template.json)
 	if [ ! "$speed_limit" = "" ]
@@ -29,12 +28,6 @@ __test_stat() {
 		scheme=$(echo "$scheme" | \
 			sed "s/quotas_sz_bytes_to_be_replaced/0 B/" \
 			| sed 's/quotas_reset_interval_ms_to_be_replaced/max/')
-	fi
-
-	if [ "$use_scheme_file" = "use_scheme_file" ]
-	then
-		echo "$scheme" > test_scheme.json
-		scheme="./test_scheme.json"
 	fi
 
 	python ./stairs.py &
@@ -52,11 +45,6 @@ __test_stat() {
 		sleep 1
 	done
 	measure_time=$((SECONDS - start_time))
-
-	if [ "$use_scheme_file" = "use_scheme_file" ]
-	then
-		rm "$scheme"
-	fi
 }
 
 test_stat() {
@@ -69,16 +57,7 @@ test_stat() {
 
 	testname="schemes-stat $damon_interface"
 
-	__test_stat 0 "dont_use_scheme_file" "$damon_interface"
-	if [ "$applied" -eq 0 ]
-	then
-		echo "FAIL $testname"
-		exit 1
-	fi
-	echo "PASS $testname ($applied cold memory found)"
-
-	testname="schemes-stat-using-scheme-file $damon_interface"
-	__test_stat 0 "use_scheme_file" "$damon_interface"
+	__test_stat 0 "$damon_interface"
 	if [ "$applied" -eq 0 ]
 	then
 		echo "FAIL $testname"
@@ -103,7 +82,7 @@ test_stat() {
 	fi
 	speed_limit=$((speed / 2))
 
-	__test_stat $speed_limit "dont_use_scheme_file" "$damon_interface"
+	__test_stat $speed_limit "$damon_interface"
 	speed=$((applied / measure_time))
 	if [ "$speed" -gt $((speed_limit * 11 / 10)) ]
 	then
