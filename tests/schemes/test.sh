@@ -87,7 +87,7 @@ test_stat() {
 	testname="schemes-speed-limit $damon_interface"
 	if ! sudo "$damo" features supported \
 		--damon_interface "$damon_interface" 2> /dev/null | \
-		grep -w schemes_speed_limit > /dev/null
+		grep -w schemes_quotas > /dev/null
 	then
 		echo "SKIP $testname (unsupported)"
 		return
