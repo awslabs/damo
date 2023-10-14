@@ -42,7 +42,7 @@ __test_stat() {
 			--damos_stat 0 0 0 --damos_stat_field sz_tried --raw)
 		sleep 1
 	done
-	test_stat_measure_time=$((SECONDS - start_time))
+	test_stat_speed=$((test_stat_applied / (SECONDS - start_time)))
 }
 
 test_stat() {
@@ -72,22 +72,20 @@ test_stat() {
 		return
 	fi
 
-	speed=$((test_stat_applied / test_stat_measure_time))
-	if [ "$speed" -lt $((4 * 1024 * 100)) ]
+	if [ "$test_stat_speed" -lt $((4 * 1024 * 100)) ]
 	then
-		echo "SKIP $testname (too slow detection: $speed)"
+		echo "SKIP $testname (too slow detection: $test_stat_speed)"
 		return
 	fi
-	speed_limit=$((speed / 2))
+	speed_limit=$((test_stat_speed / 2))
 
 	__test_stat $speed_limit "$damon_interface"
-	speed=$((test_stat_applied / test_stat_measure_time))
-	if [ "$speed" -gt $((speed_limit * 11 / 10)) ]
+	if [ "$test_stat_speed" -gt $((speed_limit * 11 / 10)) ]
 	then
-		echo "FAIL $testname ($speed > $speed_limit)"
+		echo "FAIL $testname ($test_stat_speed > $speed_limit)"
 		exit 1
 	fi
-	echo "PASS $testname ($speed < $speed_limit)"
+	echo "PASS $testname ($test_stat_speed < $speed_limit)"
 }
 
 set_current_free_mem_permil() {
