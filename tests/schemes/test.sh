@@ -124,18 +124,8 @@ __measure_scheme_applied() {
 		exit 1
 	fi
 	local damon_interface=$1
-	if [ "$damon_interface" = "debugfs" ]
-	then
-		sudo cat "$damon_debugfs/schemes" | \
-			awk '{if (NF==23) print $20; else print $NF;}'
-	elif [ "$damon_interface" = "sysfs" ]
-	then
-		sudo "$damo" status --damon_interface "$damon_interface" \
-			--damos_stat 0 0 0 --damos_stat_field sz_tried --raw
-	else
-		echo "wrong damon_interface ($damon_interface)"
-		exit 1
-	fi
+	sudo "$damo" status --damon_interface "$damon_interface" \
+		--damos_stat 0 0 0 --damos_stat_field sz_tried --raw
 }
 
 # debugfs cannot do damo stop at the moment.  Should fix it.
