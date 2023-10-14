@@ -377,11 +377,28 @@ def update_supported_features():
     if not os.path.isdir(debugfs_damon):
         return 'damon debugfs dir (%s) not found' % debugfs_damon
 
-    if _damon.any_kdamond_running():
-        return 'debugfs feature update cannot be done while DAMON running'
-
     if os.path.isfile(debugfs_schemes):
         feature_supports['schemes'] = True
+        with open(debugfs_schemes, 'r') as f:
+            nr_fields = len(f.read().strip().split())
+        need_schemes_file_test = False
+        if nr_fields == 0:
+            need_schemes_file_test = True
+        elif nr_fields == 20:   # v5.16
+            feature_supports['schemes_speed_limit'] = True
+            feature_supports['schemes_prioritization'] = True
+            feature_supports['schemes_wmarks'] = True
+            feature_supports['schemes_quotas'] = True
+        elif nr_fields == 23:   # v5.17 or later
+            feature_supports['schemes_speed_limit'] = True
+            feature_supports['schemes_prioritization'] = True
+            feature_supports['schemes_wmarks'] = True
+            feature_supports['schemes_quotas'] = True
+            feature_supports['schemes_stat_succ'] = True
+            feature_supports['schemes_stat_qt_exceed'] = True
+
+    if _damon.any_kdamond_running():
+        return 'debugfs feature update cannot be done while DAMON running'
 
     # virtual address space has supported since the beginning
     feature_supports['vaddr'] = True
@@ -395,7 +412,7 @@ def update_supported_features():
         if init_regions_version == 2:
             feature_supports['init_regions_target_idx'] = True
 
-    if feature_supported('schemes'):
+    if need_schemes_file_test:
         # 'schemes' receives 18 numbers input and has three stats (v5.16)
         if test_debugfs_file_schemes(18):
             feature_supports['schemes_speed_limit'] = True
