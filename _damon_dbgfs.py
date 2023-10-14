@@ -412,16 +412,8 @@ def update_supported_features():
             feature_supports['init_regions_target_idx'] = True
 
     if feature_supported('schemes'):
-        if test_debugfs_file_schemes(9):
-            feature_supports['schemes_speed_limit'] = True
-        elif test_debugfs_file_schemes(12):
-            feature_supports['schemes_speed_limit'] = True
-            feature_supports['schemes_prioritization'] = True
-        elif test_debugfs_file_schemes(17):
-            feature_supports['schemes_speed_limit'] = True
-            feature_supports['schemes_prioritization'] = True
-            feature_supports['schemes_wmarks'] = True
-        elif test_debugfs_file_schemes(18):
+        # 'schemes' receives 18 numbers input and has three stats (v5.16)
+        if test_debugfs_file_schemes(18):
             feature_supports['schemes_speed_limit'] = True
             feature_supports['schemes_prioritization'] = True
             feature_supports['schemes_wmarks'] = True
@@ -433,10 +425,5 @@ def update_supported_features():
             feature_supports['schemes_quotas'] = True
             feature_supports['schemes_stat_succ'] = True
             feature_supports['schemes_stat_qt_exceed'] = True
-
-    if 0 < get_scheme_version() and get_scheme_version() < 4:
-        _damo_deprecation_notice.deprecated(
-                feature='support of non-mainlined DAMOS implementation',
-                deadline='2023-Q2', do_exit=True)
 
     return None
