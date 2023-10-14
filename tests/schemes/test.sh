@@ -17,22 +17,20 @@ __test_stat() {
 	local speed_limit=$1
 	local damon_interface=$2
 
-	scheme=$(cat cold_mem_stat_damos_template.json)
 	if [ ! "$speed_limit" = "" ]
 	then
-		speed_limit+=" B"
-		scheme=$(echo "$scheme" | \
-			sed "s/quotas_sz_bytes_to_be_replaced/$speed_limit/" \
-			| sed 's/quotas_reset_interval_ms_to_be_replaced/1 s/')
+		local quota_reset_interval="1s"
 	else
-		scheme=$(echo "$scheme" | \
-			sed "s/quotas_sz_bytes_to_be_replaced/0 B/" \
-			| sed 's/quotas_reset_interval_ms_to_be_replaced/max/')
+		local quota_reset_interval="max"
 	fi
 
 	python ./stairs.py &
 	stairs_pid=$!
-	sudo "$damo" start -c "$scheme" "$stairs_pid" \
+	sudo "$damo" start "$stairs_pid" --damos_action stat \
+		--damos_sz_region 4K max --damos_access_rate 0% 0% \
+		--damos_age 1s max \
+		--damos_quotas 0s "$speed_limit" "$quota_reset_interval" \
+			100% 100% 100% \
 		--damon_interface "$damon_interface"
 
 	start_time=$SECONDS
