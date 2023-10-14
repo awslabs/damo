@@ -183,9 +183,9 @@ At the beginning, DAMO used its special binary format, namely `record`.  It is
 designed for lightweight saving of the monitoring results.  It is difficult to
 read, and not that efficient compared to fancy compression techniques.  `json`
 based monitoring results can be easier to read, and more efficient when
-compression technique is used.  Hence, the format will be deprecated.  You may
-use `damo convert_record_format` to convert your old record binary format
-monitoring results files to the new format.
+compression technique is used.  Hence, the format is deprecated.  You may
+use `damo convert_record_format` of v2.0.2 or lower version of DAMO to convert
+your old record binary format monitoring results files to the new format.
 
 
 Python2 support
