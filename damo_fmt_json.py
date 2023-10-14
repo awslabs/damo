@@ -12,6 +12,8 @@ import _damon_args
 
 def set_argparser(parser):
     _damon_args.set_argparser(parser, add_record_options=False)
+    parser.add_argument('--schemes_only', action='store_true',
+            help='print schemes part only')
     parser.add_argument('--raw', action='store_true',
             help='print numbers in machine friendly raw form')
 
@@ -26,6 +28,13 @@ def main(args=None):
     if err:
         print('invalid arguments (%s)' % err)
         exit(1)
+    if args.schemes_only:
+        schemes = []
+        for kdamond in kdamonds:
+            for ctx in kdamond.contexts:
+                schemes += ctx.schemes
+        print(json.dumps([s.to_kvpairs(args.raw) for s in schemes], indent=4))
+        return
     print(json.dumps({'kdamonds': [k.to_kvpairs(args.raw) for k in kdamonds]},
         indent=4))
 
