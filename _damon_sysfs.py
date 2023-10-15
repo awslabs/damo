@@ -549,6 +549,9 @@ def update_supported_features():
 
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'filters')):
         feature_supports['schemes_filters'] = True
+        # anon and memcg were supported from the beginning
+        feature_supports['schemes_filters_anon'] = True
+        feature_supports['schemes_filters_memcg'] = True
 
     if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'apply_interval_us')):
         feature_supports['schemes_apply_interval'] = True
