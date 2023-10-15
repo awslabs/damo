@@ -8,6 +8,7 @@ import argparse
 import json
 
 import _damo_deprecated
+import _damo_deprecation_notice
 
 def set_argparser(parser):
     parser.add_argument('schemes', metavar='<file or string>',
@@ -18,6 +19,9 @@ def main(args=None):
         parser = argparse.ArgumentParser()
         set_argparser(parser)
         args = parser.parse_args()
+
+    _damo_deprecation_notice.will_be_deprecated('translate_damos', '2023-Q4',
+            'Use the command of <=v2.0.2 DAMO instead.')
 
     _damo_deprecated.avoid_crashing_single_line_scheme_for_testing = True
     _damo_deprecated.avoid_crashing_v1_v3_schemes_for_testing = True
