@@ -1,14 +1,22 @@
 # SPDX-License-Identifier: GPL-2.0
 
 """
-Transform DAMON monitoring results record into human readable text that can be
-used for heatmap drawing, or directly plot the data in a heatmap format.
+Transform DAMON monitoring results record into a heatmap.  The heatmap is
+constructed with pixels that each shows when (time), which memory region
+(space) was how frequently accessed (heat).  The time and space are represented
+by the location of the pixel on the map, while the heat is represented by it's
+color.
 
-Format of the text is:
+By default, the output shows the relative time, space, and heat values of each
+pixel of the map on each line, like below.
 
     <time> <space> <heat>
     ...
 
+By constructing the pixels based on the values, the user can draw more
+human-readable heatmap.  gnuplot like plot tools can be used.  If '--heatmap'
+option is givne, this tool does that on behalf of the human when '--heatmap'
+option is given.
 """
 
 import argparse
