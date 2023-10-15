@@ -19,6 +19,7 @@
 - Implement histogram stat regions output
 - Support DAMOS quotas/watermarks/filters with command line options
 - Deprecate old features
+  - Deprecate translate_damos (schedule noticed for 2023-Q4)
   - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
   - Deprecate v1-v3 schemes (done.  necessary code moved to _damon_deprecated)
   - Deprecate python2 support (done.  code moved to _damon_deprecated)
