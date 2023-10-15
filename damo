@@ -16,6 +16,7 @@ import damo_lru_sort
 import damo_monitor
 import damo_reclaim
 import damo_record
+import damo_record_info
 import damo_report
 import damo_schemes
 import damo_show
@@ -80,6 +81,9 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='convert_record_format',
             module=damo_convert_record_format,
             msg='convert DAMON result record file\'s format'),
+        _damo_subcmds.DamoSubCmd(name='record_info',
+            module=damo_record_info,
+            msg='print basic information of a data accesses record file'),
         ]
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
