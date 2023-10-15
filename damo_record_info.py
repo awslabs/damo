@@ -115,9 +115,6 @@ def pr_guide(records):
     for guide in get_guide_info(records):
         print(guide)
 
-def region_sort_key(region):
-    return region[1] - region[0]
-
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')

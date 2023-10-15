@@ -271,9 +271,6 @@ def pr_guide(records):
     for guide in get_guide_info(records):
         print(guide)
 
-def region_sort_key(region):
-    return region[1] - region[0]
-
 def set_missed_args(args, records):
     if args.tid and args.time_range and args.address_range:
         return
