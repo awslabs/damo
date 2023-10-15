@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0
 
 """
-Transform binary trace data into human readable text that can be used for
-heatmap drawing, or directly plot the data in a heatmap format.
+Transform DAMON monitoring results record into human readable text that can be
+used for heatmap drawing, or directly plot the data in a heatmap format.
 
 Format of the text is:
 
