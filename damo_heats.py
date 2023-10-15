@@ -17,6 +17,8 @@ import subprocess
 import sys
 import tempfile
 
+import damo_record_info
+
 import _damo_ascii_color
 import _damo_fmt_str
 import _damon_result
@@ -386,7 +388,7 @@ def main(args=None):
         args.resol = [40, 80]
 
     if args.guide:
-        pr_guide(records)
+        damo_record_info.pr_guide(records)
     else:
         set_missed_args(args, records)
         orig_stdout = sys.stdout
