@@ -41,5 +41,4 @@
   - Implement min/max snapshot format keyword
   - Consider <box><size> <access rate> <age> as default
     - Current default region format might make sense to be optional?
-- Support DAMOS tried regions tracepoint
 - Test DAMOS interval
