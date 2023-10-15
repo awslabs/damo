@@ -205,8 +205,9 @@ Deprecated.  Use `--damos_*` command line options or json format input.
 A simple DAMOS scheme specification format called one-line scheme specification
 was initially supported.  Because it is not flexible for extension of features,
 it has deprecated now.  You may use `--damos_*` command line options or json
-format instead.  You may use `damo translate_damos` to convert your old single
-line DAMOS schemes specification to the new json format.
+format instead.  You could use `damo translate_damos` ov v2.0.2 or lower
+version of DAMO to convert your old single line DAMOS schemes specification to
+the new json format.
 
 
 --rbuf option of `damo record`
