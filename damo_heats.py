@@ -283,21 +283,22 @@ def main(args=None):
 
     if args.guide:
         damo_record_info.pr_guide(records)
-    else:
-        set_missed_args(args, records)
-        orig_stdout = sys.stdout
-        if args.heatmap and args.heatmap != 'stdout':
-            tmp_path = tempfile.mkstemp()[1]
-            tmp_file = open(tmp_path, 'w')
-            sys.stdout = tmp_file
+        return
 
-        pr_heats(args, records)
+    set_missed_args(args, records)
+    orig_stdout = sys.stdout
+    if args.heatmap and args.heatmap != 'stdout':
+        tmp_path = tempfile.mkstemp()[1]
+        tmp_file = open(tmp_path, 'w')
+        sys.stdout = tmp_file
 
-        if args.heatmap and args.heatmap != 'stdout':
-            sys.stdout = orig_stdout
-            tmp_file.flush()
-            tmp_file.close()
-            plot_heatmap(tmp_path, args.heatmap, args)
+    pr_heats(args, records)
+
+    if args.heatmap and args.heatmap != 'stdout':
+        sys.stdout = orig_stdout
+        tmp_file.flush()
+        tmp_file.close()
+        plot_heatmap(tmp_path, args.heatmap, args)
 
 if __name__ == '__main__':
     main()
