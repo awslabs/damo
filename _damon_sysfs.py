@@ -546,6 +546,10 @@ def update_supported_features():
     if os.path.isfile(os.path.join(scheme_tried_regions_dir_of(0, 0, 0),
             'total_bytes')):
         feature_supports['schemes_tried_regions_sz'] = True
+        # address and target filter types are added in v6.6-rc1, together with
+        # tried regions
+        feature_supports['schemes_filters_addr'] = True
+        feature_supports['schemes_filters_target'] = True
 
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'filters')):
         feature_supports['schemes_filters'] = True

@@ -895,6 +895,8 @@ features = ['record',       # was in DAMON patchset, but not merged in mainline
             'schemes_filters_anon',     # merged in v6.3-rc1
             'schemes_filters_memcg',    # merged in v6.3-rc1
             'schemes_tried_regions_sz', # merged in v6.6-rc1
+            'schemes_filters_addr',     # merged in v6.6-rc1
+            'schemes_filters_target',   # merged in v6.6-rc1
             'schemes_apply_interval',   # merged in v6.6-rc4 based mm tree
             ]
 
