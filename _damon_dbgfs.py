@@ -377,11 +377,11 @@ def update_supported_features():
     if not os.path.isdir(debugfs_damon):
         return 'damon debugfs dir (%s) not found' % debugfs_damon
 
+    need_schemes_file_test = False
     if os.path.isfile(debugfs_schemes):
         feature_supports['schemes'] = True
         with open(debugfs_schemes, 'r') as f:
             nr_fields = len(f.read().strip().split())
-        need_schemes_file_test = False
         if nr_fields == 0:
             need_schemes_file_test = True
         elif nr_fields == 20:   # v5.16
