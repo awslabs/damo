@@ -145,7 +145,7 @@ def default_paddr_region():
             if len(fields) != 2:
                 continue
             name = fields[1].strip()
-            if name != 'System RAM':
+            if not name.startswith('System RAM'):
                 continue
             addrs = fields[0].split('-')
             if len(addrs) != 2:
@@ -162,7 +162,7 @@ def paddr_region_of(numa_node):
     regions = []
     paddr_ranges_ = paddr_ranges()
     for r in paddr_ranges_:
-        if r.nid == numa_node and r.name == 'System RAM':
+        if r.nid == numa_node and r.name.startswith('System RAM'):
             regions.append([r.start, r.end])
 
     return regions
