@@ -18,7 +18,7 @@ class DamoSubCmd:
     module = None
     msg_as_desc = None
 
-    def __init__(self, name, module, msg, msg_as_desc=False):
+    def __init__(self, name, module, msg, msg_as_desc=True):
         self.name = name
         self.module = module
         self.msg = msg
