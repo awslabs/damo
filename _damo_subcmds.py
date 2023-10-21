@@ -16,18 +16,15 @@ class DamoSubCmd:
     name = None
     msg = None
     module = None
-    msg_as_desc = None
 
-    def __init__(self, name, module, msg, msg_as_desc=True):
+    def __init__(self, name, module, msg):
         self.name = name
         self.module = module
         self.msg = msg
-        self.msg_as_desc = msg_as_desc
 
     def add_parser(self, subparsers):
         subparser = subparsers.add_parser(self.name, help=self.msg)
-        if self.msg_as_desc:
-            subparser.description = self.msg
+        subparser.description = self.msg
         self.module.set_argparser(subparser)
 
     def execute(self, args):
