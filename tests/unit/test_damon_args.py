@@ -14,14 +14,14 @@ import _damon_sysfs
 
 class TestDamonArgs(unittest.TestCase):
     def test_damon_ctx_for(self):
-        _damon_sysfs.feature_supports = {'init_regions': True, 'schemes': True,
+        _damon._damon_fs = _damon_sysfs
+        _damon.set_feature_supports({'init_regions': True, 'schemes': True,
                 'schemes_stat_qt_exceed': True, 'init_regions_target_idx':
                 True, 'schemes_prioritization': True, 'schemes_tried_regions':
                 False, 'record': False, 'schemes_quotas': True, 'fvaddr':
                 False, 'paddr': True, 'schemes_wmarks': True,
                 'schemes_speed_limit': True, 'schemes_stat_succ': True,
-                'vaddr': True}
-        _damon._damon_fs = _damon_sysfs
+                'vaddr': True})
 
         parser = argparse.ArgumentParser()
         _damon_args.set_argparser(parser, add_record_options=False)
