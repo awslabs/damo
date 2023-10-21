@@ -19,9 +19,12 @@ def main(args=None):
 
     _damon.ensure_root_and_initialized(args)
 
-    feature_dir = {}
-    for feature in sorted(_damon.features):
-        supported = _damon.feature_supported(feature)
+    feature_supports, err = _damon.get_feature_supports()
+    if err != None:
+        print('getting feature supports info failed (%s)' % err)
+        exit(1)
+    for feature in sorted(feature_supports.keys()):
+        supported = feature_supports[feature]
         if args.type == 'all':
             print('%s: %s' % (feature,
                 'Supported' if supported else 'Unsupported'))
@@ -29,10 +32,8 @@ def main(args=None):
             print(feature)
         elif args.type == 'unsupported' and not supported:
             print(feature)
-        elif args.type == 'json':
-            feature_dir[feature] = supported
     if args.type == 'json':
-        print(json.dumps(feature_dir, indent=4, sort_keys=True))
+        print(json.dumps(feature_supports, indent=4, sort_keys=True))
 
 if __name__ == '__main__':
     main()
