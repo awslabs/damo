@@ -922,27 +922,27 @@ def get_feature_supports():
 def set_feature_supports(feature_supports):
     _damon_fs.feature_supports = feature_supports
 
-def initialize(args):
+def initialize(damon_interface, debug_damon, damon_features):
     global _damon_fs
-    if args.damon_interface == 'sysfs':
+    if damon_interface == 'sysfs':
         _damon_fs = _damon_sysfs
-    elif args.damon_interface == 'debugfs':
+    elif damon_interface == 'debugfs':
         _damon_fs = _damon_dbgfs
-    elif args.damon_interface == 'auto':
+    elif damon_interface == 'auto':
         if _damon_sysfs.supported():
             _damon_fs = _damon_sysfs
         else:
             _damon_fs = _damon_dbgfs
 
     global pr_debug_log
-    if args.debug_damon:
+    if debug_damon:
         pr_debug_log = True
 
-    if args.damon_features != None:
-        if not os.path.isfile(args.damon_features):
-            return 'File %s not found' % args.damon_features
+    if damon_features != None:
+        if not os.path.isfile(damon_features):
+            return 'File %s not found' % damon_features
         try:
-            with open(args.damon_features, 'r') as f:
+            with open(damon_features, 'r') as f:
                 set_feature_supports(json.load(f))
         except Exception as e:
             return '--supported_features handling failed (%s)' % e
@@ -954,7 +954,8 @@ def ensure_initialized(args):
 
     if initialized:
         return
-    err = initialize(args)
+    err = initialize(args.damon_interface, args.debug_damon,
+            args.damon_features)
     if err != None:
         print(err)
         exit(1)
