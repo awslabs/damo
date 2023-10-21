@@ -33,7 +33,10 @@ def init_regions_for(args):
 
     if args.ops == 'paddr' and not init_regions:
         if args.numa_node != None:
-            init_regions = _damo_paddr_layout.paddr_region_of(args.numa_node)
+            init_regions, err = _damo_paddr_layout.paddr_region_of(
+                    args.numa_node)
+            if err != None:
+                return None, err
         else:
             init_regions = [_damo_paddr_layout.default_paddr_region()]
         try:

@@ -165,8 +165,7 @@ def paddr_region_of(numa_node):
         if r.nid == numa_node and r.name.startswith('System RAM'):
             regions.append([r.start, r.end])
 
-    return regions
-
+    return regions, None
 
 def main():
     parser = argparse.ArgumentParser()
