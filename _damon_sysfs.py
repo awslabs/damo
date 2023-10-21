@@ -517,6 +517,10 @@ def _avail_ops():
         return None, err
     return content.strip().split(), None
 
+def set_supported_features(features_map):
+    global feature_supports
+    feature_supports = features_map
+
 def update_supported_features():
     global feature_supports
 

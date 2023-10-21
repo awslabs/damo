@@ -368,6 +368,10 @@ def test_init_regions_version(paddr_supported):
 
     return version
 
+def set_supported_features(features_map):
+    global feature_supports
+    feature_supports = features_map
+
 def update_supported_features():
     global feature_supports
     if feature_supports != None:
