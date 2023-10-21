@@ -912,6 +912,12 @@ def ensure_root_permission():
 def feature_supported(feature):
     return _damon_fs.feature_supported(feature)
 
+def get_feature_supports():
+    err = _damon_fs.update_supported_features()
+    if err != None:
+        return None, err
+    return _damon_fs.feature_supports, None
+
 def initialize(args):
     global _damon_fs
     if args.damon_interface == 'sysfs':
