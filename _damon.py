@@ -6,6 +6,7 @@ Contains core functions for DAMON control.
 
 import collections
 import copy
+import json
 import os
 import random
 import time
@@ -933,6 +934,16 @@ def initialize(args):
     global pr_debug_log
     if args.debug_damon:
         pr_debug_log = True
+
+    if args.damon_features != None:
+        if not os.path.isfile(args.damon_features):
+            return 'File %s not found' % args.damon_features
+        try:
+            with open(args.damon_features, 'r') as f:
+                _damon_fs.set_supported_features(json.load(f))
+        except Exception as e:
+            return '--supported_features handling failed (%s)' % e
+    return None
 
 initialized = False
 def ensure_initialized(args):

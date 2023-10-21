@@ -379,6 +379,8 @@ def set_common_argparser(parser):
             help='underlying DAMON interface to use (!! DEPRECATED)')
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')
+    parser.add_argument('--damon_features', metavar='<file>',
+            help='damon feature supports info (\'damo features json\' output)')
 
 def set_monitoring_attrs_pinpoint_argparser(parser):
     # for easier pinpoint setup
