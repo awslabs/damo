@@ -34,7 +34,7 @@ def pr_damo_version(args_not_use):
 subcmds = [
         # DAMON control
         _damo_subcmds.DamoSubCmd(name='start', module=damo_start,
-            msg='start DAMON with given parameters', msg_as_desc=True),
+            msg='start DAMON with given parameters'),
         _damo_subcmds.DamoSubCmd(name='tune', module=damo_tune,
             msg='update input parameters of ongoing DAMON'),
         _damo_subcmds.DamoSubCmd(name='stop', module=damo_stop,
