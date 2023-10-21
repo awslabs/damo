@@ -159,6 +159,9 @@ def default_paddr_region():
     return ret
 
 def paddr_region_of(numa_node):
+    if not os.path.isdir('/sys/devices/system/memory'):
+        return None, '/sys/devices/system/memory not found.  You may need CONFIG_MEMORY_HOTPLUG enabled.'
+
     regions = []
     paddr_ranges_ = paddr_ranges()
     for r in paddr_ranges_:
