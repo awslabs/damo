@@ -919,6 +919,9 @@ def get_feature_supports():
         return None, err
     return _damon_fs.feature_supports, None
 
+def set_feature_supports(feature_supports):
+    _damon_fs.feature_supports = feature_supports
+
 def initialize(args):
     global _damon_fs
     if args.damon_interface == 'sysfs':
@@ -940,7 +943,7 @@ def initialize(args):
             return 'File %s not found' % args.damon_features
         try:
             with open(args.damon_features, 'r') as f:
-                _damon_fs.set_supported_features(json.load(f))
+                set_feature_supports(json.load(f))
         except Exception as e:
             return '--supported_features handling failed (%s)' % e
     return None
