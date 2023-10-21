@@ -1,14 +1,8 @@
 - Test --numa_node 0 case
-- Implement age distribution reporting
-- Test and 'status'
 - Support rss recording
-- Support filtering regions with min age
-- Make stateful (maybe we need .damo file under /tmp/)
 - Support 'init': Do the system/features check and store the result in a file
   (.damo?)
 - Support 'cleanup': echo 0 > nr_kdamonds
-- Document new workflow: init-start-show-tune-stop
-- Support ongoing schemes
 - Cleanup schemes test using damo status
 - Find a better and consistent rule for feature check
   - Check from subcommands
@@ -17,7 +11,6 @@
   - No check at all
   - Or, goes from option 1 to option 4 incrementally
 - Implement histogram stat regions output
-- Support DAMOS quotas/watermarks/filters with command line options
 - Deprecate old features
   - Deprecate translate_damos (schedule noticed for 2023-Q4)
   - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
@@ -28,8 +21,6 @@
   - Deprecate old scheme usages in tests
   - Deprecate DAMON results record binary format (done.  code moved to
     _damon_deprecated)
-- Refactor heats code
-- Add test for translate_damos and convert_record_format
 - damo status features implementation
   - specify target to show
 - damo show features implementation
