@@ -26,9 +26,9 @@ class DamoSubCmd:
 
     def add_parser(self, subparsers):
         subparser = subparsers.add_parser(self.name, help=self.msg)
-        self.module.set_argparser(subparser)
         if self.msg_as_desc:
             subparser.description = self.msg
+        self.module.set_argparser(subparser)
 
     def execute(self, args):
         self.module.main(args)
