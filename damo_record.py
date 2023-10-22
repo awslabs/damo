@@ -169,6 +169,11 @@ def main(args=None):
             print('DAMON is not turned on')
             exit(1)
 
+        err = _damon.read_feature_supports_file()
+        if err != None:
+            print(err)
+            exit(1)
+
         # TODO: Support multiple kdamonds, multiple contexts
         monitoring_intervals = data_for_cleanup.orig_kdamonds[
                 0].contexts[0].intervals
