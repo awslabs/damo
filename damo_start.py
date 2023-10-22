@@ -17,7 +17,7 @@ def main(args=None):
         parser = set_pargparser(None)
         args = parser.parse_args()
 
-    _damon.ensure_root_and_initialized(args)
+    _damon.ensure_root_and_initialized(args, save_feature_supports=True)
 
     err, kdamonds = _damon_args.turn_damon_on(args)
     if err:
