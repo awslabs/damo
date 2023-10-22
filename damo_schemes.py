@@ -38,7 +38,7 @@ def main(args=None):
         parser = set_argparser(None)
         args = parser.parse_args()
 
-    _damon.ensure_root_and_initialized(args)
+    _damon.ensure_root_and_initialized(args, save_feature_supports=True)
 
     orig_kdamonds = _damon.current_kdamonds()
     kdamonds_idxs = []
