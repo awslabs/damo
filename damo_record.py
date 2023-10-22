@@ -156,6 +156,10 @@ def main(args=None):
     # Now the real works
     is_ongoing = _damon_args.is_ongoing_target(args)
     if not is_ongoing:
+        err = _damon.write_feature_supports_file()
+        if err != None:
+            print(err)
+            cleanup_exit(-3)
         err, kdamonds = _damon_args.turn_damon_on(args)
         if err:
             print('could not turn DAMON on (%s)' % err)
