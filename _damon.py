@@ -979,11 +979,6 @@ def initialize(damon_interface, debug_damon, damon_features,
         if err:
             return err
 
-    if save_feature_supports and damon_features == None:
-        err = _damon_fs.update_supported_features()
-        if err != None:
-            return 'update_supported_features() failed (%s)' % err
-
     if save_feature_supports:
         feature_supports, err = get_feature_supports()
         if err != None:
