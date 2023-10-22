@@ -910,6 +910,9 @@ def ensure_root_permission():
         print('Run as root')
         exit(1)
 
+feature_supports_file_path = os.path.join(os.environ['HOME'],
+        '.damo.damon_feature_supports')
+
 def feature_supported(feature):
     return _damon_fs.feature_supported(feature)
 
@@ -954,8 +957,7 @@ def initialize(damon_interface, debug_damon, damon_features,
             return 'update_supported_features() failed (%s)' % err
 
     if save_feature_supports:
-        with open(os.path.join(os.environ['HOME'],
-            '.damo.damon_feature_supports'), 'w') as f:
+        with open(feature_supports_file_path, 'w') as f:
             json.dump(get_feature_supports(), f, indent=4, sort_keys=True)
 
     return None
