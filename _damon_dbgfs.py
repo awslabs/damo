@@ -226,6 +226,7 @@ def debugfs_output_to_damos(output, intervals_us):
     return damos
 
 def files_content_to_kdamonds(files_content):
+    state = files_content['monitor_on'].strip()
     attrs = [int(x) for x in files_content['attrs'].strip().split()]
 
     intervals = _damon.DamonIntervals(attrs[0], attrs[1], attrs[2])
@@ -233,7 +234,9 @@ def files_content_to_kdamonds(files_content):
 
     target_ids = [int(x) for x in files_content['target_ids'].strip().split()]
     regions_dict = {}
-    if feature_supported('init_regions'):
+    # Reading init_regions fails when DAMON is running.  Do the parsing only
+    # when DAMON is off.
+    if state == 'off' and feature_supported('init_regions'):
         fields = [int(x) for x in files_content['init_regions'].strip().split()]
         for i in range(0, len(fields), 3):
             id_or_index = fields[i]
