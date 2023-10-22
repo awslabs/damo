@@ -144,7 +144,10 @@ def main(args=None):
         parser = set_argparser(None)
         args = parser.parse_args()
 
-    _damon.ensure_root_and_initialized(args)
+    is_ongoing = _damon_args.is_ongoing_target(args)
+    _damon.ensure_root_and_initialized(args,
+            load_feature_supports=is_ongoing,
+            save_feature_supports=not is_ongoing)
 
     handle_args(args)
 
@@ -156,10 +159,6 @@ def main(args=None):
     # Now the real works
     is_ongoing = _damon_args.is_ongoing_target(args)
     if not is_ongoing:
-        err = _damon.write_feature_supports_file()
-        if err != None:
-            print(err)
-            cleanup_exit(-3)
         err, kdamonds = _damon_args.turn_damon_on(args)
         if err:
             print('could not turn DAMON on (%s)' % err)
