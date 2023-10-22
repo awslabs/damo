@@ -922,7 +922,8 @@ def get_feature_supports():
 def set_feature_supports(feature_supports):
     _damon_fs.feature_supports = feature_supports
 
-def initialize(damon_interface, debug_damon, damon_features):
+def initialize(damon_interface, debug_damon, damon_features,
+        save_feature_supports):
     global _damon_fs
     if damon_interface == 'sysfs':
         _damon_fs = _damon_sysfs
@@ -946,24 +947,35 @@ def initialize(damon_interface, debug_damon, damon_features):
                 set_feature_supports(json.load(f))
         except Exception as e:
             return '--supported_features handling failed (%s)' % e
+
+    if save_feature_supports and damon_features == None:
+        err = _damon_fs.update_supported_features()
+        if err != None:
+            return 'update_supported_features() failed (%s)' % err
+
+    if save_feature_supports:
+        with open(os.path.join(os.environ['HOME'],
+            '.damo.damon_feature_supports'), 'w') as f:
+            json.dump(get_feature_supports(), f, indent=4, sort_keys=True)
+
     return None
 
 initialized = False
-def ensure_initialized(args):
+def ensure_initialized(args, save_feature_supports):
     global initialized
 
     if initialized:
         return
     err = initialize(args.damon_interface, args.debug_damon,
-            args.damon_features)
+            args.damon_features, save_feature_supports)
     if err != None:
         print(err)
         exit(1)
     initialized = True
 
-def ensure_root_and_initialized(args):
+def ensure_root_and_initialized(args, save_feature_supports=False):
     ensure_root_permission()
-    ensure_initialized(args)
+    ensure_initialized(args, save_feature_supports)
 
 def damon_interface():
     if _damon_fs == _damon_sysfs:
