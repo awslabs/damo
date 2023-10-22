@@ -913,6 +913,18 @@ def ensure_root_permission():
 feature_supports_file_path = os.path.join(os.environ['HOME'],
         '.damo.damon_feature_supports')
 
+def read_feature_supports_file():
+    '''Return error string'''
+    if not os.path.isfile(feature_supports_file_path):
+        return '%s not exist' % feature_supports_file_path
+    try:
+        with open(feature_supports_file_path, 'r') as f:
+            feature_supports = json.load(f)
+        set_feature_supports(feature_supports)
+    except Exception as e:
+        return 'reading feature supports failed (%s)' % e
+    return None
+
 def feature_supported(feature):
     return _damon_fs.feature_supported(feature)
 
