@@ -157,7 +157,6 @@ def main(args=None):
     signal.signal(signal.SIGTERM, sighandler)
 
     # Now the real works
-    is_ongoing = _damon_args.is_ongoing_target(args)
     if not is_ongoing:
         err, kdamonds = _damon_args.turn_damon_on(args)
         if err:
@@ -170,11 +169,6 @@ def main(args=None):
     else:
         if not _damon.any_kdamond_running():
             print('DAMON is not turned on')
-            exit(1)
-
-        err = _damon.read_feature_supports_file()
-        if err != None:
-            print(err)
             exit(1)
 
         # TODO: Support multiple kdamonds, multiple contexts
