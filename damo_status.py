@@ -124,6 +124,8 @@ def main(args=None):
         args = parser.parse_args()
 
     _damon.ensure_root_and_initialized(args)
+    # ignore the error.  status could be called before feature saving commands.
+    err = _damon.read_feature_supports_file()
 
     kdamonds, err = _damon.update_read_kdamonds(nr_retries=5)
     if err != None:
