@@ -957,8 +957,11 @@ def initialize(damon_interface, debug_damon, damon_features,
             return 'update_supported_features() failed (%s)' % err
 
     if save_feature_supports:
+        feature_supports, err = get_feature_supports()
+        if err != None:
+            return 'get_feature_supports() failed (%s)' % err
         with open(feature_supports_file_path, 'w') as f:
-            json.dump(get_feature_supports(), f, indent=4, sort_keys=True)
+            json.dump(feature_supports, f, indent=4, sort_keys=True)
 
     return None
 
