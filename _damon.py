@@ -878,6 +878,17 @@ import _damon_sysfs
 
 # System check
 
+# damo supports all DAMON-enabled kernels.  For that, damo maintains list of
+# the DAMON features, and a dict saying whether the feature is supported on the
+# running kernel.  Since the supports depend on underlying DAMON interface, the
+# dict is populated by _damon_fs, and saved as _damon_fs.feature_supports.
+#
+# The feature_supports population cannot be fully done while DAMON is running,
+# particularly in case of debugfs.  Sysfs is ok for now, but similar issue
+# could happen in future.  For the reason, the feature_supports are saved at
+# feature_supports_file_path file.  damo commands can ask
+# _damon.ensure_initialized() to load/save the file.
+
 features = ['record',       # was in DAMON patchset, but not merged in mainline
             'vaddr',        # merged in v5.15, thebeginning
             'schemes',      # merged in v5.16
