@@ -936,6 +936,14 @@ def read_feature_supports_file():
         return 'reading feature supports failed (%s)' % e
     return None
 
+def write_feature_supports_file():
+    '''Return error string'''
+    feature_supports, err = get_feature_supports()
+    if err != None:
+        return 'get_feature_supports() failed (%s)' % err
+    with open(feature_supports_file_path, 'w') as f:
+        json.dump(feature_supports, f, indent=4, sort_keys=True)
+
 def feature_supported(feature):
     return _damon_fs.feature_supported(feature)
 
@@ -980,11 +988,7 @@ def initialize(damon_interface, debug_damon, damon_features,
             return err
 
     if save_feature_supports:
-        feature_supports, err = get_feature_supports()
-        if err != None:
-            return 'get_feature_supports() failed (%s)' % err
-        with open(feature_supports_file_path, 'w') as f:
-            json.dump(feature_supports, f, indent=4, sort_keys=True)
+        write_feature_supports_file()
 
     return None
 
