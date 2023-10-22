@@ -956,7 +956,7 @@ def get_feature_supports():
 def set_feature_supports(feature_supports):
     _damon_fs.feature_supports = feature_supports
 
-def initialize(damon_interface, debug_damon, damon_features,
+def initialize(damon_interface, debug_damon,
         save_feature_supports, load_feature_supports):
     global _damon_fs
     if damon_interface == 'sysfs':
@@ -972,15 +972,6 @@ def initialize(damon_interface, debug_damon, damon_features,
     global pr_debug_log
     if debug_damon:
         pr_debug_log = True
-
-    if damon_features != None:
-        if not os.path.isfile(damon_features):
-            return 'File %s not found' % damon_features
-        try:
-            with open(damon_features, 'r') as f:
-                set_feature_supports(json.load(f))
-        except Exception as e:
-            return '--supported_features handling failed (%s)' % e
 
     if load_feature_supports:
         err = read_feature_supports_file()
@@ -999,7 +990,7 @@ def ensure_initialized(args, save_feature_supports, load_feature_supports):
     if initialized:
         return
     err = initialize(args.damon_interface, args.debug_damon,
-            args.damon_features, save_feature_supports, load_feature_supports)
+            save_feature_supports, load_feature_supports)
     if err != None:
         print(err)
         exit(1)
