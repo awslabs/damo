@@ -551,6 +551,27 @@ def convert_addr_ranges_input(addr_ranges_input):
             return None, 'overlapping range'
     return ranges, None
 
+def get_records(access_pattern, tried_regions_of,
+        total_sz_only, dont_merge_regions):
+    if not _damon.feature_supported('schemes_tried_regions'):
+        print('damos tried regions feature not supported')
+        exit(0)
+    err = 'assumed error'
+    nr_tries = 0
+    while err != None and nr_tries < 5:
+        nr_tries += 1
+        if tried_regions_of == None:
+            monitor_scheme = _damon.Damos(access_pattern=access_pattern)
+            records, err = _damon_result.get_snapshot_records(monitor_scheme,
+                    total_sz_only, not dont_merge_regions)
+        else:
+             records, err = _damon_result.get_snapshot_records_for_schemes(
+                    tried_regions_of, total_sz_only, not dont_merge_regions)
+        if err != None:
+            time.sleep(random.randrange(
+                2**(nr_tries - 1), 2**nr_tries) / 100)
+    return records, err
+
 def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
 
@@ -667,25 +688,8 @@ def main(args=None):
 
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args, load_feature_supports=True)
-        if not _damon.feature_supported('schemes_tried_regions'):
-            print('damos tried regions feature not supported')
-            exit(0)
-        err = 'assumed error'
-        nr_tries = 0
-        while err != None and nr_tries < 5:
-            nr_tries += 1
-            if args.tried_regions_of == None:
-                monitor_scheme = _damon.Damos(access_pattern=access_pattern)
-                records, err = _damon_result.get_snapshot_records(
-                        monitor_scheme, args.total_sz_only,
-                        not args.dont_merge_regions)
-            else:
-                 records, err = _damon_result.get_snapshot_records_for_schemes(
-                        args.tried_regions_of, args.total_sz_only,
-                        not args.dont_merge_regions)
-            if err != None:
-                time.sleep(random.randrange(
-                    2**(nr_tries - 1), 2**nr_tries) / 100)
+        records, err = get_records(access_pattern, args.tried_regions_of,
+                args.total_sz_only, args.dont_merge_regions)
         if err != None:
             print(err)
             exit(1)
