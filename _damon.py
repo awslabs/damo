@@ -925,6 +925,8 @@ def ensure_root_permission():
 feature_supports_file_path = os.path.join(os.environ['HOME'],
         '.damo.damon_feature_supports')
 
+feature_support_file_format_ver = 1
+
 def read_feature_supports_file():
     '''Return error string'''
     if not os.path.isfile(feature_supports_file_path):
@@ -939,8 +941,8 @@ def read_feature_supports_file():
         set_feature_supports(feature_supports)
         return None
     file_format_ver = feature_supports['file_format_ver']
-    # support only the init version and version 1 for now.
-    if file_format_ver != 1:
+    # support only the init version and current version for now.
+    if file_format_ver != feature_support_file_format_ver:
         return 'unsupported format version %s' % file_format_ver
     if not damon_interface() in feature_supports:
         return 'no feature_supports for %s interface saved' % damon_interface()
@@ -962,11 +964,11 @@ def write_feature_supports_file():
                 to_save = {}
         if not 'file_format_ver' in to_save:
             to_save = {}
-        elif to_save['file_format_ver'] != 1:
+        elif to_save['file_format_ver'] != feature_support_file_format_ver:
             to_save = {}
 
     if to_save == {}:
-        to_save['file_format_ver'] = 1
+        to_save['file_format_ver'] = feature_support_file_format_ver
     to_save[damon_interface()] = feature_supports
 
     with open(feature_supports_file_path, 'w') as f:
