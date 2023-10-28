@@ -875,6 +875,7 @@ class Kdamond:
 import _damo_fs
 import _damon_dbgfs
 import _damon_sysfs
+import damo_version
 
 # System check
 
@@ -950,8 +951,26 @@ def write_feature_supports_file():
     feature_supports, err = get_feature_supports()
     if err != None:
         return 'get_feature_supports() failed (%s)' % err
+
+    to_save = {}
+    if os.path.isfile(feature_supports_file_path):
+        with open(feature_supports_file_path, 'r') as f:
+            try:
+                to_save = json.load(f)
+            except:
+                # Maybe previous writing was something wrong.  Just overwirte.
+                to_save = {}
+        if not 'file_format_ver' in to_save:
+            to_save = {}
+        elif to_save['file_format_ver'] != 1:
+            to_save = {}
+
+    if to_save == {}:
+        to_save['file_format_ver'] = 1
+    to_save[damon_interface()] = feature_supports
+
     with open(feature_supports_file_path, 'w') as f:
-        json.dump(feature_supports, f, indent=4, sort_keys=True)
+        json.dump(to_save, f, indent=4, sort_keys=True)
 
 def feature_supported(feature):
     return _damon_fs.feature_supported(feature)
