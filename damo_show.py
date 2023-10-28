@@ -648,13 +648,6 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    args.region_box_values = [v if v != 'none' else None
-            for v in args.region_box_values]
-
-    access_pattern = _damon.DamosAccessPattern(args.sz_region,
-            args.access_rate, _damon.unit_percent, args.age * 1000000,
-            _damon.unit_usec)
-
     if args.ls_record_format_keywords:
         print('\n\n'.join(['%s' % f for f in record_formatters]))
         return
@@ -664,6 +657,13 @@ def main(args=None):
     if args.ls_region_format_keywords:
         print('\n\n'.join(['%s' % f for f in region_formatters]))
         return
+
+    args.region_box_values = [v if v != 'none' else None
+            for v in args.region_box_values]
+
+    access_pattern = _damon.DamosAccessPattern(args.sz_region,
+            args.access_rate, _damon.unit_percent, args.age * 1000000,
+            _damon.unit_usec)
 
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args, load_feature_supports=True)
