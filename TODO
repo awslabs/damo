@@ -1,9 +1,6 @@
 - Test --numa_node 0 case
 - Support rss recording
-- Support 'init': Do the system/features check and store the result in a file
-  (.damo?)
 - Support 'cleanup': echo 0 > nr_kdamonds
-- Cleanup schemes test using damo status
 - Implement histogram stat regions output
 - Deprecate old features
   - Deprecate translate_damos (schedule noticed for 2023-Q4)
