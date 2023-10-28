@@ -931,10 +931,19 @@ def read_feature_supports_file():
     try:
         with open(feature_supports_file_path, 'r') as f:
             feature_supports = json.load(f)
-        set_feature_supports(feature_supports)
     except Exception as e:
         return 'reading feature supports failed (%s)' % e
-    return None
+    if not 'file_format_ver' in feature_supports:
+        # The initial format
+        set_feature_supports(feature_supports)
+        return None
+    file_format_ver = feature_supports['file_format_ver']
+    # support only the init version and version 1 for now.
+    if file_format_ver != 1:
+        return 'unsupported format version %s' % file_format_ver
+    if not damon_interface() in feature_supports:
+        return 'no feature_supports for %s interface saved' % damon_interface()
+    set_feature_supports(feature_supports[damon_interface()])
 
 def write_feature_supports_file():
     '''Return error string'''
