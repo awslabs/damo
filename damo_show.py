@@ -675,8 +675,10 @@ def main(args=None):
         while err != None and nr_tries < 5:
             nr_tries += 1
             if args.tried_regions_of == None:
-                records, err = _damon_result.get_snapshot_records(access_pattern,
-                        args.total_sz_only, not args.dont_merge_regions)
+                monitor_scheme = _damon.Damos(access_pattern=access_pattern)
+                records, err = _damon_result.get_snapshot_records(
+                        monitor_scheme, args.total_sz_only,
+                        not args.dont_merge_regions)
             else:
                  records, err = _damon_result.get_snapshot_records_for_schemes(
                         args.tried_regions_of, args.total_sz_only,

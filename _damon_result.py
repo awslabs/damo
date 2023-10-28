@@ -671,7 +671,7 @@ def install_target_regions_if_needed(kdamonds):
                 target.regions = []
     return err
 
-def get_snapshot_records(access_pattern, total_sz_only, merge_regions):
+def get_snapshot_records(monitor_scheme, total_sz_only, merge_regions):
     'return DamonRecord objects each having single DamonSnapshot and an error'
     running_kdamond_idxs = _damon.running_kdamond_idxs()
     if len(running_kdamond_idxs) == 0:
@@ -683,7 +683,6 @@ def get_snapshot_records(access_pattern, total_sz_only, merge_regions):
     if err != None:
         return None, 'vaddr region install failed (%s)' % err
 
-    monitor_scheme = _damon.Damos(access_pattern=access_pattern)
     installed, idxs, err = find_install_scheme(monitor_scheme)
     if err:
         return None, 'monitoring scheme install failed: %s' % err
