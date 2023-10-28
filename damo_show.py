@@ -572,6 +572,18 @@ def get_records(access_pattern, tried_regions_of,
                 2**(nr_tries - 1), 2**nr_tries) / 100)
     return records, err
 
+def handle_ls_keywords(args):
+    if args.ls_record_format_keywords:
+        print('\n\n'.join(['%s' % f for f in record_formatters]))
+        return True
+    if args.ls_snapshot_format_keywords:
+        print('\n\n'.join(['%s' % f for f in snapshot_formatters]))
+        return True
+    if args.ls_region_format_keywords:
+        print('\n\n'.join(['%s' % f for f in region_formatters]))
+        return True
+    return False
+
 def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
 
@@ -669,14 +681,8 @@ def main(args=None):
         set_argparser(parser)
         args = parser.parse_args()
 
-    if args.ls_record_format_keywords:
-        print('\n\n'.join(['%s' % f for f in record_formatters]))
-        return
-    if args.ls_snapshot_format_keywords:
-        print('\n\n'.join(['%s' % f for f in snapshot_formatters]))
-        return
-    if args.ls_region_format_keywords:
-        print('\n\n'.join(['%s' % f for f in region_formatters]))
+    handled = handle_ls_keywords(args)
+    if handled:
         return
 
     args.region_box_values = [v if v != 'none' else None
