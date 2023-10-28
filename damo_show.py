@@ -551,7 +551,7 @@ def convert_addr_ranges_input(addr_ranges_input):
             return None, 'overlapping range'
     return ranges, None
 
-def get_records(access_pattern, tried_regions_of,
+def __get_records(access_pattern, tried_regions_of,
         total_sz_only, dont_merge_regions):
     if not _damon.feature_supported('schemes_tried_regions'):
         print('damos tried regions feature not supported')
@@ -570,6 +570,30 @@ def get_records(access_pattern, tried_regions_of,
         if err != None:
             time.sleep(random.randrange(
                 2**(nr_tries - 1), 2**nr_tries) / 100)
+    return records, err
+
+def get_records(input_file, access_pattern, address, tried_regions_of,
+        total_sz_only, dont_merge_regions):
+    if input_file == None:
+        records, err = __get_records(access_pattern, tried_regions_of,
+                total_sz_only, dont_merge_regions)
+        if err != None:
+            return None, err
+    else:
+        if not os.path.isfile(input_file):
+            return None, '--input_file (%s) is not file' % input_file
+
+        records, err = _damon_result.parse_records_file(input_file)
+        if err:
+            return None, ('parsing damon result file (%s) failed (%s)' %
+                    (input_file, err))
+        for record in records:
+            filter_by_pattern(record, access_pattern)
+    if address:
+        ranges, err = convert_addr_ranges_input(address)
+        if err:
+            return None, 'wrong --address input (%s)' % err
+        filter_records_by_addr(records, ranges)
     return records, err
 
 def handle_ls_keywords(args):
@@ -694,29 +718,11 @@ def main(args=None):
 
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args, load_feature_supports=True)
-        records, err = get_records(access_pattern, args.tried_regions_of,
-                args.total_sz_only, args.dont_merge_regions)
-        if err != None:
-            print(err)
-            exit(1)
-    else:
-        if not os.path.isfile(args.input_file):
-            print('--input_file (%s) is not file' % args.input_file)
-            exit(1)
 
-        records, err = _damon_result.parse_records_file(args.input_file)
-        if err:
-            print('parsing damon result file (%s) failed (%s)' %
-                    (args.input_file, err))
-            exit(1)
-        for record in records:
-            filter_by_pattern(record, access_pattern)
-    if args.address:
-        ranges, err = convert_addr_ranges_input(args.address)
-        if err:
-            print('wrong --address input (%s)' % err)
-            exit(1)
-        filter_records_by_addr(records, ranges)
+    records, err = get_records(args.input_file, access_pattern, args.address,
+            args.tried_regions_of, args.total_sz_only, args.dont_merge_regions)
+    if err != None:
+        print(err)
 
     for record in records:
         try:
