@@ -551,7 +551,7 @@ def convert_addr_ranges_input(addr_ranges_input):
             return None, 'overlapping range'
     return ranges, None
 
-def __get_records(access_pattern, tried_regions_of,
+def __get_records(access_pattern, address, tried_regions_of,
         total_sz_only, dont_merge_regions):
     if not _damon.feature_supported('schemes_tried_regions'):
         print('damos tried regions feature not supported')
@@ -561,7 +561,15 @@ def __get_records(access_pattern, tried_regions_of,
     while err != None and nr_tries < 5:
         nr_tries += 1
         if tried_regions_of == None:
-            monitor_scheme = _damon.Damos(access_pattern=access_pattern)
+            filters = []
+            if address and _damon.feature_supported('schemes_filters_addr'):
+                for start, end in address:
+                    filters.append(_damon.DamosFilter('addr', False,
+                        address_range=_damon.DamonRegion(start, end)))
+
+            monitor_scheme = _damon.Damos(access_pattern=access_pattern,
+                    filters=filters)
+
             records, err = _damon_result.get_snapshot_records(monitor_scheme,
                     total_sz_only, not dont_merge_regions)
         else:
@@ -575,7 +583,7 @@ def __get_records(access_pattern, tried_regions_of,
 def get_records(input_file, access_pattern, address, tried_regions_of,
         total_sz_only, dont_merge_regions):
     if input_file == None:
-        records, err = __get_records(access_pattern, tried_regions_of,
+        records, err = __get_records(access_pattern, address, tried_regions_of,
                 total_sz_only, dont_merge_regions)
         if err != None:
             return None, err
