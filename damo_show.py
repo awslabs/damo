@@ -553,9 +553,6 @@ def convert_addr_ranges_input(addr_ranges_input):
 
 def __get_records(access_pattern, address, tried_regions_of,
         total_sz_only, dont_merge_regions):
-    if not _damon.feature_supported('schemes_tried_regions'):
-        print('damos tried regions feature not supported')
-        exit(0)
     err = 'assumed error'
     nr_tries = 0
     while err != None and nr_tries < 5:
