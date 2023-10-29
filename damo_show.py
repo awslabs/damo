@@ -734,6 +734,7 @@ def main(args=None):
             args.tried_regions_of, args.total_sz_only, args.dont_merge_regions)
     if err != None:
         print(err)
+        exit(1)
 
     for record in records:
         try:
