@@ -582,11 +582,14 @@ def __get_records(access_pattern, address, tried_regions_of,
 
 def get_records(input_file, access_pattern, address, tried_regions_of,
         total_sz_only, dont_merge_regions):
+    address_filtered = False
     if input_file == None:
         records, err = __get_records(access_pattern, address, tried_regions_of,
                 total_sz_only, dont_merge_regions)
         if err != None:
             return None, err
+        if address and _damon.feature_supported('schemes_filters_addr'):
+            address_filtered = True
     else:
         if not os.path.isfile(input_file):
             return None, '--input_file (%s) is not file' % input_file
@@ -597,7 +600,7 @@ def get_records(input_file, access_pattern, address, tried_regions_of,
                     (input_file, err))
         for record in records:
             filter_by_pattern(record, access_pattern)
-    if address:
+    if address and not address_filtered:
         ranges, err = convert_addr_ranges_input(address)
         if err:
             return None, 'wrong --address input (%s)' % err
