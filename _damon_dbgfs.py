@@ -169,6 +169,9 @@ def wops_for_kdamonds(kdamonds):
 
 def stage_kdamonds(kdamonds):
     '''Return error'''
+    if _damon.any_kdamond_running():
+        return 'DAMON debugfs doesn\'t support online staging'
+
     try:
         wops = wops_for_kdamonds(kdamonds)
     except Exception as e:
