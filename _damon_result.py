@@ -689,6 +689,8 @@ def get_snapshot_records(monitor_scheme, total_sz_only, merge_regions):
 
     if total_sz_only:
         err = _damon.update_schemes_tried_bytes(running_kdamond_idxs)
+        # update_schemes_tried_bytes() can error if the feature is not
+        # supported.  Then, full record will be returned
         if err == None:
             records = tried_regions_to_records_of(idxs, merge_regions)
 
@@ -723,6 +725,8 @@ def get_snapshot_records_for_schemes(idxs, total_sz_only, merge_regions):
 
     if total_sz_only:
         err = _damon.update_schemes_tried_bytes(running_kdamond_idxs)
+        # update_schemes_tried_bytes() can error if the feature is not
+        # supported.  Then, full record will be returned
         if err == None:
             records = tried_regions_to_records_of(idxs, merge_regions)
             return records, None
