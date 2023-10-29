@@ -15,7 +15,7 @@
 - damo status features implementation
   - specify target to show
 - damo show features implementation
-  - support target/address ranges damos filter
+  - support target damos filter
   - time based filtering
   - collapse by time
   - collapse by priority value (more histogram control)
