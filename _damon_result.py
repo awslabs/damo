@@ -703,9 +703,9 @@ def get_snapshot_records(monitor_scheme, total_sz_only, merge_regions):
     err = _damon.update_schemes_tried_regions(running_kdamond_idxs)
     if err != None:
         if installed:
-            err = _damon.commit(orig_kdamonds)
-            if err:
-                return None, 'monitoring scheme uninstall failed: %s' % err
+            uninstall_err = _damon.commit(orig_kdamonds)
+            if uninstall_err:
+                err += ', %s' % uninstall_err
         return None, 'updating schemes tried regions fail: %s' % err
 
     records = tried_regions_to_records_of(idxs, merge_regions)
