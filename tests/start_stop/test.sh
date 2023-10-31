@@ -24,6 +24,12 @@ fi
 for damon_interface in $damon_interfaces
 do
 	testname2="$testname $damon_interface"
+	if sudo "$damo" features supported | grep schemes_tried_regions --quiet
+	then
+		do_show_test="true"
+	else
+		do_show_test="false"
+	fi
 	sudo "$damo" start --ops paddr --damon_interface "$damon_interface" \
 		-c monitoring_damos.json 2> /dev/null
 	if ! pgrep kdamond.0 > /dev/null
@@ -60,19 +66,22 @@ do
 	done
 	echo "PASS $testname2 status $i"
 
-	for i in {1..10}
-	do
-		if ! sudo "$damo" show &> /dev/null
-		then
-			echo "FAIL $testname2 show $i failed"
-			if ! sudo "$damo" stop
+	if [ "$do_show_test" = "true" ]
+	then
+		for i in {1..10}
+		do
+			if ! sudo "$damo" show &> /dev/null
 			then
-				echo "failed stopping DAMON"
+				echo "FAIL $testname2 show $i failed"
+				if ! sudo "$damo" stop
+				then
+					echo "failed stopping DAMON"
+				fi
+				exit 1
 			fi
-			exit 1
-		fi
-	done
-	echo "PASS $testname2 show $i"
+		done
+		echo "PASS $testname2 show $i"
+	fi
 
 	if ! sudo "$damo" tune --aggr 200000 --ops paddr \
 		--damon_interface "$damon_interface" &> /dev/null
@@ -112,19 +121,22 @@ do
 	done
 	echo "PASS $testname2 tune-status $i"
 
-	for i in {1..10}
-	do
-		if ! sudo "$damo" show &> /dev/null
-		then
-			echo "FAIL $testname2 tune-show $i failed"
-			if ! sudo "$damo" stop
+	if [ "$do_show_test" = "true" ]
+	then
+		for i in {1..10}
+		do
+			if ! sudo "$damo" show &> /dev/null
 			then
-				echo "failed stopping DAMON"
+				echo "FAIL $testname2 tune-show $i failed"
+				if ! sudo "$damo" stop
+				then
+					echo "failed stopping DAMON"
+				fi
+				exit 1
 			fi
-			exit 1
-		fi
-	done
-	echo "PASS $testname2 tune-show $i"
+		done
+		echo "PASS $testname2 tune-show $i"
+	fi
 
 	sudo "$damo" stop --damon_interface "$damon_interface" 2> /dev/null
 	if pgrep kdamond.0 > /dev/null
