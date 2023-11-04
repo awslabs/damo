@@ -91,6 +91,8 @@ def set_argparser(parser):
             help='print output in json format')
     parser.add_argument('--raw', action='store_true', default=False,
             help='print raw numbers')
+    parser.add_argument('--kdamonds_summary', action='store_true',
+            help='print kdamond summary only')
     parser.add_argument('--damos_stat', nargs=3, type=int,
             metavar=('<kdamond index>', '<context index>', '<scheme index>'),
             help='print statistics of specific scheme')
@@ -108,6 +110,9 @@ def main(args=None):
     _damon.ensure_root_and_initialized(args)
     # ignore the error.  status could be called before feature saving commands.
     err = _damon.read_feature_supports_file()
+
+    if args.kdamonds_summary:
+        return update_pr_kdamonds_summary(args.json, args.raw)
 
     kdamonds, err = _damon.update_read_kdamonds(nr_retries=5,
             update_stats=True,
