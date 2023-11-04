@@ -25,11 +25,8 @@ def update_pr_schemes_stats(json_format, raw_nr):
             for scheme_idx, scheme in enumerate(ctx.schemes):
                 indices = {
                         'kdamond':kd_idx, 'context': ctx_idx, 'scheme': scheme_idx}
-                stats.append([indices, scheme.stats])
-
-    for indices_stat in stats:
-        indices, stat = indices_stat
-        indices_stat[1] = stat.to_kvpairs(raw_nr)
+                stat_kvpair = scheme.stats.to_kvpairs(raw_nr)
+                stats.append([indices, stat_kvpair])
 
     if json_format:
         print(json.dumps(stats, indent=4))
