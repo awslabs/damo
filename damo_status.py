@@ -29,20 +29,18 @@ def update_pr_schemes_stats(json_format, raw_nr):
 
     for indices_stat in stats:
         indices, stat = indices_stat
-        if json_format:
-            indices_stat[1] = stat.to_kvpairs(raw_nr)
-        else:
-            indices_stat[1] = stat.to_str(raw_nr)
+        indices_stat[1] = stat.to_kvpairs(raw_nr)
 
     if json_format:
         print(json.dumps(stats, indent=4))
         return
 
-    for indices, stat_txt in stats:
+    for indices, stat_kvpair in stats:
         if len(stats) > 1:
             print('kdamond %d / context %d / scheme %d' % (indices['kdamond'],
                 indices['context'], indices['scheme']))
-        print(stat_txt)
+        for k, v in stat_kvpair.items():
+            print('%s: %s' % (k, v))
         if len(stats) > 1:
             print()
 
