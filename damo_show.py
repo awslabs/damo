@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
-import collections
 import copy
 import json
 import math
