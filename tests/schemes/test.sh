@@ -39,7 +39,7 @@ __test_stat() {
 	do
 		test_stat_applied=$(sudo "$damo" status \
 			--damon_interface "$damon_interface" \
-			--damos_stat 0 0 0 --damos_stat_field sz_tried --raw)
+			--damos_stats --damos_stat_fields sz_tried --raw)
 		sleep 1
 	done
 	test_stat_speed=$((test_stat_applied / (SECONDS - start_time)))
@@ -120,14 +120,14 @@ measure_scheme_applied() {
 	done
 
 	before=$(sudo "$damo" status --damon_interface "$damon_interface" \
-		--damos_stat 0 0 0 --damos_stat_field sz_tried --raw)
+		--damos_stats --damos_stat_fields sz_tried --raw)
 	if [ "$before" = "" ]
 	then
 		before=0
 	fi
 	sleep "$wait_for"
 	after=$(sudo "$damo" status --damon_interface "$damon_interface" \
-		--damos_stat 0 0 0 --damos_stat_field sz_tried --raw)
+		--damos_stats --damos_stat_fields sz_tried --raw)
 
 	sudo "$damo" stop --damon_interface "$damon_interface"
 
