@@ -23,7 +23,9 @@ def update_pr_schemes_stats(json_format, raw_nr):
     for kd_idx, kdamond in enumerate(kdamonds):
         for ctx_idx, ctx in enumerate(kdamond.contexts):
             for scheme_idx, scheme in enumerate(ctx.schemes):
-                stats.append([[kd_idx, ctx_idx, scheme_idx], scheme.stats])
+                indices = {
+                        'kdamond':kd_idx, 'context': ctx_idx, 'scheme': scheme_idx}
+                stats.append([indices, scheme.stats])
 
     for indices_stat in stats:
         indices, stat = indices_stat
@@ -38,8 +40,8 @@ def update_pr_schemes_stats(json_format, raw_nr):
 
     for indices, stat_txt in stats:
         if len(stats) > 1:
-            print('kdamond %d / context %d / scheme %d' % (indices[0],
-                indices[1], indices[2]))
+            print('kdamond %d / context %d / scheme %d' % (indices['kdamond'],
+                indices['context'], indices['scheme']))
         print(stat_txt)
         if len(stats) > 1:
             print()
