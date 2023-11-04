@@ -39,7 +39,7 @@ def update_pr_schemes_stats(raw_nr):
                     'qt_exceeds', _damo_fmt_str.format_nr(
                         scheme.stats.qt_exceeds, raw_nr)))
 
-def update_pr_kdamonds_summary(json_format, raw_nr):
+def pr_kdamonds_summary(json_format, raw_nr):
     kdamonds = _damon.current_kdamonds()
     summary = [k.summary_str() for k in kdamonds]
     if json_format:
@@ -112,7 +112,7 @@ def main(args=None):
     err = _damon.read_feature_supports_file()
 
     if args.kdamonds_summary:
-        return update_pr_kdamonds_summary(args.json, args.raw)
+        return pr_kdamonds_summary(args.json, args.raw)
 
     kdamonds, err = _damon.update_read_kdamonds(nr_retries=5,
             update_stats=True,
