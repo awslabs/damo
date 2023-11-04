@@ -45,7 +45,10 @@ def pr_kdamonds_summary(json_format, raw_nr):
     if json_format:
         print(json.dumps(summary, indent=4))
         return
-    print('\n'.join(summary))
+    if len(summary) == 1:
+        print(summary)
+    for idx, line in enumerate(summary):
+        print('%d\t%s' % (idx, line))
 
 def pr_kdamonds(kdamonds, json_format, raw_nr, damos_stat_indices,
         damos_stat_field):
