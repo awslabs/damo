@@ -43,7 +43,10 @@ def update_pr_schemes_stats(json_format, raw_nr, damos_stat_fields):
             print('kdamond %d / context %d / scheme %d' % (indices['kdamond'],
                 indices['context'], indices['scheme']))
         for k, v in stat_kvpair.items():
-            print('%s: %s' % (k, v))
+            if len(stat_kvpair.keys()) > 1:
+                print('%s: %s' % (k, v))
+            else:
+                print('%s' % v)
         if len(stats) > 1:
             print()
 
