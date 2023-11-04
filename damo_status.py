@@ -113,12 +113,6 @@ def set_argparser(parser):
             choices=['nr_tried', 'sz_tried', 'nr_applied', 'sz_applied',
                 'qt_exceeds'], nargs='+',
             help='DAMOS stat fiedls to print')
-    parser.add_argument('--damos_stat', nargs=3, type=int,
-            metavar=('<kdamond index>', '<context index>', '<scheme index>'),
-            help='print statistics of specific scheme')
-    parser.add_argument('--damos_stat_field',
-            metavar='<stat field name>',
-            help='statistic field to show, if --damos_stat is given')
     _damon_args.set_common_argparser(parser)
     return parser
 
@@ -144,8 +138,7 @@ def main(args=None):
     if err != None:
         print('cannot update and read kdamonds: %s' % err)
         exit(1)
-    pr_kdamonds(kdamonds, args.json, args.raw, args.damos_stat,
-            args.damos_stat_field)
+    pr_kdamonds(kdamonds, args.json, args.raw, None, None)
 
 if __name__ == '__main__':
     main()
