@@ -127,7 +127,9 @@ def main(args=None):
     # ignore the error.  status could be called before feature saving commands.
     err = _damon.read_feature_supports_file()
 
-    kdamonds, err = _damon.update_read_kdamonds(nr_retries=5)
+    kdamonds, err = _damon.update_read_kdamonds(nr_retries=5,
+            update_stats=True,
+            update_tried_regions=(args.damos_stat == None))
     if err != None:
         print('cannot update and read kdamonds: %s' % err)
         exit(1)
