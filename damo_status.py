@@ -12,32 +12,28 @@ import _damo_fmt_str
 import _damon
 import _damon_args
 
-def update_pr_schemes_stats(raw_nr):
+def update_pr_schemes_stats(json_format, raw_nr):
     err = _damon.update_schemes_stats()
     if err:
         print(err)
         return
     kdamonds = _damon.current_kdamonds()
 
-    print('# <kdamond> <context> <scheme> <field> <value>')
+    kvpairs = []
     for kd_idx, kdamond in enumerate(kdamonds):
+        kvpairs.append([])
         for ctx_idx, ctx in enumerate(kdamond.contexts):
+            kvpairs[-1].append([])
             for scheme_idx, scheme in enumerate(ctx.schemes):
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'nr_tried', _damo_fmt_str.format_nr(
-                        scheme.stats.nr_tried, raw_nr)))
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'sz_tried', _damo_fmt_str.format_sz(
-                        scheme.stats.sz_tried, raw_nr)))
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'nr_applied', _damo_fmt_str.format_nr(
-                        scheme.stats.nr_applied, raw_nr)))
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'sz_applied', _damo_fmt_str.format_sz(
-                        scheme.stats.sz_applied, raw_nr)))
-                print('%s %s %s %s %s' % (kd_idx, ctx_idx, scheme_idx,
-                    'qt_exceeds', _damo_fmt_str.format_nr(
-                        scheme.stats.qt_exceeds, raw_nr)))
+                kvpairs[-1][-1].append(scheme.stats.to_kvpairs(raw_nr))
+                if not json_format:
+                    print('kdamond %s context %s scheme %s' %
+                            (kd_idx, ctx_idx, scheme_idx))
+                    print(scheme.stats.to_str(raw_nr))
+
+    if not json_format:
+        return
+    print(json.dumps(kvpairs, indent=4))
 
 def pr_kdamonds_summary(json_format, raw_nr):
     kdamonds = _damon.current_kdamonds()
