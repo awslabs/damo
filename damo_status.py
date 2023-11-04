@@ -4,6 +4,7 @@
 Show status of DAMON.
 """
 
+import collections
 import json
 import random
 import time
@@ -12,7 +13,7 @@ import _damo_fmt_str
 import _damon
 import _damon_args
 
-def update_pr_schemes_stats(json_format, raw_nr):
+def update_pr_schemes_stats(json_format, raw_nr, damos_stat_fields):
     err = _damon.update_schemes_stats()
     if err:
         print(err)
@@ -26,6 +27,11 @@ def update_pr_schemes_stats(json_format, raw_nr):
                 indices = {
                         'kdamond':kd_idx, 'context': ctx_idx, 'scheme': scheme_idx}
                 stat_kvpair = scheme.stats.to_kvpairs(raw_nr)
+                if damos_stat_fields:
+                    filtered_stat_kvpair = collections.OrderedDict()
+                    for k in damos_stat_fields:
+                        filtered_stat_kvpair[k] = stat_kvpair[k]
+                    stat_kvpair = filtered_stat_kvpair
                 stats.append([indices, stat_kvpair])
 
     if json_format:
@@ -100,6 +106,10 @@ def set_argparser(parser):
             help='print kdamond summary only')
     parser.add_argument('--damos_stats', action='store_true',
             help='print DAMOS scheme stats only')
+    parser.add_argument('--damos_stat_fields', metavar='<stat field name>',
+            choices=['nr_tried', 'sz_tried', 'nr_applied', 'sz_applied',
+                'qt_exceeds'], nargs='+',
+            help='DAMOS stat fiedls to print')
     parser.add_argument('--damos_stat', nargs=3, type=int,
             metavar=('<kdamond index>', '<context index>', '<scheme index>'),
             help='print statistics of specific scheme')
@@ -122,7 +132,8 @@ def main(args=None):
         return pr_kdamonds_summary(args.json, args.raw)
 
     if args.damos_stats:
-        return update_pr_schemes_stats(args.json, args.raw)
+        return update_pr_schemes_stats(args.json, args.raw,
+                args.damos_stat_fields)
 
     kdamonds, err = _damon.update_read_kdamonds(nr_retries=5,
             update_stats=True,
