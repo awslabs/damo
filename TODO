@@ -14,6 +14,7 @@
     _damon_deprecated)
 - damo status features implementation
   - specify target to show
+  - update only as needed
 - damo show features implementation
   - support target damos filter
   - time based filtering
