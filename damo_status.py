@@ -19,21 +19,30 @@ def update_pr_schemes_stats(json_format, raw_nr):
         return
     kdamonds = _damon.current_kdamonds()
 
-    kvpairs = []
+    stats = []
     for kd_idx, kdamond in enumerate(kdamonds):
-        kvpairs.append([])
         for ctx_idx, ctx in enumerate(kdamond.contexts):
-            kvpairs[-1].append([])
             for scheme_idx, scheme in enumerate(ctx.schemes):
-                kvpairs[-1][-1].append(scheme.stats.to_kvpairs(raw_nr))
-                if not json_format:
-                    print('kdamond %s context %s scheme %s' %
-                            (kd_idx, ctx_idx, scheme_idx))
-                    print(scheme.stats.to_str(raw_nr))
+                stats.append([[kd_idx, ctx_idx, scheme_idx], scheme.stats])
 
-    if not json_format:
+    for indices_stat in stats:
+        indices, stat = indices_stat
+        if json_format:
+            indices_stat[1] = stat.to_kvpairs(raw_nr)
+        else:
+            indices_stat[1] = stat.to_str(raw_nr)
+
+    if json_format:
+        print(json.dumps(stats, indent=4))
         return
-    print(json.dumps(kvpairs, indent=4))
+
+    for indices, stat_txt in stats:
+        if len(stats) > 1:
+            print('kdamond %d / context %d / scheme %d' % (indices[0],
+                indices[1], indices[2]))
+        print(stat_txt)
+        if len(stats) > 1:
+            print()
 
 def pr_kdamonds_summary(json_format, raw_nr):
     kdamonds = _damon.current_kdamonds()
