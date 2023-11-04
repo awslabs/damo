@@ -92,6 +92,8 @@ def set_argparser(parser):
             help='print raw numbers')
     parser.add_argument('--kdamonds_summary', action='store_true',
             help='print kdamond summary only')
+    parser.add_argument('--damos_stats', action='store_true',
+            help='print DAMOS scheme stats only')
     parser.add_argument('--damos_stat', nargs=3, type=int,
             metavar=('<kdamond index>', '<context index>', '<scheme index>'),
             help='print statistics of specific scheme')
@@ -112,6 +114,9 @@ def main(args=None):
 
     if args.kdamonds_summary:
         return pr_kdamonds_summary(args.json, args.raw)
+
+    if args.damos_stats:
+        return update_pr_schemes_stats(args.json, args.raw)
 
     kdamonds, err = _damon.update_read_kdamonds(nr_retries=5,
             update_stats=True,
