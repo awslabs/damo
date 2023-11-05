@@ -132,9 +132,7 @@ def main(args=None):
         return update_pr_schemes_stats(args.json, args.raw,
                 args.damos_stat_fields)
 
-    kdamonds, err = _damon.update_read_kdamonds(nr_retries=5,
-            update_stats=True,
-            update_tried_regions=(args.damos_stat == None))
+    kdamonds, err = _damon.update_read_kdamonds(nr_retries=5)
     if err != None:
         print('cannot update and read kdamonds: %s' % err)
         exit(1)
