@@ -28,6 +28,13 @@ def main(args=None):
     if err:
         print('invalid arguments (%s)' % err)
         exit(1)
+
+    for k in kdamonds:
+        for c in k.contexts:
+            for s in c.schemes:
+                s.stats = None
+                s.tried_regions = None
+
     if args.schemes_only:
         schemes = []
         for kdamond in kdamonds:
