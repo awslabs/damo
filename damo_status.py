@@ -21,12 +21,7 @@ def pr_damon_prameters(json_format, raw_nr):
                 s.stats = None
                 s.tried_regions = None
 
-    if json_format:
-        print(json.dumps([k.to_kvpairs(raw_nr) for k in kdamonds], indent=4))
-    else:
-        for idx, k in enumerate(kdamonds):
-            print('kdamond %d' % idx)
-            print(_damo_fmt_str.indent_lines( k.to_str(raw_nr), 4))
+    pr_kdamonds(kdamonds, json_format, raw_nr)
 
 def update_pr_schemes_stats(json_format, raw_nr, damos_stat_fields):
     err = _damon.update_schemes_stats()
