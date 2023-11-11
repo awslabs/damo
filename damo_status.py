@@ -76,37 +76,7 @@ def pr_kdamonds_summary(json_format, raw_nr):
     for idx, line in enumerate(summary):
         print('%d\t%s' % (idx, line))
 
-def pr_kdamonds(kdamonds, json_format, raw_nr, damos_stat_indices,
-        damos_stat_field):
-    if damos_stat_indices:
-        kidx, cidx, sidx = damos_stat_indices
-        if kidx >= len(kdamonds):
-            print('too high kdamond index')
-            exit(1)
-        kdamond = kdamonds[kidx]
-        if cidx >= len(kdamond.contexts):
-            print('too high context index')
-            exit(1)
-        ctx = kdamond.contexts[cidx]
-        if sidx >= len(ctx.schemes):
-            print('too high scheme index')
-            exit(1)
-        scheme = ctx.schemes[sidx]
-
-        if damos_stat_field != None:
-            kvpairs = scheme.stats.to_kvpairs(raw_nr)
-            if not damos_stat_field in kvpairs:
-                print('wrong damos_stat_field')
-                exit(1)
-            print(kvpairs[damos_stat_field])
-            return
-
-        if json_format:
-            print(json.dumps(scheme.stats.to_kvpairs(raw_nr), indent=4))
-        else:
-            print(scheme.stats.to_str(raw_nr))
-        return
-
+def pr_kdamonds(kdamonds, json_format, raw_nr):
     if json_format:
         print(json.dumps([k.to_kvpairs(raw_nr) for k in kdamonds], indent=4))
     else:
@@ -156,7 +126,7 @@ def main(args=None):
     if err != None:
         print('cannot update and read kdamonds: %s' % err)
         exit(1)
-    pr_kdamonds(kdamonds, args.json, args.raw, None, None)
+    pr_kdamonds(kdamonds, args.json, args.raw)
 
 if __name__ == '__main__':
     main()
