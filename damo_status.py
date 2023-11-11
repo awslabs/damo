@@ -13,6 +13,21 @@ import _damo_fmt_str
 import _damon
 import _damon_args
 
+def pr_damon_prameters(json_format, raw_nr):
+    kdamonds = _damon.current_kdamonds()
+    for k in kdamonds:
+        for c in k.contexts:
+            for s in c.schemes:
+                s.stats = None
+                s.tried_regions = None
+
+    if json_format:
+        print(json.dumps([k.to_kvpairs(raw_nr) for k in kdamonds], indent=4))
+    else:
+        for idx, k in enumerate(kdamonds):
+            print('kdamond %d' % idx)
+            print(_damo_fmt_str.indent_lines( k.to_str(raw_nr), 4))
+
 def update_pr_schemes_stats(json_format, raw_nr, damos_stat_fields):
     err = _damon.update_schemes_stats()
     if err:
@@ -113,6 +128,8 @@ def set_argparser(parser):
             choices=['nr_tried', 'sz_tried', 'nr_applied', 'sz_applied',
                 'qt_exceeds'], nargs='+',
             help='DAMOS stat fiedls to print')
+    parser.add_argument('--damon_params', action='store_true',
+            help='print entered DAMON parameters only')
     _damon_args.set_common_argparser(parser)
     return parser
 
@@ -124,6 +141,9 @@ def main(args=None):
     _damon.ensure_root_and_initialized(args)
     # ignore the error.  status could be called before feature saving commands.
     err = _damon.read_feature_supports_file()
+
+    if args.damon_params:
+        return pr_damon_prameters(args.json, args.raw)
 
     if args.kdamonds_summary:
         return pr_kdamonds_summary(args.json, args.raw)
