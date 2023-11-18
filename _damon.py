@@ -406,6 +406,38 @@ class DamosAccessPattern:
                 other.converted_for_units(
                     unit_samples, unit_aggr_intervals, intervals))
 
+class DamosQuotaGoal:
+    target_value_bp = None
+    current_value_bp = None
+
+    def __init__(self, target_value_bp='0 %', current_value_bp='0 %'):
+        self.target_value_bp = _damo_fmt_str.text_to_bp(target_value_bp)
+        self.current_value_bp = _damo_fmt_str.text_to_bp(current_value_bp)
+
+    def to_str(self, raw):
+        return 'target %s current %s' % (
+                _damo_fmt_str.format_bp(self.target_value_bp), 
+                _damo_fmt_str.format_bp(self.current_value_bp),)
+
+    def __str__(self):
+        return self.to_str(False)
+
+    def __eq__(self, other):
+        return (type(self) == type(other) and
+                self.target_value_bp == other.target_value_bp and
+                self.current_value_bp == other.current_value_bp)
+
+    @classmethod
+    def from_kvpairs(cls, kv):
+        return DamosQuotaGoal(kv['target_value_bp'], kv['current_value_bp'])
+
+    def to_kvpairs(self, raw=False):
+        return collections.OrderedDict([
+            ('target_value_bp', _damo_fmt_str.format_bp(self.target_value_bp,
+                raw)),
+            ('current_value_bp', _damo_fmt_str.format_bp(self.current_value_bp,
+                raw))])
+
 class DamosQuotas:
     time_ms = None
     sz_bytes = None
@@ -413,9 +445,10 @@ class DamosQuotas:
     weight_sz_permil = None
     weight_nr_accesses_permil = None
     weight_age_permil = None
+    goals = None
 
     def __init__(self, time_ms=0, sz_bytes=0, reset_interval_ms='max',
-            weights=['0 %', '0 %', '0 %']):
+            weights=['0 %', '0 %', '0 %'], goals=[]):
         self.time_ms = _damo_fmt_str.text_to_ms(time_ms)
         self.sz_bytes = _damo_fmt_str.text_to_bytes(sz_bytes)
         self.reset_interval_ms = _damo_fmt_str.text_to_ms(reset_interval_ms)
@@ -423,6 +456,7 @@ class DamosQuotas:
         self.weight_nr_accesses_permil = _damo_fmt_str.text_to_permil(
                 weights[1])
         self.weight_age_permil = _damo_fmt_str.text_to_permil(weights[2])
+        self.goals = goals
 
     def __str__(self):
         return self.to_str(False)
@@ -433,28 +467,35 @@ class DamosQuotas:
                 other.reset_interval_ms and self.weight_sz_permil ==
                 other.weight_sz_permil and self.weight_nr_accesses_permil ==
                 other.weight_nr_accesses_permil and self.weight_age_permil ==
-                other.weight_age_permil)
+                other.weight_age_permil and self.goals == other.goals)
 
     @classmethod
     def from_kvpairs(cls, kv):
+        if 'goals' in kv:
+            goals = [DamosQuotaGoal.from_kvpairs(goal) for goal in kv['goals']]
+        else:
+            goals = []
         return DamosQuotas(kv['time_ms'], kv['sz_bytes'],
                 kv['reset_interval_ms'],
                 [kv['weights']['sz_permil'],
                     kv['weights']['nr_accesses_permil'],
-                    kv['weights']['age_permil'],])
+                    kv['weights']['age_permil'],], goals)
 
     def to_str(self, raw):
-        return '\n'.join([
+        lines = [
             '%s / %s per %s' % (
                 _damo_fmt_str.format_time_ns(self.time_ms * 1000000, raw),
                 _damo_fmt_str.format_time_ns(self.sz_bytes, raw),
-                _damo_fmt_str.format_time_ms(self.reset_interval_ms, raw)),
+                _damo_fmt_str.format_time_ms(self.reset_interval_ms, raw))]
+        for idx, goal in enumerate(self.goals):
+            lines.append('goal %d: %s' % (idx, goal.to_str(raw)))
+        lines.append(
             'priority: sz %s, nr_accesses %s, age %s' % (
                 _damo_fmt_str.format_permil(self.weight_sz_permil, raw),
                 _damo_fmt_str.format_permil(
                     self.weight_nr_accesses_permil, raw),
-                _damo_fmt_str.format_permil(self.weight_age_permil, raw)),
-            ])
+                _damo_fmt_str.format_permil(self.weight_age_permil, raw)))
+        return '\n'.join(lines)
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
@@ -462,6 +503,7 @@ class DamosQuotas:
             ('sz_bytes', _damo_fmt_str.format_sz(self.sz_bytes, raw)),
             ('reset_interval_ms', _damo_fmt_str.format_time_ms_exact(
                 self.reset_interval_ms, raw)),
+            ('goals', [goal.to_kvpairs(raw) for goal in self.goals]),
             ('weights', (collections.OrderedDict([
                 ('sz_permil',
                     _damo_fmt_str.format_permil(self.weight_sz_permil, raw)),
