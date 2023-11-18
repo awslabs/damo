@@ -371,6 +371,14 @@ def files_content_to_access_pattern(files_content):
                 int(files_content['age']['max'])],
             _damon.unit_aggr_intervals) # age_unit
 
+def files_content_to_quota_goals(files_content):
+    goals = []
+    for goal_kv in number_sorted_dirs(files_content):
+        goals.append(
+                _damon.DamosQuotaGoal(goal_kv['target_value_bp'],
+                    goal_kv['current_value_bp']))
+    return goals
+
 def files_content_to_quotas(files_content):
     return _damon.DamosQuotas(
             int(files_content['ms']),
@@ -378,7 +386,10 @@ def files_content_to_quotas(files_content):
             int(files_content['reset_interval_ms']),
             [int(files_content['weights']['sz_permil']),
                 int(files_content['weights']['nr_accesses_permil']),
-                int(files_content['weights']['age_permil'])])
+                int(files_content['weights']['age_permil'])],
+            files_content_to_quota_goals(files_content['goals'])
+            if 'goals' in files_content else []
+            )
 
 def files_content_to_watermarks(files_content):
     return _damon.DamosWatermarks(
