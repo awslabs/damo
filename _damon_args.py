@@ -126,12 +126,18 @@ def damos_options_to_filters(filters_args):
     return filters, None
 
 def damos_options_to_scheme(sz_region, access_rate, age, action,
-        apply_interval, quotas, wmarks, filters):
+        apply_interval, quotas, goals, wmarks, filters):
     if quotas != None:
+        gargs = goals
+        try:
+            goals = [_damon.DamosQuotaGoal(garg[0], garg[1]) for garg in gargs]
+        except Exception as e:
+            return None, 'Wrong --damos_quota_goal (%s, %s)' % (gargs, e)
+
         qargs = quotas
         try:
             quotas = _damon.DamosQuotas(qargs[0], qargs[1], qargs[2],
-                    [qargs[3], qargs[4], qargs[5]])
+                    [qargs[3], qargs[4], qargs[5]], goals)
         except Exception as e:
             return None, 'Wrong --damos_quotas (%s, %s)' % (qargs, e)
 
@@ -168,6 +174,13 @@ def damos_options_to_schemes(args):
         return [], 'too much --damos_apply_interval'
     if len(args.damos_quotas) > nr_schemes:
         return [], 'too much --damos_quotas'
+    if len(args.damos_quota_goal) > 0 and nr_schemes > 1:
+        if len(args.damos_nr_quota_goals) == 0:
+            return [], '--damos_nr_quota_goals required'
+    if nr_schemes == 1 and args.damos_nr_quota_goals == []:
+        args.damos_nr_quota_goals = [len(args.damos_quota_goal)]
+    if sum(args.damos_nr_quota_goals) != len(args.damos_quota_goal):
+        return [], 'wrong --damos_nr_quota_goals'
     if len(args.damos_wmarks) > nr_schemes:
         return [], 'too much --damos_wmarks'
     # for multiple schemes, number of filters per scheme is required
@@ -190,6 +203,12 @@ def damos_options_to_schemes(args):
     args.damos_wmarks += [None] * (nr_schemes - len(args.damos_wmarks))
     schemes = []
     for i in range(nr_schemes):
+        qgoals = []
+        if args.damos_quota_goal:
+            goal_start_index = sum(args.damos_nr_quota_goals[:i])
+            goal_end_index = goal_start_index + args.damos_nr_quota_goals[i]
+            qgoals = args.damos_quota_goal[goal_start_index:goal_end_index]
+
         filters = []
         if args.damos_filter:
             filter_start_index = sum(args.damos_nr_filters[:i])
@@ -198,7 +217,7 @@ def damos_options_to_schemes(args):
         scheme, err = damos_options_to_scheme(args.damos_sz_region[i],
                 args.damos_access_rate[i], args.damos_age[i],
                 args.damos_action[i], args.damos_apply_interval[i],
-                args.damos_quotas[i], args.damos_wmarks[i], filters)
+                args.damos_quotas[i], qgoals, args.damos_wmarks[i], filters)
         if err != None:
             return [], err
         schemes.append(scheme)
@@ -439,6 +458,13 @@ def set_damos_argparser(parser):
                 '<access rate priority weight> (permil)',
                 '<age priority weight> (permil)'), nargs=6, action='append',
             help='damos quotas')
+    parser.add_argument('--damos_quota_goal', nargs=2, action='append',
+            default=[],
+            metavar=('<target value bp>', '<current value bp>'),
+            help='damos quota goal (target and current values in bp')
+    parser.add_argument('--damos_nr_quota_goals', type=int, nargs='+',
+            default=[], metavar='<integer>',
+            help='number of quota goals for each scheme (in order)')
     parser.add_argument('--damos_wmarks', nargs=5, action='append', default=[],
             metavar=('<metric (none|free_mem_rate)>', '<interval (us)>',
                 '<high mark (permil)>', '<mid mark (permil)>',
