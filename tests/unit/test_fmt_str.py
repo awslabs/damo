@@ -182,6 +182,22 @@ class TestDamoFmtStr(unittest.TestCase):
                     123.456: 123.456,
                     })
 
+    def test_text_to_bp(self):
+        _test_damo_common.test_input_expects(self,
+                _damo_fmt_str.text_to_bp,
+                {'10%': 1000.0,
+                    12.34: 12.34,
+                    '12.34': 12.34,
+                    '1.234%': 123.4,
+                    '1.234 %': 123.4,
+                    '1,234.567 %': 123456.7,
+                    '1,234.567,89 %': 123456.789,
+                    '123': 123,
+                    '123.456': 123.456,
+                    123: 123,
+                    123.456: 123.456,
+                    })
+
     def test_text_to_ratio(self):
         _test_damo_common.test_input_expects(self,
                 _damo_fmt_str.text_to_ratio,
