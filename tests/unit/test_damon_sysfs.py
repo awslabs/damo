@@ -20,6 +20,7 @@ class TestDamonSysfs(unittest.TestCase):
                 'schemes': True,
                 'schemes_prioritization': True,
                 'schemes_quotas': True,
+                'schemes_quota_goals': True,
                 'schemes_speed_limit': True,
                 'schemes_tried_regions': True,
                 'schemes_wmarks': True,
@@ -116,6 +117,7 @@ class TestDamonSysfs(unittest.TestCase):
                                         "quotas": {
                                             "bytes": "0", "ms": "0",
                                             "reset_interval_ms": "0",
+                                            "goals": {},
                                             "weights": {
                                                 "age_permil": "0",
                                                 "nr_accesses_permil": "0",

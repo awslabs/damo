@@ -131,10 +131,22 @@ def wops_for_scheme_watermarks(wmarks):
         'low': '%d' % wmarks.low_permil,
     }
 
+def wops_for_scheme_quota_goal(goal):
+    return {
+            'target_value': '%s' % goal.target_value_bp,
+            'current_value': '%s' % goal.current_value_bp,
+            }
+
+def wops_for_scheme_quota_goals(goals):
+    wops = {}
+    for idx, goal in enumerate(goals):
+        wops['%d' % idx] = wops_for_scheme_goal(goal)
+    return wops
+
 def wops_for_scheme_quotas(quotas):
     if quotas == None:
         return {}
-    return {
+    wops = {
         'ms': '%d' % quotas.time_ms,
         'bytes': '%d' % quotas.sz_bytes,
         'reset_interval_ms': '%d' % quotas.reset_interval_ms,
@@ -144,6 +156,10 @@ def wops_for_scheme_quotas(quotas):
             'age_permil': '%d' % quotas.weight_age_permil,
         },
     }
+    if feature_supported('schemes_quota_goals'):
+        wops['goals'] = wops_for_scheme_quota_goals(quotas.goals)
+
+    return wops
 
 def wops_for_scheme_access_pattern(pattern, ctx):
     if pattern == None:
@@ -247,6 +263,13 @@ def __ensure_scheme_dir_populated(scheme_dir, scheme):
         raise Exception('nr_filters read fail (%s)' % err)
     if int(nr_filters) != len(scheme.filters):
         _damo_fs.write_file(nr_filters_path, '%d' % len(scheme.filters))
+
+    nr_goals_path = os.path.join(scheme_dir, 'quotas', 'goals', 'nr_goals')
+    nr_goals, err = _damo_fs.read_file(nr_goals_path)
+    if err != None:
+        raise Exception('nr_goals read fail (%s)' % err)
+    if int(nr_goals) != len(scheme.quotas.goals):
+        _damo_fs.write_file(nr_goals_path, '%d' % len(scheme.quotas.goals))
 
 def __ensure_target_dir_populated(target_dir, target):
     nr_regions_path = os.path.join(target_dir, 'regions', 'nr_regions')
