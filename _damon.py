@@ -911,7 +911,7 @@ features = ['record',       # was in DAMON patchset, but not merged in mainline
             'schemes_tried_regions_sz', # merged in v6.6-rc1
             'schemes_filters_addr',     # merged in v6.6-rc1
             'schemes_filters_target',   # merged in v6.6-rc1
-            'schemes_apply_interval',   # merged in v6.6-rc4 based mm tree
+            'schemes_apply_interval',   # merged in v6.7-rc1
             ]
 
 _damon_fs = None
