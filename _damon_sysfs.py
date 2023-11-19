@@ -514,6 +514,13 @@ def commit_staged(kdamond_idxs):
             return err
     return None
 
+def commit_quota_goals(kdamond_idxs):
+    for kdamond_idx in kdamond_idxs:
+        err = _damo_fs.write_file(state_file_of(kdamond_idx),
+                'commit_schemes_quota_goals')
+        if err != None:
+            return err
+
 # features
 
 def feature_supported(feature):
