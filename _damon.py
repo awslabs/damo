@@ -416,8 +416,8 @@ class DamosQuotaGoal:
 
     def to_str(self, raw):
         return 'target %s current %s' % (
-                _damo_fmt_str.format_bp(self.target_value_bp), 
-                _damo_fmt_str.format_bp(self.current_value_bp),)
+                _damo_fmt_str.format_bp(self.target_value_bp, raw),
+                _damo_fmt_str.format_bp(self.current_value_bp, raw),)
 
     def __str__(self):
         return self.to_str(False)
