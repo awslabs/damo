@@ -1092,6 +1092,11 @@ def commit_staged(kdamond_idxs):
         return 'debugfs interface does not support commit_staged()'
     return _damon_fs.commit_staged(kdamond_idxs)
 
+def commit_quota_goals(kdamond_idxs):
+    if _damon_fs == _damon_dbgfs:
+        return 'debugfs interface does not support commit_quota_goals()'
+    return _damon_fs.commit_quota_goals(kdamond_idxs)
+
 def commit(kdamonds):
     err = stage_kdamonds(kdamonds)
     if err:
