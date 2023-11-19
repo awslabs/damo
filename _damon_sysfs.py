@@ -140,7 +140,7 @@ def wops_for_scheme_quota_goal(goal):
 def wops_for_scheme_quota_goals(goals):
     wops = {}
     for idx, goal in enumerate(goals):
-        wops['%d' % idx] = wops_for_scheme_goal(goal)
+        wops['%d' % idx] = wops_for_scheme_quota_goal(goal)
     return wops
 
 def wops_for_scheme_quotas(quotas):
