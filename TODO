@@ -22,3 +22,4 @@
   - collapse by priority value (more histogram control)
   - Implement min/max snapshot format keyword
 - Test DAMOS interval
+- Make quota goals tuning to touch only really needed files
