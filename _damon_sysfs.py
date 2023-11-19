@@ -264,6 +264,9 @@ def __ensure_scheme_dir_populated(scheme_dir, scheme):
     if int(nr_filters) != len(scheme.filters):
         _damo_fs.write_file(nr_filters_path, '%d' % len(scheme.filters))
 
+    if not feature_supported('schemes_quota_goals'):
+        return
+
     nr_goals_path = os.path.join(scheme_dir, 'quotas', 'goals', 'nr_goals')
     nr_goals, err = _damo_fs.read_file(nr_goals_path)
     if err != None:
