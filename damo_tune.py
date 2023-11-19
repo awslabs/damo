@@ -9,6 +9,8 @@ import _damon_args
 
 def set_argparser(parser):
     parser.description = 'Update DAMON parameters'
+    parser.add_argument('--quota_goals_only', action='store_true',
+            help='commit quota goals change only')
     return _damon_args.set_argparser(parser, add_record_options=False)
 
 def main(args=None):
@@ -22,7 +24,7 @@ def main(args=None):
         print('DAMON is not turned on')
         exit(1)
 
-    kdamonds, err = _damon_args.commit_kdamonds(args)
+    kdamonds, err = _damon_args.commit_kdamonds(args, args.quota_goals_only)
     if err:
         print('tuning failed (%s)' % err)
         exit(1)
