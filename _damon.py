@@ -1097,11 +1097,20 @@ def commit_quota_goals(kdamond_idxs):
         return 'debugfs interface does not support commit_quota_goals()'
     return _damon_fs.commit_quota_goals(kdamond_idxs)
 
-def commit(kdamonds):
+def commit(kdamonds, commit_quota_goals_only=False):
     err = stage_kdamonds(kdamonds)
     if err:
         return 'staging updates failed (%s)' % err
-    err = commit_staged(['%s' % idx for idx, k in enumerate(kdamonds)])
+
+    kdamond_idxs = ['%s' % idx for idx, k in enumerate(kdamonds)]
+
+    if commit_quota_goals_only:
+        err = commit_quota_goals(kdamond_idxs)
+        if err:
+            return 'commit quotas failed (%s)' % err
+        return None
+
+    err = commit_staged(kdamond_idxs)
     if err:
         return 'commit staged updates filed (%s)' % err
     return None
