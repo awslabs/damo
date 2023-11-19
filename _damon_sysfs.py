@@ -376,6 +376,9 @@ def files_content_to_access_pattern(files_content):
 
 def files_content_to_quota_goals(files_content):
     goals = []
+    if not feature_supported('schemes_quota_goals'):
+        return goals
+
     for goal_kv in number_sorted_dirs(files_content):
         goals.append(
                 _damon.DamosQuotaGoal(goal_kv['target_value_bp'],
