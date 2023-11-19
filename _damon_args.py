@@ -376,11 +376,11 @@ def stage_kdamonds(args):
         return None, 'cannot apply kdamonds from args (%s)' % err
     return kdamonds, None
 
-def commit_kdamonds(args):
+def commit_kdamonds(args, commit_quota_goals_only):
     kdamonds, err = kdamonds_for(args)
     if err:
         return None, 'cannot create kdamonds to commit from args (%s)' % err
-    err = _damon.commit(kdamonds)
+    err = _damon.commit(kdamonds, commit_quota_goals_only)
     if err:
         return None, 'cannot commit kdamonds (%s)' % err
     return kdamonds, None
