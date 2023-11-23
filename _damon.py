@@ -1098,9 +1098,10 @@ def commit_quota_goals(kdamond_idxs):
     return _damon_fs.commit_quota_goals(kdamond_idxs)
 
 def commit(kdamonds, commit_quota_goals_only=False):
-    err = stage_kdamonds(kdamonds)
-    if err:
-        return 'staging updates failed (%s)' % err
+    if not commit_quota_goals_only:
+        err = stage_kdamonds(kdamonds)
+        if err:
+            return 'staging updates failed (%s)' % err
 
     kdamond_idxs = ['%s' % idx for idx, k in enumerate(kdamonds)]
 
