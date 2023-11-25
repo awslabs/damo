@@ -12,7 +12,7 @@ import _damo_ascii_color
 import _damo_fmt_str
 import _damon
 import _damon_args
-import _damon_result
+import _damon_records
 
 class Formatter:
     keyword = None
@@ -566,10 +566,10 @@ def __get_records(access_pattern, address, tried_regions_of,
             monitor_scheme = _damon.Damos(access_pattern=access_pattern,
                     filters=filters)
 
-            records, err = _damon_result.get_snapshot_records(monitor_scheme,
+            records, err = _damon_records.get_snapshot_records(monitor_scheme,
                     total_sz_only, not dont_merge_regions)
         else:
-             records, err = _damon_result.get_snapshot_records_for_schemes(
+             records, err = _damon_records.get_snapshot_records_for_schemes(
                     tried_regions_of, total_sz_only, not dont_merge_regions)
         if err != None:
             time.sleep(random.randrange(
@@ -590,7 +590,7 @@ def get_records(input_file, access_pattern, address, tried_regions_of,
         if not os.path.isfile(input_file):
             return None, '--input_file (%s) is not file' % input_file
 
-        records, err = _damon_result.parse_records_file(input_file)
+        records, err = _damon_records.parse_records_file(input_file)
         if err:
             return None, ('parsing damon result file (%s) failed (%s)' %
                     (input_file, err))

@@ -11,7 +11,7 @@ import time
 
 import _damon
 import _damon_args
-import _damon_result
+import _damon_records
 
 class DataForCleanup:
     kdamonds_idxs = None
@@ -34,7 +34,7 @@ def cleanup_exit(exit_code):
             print('failed restoring previous kdamonds setup (%s)' % err)
 
     if data_for_cleanup.perf_pipe:
-        _damon_result.stop_monitoring_record(data_for_cleanup.perf_pipe)
+        _damon_records.stop_monitoring_record(data_for_cleanup.perf_pipe)
 
     exit(exit_code)
 
@@ -46,7 +46,7 @@ def handle_args(args):
     if _damon.any_kdamond_running() and not args.deducible_target:
         args.deducible_target = 'ongoing'
 
-    args.output_permission, err = _damon_result.parse_file_permission_str(
+    args.output_permission, err = _damon_records.parse_file_permission_str(
             args.output_permission)
     if err != None:
         print('wrong --output permission (%s) (%s)' %
@@ -57,7 +57,7 @@ def handle_args(args):
     if os.path.isfile(args.out):
         os.rename(args.out, args.out + '.old')
 
-    err = _damon_result.set_perf_path(args.perf_path)
+    err = _damon_records.set_perf_path(args.perf_path)
     if err != None:
         print(err)
         exit(-3)
@@ -123,8 +123,8 @@ def poll_target_pids(kdamonds, add_childs):
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type',
-            choices=_damon_result.file_types,
-            default=_damon_result.file_type_json_compressed,
+            choices=_damon_records.file_types,
+            default=_damon_records.file_type_json_compressed,
             help='output file\'s type')
     parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')
@@ -176,11 +176,11 @@ def main(args=None):
                 0].contexts[0].intervals
 
     if args.schemes_target_regions == False:
-        tracepoint = _damon_result.perf_event_damon_aggregated
+        tracepoint = _damon_records.perf_event_damon_aggregated
     else:
-        tracepoint = _damon_result.perf_event_damos_before_apply
+        tracepoint = _damon_records.perf_event_damos_before_apply
 
-    data_for_cleanup.perf_pipe = _damon_result.start_monitoring_record(
+    data_for_cleanup.perf_pipe = _damon_records.start_monitoring_record(
             tracepoint, args.out, args.output_type, args.output_permission,
             monitoring_intervals)
     print('Press Ctrl+C to stop')

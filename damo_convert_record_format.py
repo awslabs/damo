@@ -2,14 +2,14 @@
 
 import os
 
-import _damon_result
+import _damon_records
 
 def set_argparser(parser):
     parser.add_argument('--record_file', metavar='<file>',
             default='damon.data', help='the record file')
     parser.add_argument('--format',
-            choices=_damon_result.self_write_supported_file_types,
-            default=_damon_result.file_type_json_compressed,
+            choices=_damon_records.self_write_supported_file_types,
+            default=_damon_records.file_type_json_compressed,
             help='new file format')
     parser.add_argument('--output_file', metavar='<file>',
             help='the path to converted file')
@@ -27,12 +27,12 @@ def main(args=None):
     if not args.output_file:
         args.output_file = args.record_file
 
-    records, err = _damon_result.parse_records_file(args.record_file, None)
+    records, err = _damon_records.parse_records_file(args.record_file, None)
     if err != None:
         print('parsing record file failed (%s)' % err)
         exit(1)
 
-    err = _damon_result.write_damon_records(records, args.output_file,
+    err = _damon_records.write_damon_records(records, args.output_file,
             args.format)
     if err != None:
         print('writing records again failed (%s)' % err)

@@ -5,7 +5,7 @@
 import argparse
 import os
 
-import _damon_result
+import _damon_records
 
 def assert_value_in_range(value, min_max, name, error_allowed):
     '''Returns 0 if the value is in the range, 1 if the value is out of range
@@ -68,7 +68,7 @@ def main(args=None):
                 print('wrong boundary input %s' % boundary)
             regions_boundary.append(parsed_boundary)
 
-    records, err = _damon_result.parse_records_file(args.input)
+    records, err = _damon_records.parse_records_file(args.input)
     if err != None:
         print('parsing failed (%s)' % err)
         exit(1)

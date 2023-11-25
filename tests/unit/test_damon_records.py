@@ -7,28 +7,28 @@ import _test_damo_common
 
 _test_damo_common.add_damo_dir_to_syspath()
 
-import _damon_result
+import _damon_records
 
 class TestDamon(unittest.TestCase):
     def test_parse_file_permission_str(self):
-        perm, err = _damon_result.parse_file_permission_str('777')
+        perm, err = _damon_records.parse_file_permission_str('777')
         self.assertEqual(perm, 0o777)
         self.assertIsNone(err)
 
-        perm, err = _damon_result.parse_file_permission_str('-123')
+        perm, err = _damon_records.parse_file_permission_str('-123')
         self.assertIsNone(perm)
         self.assertIsNotNone(err)
 
-        perm, err = _damon_result.parse_file_permission_str('1000')
+        perm, err = _damon_records.parse_file_permission_str('1000')
         self.assertIsNone(perm)
         self.assertIsNotNone(err)
 
-        perm, err = _damon_result.parse_file_permission_str('778')
+        perm, err = _damon_records.parse_file_permission_str('778')
         self.assertIsNone(perm)
         self.assertIsNotNone(err)
 
     def test_record_from_kvpairs(self):
-        records = [_damon_result.DamonRecord.from_kvpairs(p) for p in [
+        records = [_damon_records.DamonRecord.from_kvpairs(p) for p in [
             {
                 "kdamond_idx": 0, "context_idx": 0,
                 "intervals": {
@@ -64,7 +64,7 @@ class TestDamon(unittest.TestCase):
 
         # test DamonSnapshot.total_bytes added by commit 98c1bd8f467f6.  Test
         # older output that doesn't have the data.
-        records = [_damon_result.DamonRecord.from_kvpairs(p) for p in [
+        records = [_damon_records.DamonRecord.from_kvpairs(p) for p in [
             {
                 "kdamond_idx": 0, "context_idx": 0,
                 "intervals": {
