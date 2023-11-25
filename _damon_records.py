@@ -846,11 +846,11 @@ def get_records(input_file, access_pattern, address, tried_regions_of,
             address_filtered = True
     else:
         if not os.path.isfile(input_file):
-            return None, '--input_file (%s) is not file' % input_file
+            return None, '--input_file (%s) not found' % input_file
 
         records, err = parse_records_file(input_file)
         if err:
-            return None, ('parsing damon result file (%s) failed (%s)' %
+            return None, ('parsing --input_file (%s) failed (%s)' %
                     (input_file, err))
         for record in records:
             filter_by_pattern(record, access_pattern)
@@ -859,4 +859,4 @@ def get_records(input_file, access_pattern, address, tried_regions_of,
         if err:
             return None, 'wrong --address input (%s)' % err
         filter_records_by_addr(records, ranges)
-    return records, err
+    return records, None
