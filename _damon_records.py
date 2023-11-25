@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import collections
+import copy
 import json
 import os
 import signal
@@ -737,3 +738,125 @@ def get_snapshot_records_for_schemes(idxs, total_sz_only, merge_regions):
 
     records = tried_regions_to_records_of(idxs, merge_regions)
     return records, None
+
+def filter_by_pattern(record, access_pattern):
+    sz_bytes = access_pattern.sz_bytes
+    nr_acc = access_pattern.nr_acc_min_max
+    age = access_pattern.age_min_max
+
+    for snapshot in record.snapshots:
+        filtered = []
+        for region in snapshot.regions:
+            sz = region.size()
+            if sz < sz_bytes[0] or sz_bytes[1] < sz:
+                continue
+            intervals = record.intervals
+            if intervals == None:
+                filtered.append(region)
+                continue
+            region.nr_accesses.add_unset_unit(intervals)
+            freq = region.nr_accesses.percent
+            if freq < nr_acc[0].percent or nr_acc[1].percent < freq:
+                continue
+            region.age.add_unset_unit(intervals)
+            usecs = region.age.usec
+            if usecs < age[0].usec or age[1].usec < usecs:
+                continue
+            filtered.append(region)
+        snapshot.regions = filtered
+
+def filter_by_addr(region, addr_ranges):
+    regions = []
+    for start, end in addr_ranges:
+        # out of the range
+        if region.end <= start or end <= region.start:
+            continue
+        # in the range
+        if start <= region.start and region.end <= end:
+            regions.append(copy.deepcopy(region))
+            continue
+        # overlap
+        copied = copy.deepcopy(region)
+        copied.start = max(start, region.start)
+        copied.end = min(end, region.end)
+        regions.append(copied)
+    return regions
+
+def filter_records_by_addr(records, addr_ranges):
+    for record in records:
+        for snapshot in record.snapshots:
+            filtered_regions = []
+            for region in snapshot.regions:
+                filtered_regions += filter_by_addr(region, addr_ranges)
+            snapshot.regions = filtered_regions
+            snapshot.update_total_bytes()
+
+def convert_addr_ranges_input(addr_ranges_input):
+    try:
+        ranges = [[_damo_fmt_str.text_to_bytes(start),
+            _damo_fmt_str.text_to_bytes(end)]
+            for start, end in addr_ranges_input]
+    except Exception as e:
+        return None, 'conversion to bytes failed (%s)' % e
+
+    ranges.sort(key=lambda x: x[0])
+    for idx, arange in enumerate(ranges):
+        start, end = arange
+        if start > end:
+            return None, 'start > end (%s)' % arange
+        if idx > 0 and ranges[idx - 1][1] > start:
+            return None, 'overlapping range'
+    return ranges, None
+
+def __get_records(access_pattern, address, tried_regions_of,
+        total_sz_only, dont_merge_regions):
+    err = 'assumed error'
+    nr_tries = 0
+    while err != None and nr_tries < 5:
+        nr_tries += 1
+        if tried_regions_of == None:
+            filters = []
+            if address and _damon.feature_supported('schemes_filters_addr'):
+                for start, end in address:
+                    filters.append(_damon.DamosFilter('addr', False,
+                        address_range=_damon.DamonRegion(start, end)))
+
+            monitor_scheme = _damon.Damos(access_pattern=access_pattern,
+                    filters=filters)
+
+            records, err = get_snapshot_records(monitor_scheme,
+                    total_sz_only, not dont_merge_regions)
+        else:
+             records, err = get_snapshot_records_for_schemes(
+                    tried_regions_of, total_sz_only, not dont_merge_regions)
+        if err != None:
+            time.sleep(random.randrange(
+                2**(nr_tries - 1), 2**nr_tries) / 100)
+    return records, err
+
+def get_records(input_file, access_pattern, address, tried_regions_of,
+        total_sz_only, dont_merge_regions):
+    address_filtered = False
+    if input_file == None:
+        records, err = __get_records(access_pattern, address, tried_regions_of,
+                total_sz_only, dont_merge_regions)
+        if err != None:
+            return None, err
+        if address and _damon.feature_supported('schemes_filters_addr'):
+            address_filtered = True
+    else:
+        if not os.path.isfile(input_file):
+            return None, '--input_file (%s) is not file' % input_file
+
+        records, err = parse_records_file(input_file)
+        if err:
+            return None, ('parsing damon result file (%s) failed (%s)' %
+                    (input_file, err))
+        for record in records:
+            filter_by_pattern(record, access_pattern)
+    if address and not address_filtered:
+        ranges, err = convert_addr_ranges_input(address)
+        if err:
+            return None, 'wrong --address input (%s)' % err
+        filter_records_by_addr(records, ranges)
+    return records, err

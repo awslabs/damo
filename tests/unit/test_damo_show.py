@@ -12,41 +12,6 @@ import _damon_records
 import damo_show
 
 class TestDamoShow(unittest.TestCase):
-    def test_filter_by_address(self):
-        ranges = [[3, 5], [6, 9], [10, 12]]
-        region = _damon.DamonRegion(7, 8)
-        self.assertEqual(
-                damo_show.filter_by_addr(_damon.DamonRegion(7, 8), ranges),
-                [_damon.DamonRegion(7, 8)])
-        self.assertEqual(
-                damo_show.filter_by_addr(_damon.DamonRegion(1, 2), ranges),
-                [])
-        self.assertEqual(
-                damo_show.filter_by_addr(_damon.DamonRegion(5, 6), ranges),
-                [])
-        self.assertEqual(
-                damo_show.filter_by_addr(_damon.DamonRegion(1, 4), ranges),
-                [_damon.DamonRegion(3, 4)])
-        self.assertEqual(
-                damo_show.filter_by_addr(_damon.DamonRegion(1, 20), ranges),
-                [_damon.DamonRegion(3, 5), _damon.DamonRegion(6, 9),
-                    _damon.DamonRegion(10, 12)])
-
-    def test_convert_addr_ranges_input(self):
-        self.assertEqual(
-                damo_show.convert_addr_ranges_input([['1G', '2G']]),
-                ([[1024 * 1024 * 1024, 1024 * 1024 * 1024 * 2]], None))
-        ranges, err = damo_show.convert_addr_ranges_input([['abc', 'def']])
-        self.assertNotEqual(err, None)
-        ranges, err = damo_show.convert_addr_ranges_input([[4, 3]])
-        self.assertNotEqual(err, None)
-        ranges, err = damo_show.convert_addr_ranges_input([[5, 7], [2, 6]])
-        self.assertEqual(err, 'overlapping range')
-
-        self.assertEqual(
-                damo_show.convert_addr_ranges_input([[10, 20], [5, 7]]),
-                ([[5, 7], [10, 20]], None))
-
     def test_sorted_access_pattern(self):
         record = _damon_records.DamonRecord.from_kvpairs(
             {

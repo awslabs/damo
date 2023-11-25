@@ -7,6 +7,7 @@ import _test_damo_common
 
 _test_damo_common.add_damo_dir_to_syspath()
 
+import _damon
 import _damon_records
 
 class TestDamon(unittest.TestCase):
@@ -96,6 +97,43 @@ class TestDamon(unittest.TestCase):
             ]]
         self.assertEqual(len(records), 1)
         self.assertEqual(len(records[0].snapshots), 1)
+
+    def test_filter_by_address(self):
+        ranges = [[3, 5], [6, 9], [10, 12]]
+        region = _damon.DamonRegion(7, 8)
+        self.assertEqual(
+                _damon_records.filter_by_addr(_damon.DamonRegion(7, 8),
+                    ranges), [_damon.DamonRegion(7, 8)])
+        self.assertEqual(
+                _damon_records.filter_by_addr(_damon.DamonRegion(1, 2),
+                    ranges), [])
+        self.assertEqual(
+                _damon_records.filter_by_addr(_damon.DamonRegion(5, 6),
+                    ranges), [])
+        self.assertEqual(
+                _damon_records.filter_by_addr(_damon.DamonRegion(1, 4),
+                    ranges), [_damon.DamonRegion(3, 4)])
+        self.assertEqual(
+                _damon_records.filter_by_addr(_damon.DamonRegion(1, 20),
+                    ranges), [_damon.DamonRegion(3, 5), _damon.DamonRegion(6,
+                        9), _damon.DamonRegion(10, 12)])
+
+    def test_convert_addr_ranges_input(self):
+        self.assertEqual(
+                _damon_records.convert_addr_ranges_input([['1G', '2G']]),
+                ([[1024 * 1024 * 1024, 1024 * 1024 * 1024 * 2]], None))
+        ranges, err = _damon_records.convert_addr_ranges_input(
+                [['abc', 'def']])
+        self.assertNotEqual(err, None)
+        ranges, err = _damon_records.convert_addr_ranges_input([[4, 3]])
+        self.assertNotEqual(err, None)
+        ranges, err = _damon_records.convert_addr_ranges_input(
+                [[5, 7], [2, 6]])
+        self.assertEqual(err, 'overlapping range')
+
+        self.assertEqual(
+                _damon_records.convert_addr_ranges_input([[10, 20], [5, 7]]),
+                ([[5, 7], [10, 20]], None))
 
 if __name__ == '__main__':
     unittest.main()
