@@ -177,8 +177,7 @@ issue, sj@kernel.org, damon@lists.linux.dev, and/or linux-mm@kvack.org.
 `damo translate_damos`
 ----------------------
 
-Will be deprecated by 2023-Q4.  Use the command of v2.0.2 or lower version of
-DAMO instead.
+Deprecated.  Use the command of v2.0.2 or lower version of DAMO instead.
 
 
 DAMON record binary format
