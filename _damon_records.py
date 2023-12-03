@@ -671,39 +671,20 @@ def install_target_regions_if_needed(kdamonds):
     return err
 
 def update_get_snapshot_records(kdamond_idxs, scheme_idxs,
-        total_sz_only, merge_regions, orig_kdamonds):
-    '''
-    orig_kdamonds is not None if the caller installed monitoring scheme.  In
-    the case, orig_kdamonds should be committed back to uninstall the
-    monitoring scheme.
-    '''
+        total_sz_only, merge_regions):
     if total_sz_only:
         err = _damon.update_schemes_tried_bytes(kdamond_idxs)
         # update_schemes_tried_bytes() can error if the feature is not
         # supported.  Then, full record will be returned
         if err == None:
             records = tried_regions_to_records_of(scheme_idxs, merge_regions)
-
-            if orig_kdamonds != None:
-                err = _damon.commit(orig_kdamonds)
-                if err:
-                    return records, 'monitoring scheme uninstall failed: %s' % err
             return records, None
 
     err = _damon.update_schemes_tried_regions(kdamond_idxs)
     if err != None:
-        if orig_kdamonds != None:
-            uninstall_err = _damon.commit(orig_kdamonds)
-            if uninstall_err:
-                err += ', %s' % uninstall_err
         return None, 'updating schemes tried regions fail: %s' % err
 
     records = tried_regions_to_records_of(scheme_idxs, merge_regions)
-
-    if orig_kdamonds != None:
-        err = _damon.commit(orig_kdamonds)
-        if err:
-            return records, 'monitoring scheme uninstall failed: %s' % err
     return records, None
 
 def get_snapshot_records(monitor_scheme, total_sz_only, merge_regions):
@@ -722,10 +703,19 @@ def get_snapshot_records(monitor_scheme, total_sz_only, merge_regions):
     if err:
         return None, 'monitoring scheme install failed: %s' % err
 
-    if not installed:
-        orig_kdamonds = None
-    return update_get_snapshot_records(running_kdamond_idxs, idxs,
-            total_sz_only, merge_regions, orig_kdamonds)
+    records, err = update_get_snapshot_records(running_kdamond_idxs, idxs,
+            total_sz_only, merge_regions)
+
+    if installed:
+        uninstall_err = _damon.commit(orig_kdamonds)
+        if uninstall_err:
+            errmsg = 'monitoring scheme uninstall failed: %s' % uninstall_err
+            if err != None:
+                err += ', %s' % errmsg
+            else:
+                err = errmsg
+
+    return records, err
 
 def get_snapshot_records_for_schemes(idxs, total_sz_only, merge_regions):
     '''idxs: list of kdamond/context/scheme indices to get records for.
