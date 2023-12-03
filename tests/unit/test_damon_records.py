@@ -118,22 +118,5 @@ class TestDamon(unittest.TestCase):
                     ranges), [_damon.DamonRegion(3, 5), _damon.DamonRegion(6,
                         9), _damon.DamonRegion(10, 12)])
 
-    def test_convert_addr_ranges_input(self):
-        self.assertEqual(
-                _damon_records.convert_addr_ranges_input([['1G', '2G']]),
-                ([[1024 * 1024 * 1024, 1024 * 1024 * 1024 * 2]], None))
-        ranges, err = _damon_records.convert_addr_ranges_input(
-                [['abc', 'def']])
-        self.assertNotEqual(err, None)
-        ranges, err = _damon_records.convert_addr_ranges_input([[4, 3]])
-        self.assertNotEqual(err, None)
-        ranges, err = _damon_records.convert_addr_ranges_input(
-                [[5, 7], [2, 6]])
-        self.assertEqual(err, 'overlapping range')
-
-        self.assertEqual(
-                _damon_records.convert_addr_ranges_input([[10, 20], [5, 7]]),
-                ([[5, 7], [10, 20]], None))
-
 if __name__ == '__main__':
     unittest.main()

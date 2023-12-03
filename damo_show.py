@@ -477,6 +477,23 @@ def pr_records(args, records):
                 args.min_chars_for, None, None, None, record, args.raw_number,
                 region_box_args)
 
+def convert_addr_ranges_input(addr_ranges_input):
+    try:
+        ranges = [[_damo_fmt_str.text_to_bytes(start),
+            _damo_fmt_str.text_to_bytes(end)]
+            for start, end in addr_ranges_input]
+    except Exception as e:
+        return None, 'conversion to bytes failed (%s)' % e
+
+    ranges.sort(key=lambda x: x[0])
+    for idx, arange in enumerate(ranges):
+        start, end = arange
+        if start > end:
+            return None, 'start > end (%s)' % arange
+        if idx > 0 and ranges[idx - 1][1] > start:
+            return None, 'overlapping range'
+    return ranges, None
+
 def handle_ls_keywords(args):
     if args.ls_record_format_keywords:
         print('\n\n'.join(['%s' % f for f in record_formatters]))
@@ -597,11 +614,18 @@ def main(args=None):
             args.access_rate, _damon.unit_percent, args.age * 1000000,
             _damon.unit_usec)
 
+    addr_range = None
+    if args.address != None:
+        addr_range, err = convert_addr_ranges_input(args.address)
+        if err != None:
+            print('wrong --address input (%s)' % err)
+            exit(1)
+
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args, load_feature_supports=True)
 
     records, err = _damon_records.get_records(args.input_file, access_pattern,
-            args.address, args.tried_regions_of, args.total_sz_only,
+            addr_range, args.tried_regions_of, args.total_sz_only,
             args.dont_merge_regions)
     if err != None:
         print(err)

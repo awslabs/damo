@@ -789,23 +789,6 @@ def filter_records_by_addr(records, addr_ranges):
             snapshot.regions = filtered_regions
             snapshot.update_total_bytes()
 
-def convert_addr_ranges_input(addr_ranges_input):
-    try:
-        ranges = [[_damo_fmt_str.text_to_bytes(start),
-            _damo_fmt_str.text_to_bytes(end)]
-            for start, end in addr_ranges_input]
-    except Exception as e:
-        return None, 'conversion to bytes failed (%s)' % e
-
-    ranges.sort(key=lambda x: x[0])
-    for idx, arange in enumerate(ranges):
-        start, end = arange
-        if start > end:
-            return None, 'start > end (%s)' % arange
-        if idx > 0 and ranges[idx - 1][1] > start:
-            return None, 'overlapping range'
-    return ranges, None
-
 def get_snapshot_records_of(access_pattern, address, tried_regions_of,
         total_sz_only, dont_merge_regions):
     '''
@@ -857,8 +840,5 @@ def get_records(input_file, access_pattern, address, tried_regions_of,
             filter_by_pattern(record, access_pattern)
 
     if address:
-        ranges, err = convert_addr_ranges_input(address)
-        if err:
-            return None, 'wrong --address input (%s)' % err
-        filter_records_by_addr(records, ranges)
+        filter_records_by_addr(records, address)
     return records, None
