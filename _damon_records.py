@@ -5,12 +5,10 @@ import copy
 import json
 import os
 import signal
-import struct
 import subprocess
 import time
 import zlib
 
-import _damo_deprecation_notice
 import _damo_fmt_str
 import _damon
 
