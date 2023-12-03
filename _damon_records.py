@@ -340,8 +340,8 @@ def parse_json(json_str):
     kvpairs = json.loads(json_str)
     return [DamonRecord.from_kvpairs(kvp) for kvp in kvpairs]
 
-def parse_compressed_json(result_file):
-    with open(result_file, 'rb') as f:
+def parse_compressed_json(record_file):
+    with open(record_file, 'rb') as f:
         compressed = f.read()
     decompressed = zlib.decompress(compressed).decode()
     return parse_json(decompressed)
@@ -351,27 +351,27 @@ def parse_json_file(record_file):
         json_str = f.read()
     return parse_json(json_str)
 
-def parse_records_file(result_file, monitoring_intervals=None):
+def parse_records_file(record_file, monitoring_intervals=None):
     '''
     Return monitoring results records and error string
     '''
 
     file_type = subprocess.check_output(
-            ['file', '-b', result_file]).decode().strip()
+            ['file', '-b', record_file]).decode().strip()
     if file_type == 'JSON data':
         try:
-            return parse_json_file(result_file), None
+            return parse_json_file(record_file), None
         except Exception as e:
             return None, 'failed parsing json file (%s)' % e
     if file_type == 'zlib compressed data':
         try:
-            return parse_compressed_json(result_file), None
+            return parse_compressed_json(record_file), None
         except Exception as e:
             return None, 'failed parsing json compressed file (%s)' % e
 
     perf_script_output = None
     if file_type == 'ASCII text':
-        with open(result_file, 'r') as f:
+        with open(record_file, 'r') as f:
             perf_script_output = f.read()
     else:
         # might be perf data
@@ -382,7 +382,7 @@ def parse_records_file(result_file, monitoring_intervals=None):
                 # damo.  As long as we can, just parse it with '--force'
                 # option.
                 perf_script_output = subprocess.check_output(
-                        [PERF, 'script', '--force', '-i', result_file],
+                        [PERF, 'script', '--force', '-i', record_file],
                         stderr=fnull).decode()
         except:
             # Should be record format file
@@ -390,7 +390,7 @@ def parse_records_file(result_file, monitoring_intervals=None):
     if perf_script_output != None:
         return parse_perf_script(perf_script_output, monitoring_intervals)
     else:
-        return None, 'parsing %s failed' % result_file
+        return None, 'parsing %s failed' % record_file
 
 # for writing monitoring results to a file
 
