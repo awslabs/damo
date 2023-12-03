@@ -837,14 +837,14 @@ def get_snapshot_records_of(access_pattern, address, tried_regions_of,
 
 def get_records(input_file, access_pattern, address, tried_regions_of,
         total_sz_only, dont_merge_regions):
-    address_filtered = False
     if input_file == None:
         records, err = get_snapshot_records_of(access_pattern, address,
                 tried_regions_of, total_sz_only, dont_merge_regions)
         if err != None:
             return None, err
-        if address and _damon.feature_supported('schemes_filters_addr'):
-            address_filtered = True
+        if _damon.feature_supported('schemes_filters_addr'):
+            # get_snapshot_records_of() has already handled address filter
+            return records, None
     else:
         if not os.path.isfile(input_file):
             return None, '--input_file (%s) not found' % input_file
@@ -855,7 +855,8 @@ def get_records(input_file, access_pattern, address, tried_regions_of,
                     (input_file, err))
         for record in records:
             filter_by_pattern(record, access_pattern)
-    if address and not address_filtered:
+
+    if address:
         ranges, err = convert_addr_ranges_input(address)
         if err:
             return None, 'wrong --address input (%s)' % err
