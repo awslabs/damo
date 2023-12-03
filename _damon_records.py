@@ -340,7 +340,7 @@ def parse_json(json_str):
     kvpairs = json.loads(json_str)
     return [DamonRecord.from_kvpairs(kvp) for kvp in kvpairs]
 
-def parse_json_compressed(result_file):
+def parse_compressed_json(result_file):
     with open(result_file, 'rb') as f:
         compressed = f.read()
     decompressed = zlib.decompress(compressed).decode()
@@ -365,7 +365,7 @@ def parse_records_file(result_file, monitoring_intervals=None):
             return None, 'failed parsing json file (%s)' % e
     if file_type == 'zlib compressed data':
         try:
-            return parse_json_compressed(result_file), None
+            return parse_compressed_json(result_file), None
         except Exception as e:
             return None, 'failed parsing json compressed file (%s)' % e
 
