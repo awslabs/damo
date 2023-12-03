@@ -806,8 +806,11 @@ def convert_addr_ranges_input(addr_ranges_input):
             return None, 'overlapping range'
     return ranges, None
 
-def __get_records(access_pattern, address, tried_regions_of,
+def get_snapshot_records_of(access_pattern, address, tried_regions_of,
         total_sz_only, dont_merge_regions):
+    '''
+    get records containing single snapshot from running kdamonds
+    '''
     err = 'assumed error'
     nr_tries = 0
     while err != None and nr_tries < 5:
@@ -836,8 +839,8 @@ def get_records(input_file, access_pattern, address, tried_regions_of,
         total_sz_only, dont_merge_regions):
     address_filtered = False
     if input_file == None:
-        records, err = __get_records(access_pattern, address, tried_regions_of,
-                total_sz_only, dont_merge_regions)
+        records, err = get_snapshot_records_of(access_pattern, address,
+                tried_regions_of, total_sz_only, dont_merge_regions)
         if err != None:
             return None, err
         if address and _damon.feature_supported('schemes_filters_addr'):
