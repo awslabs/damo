@@ -681,7 +681,16 @@ def update_get_snapshot_records(kdamond_idxs, scheme_idxs,
             records = tried_regions_to_records_of(scheme_idxs, merge_regions)
             return records, None
 
-    err = _damon.update_schemes_tried_regions(kdamond_idxs)
+    err = 'assumed error'
+    nr_tries = 0
+    while err != None and nr_tries < 5:
+        nr_tries += 1
+
+        err = _damon.update_schemes_tried_regions(kdamond_idxs)
+
+        if err != None:
+            time.sleep(random.randrange(
+                2**(nr_tries - 1), 2**nr_tries) / 100)
     if err != None:
         return None, 'updating schemes tried regions fail: %s' % err
 
@@ -785,28 +794,21 @@ def get_snapshot_records_of(access_pattern, address, tried_regions_of,
     '''
     get records containing single snapshot from running kdamonds
     '''
-    err = 'assumed error'
-    nr_tries = 0
-    while err != None and nr_tries < 5:
-        nr_tries += 1
-        if tried_regions_of == None:
-            filters = []
-            if address and _damon.feature_supported('schemes_filters_addr'):
-                for start, end in address:
-                    filters.append(_damon.DamosFilter('addr', False,
-                        address_range=_damon.DamonRegion(start, end)))
+    if tried_regions_of == None:
+        filters = []
+        if address and _damon.feature_supported('schemes_filters_addr'):
+            for start, end in address:
+                filters.append(_damon.DamosFilter('addr', False,
+                    address_range=_damon.DamonRegion(start, end)))
 
-            monitor_scheme = _damon.Damos(access_pattern=access_pattern,
-                    filters=filters)
+        monitor_scheme = _damon.Damos(access_pattern=access_pattern,
+                filters=filters)
 
-            records, err = get_snapshot_records(monitor_scheme,
-                    total_sz_only, not dont_merge_regions)
-        else:
-             records, err = get_snapshot_records_for_schemes(
-                    tried_regions_of, total_sz_only, not dont_merge_regions)
-        if err != None:
-            time.sleep(random.randrange(
-                2**(nr_tries - 1), 2**nr_tries) / 100)
+        records, err = get_snapshot_records(monitor_scheme,
+                total_sz_only, not dont_merge_regions)
+    else:
+         records, err = get_snapshot_records_for_schemes(
+                tried_regions_of, total_sz_only, not dont_merge_regions)
     return records, err
 
 def get_records(input_file, access_pattern, address, tried_regions_of,
