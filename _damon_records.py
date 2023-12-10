@@ -811,27 +811,50 @@ def get_snapshot_records_of(access_pattern, address, tried_regions_of,
                 tried_regions_of, total_sz_only, not dont_merge_regions)
     return records, err
 
-def get_records(input_file, access_pattern, address, tried_regions_of,
-        total_sz_only, dont_merge_regions):
-    if input_file == None:
-        records, err = get_snapshot_records_of(access_pattern, address,
-                tried_regions_of, total_sz_only, dont_merge_regions)
+class RecordGetRequest:
+    # source of the record
+    tried_regions_of = None
+    record_file = None
+
+    # filters of the record
+    access_pattern = None
+    address_ranges = None
+
+    # more detailed requests
+    total_sz_only = None
+    dont_merge_regions = None
+
+    def __init__(self, tried_regions_of, record_file, access_pattern,
+            address_ranges, total_sz_only, dont_merge_regions):
+        self.tried_regions_of = tried_regions_of
+        self.record_file = record_file
+        self.access_pattern = access_pattern
+        self.address_ranges = address_ranges
+        self.total_sz_only = total_sz_only
+        self.dont_merge_regions = dont_merge_regions
+
+def get_records(request):
+    if request.record_file == None:
+        records, err = get_snapshot_records_of(request.access_pattern,
+                request.address_ranges,
+                request.tried_regions_of, request.total_sz_only,
+                request.dont_merge_regions)
         if err != None:
             return None, err
         if _damon.feature_supported('schemes_filters_addr'):
             # get_snapshot_records_of() has already handled address filter
             return records, None
     else:
-        if not os.path.isfile(input_file):
+        if not os.path.isfile(request.record_file):
             return None, '--input_file (%s) not found' % input_file
 
-        records, err = parse_records_file(input_file)
+        records, err = parse_records_file(request.record_file)
         if err:
             return None, ('parsing --input_file (%s) failed (%s)' %
-                    (input_file, err))
+                    (request.record_file, err))
         for record in records:
-            filter_by_pattern(record, access_pattern)
+            filter_by_pattern(record, request.access_pattern)
 
-    if address:
-        filter_records_by_addr(records, address)
+    if request.address_ranges:
+        filter_records_by_addr(records, request.address_ranges)
     return records, None
