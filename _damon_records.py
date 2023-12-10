@@ -812,6 +812,8 @@ def get_snapshot_records_of(request):
     return records, err
 
 class RecordGetRequest:
+    # TODO: Extend to be used for recording
+
     # source of the record.  If both are None, get snapshot
     tried_regions_of = None
     record_file = None
