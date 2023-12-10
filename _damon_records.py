@@ -846,11 +846,11 @@ def get_records(request):
             return records, None
     else:
         if not os.path.isfile(request.record_file):
-            return None, '--input_file (%s) not found' % input_file
+            return None, '%s not found' % input_file
 
         records, err = parse_records_file(request.record_file)
         if err:
-            return None, ('parsing --input_file (%s) failed (%s)' %
+            return None, ('parsing %s failed (%s)' %
                     (request.record_file, err))
         for record in records:
             filter_by_pattern(record, request.access_pattern)
