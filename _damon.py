@@ -718,9 +718,7 @@ class Damos:
                 if watermarks != None else DamosWatermarks())
         self.filters = filters if filters != None else []
         self.stats = stats if stats != None else DamosStats()
-        self.tried_regions = tried_regions
-        if self.tried_regions == None:
-            self.tried_regions = []
+        self.tried_regions = tried_regions if tried_regions != None else []
         self.tried_bytes = 0
         if tried_bytes:
             self.tried_bytes = _damo_fmt_str.text_to_bytes(
