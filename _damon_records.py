@@ -789,30 +789,30 @@ def filter_records_by_addr(records, addr_ranges):
             snapshot.regions = filtered_regions
             snapshot.update_total_bytes()
 
-def get_snapshot_records_of(access_pattern, address, tried_regions_of,
-        total_sz_only, dont_merge_regions):
+def get_snapshot_records_of(request):
     '''
     get records containing single snapshot from running kdamonds
     '''
-    if tried_regions_of == None:
+    if request.tried_regions_of == None:
         filters = []
-        if address and _damon.feature_supported('schemes_filters_addr'):
-            for start, end in address:
+        if request.address_ranges and _damon.feature_supported('schemes_filters_addr'):
+            for start, end in request.address_ranges:
                 filters.append(_damon.DamosFilter('addr', False,
                     address_range=_damon.DamonRegion(start, end)))
 
-        monitor_scheme = _damon.Damos(access_pattern=access_pattern,
+        monitor_scheme = _damon.Damos(access_pattern=request.access_pattern,
                 filters=filters)
 
         records, err = get_snapshot_records(monitor_scheme,
-                total_sz_only, not dont_merge_regions)
+                request.total_sz_only, not request.dont_merge_regions)
     else:
          records, err = get_snapshot_records_for_schemes(
-                tried_regions_of, total_sz_only, not dont_merge_regions)
+                 request.tried_regions_of, request.total_sz_only,
+                 not request.dont_merge_regions)
     return records, err
 
 class RecordGetRequest:
-    # source of the record
+    # source of the record.  If both are None, get snapshot
     tried_regions_of = None
     record_file = None
 
@@ -835,10 +835,7 @@ class RecordGetRequest:
 
 def get_records(request):
     if request.record_file == None:
-        records, err = get_snapshot_records_of(request.access_pattern,
-                request.address_ranges,
-                request.tried_regions_of, request.total_sz_only,
-                request.dont_merge_regions)
+        records, err = get_snapshot_records_of(request)
         if err != None:
             return None, err
         if _damon.feature_supported('schemes_filters_addr'):
