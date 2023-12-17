@@ -625,10 +625,9 @@ def main(args=None):
         _damon.ensure_root_and_initialized(args, load_feature_supports=True)
 
     records, err = _damon_records.get_records(
-            _damon_records.RecordGetRequest(
                 args.tried_regions_of, args.input_file,
                 access_pattern, addr_range,
-                args.total_sz_only, args.dont_merge_regions))
+                args.total_sz_only, args.dont_merge_regions)
     if err != None:
         print(err)
         exit(1)

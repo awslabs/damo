@@ -836,7 +836,10 @@ class RecordGetRequest:
         self.total_sz_only = total_sz_only
         self.dont_merge_regions = dont_merge_regions
 
-def get_records(request):
+def get_records(tried_regions_of=None, record_file=None, access_pattern=None,
+        address_ranges=None, total_sz_only=False, dont_merge_regions=True):
+    request = RecordGetRequest(tried_regions_of, record_file, access_pattern,
+            address_ranges, total_sz_only, dont_merge_regions)
     if request.record_file == None:
         records, err = get_snapshot_records_of(request)
         if err != None:
