@@ -851,8 +851,9 @@ def get_records(request):
         if err:
             return None, ('parsing %s failed (%s)' %
                     (request.record_file, err))
-        for record in records:
-            filter_by_pattern(record, request.access_pattern)
+        if request.access_pattern is not None:
+            for record in records:
+                filter_by_pattern(record, request.access_pattern)
 
     if request.address_ranges:
         filter_records_by_addr(records, request.address_ranges)
