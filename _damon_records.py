@@ -826,8 +826,9 @@ class RecordGetRequest:
     total_sz_only = None
     dont_merge_regions = None
 
-    def __init__(self, tried_regions_of, record_file, access_pattern,
-            address_ranges, total_sz_only, dont_merge_regions):
+    def __init__(self, tried_regions_of=None, record_file=None,
+            access_pattern=None, address_ranges=None, total_sz_only=False,
+            dont_merge_regions=True):
         self.tried_regions_of = tried_regions_of
         self.record_file = record_file
         self.access_pattern = access_pattern
