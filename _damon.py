@@ -195,6 +195,7 @@ class DamonRegion:
     # nr_accesses and age could be None
     nr_accesses = None
     age = None
+    scheme = None # non-None if tried region
 
     def __init__(self, start, end, nr_accesses=None, nr_accesses_unit=None,
             age=None, age_unit=None):
@@ -264,6 +265,7 @@ class DamonRegion:
 class DamonTarget:
     pid = None
     regions = None
+    context = None
 
     def __init__(self, pid, regions):
         self.pid = pid
@@ -409,6 +411,7 @@ class DamosAccessPattern:
 class DamosQuotaGoal:
     target_value_bp = None
     current_value_bp = None
+    quotas = None
 
     def __init__(self, target_value_bp='0 %', current_value_bp='0 %'):
         self.target_value_bp = _damo_fmt_str.text_to_bp(target_value_bp)
@@ -446,6 +449,7 @@ class DamosQuotas:
     weight_nr_accesses_permil = None
     weight_age_permil = None
     goals = None
+    scheme = None
 
     def __init__(self, time_ms=0, sz_bytes=0, reset_interval_ms='max',
             weights=['0 %', '0 %', '0 %'], goals=[]):
@@ -457,6 +461,8 @@ class DamosQuotas:
                 weights[1])
         self.weight_age_permil = _damo_fmt_str.text_to_permil(weights[2])
         self.goals = goals
+        for goal in self.goals:
+            goal.quotas = self
 
     def __str__(self):
         return self.to_str(False)
@@ -581,6 +587,7 @@ class DamosFilter:
     memcg_path = None
     address_range = None    # DamonRegion
     damon_target_idx = None
+    scheme = None
 
     def __init__(self, filter_type, matching, memcg_path=None,
             address_range=None, damon_target_idx=None):
@@ -697,6 +704,7 @@ class Damos:
     stats = None
     tried_regions = None
     tried_bytes = None
+    context = None
 
     # for monitoring only by default
     def __init__(self, access_pattern=None, action=damos_action_stat,
@@ -714,11 +722,16 @@ class Damos:
         else:
             self.apply_interval_us = 0
         self.quotas = quotas if quotas != None else DamosQuotas()
+        self.quotas.scheme = self
         self.watermarks = (watermarks
                 if watermarks != None else DamosWatermarks())
         self.filters = filters if filters != None else []
+        for filter_ in self.filters:
+            filter_.scheme = self
         self.stats = stats if stats != None else DamosStats()
         self.tried_regions = tried_regions if tried_regions != None else []
+        for tried_region in self.tried_regions:
+            tried_region.scheme = self
         self.tried_bytes = 0
         if tried_bytes:
             self.tried_bytes = _damo_fmt_str.text_to_bytes(
@@ -816,13 +829,18 @@ class DamonCtx:
     intervals = None
     nr_regions = None
     schemes = None
+    kdamond = None
 
     def __init__(self, ops, targets, intervals, nr_regions, schemes):
         self.ops = ops
         self.targets = targets
+        for target in self.targets:
+            target.context = self
         self.intervals = intervals
         self.nr_regions = nr_regions
         self.schemes = schemes
+        for scheme in self.schemes:
+            scheme.context = self
 
     def to_str(self, raw):
         lines = ['ops: %s' % self.ops]
@@ -879,6 +897,8 @@ class Kdamond:
         self.state = state
         self.pid = pid
         self.contexts = contexts
+        for ctx in self.contexts:
+            ctx.kdamond = self
 
     def summary_str(self):
         return 'state: %s, pid: %s' % (self.state, self.pid)
