@@ -16,7 +16,7 @@ import _damon_records
 class DataForCleanup:
     kdamonds_idxs = None
     orig_kdamonds = None
-    perf_pipe = None
+    record_handle = None
 
 data_for_cleanup = DataForCleanup()
 
@@ -33,8 +33,8 @@ def cleanup_exit(exit_code):
         if err:
             print('failed restoring previous kdamonds setup (%s)' % err)
 
-    if data_for_cleanup.perf_pipe:
-        _damon_records.stop_monitoring_record(data_for_cleanup.perf_pipe)
+    if data_for_cleanup.record_handle:
+        _damon_records.stop_monitoring_record(data_for_cleanup.record_handle)
 
     exit(exit_code)
 
@@ -180,7 +180,7 @@ def main(args=None):
     else:
         tracepoint = _damon_records.perf_event_damos_before_apply
 
-    data_for_cleanup.perf_pipe = _damon_records.start_monitoring_record(
+    data_for_cleanup.record_handle = _damon_records.start_monitoring_record(
             tracepoint, args.out, args.output_type, args.output_permission,
             monitoring_intervals)
     print('Press Ctrl+C to stop')
