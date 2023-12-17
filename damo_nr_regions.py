@@ -35,7 +35,7 @@ def main(args=None):
     if args.sortby == 'time':
         nr_regions_sort = False
 
-    records, err = _damon_records.parse_records_file(file_path)
+    records, err = _damon_records.get_records(record_file=file_path)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))

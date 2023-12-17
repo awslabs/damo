@@ -27,7 +27,7 @@ def main(args=None):
     if not args.output_file:
         args.output_file = args.record_file
 
-    records, err = _damon_records.parse_records_file(args.record_file, None)
+    records, err = _damon_records.get_records(record_file=args.record_file)
     if err != None:
         print('parsing record file failed (%s)' % err)
         exit(1)

@@ -87,7 +87,7 @@ def main(args=None):
         print('input file (%s) is not exist' % file_path)
         exit(1)
 
-    records, err = _damon_records.parse_records_file(file_path)
+    records, err = _damon_records.get_records(record_file=file_path)
     if err:
         print('parsing damon result file (%s) failed (%s)' %
                 (file_path, err))

@@ -68,7 +68,7 @@ def main(args=None):
                 print('wrong boundary input %s' % boundary)
             regions_boundary.append(parsed_boundary)
 
-    records, err = _damon_records.parse_records_file(args.input)
+    records, err = _damon_records.get_records(record_file=args.input)
     if err != None:
         print('parsing failed (%s)' % err)
         exit(1)
