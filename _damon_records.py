@@ -500,7 +500,21 @@ def update_records_file(file_path, file_format, file_permission=None,
 
 # for recording
 
-record_requests = {}
+class RecordingHandle:
+    file_path = None
+    file_format = None
+    file_permission = None
+    monitoring_intervals = None
+    perf_pipe = None
+
+    def __init__(self, file_path, file_format, file_permission,
+            monitoring_intervals, perf_pipe):
+        self.file_path = file_path
+        self.file_format = file_format
+        self.file_permission = file_permission
+        self.monitoring_intervals = monitoring_intervals
+        self.perf_pipe = perf_pipe
+
 '''
 Start recording DAMON's monitoring results using perf.
 
@@ -511,29 +525,26 @@ def start_monitoring_record(tracepoint, file_path, file_format,
         file_permission, monitoring_intervals):
     pipe = subprocess.Popen(
             [PERF, 'record', '-a', '-e', tracepoint, '-o', file_path])
-    record_requests[pipe] = [file_path, file_format, file_permission,
-            monitoring_intervals]
-    return pipe
+    return RecordingHandle(file_path, file_format, file_permission,
+            monitoring_intervals, pipe)
 
-def stop_monitoring_record(perf_pipe):
-    file_path, file_format, file_permission = record_requests[perf_pipe][:3]
-    monitoring_intervals = record_requests[perf_pipe][3]
+def stop_monitoring_record(handle):
     try:
-        perf_pipe.send_signal(signal.SIGINT)
-        perf_pipe.wait()
+        handle.perf_pipe.send_signal(signal.SIGINT)
+        handle.perf_pipe.wait()
     except:
         # perf might already finished
         pass
 
-    if file_format == file_type_perf_data:
-        os.chmod(file_path, file_permission)
+    if handle.file_format == file_type_perf_data:
+        os.chmod(handle.file_path, handle.file_permission)
         return
 
-    err = update_records_file(file_path, file_format, file_permission,
-            monitoring_intervals)
+    err = update_records_file(handle.file_path, handle.file_format,
+            handle.file_permission, handle.monitoring_intervals)
     if err != None:
         print('converting format from perf_data to %s failed (%s)' %
-                (file_format, err))
+                (handle.file_format, err))
 
 # for snapshot
 
