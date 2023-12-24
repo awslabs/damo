@@ -88,6 +88,8 @@ def set_argparser(parser):
     parser.add_argument('--monitor_region', type=int, metavar='<phy addr>',
             nargs=2, default=[None] * 2,
             help='start and end addresses of the target memory region')
+    parser.add_argument('--skip_anon', action='store_true',
+            help='skip reclaiming anonymous pages')
 
 def main(args=None):
     if not args:
@@ -116,6 +118,7 @@ def main(args=None):
     set_param('max_nr_regions', args.nr_regions[1])
     set_param('monitor_region_start', args.monitor_region[0])
     set_param('monitor_region_end', args.monitor_region[1])
+    set_param('skip_anon', 'Y' if args.skip_anon else 'N')
 
     darc_enable(args.action == 'enable')
 
