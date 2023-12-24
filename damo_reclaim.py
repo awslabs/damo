@@ -18,7 +18,7 @@ darc_essential_params = ['kdamond_pid', 'enabled', 'min_age', 'quota_ms',
 
 # parameters that introduced after the initial release
 darc_optional_params = ['nr_reclaim_tried_regions', 'nr_reclaimed_regions',
-        'bytes_reclaim_tried_regions', 'bytes_reclaimed_regions']
+        'bytes_reclaim_tried_regions', 'bytes_reclaimed_regions', 'skip_anon']
 
 def chk_darc_sysfs():
     if not os.path.isdir(darc_params_dir):
