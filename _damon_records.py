@@ -518,17 +518,17 @@ class RecordingHandle:
 '''
 Start recording DAMON's monitoring results using perf.
 
-Returns pipe for the perf.  The pipe should be passed to
-stop_monitoring_record() later.
+Returns pipe for the perf.  The pipe should be passed to finish_recording()
+later.
 '''
-def start_monitoring_record(tracepoint, file_path, file_format,
+def start_recording(tracepoint, file_path, file_format,
         file_permission, monitoring_intervals):
     pipe = subprocess.Popen(
             [PERF, 'record', '-a', '-e', tracepoint, '-o', file_path])
     return RecordingHandle(file_path, file_format, file_permission,
             monitoring_intervals, pipe)
 
-def stop_monitoring_record(handle):
+def finish_recording(handle):
     try:
         handle.perf_pipe.send_signal(signal.SIGINT)
         handle.perf_pipe.wait()
