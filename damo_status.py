@@ -13,7 +13,7 @@ import _damo_fmt_str
 import _damon
 import _damon_args
 
-def pr_damon_prameters(json_format, raw_nr):
+def pr_damon_parameters(json_format, raw_nr):
     kdamonds = _damon.current_kdamonds()
     for k in kdamonds:
         for c in k.contexts:
@@ -108,7 +108,7 @@ def main(args=None):
     err = _damon.read_feature_supports_file()
 
     if args.damon_params:
-        return pr_damon_prameters(args.json, args.raw)
+        return pr_damon_parameters(args.json, args.raw)
 
     if args.kdamonds_summary:
         return pr_kdamonds_summary(args.json, args.raw)
