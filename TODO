@@ -1,9 +1,11 @@
 - Test --numa_node 0 case
-- Support rss recording
+- Support profiling
+  - Support rss recording and reporting wss/rss
+  - Support flamegraph-wss-heatmap visualization
 - Support 'cleanup': echo 0 > nr_kdamonds
 - Implement histogram stat regions output
 - Deprecate old features
-  - Deprecate translate_damos (schedule noticed for 2023-Q4)
+  - Deprecate translate_damos (done.)
   - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
   - Deprecate v1-v3 schemes (done.  necessary code moved to _damon_deprecated)
   - Deprecate python2 support (done.  code moved to _damon_deprecated)
@@ -12,9 +14,6 @@
   - Deprecate old scheme usages in tests
   - Deprecate DAMON results record binary format (done.  code moved to
     _damon_deprecated)
-- damo status features implementation
-  - specify target to show
-  - update only as needed
 - damo show features implementation
   - support target damos filter
   - time based filtering
@@ -24,3 +23,4 @@
 - Test DAMOS interval
 - Test quota goals
 - Handle quota goals tuning error / invalid inputs better
+- Get sysfs/debugfs mount point from /proc/mounts file
