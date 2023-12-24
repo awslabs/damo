@@ -27,11 +27,11 @@ Getting Started
 Follow below instructions and commands to monitor and visualize the access
 pattern of your workload.
 
-    $ # ensure your kernel is built with CONFIG_DAMON_*=y
-    $ # install from PyPI, or use your distribution's package manager
+    $ # ensure DAMON is enabled on your kernel
+    $ # install damo from PyPI, or use your distribution's package manager
     $ sudo pip3 install damo
     $ sudo damo record $(pidof <your workload>)
-    $ damo report heats --heatmap stdout --stdout_heatmap_color emotion
+    $ sudo damo report heats --heatmap stdout --stdout_heatmap_color emotion
 
 The last command will show the access pattern of your workload, like below:
 
@@ -42,8 +42,8 @@ The last command will show the access pattern of your workload, like below:
 FAQs
 ====
 
-How can I install a kernel that is built with `CONFIG_DAMON_*=y`?
------------------------------------------------------------------
+How can I ensure DAMON is enabled on my kernel?
+-----------------------------------------------
 
 Please refer to 'Install'
 [section](https://sjp38.github.io/post/damon/#install) of the project webpage.
@@ -55,8 +55,8 @@ The below sections provide quick introductions for `damo`'s major features.
 For more detailed usage, please refer to [USAGE.md](USAGE.md) file.
 
 
-What does the version number mean?
-----------------------------------
+What does the version numbers mean?
+-----------------------------------
 
 Nothing at all but indicate which version is more fresh.  A higher version
 number means it is more recently released.
@@ -86,8 +86,8 @@ Why some subcommands are not documented on [USAGE.md](USAGE.md) file?
 Only sufficiently stabilized features are documented there.  In other words,
 any feature that not documented on [USAGE.md](USAGE.md) are in experimental
 stage.  Such experimental features could be deprecated and removed without any
-notice and grace periods.  The documented features could also be deprecated, but
-those will provide some notification and grace periods.
+notice and grace periods.  The documented features could also be deprecated,
+but those will provide some notification and grace periods.
 
 
 Snapshot Data Access Pattern
