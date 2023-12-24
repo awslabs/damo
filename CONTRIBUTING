@@ -22,22 +22,21 @@ Testing First
 -------------
 
 If you want to participate in the development but are unsure what to do first,
-you could consider running DAMON tests suite
-(https://github.com/awslabs/damon-tests) on your system.  It might reveal some
-issues in DAMO or DAMON to you.
-
-If you have more interest in development of DAMO itself than DAMON, you could
-consider running only DAMO tests on your system.  You can run the tests via
-below command from the root of DAMO.
+you could consider running DAMO tests on your system.  It might reveal some
+issues in DAMO.  You could also contribute more tests.  You can run the tests
+via below command from the root of DAMO.
 
     $ sudo ./tests/run.sh
 
-It might reveal some issues in DAMO to you.
+If you want to run wider range of tests, or have interests in not only DAMO but
+also DAMON, you could also run DAMON tests suite
+(https://github.com/awslabs/damon-tests) on your system.  It might reveal some
+issues in DAMO or DAMON.
 
 TODO list
 ---------
 
-There is a list of times that need to be done in 'TODO' file of this repo.  If
+There is a list of todo items for DAMO in 'TODO' file of this repo.  If
 you don't have specific task to do at the moment, you could consider finding
 one from the file.  The list is not well managed at the moment, and the items
 may not well explained.  Please feel free to reach out to the original author
