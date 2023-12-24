@@ -24,3 +24,9 @@
 - Test quota goals
 - Handle quota goals tuning error / invalid inputs better
 - Get sysfs/debugfs mount point from /proc/mounts file
+- Re-write sysfs/debugfs without features detection
+
+Current sysfs/debugfs constructs every file i/o at once and submit it to
+_damo_fs.  Since the whole set of i/o operations should success, those require
+features detection, which makes damo stateful.  Rewrite it to do i/o one by one
+and handle unsupported features on the fly.
