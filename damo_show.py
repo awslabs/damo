@@ -435,7 +435,7 @@ def pr_records(args, records):
         _damo_print.pr_with_pager_if_needed(
                 json.dumps([r.to_kvpairs(args.raw_number) for r in records],
                            indent=4))
-        exit(0)
+        return
 
     set_formats(args, records)
     sorted_access_patterns = SortedAccessPatterns(records)
