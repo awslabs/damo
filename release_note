@@ -1,6 +1,10 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v2.1.4
+- 'damo show, damo report raw': Use a pager if the output is longer than the
+  terminal
+
 v2.1.3
 - 'damo reclaim': Support 'skip_anon'
 - Cleanup code and documents
