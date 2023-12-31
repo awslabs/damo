@@ -449,7 +449,7 @@ def pr_with_pager_if_needed(text):
 
 def pr_records(args, records):
     if args.json:
-        print(json.dumps([r.to_kvpairs(args.raw_number)
+        pr_with_pager_if_needed(json.dumps([r.to_kvpairs(args.raw_number)
             for r in records], indent=4))
         exit(0)
 
