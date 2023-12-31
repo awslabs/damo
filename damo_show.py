@@ -506,7 +506,7 @@ def pr_records(args, records):
                     args.min_chars_for, None, None, None, record,
                     args.raw_number, region_box_args))
     outputs = [o for o in outputs if o is not None]
-    print('\n'.join(outputs))
+    pr_with_pager_if_needed('\n'.join(outputs))
 
 def convert_addr_ranges_input(addr_ranges_input):
     try:
