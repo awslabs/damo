@@ -24,6 +24,7 @@
 - Test quota goals
 - Handle quota goals tuning error / invalid inputs better
 - Get sysfs/debugfs mount point from /proc/mounts file
+- damo show: use pager if the output is too long
 - Re-write sysfs/debugfs without features detection
 
 Current sysfs/debugfs constructs every file i/o at once and submit it to
