@@ -647,6 +647,10 @@ def main(args=None):
         print(err)
         exit(1)
 
+    if len([r for r in records if r.intervals is None]) != 0:
+        print('some records lack the intervals information')
+        exit(1)
+
     for record in records:
         try:
             pr_records(args, records)
