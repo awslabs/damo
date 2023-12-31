@@ -6,6 +6,7 @@ import os
 import sys
 
 import _damo_fmt_str
+import _damo_print
 import _damon_records
 
 def filter_snapshots(records, start_time_sec, end_time_sec):
@@ -24,12 +25,14 @@ def filter_snapshots(records, start_time_sec, end_time_sec):
         record.snapshots = filtered_snapshots
 
 def pr_records(args, records):
+    lines = []
     if args.duration:
         filter_snapshots(records, args.duration[0], args.duration[1])
 
     if args.json:
-        print(json.dumps([r.to_kvpairs(args.raw_number)
-            for r in records], indent=4))
+        _damo_print.pr_with_pager_if_needed(
+                json.dumps([r.to_kvpairs(args.raw_number) for r in records],
+                           indent=4))
         exit(0)
 
     for record in records:
