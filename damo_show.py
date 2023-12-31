@@ -3,12 +3,10 @@
 import argparse
 import json
 import math
-import os
-import subprocess
-import tempfile
 
 import _damo_ascii_color
 import _damo_fmt_str
+import _damo_print
 import _damon
 import _damon_args
 import _damon_records
@@ -432,25 +430,11 @@ def sorted_regions(regions, sort_fields, sort_dsc_keys):
             regions = sorted(regions, key=lambda r: r.size(), reverse=dsc)
     return regions
 
-def pr_with_pager_if_needed(text):
-    try:
-        nr_terminal_lines = os.get_terminal_size().lines
-    except:
-        nr_terminal_lines = 50
-    if text.count('\n') <= nr_terminal_lines:
-        print(text)
-        return
-
-    fd, tmp_path = tempfile.mkstemp(prefix='damo_show-')
-    with open(tmp_path, 'w') as f:
-        f.write(text)
-    subprocess.call(['less', '--RAW-CONTROL-CHARS', '--no-init', tmp_path])
-    os.remove(tmp_path)
-
 def pr_records(args, records):
     if args.json:
-        pr_with_pager_if_needed(json.dumps([r.to_kvpairs(args.raw_number)
-            for r in records], indent=4))
+        _damo_print.pr_with_pager_if_needed(
+                json.dumps([r.to_kvpairs(args.raw_number) for r in records],
+                           indent=4))
         exit(0)
 
     set_formats(args, records)
@@ -506,7 +490,7 @@ def pr_records(args, records):
                     args.min_chars_for, None, None, None, record,
                     args.raw_number, region_box_args))
     outputs = [o for o in outputs if o is not None]
-    pr_with_pager_if_needed('\n'.join(outputs))
+    _damo_print.pr_with_pager_if_needed('\n'.join(outputs))
 
 def convert_addr_ranges_input(addr_ranges_input):
     try:
