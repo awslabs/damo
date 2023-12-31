@@ -3,6 +3,9 @@
 import argparse
 import json
 import math
+import os
+import subprocess
+import tempfile
 
 import _damo_ascii_color
 import _damo_fmt_str
@@ -428,6 +431,21 @@ def sorted_regions(regions, sort_fields, sort_dsc_keys):
                     'size' in sort_dsc_keys)
             regions = sorted(regions, key=lambda r: r.size(), reverse=dsc)
     return regions
+
+def pr_with_pager_if_needed(text):
+    try:
+        nr_terminal_lines = os.get_terminal_size().lines
+    except:
+        nr_terminal_lines = 50
+    if text.count('\n') <= nr_terminal_lines:
+        print(text)
+        return
+
+    fd, tmp_path = tempfile.mkstemp(prefix='damo_show-')
+    with open(tmp_path, 'w') as f:
+        f.write(text)
+    subprocess.call(['less', '--no-init', tmp_path])
+    os.remove(tmp_path)
 
 def pr_records(args, records):
     if args.json:
