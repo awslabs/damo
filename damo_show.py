@@ -444,7 +444,7 @@ def pr_with_pager_if_needed(text):
     fd, tmp_path = tempfile.mkstemp(prefix='damo_show-')
     with open(tmp_path, 'w') as f:
         f.write(text)
-    subprocess.call(['less', '--no-init', tmp_path])
+    subprocess.call(['less', '--RAW-CONTROL-CHARS', '--no-init', tmp_path])
     os.remove(tmp_path)
 
 def pr_records(args, records):
