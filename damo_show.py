@@ -374,12 +374,12 @@ def format_template(template, formatters, min_chars, index, region, snapshot,
     template = template.replace('\\n', '\n')
     return template
 
-def format_pr(template, formatters, min_chars, index, region, snapshot, record,
-        raw, region_box_args):
+def format_output(template, formatters, min_chars, index, region, snapshot,
+                  record, raw, region_box_args):
     if template == '':
-        return
-    print(format_template(template, formatters, min_chars, index, region,
-        snapshot, record, raw, region_box_args))
+        return None
+    return format_template(template, formatters, min_chars, index, region,
+        snapshot, record, raw, region_box_args)
 
 def set_formats(args, records):
     if args.format_record_head == None:
@@ -466,34 +466,47 @@ def pr_records(args, records):
                 args.region_box_min_max_height,
                 args.region_box_scales[2] == 'log'))
 
+    outputs = []
     for record in records:
-        format_pr(args.format_record_head, record_formatters,
-                args.min_chars_for, None, None, None, record, args.raw_number,
-                region_box_args)
+        outputs.append(
+                format_output(
+                    args.format_record_head, record_formatters,
+                    args.min_chars_for, None, None, None, record,
+                    args.raw_number, region_box_args))
         snapshots = record.snapshots
 
         for sidx, snapshot in enumerate(snapshots):
-            format_pr(args.format_snapshot_head, snapshot_formatters,
-                    args.min_chars_for, None, None, snapshot, record,
-                    args.raw_number, region_box_args)
+            outputs.append(
+                    format_output(
+                        args.format_snapshot_head, snapshot_formatters,
+                        args.min_chars_for, None, None, snapshot, record,
+                        args.raw_number, region_box_args))
             for r in snapshot.regions:
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
             for idx, r in enumerate(
                     sorted_regions(snapshot.regions, args.sort_regions_by,
                         args.sort_regions_dsc)):
-                format_pr(args.format_region, region_formatters,
-                        args.min_chars_for, idx, r, snapshot, record,
-                        args.raw_number, region_box_args)
-            format_pr(args.format_snapshot_tail, snapshot_formatters,
-                    args.min_chars_for, None, None, snapshot, record,
-                    args.raw_number, region_box_args)
+                outputs.append(
+                        format_output(
+                            args.format_region, region_formatters,
+                            args.min_chars_for, idx, r, snapshot, record,
+                            args.raw_number, region_box_args))
+            outputs.append(
+                    format_output(
+                        args.format_snapshot_tail, snapshot_formatters,
+                        args.min_chars_for, None, None, snapshot, record,
+                        args.raw_number, region_box_args))
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
-        format_pr(args.format_record_tail, record_formatters,
-                args.min_chars_for, None, None, None, record, args.raw_number,
-                region_box_args)
+        outputs.append(
+                format_output(
+                    args.format_record_tail, record_formatters,
+                    args.min_chars_for, None, None, None, record,
+                    args.raw_number, region_box_args))
+    outputs = [o for o in outputs if o is not None]
+    print('\n'.join(outputs))
 
 def convert_addr_ranges_input(addr_ranges_input):
     try:
