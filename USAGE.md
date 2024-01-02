@@ -41,7 +41,7 @@ Basic Concepts of DAMON
 of `damo` rather than simple "Getting Started" tutorial, you should first
 understand the concepts of DAMON.  There are a number of links to resources
 including DAMON introduction talks and publications at the project
-[site](https://damonitor.githubio).  The official design
+[site](https://damonitor.github.io).  The official design
 [document](https://docs.kernel.org/mm/damon/design.html) is recommended among
 those, since we will try to keep it up to date always, and appropriate for
 DAMON users.
@@ -146,7 +146,7 @@ target region is maintained rather than dynamically updated like the virtual
 memory address spaces monitoring case.
 
 Users can specify full DAMON parameters at once in json format, by passing the
-json string of a path to a file containing the json string.  Refer to "Full
+json string or a path to a file containing the json string.  Refer to "Full
 DAMON Parameters Update" section below for the detail of the concept, and
 "`damo fmt_json`" section below for the format of the json input.
 
@@ -230,7 +230,7 @@ will be non-zero.
 
 `damo stop` stops the running DAMON.
 
-The command exits immediately after stopping DAMON.  It exists with exit value
+The command exits immediately after stopping DAMON.  It exits with exit value
 `0` if it successfully terminated DAMON.  Otherwise, the exit value will be
 non-zero.
 
@@ -483,9 +483,9 @@ in bytes and the observed access frequency.
 
 Users can convert this text output into a heatmap image (represents z-axis
 values with colors) or other 3D representations using various tools such as
-'gnuplot'.  For more convenience, `heats` sub-subcommand provides the 'gnuplot'
+`gnuplot`.  For more convenience, `heats` sub-subcommand provides the `gnuplot`
 based heatmap image creation.  For this, `--heatmap` option can be used.  Also,
-note that because it uses 'gnuplot' internally, it will fail if 'gnuplot' is
+note that because it uses `gnuplot` internally, it will fail if `gnuplot` is
 not installed on your system.  For example:
 
     $ ./damo report heats --heatmap heatmap.png
@@ -559,7 +559,7 @@ cannot show when the access spikes made.  Users can specify the resolution of
 the distribution (``--range``).  By giving more fine resolution, the short
 duration spikes could be more easily found.
 
-Similar to that of ``heats --heatmap``, it also supports 'gnuplot' based simple
+Similar to that of ``heats --heatmap``, it also supports `gnuplot` based simple
 visualization of the distribution via ``--plot`` option.
 
 Miscelleneous Helper Commands
