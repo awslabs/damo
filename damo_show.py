@@ -492,7 +492,7 @@ def pr_records(args, records):
     outputs = [o for o in outputs if o is not None]
     _damo_print.pr_with_pager_if_needed('\n'.join(outputs))
 
-def convert_addr_ranges_input(addr_ranges_input):
+def parse_sort_addr_ranges_input(addr_ranges_input):
     try:
         ranges = [[_damo_fmt_str.text_to_bytes(start),
             _damo_fmt_str.text_to_bytes(end)]
@@ -631,7 +631,7 @@ def main(args=None):
 
     addr_range = None
     if args.address != None:
-        addr_range, err = convert_addr_ranges_input(args.address)
+        addr_range, err = parse_sort_addr_ranges_input(args.address)
         if err != None:
             print('wrong --address input (%s)' % err)
             exit(1)
