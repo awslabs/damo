@@ -31,3 +31,7 @@ Current sysfs/debugfs constructs every file i/o at once and submit it to
 _damo_fs.  Since the whole set of i/o operations should success, those require
 features detection, which makes damo stateful.  Rewrite it to do i/o one by one
 and handle unsupported features on the fly.
+
+- damo reclaim: add a command for basic investigation
+  - helps ensure DAMON_RECLAIM is working as expected
+  - helps reporting issue
