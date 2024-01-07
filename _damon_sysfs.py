@@ -87,13 +87,11 @@ def update_schemes_tried_bytes(kdamond_idxs):
 
 'Return error'
 def update_schemes_tried_regions(kdamond_idxs):
-    if not feature_supported('schemes_tried_regions'):
-        return 'schemes_tried_regions not supported'
     for kdamond_idx in kdamond_idxs:
         err = _damo_fs.write_file(
                 state_file_of(kdamond_idx), 'update_schemes_tried_regions')
         if err != None:
-            return err
+            return '%s (maybe schemes_tried_regions not supported?)' % err
     return None
 
 # for stage_kdamonds
