@@ -373,7 +373,7 @@ def format_template(template, formatters, min_chars, index, region, snapshot,
     return template
 
 def format_output(template, formatters, min_chars, raw, region_box_args,
-                  record, snapshot, region, index):
+                  record, snapshot=None, region=None, index=None):
     if template == '':
         return None
     return format_template(template, formatters, min_chars, index, region,
@@ -456,7 +456,7 @@ def pr_records(args, records):
                 format_output(
                     args.format_record_head, record_formatters,
                     args.min_chars_for, args.raw_number, region_box_args,
-                    record, None, None, None))
+                    record))
         snapshots = record.snapshots
 
         for sidx, snapshot in enumerate(snapshots):
@@ -464,7 +464,7 @@ def pr_records(args, records):
                     format_output(
                         args.format_snapshot_head, snapshot_formatters,
                         args.min_chars_for, args.raw_number, region_box_args,
-                        record, snapshot, None, None))
+                        record, snapshot))
             for r in snapshot.regions:
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
@@ -480,7 +480,7 @@ def pr_records(args, records):
                     format_output(
                         args.format_snapshot_tail, snapshot_formatters,
                         args.min_chars_for, args.raw_number, region_box_args,
-                        record, snapshot, None, None))
+                        record, snapshot))
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 print('')
@@ -488,7 +488,7 @@ def pr_records(args, records):
                 format_output(
                     args.format_record_tail, record_formatters,
                     args.min_chars_for, args.raw_number, region_box_args,
-                    record, None, None, None))
+                    record))
     outputs = [o for o in outputs if o is not None]
     _damo_print.pr_with_pager_if_needed('\n'.join(outputs))
 
