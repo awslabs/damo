@@ -631,6 +631,62 @@ def get_sysfs_root():
                     break
     return sysfs_root
 
+def write_filter_dir(dir_path, filter_):
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'type'), filter_.filter_type)
+    if err is not None:
+        # todo: make error message more detailed.
+        # anon/memcg are merged in 6.3-rc1
+        # addr/target are merged in 6.6-rc1
+        return err
+
+    if filter_.memcg_path is not None:
+        err = _damo_fs.write_file(
+                os.path.join(dir_path, 'memcg_path'), filter_.memcg_path)
+        if err is not None:
+            return err
+
+    if filter_.address_range is not None:
+        err = _damo_fs.write_file(
+                os.path.join(dir_path, 'addr_start'),
+                '%d' % filter_.address_range.start)
+        if err is not None:
+            return err
+
+        err = _damo_fs.write_file(
+                os.path.join(dir_path, 'addr_end'),
+                '%d' % filter_.address_range.end)
+        if err is not None:
+            return err
+
+    if filter_.damon_target_idx is not None:
+        err = _damo_fs.write_file(
+                os.path.join(dir_path, 'damon_target_idx'),
+                '%d' % filter_.damon_target_idx)
+        if err is not None:
+            return err
+
+    return _damo_fs.write_file(os.path.join(dir_path, 'matching'),
+                               'Y' if filter_.matching else 'N')
+
+def write_filters_dir(dir_path, filters):
+    # filters merged in v6.3-rc1
+    if not os.path.isdir(dir_path):
+        if len(filters) == 0:
+            return None
+        return 'the kernel is not supporting filters'
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'nr_filters'), len(filters))
+    if err is not None:
+        return err
+
+    for idx, filter_ in enumerate(filters):
+        err = write_filter_dir(os.path.join(dir_path, '%d' % idx), filter_)
+        if err is not None:
+            return err
+    return None
+
 def write_watermarks_dir(dir_path, wmarks):
     if wmarks is None:
         # TODO: ensure wmarks is not None
@@ -764,7 +820,11 @@ def write_scheme_dir(dir_path, scheme):
     if err is not None:
         return err
 
-    # filters
+    err = write_filters_dir(os.path.join(dir_path, 'filters'), scheme.filters)
+    if err is not None:
+        return err
+
+    # filter apply intervals
 
 def write_schemes_dir(dir_path, schemes):
     err = _damo_fs.write_file(
