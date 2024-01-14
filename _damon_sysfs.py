@@ -614,3 +614,63 @@ def update_supported_features():
     if orig_kdamonds != None:
         err = stage_kdamonds(orig_kdamonds)
     return err
+
+# For next version
+
+sysfs_root = None
+
+def get_sysfs_root():
+    global sysfs_root
+
+    if sysfs_root is None:
+        with open('/proc/mounts', 'r') as f:
+            for line in f:
+                dev, mount_point = line.split()[:2]
+                if dev == 'sysfs':
+                    sysfs_root = mount_point
+                    break
+    return sysfs_root
+
+def write_context_dir(dir_path, context):
+    return None
+
+def write_contexts_dir(dir_path, contexts):
+    err = _damo_fs.write_file(os.path.join(dir_path, 'nr_contexts'),
+                              '%d' % len(contexts))
+    if err is not None:
+        return err
+
+    for idx, context in enumerate(contexts):
+        err = write_context_dir(
+                os.path.join(dir_path, '%d' % idx, context))
+        if err is not None:
+            return err
+
+def write_kdamonds_dir(dir_path, kdamonds):
+    err = _damo_fs.write_file(os.path.join(dir_path, 'nr_kdamonds'),
+                              '%d' % len(kdamonds))
+    if err is not None:
+        return err
+
+    for idx, kdamond in enumerate(kdamonds):
+        err = write_contexts_dir(
+                os.path.join(dir_path, '%d' % idx, 'contexts'),
+                kdamond.contexts)
+        if err is not None:
+            return err
+
+def stage_kdamonds_v2(kdamodns):
+    """Write DAMON parameters for kdamonds to the sysfs files.
+
+    Args:
+        kdamonds: A list of _damon.Kdamond objects.
+
+    Returns:
+        None for success, an error string if failed.
+    """
+    if get_sysfs_root() is None:
+        return 'sysfs not mounted'
+
+    return write_kdamonds_dir(
+            os.path.join(get_sysfs_root(), 'kernel/mm/damon/admin/kdamonds'),
+            kdamonds)
