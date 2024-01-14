@@ -631,6 +631,69 @@ def get_sysfs_root():
                     break
     return sysfs_root
 
+def write_quota_goal_dir(dir_path, goal):
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'target_value'), goal.target_value_bp)
+    if err is not None:
+        return err
+
+    return _damo_fs.write_file(
+            os.path.join(dir_path, 'current_value'), goal.current_value_bp)
+
+def write_quota_goals_dir(dir_path, goals):
+    # goals dir has merged in 6.8-rc1
+    if not os.path.isdir(dir_path):
+        if len(goals) == 0:
+            return None
+        return 'the kernel is not supporting schemes quota goals'
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'nr_goals'), '%d' % len(goals))
+    if err is not None:
+        return err
+
+    for idx, goal in enumerate(goals):
+        err = write_quota_goal_dir(os.path.join(dir_path, '%d' % idx), goal)
+        if err is not None:
+            return err
+    return None
+
+def write_quota_weights_dir(dir_path, quotas):
+    err = _damo_fs.write_file(os.path.join(dir_path, 'sz_permil'),
+                              quotas.weight_sz_permil)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(os.path.join(dir_path, 'nr_accesses_permil'),
+                              quotas.weight_nr_accesses_permil)
+    if err is not None:
+        return err
+
+    return _damo_fs.write_file(os.path.join(dir_path, 'age_permil'),
+                              quotas.weight_age_permil)
+
+def write_quotas_dir(dir_path, quotas):
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'ms'), '%d' % quotas.time_ms)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'bytes'), '%d' % quotas.sz_bytes)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(os.path.join(dir_path, 'reset_interval_ms'),
+                              '%d' % quotas.reset_interval_ms)
+    if err is not None:
+        return err
+
+    err = write_quota_weights_dir(os.path.join(dir_path, 'weights'), quotas)
+    if err is not None:
+        return err
+
+    return write_quota_goals_dir(os.path.join(dir_path, 'goals'), quota.goals)
+
 def write_scheme_access_pattern_dir(dir_path, pattern):
     err = _damo_fs.write_file(
             os.path.join(dir_path, 'sz', 'min'), '%d' % pattern.sz_bytes[0])
@@ -669,7 +732,10 @@ def write_scheme_dir(dir_path, scheme):
     if err is not None:
         return err
 
-    # quotas
+    err = write_quotas_dir(os.path.join(dir_path, 'quotas'), scheme.quotas)
+    if err is not None:
+        return err
+
     # watermarks
     # filters
 
