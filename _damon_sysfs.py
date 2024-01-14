@@ -824,7 +824,17 @@ def write_scheme_dir(dir_path, scheme):
     if err is not None:
         return err
 
-    # filter apply intervals
+    apply_interval_file = os.path.join(dir_path, 'apply_interval_us')
+    # schemes apply interval is merged in v6.7-rc1
+    if os.path.isfile(apply_interval_file):
+        err = _damo_fs.write_file(apply_interval_file,
+                                  scheme.apply_interval_us)
+        if err is not None:
+            return err
+    else:
+        if scheme.apply_interval_us:
+            return 'the kernel is not supporting schemes apply interval'
+    return None
 
 def write_schemes_dir(dir_path, schemes):
     err = _damo_fs.write_file(
