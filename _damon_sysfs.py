@@ -631,6 +631,30 @@ def get_sysfs_root():
                     break
     return sysfs_root
 
+def write_watermarks_dir(dir_path, wmarks):
+    if wmarks is None:
+        # TODO: ensure wmarks is not None
+        return None
+    err = _damo_fs.write_file(os.path.join(dir_path, 'metric'), wamrks.metric)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'interval_us'), '%d' % wamrks.interval_us)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'high'), '%d' % wamrks.high_permil)
+    if err is not None:
+        return err
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'mid'), '%d' % wamrks.mid_permil)
+    if err is not None:
+        return err
+    return _damo_fs.write_file(
+            os.path.join(dir_path, 'low'), '%d' % wamrks.low_permil)
+
 def write_quota_goal_dir(dir_path, goal):
     err = _damo_fs.write_file(
             os.path.join(dir_path, 'target_value'), goal.target_value_bp)
@@ -639,7 +663,6 @@ def write_quota_goal_dir(dir_path, goal):
 
     return _damo_fs.write_file(
             os.path.join(dir_path, 'current_value'), goal.current_value_bp)
-
 def write_quota_goals_dir(dir_path, goals):
     # goals dir has merged in 6.8-rc1
     if not os.path.isdir(dir_path):
@@ -736,7 +759,11 @@ def write_scheme_dir(dir_path, scheme):
     if err is not None:
         return err
 
-    # watermarks
+    err = write_watermarks_dir(
+            os.path.join(dir_path, 'watermarks'), scheme.watermarks)
+    if err is not None:
+        return err
+
     # filters
 
 def write_schemes_dir(dir_path, schemes):
