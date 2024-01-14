@@ -631,8 +631,151 @@ def get_sysfs_root():
                     break
     return sysfs_root
 
-def write_context_dir(dir_path, context):
+def write_scheme_access_pattern_dir(dir_path, pattern):
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'sz', 'min'), '%d' % pattern.sz_bytes[0])
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'sz', 'max'), '%d' % pattern.sz_bytes[1])
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(os.path.join(dir_path, 'nr_accesses', 'min'),
+                              '%d' % pattern.nr_acc_min_max[0].samples)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(os.path.join(dir_path, 'nr_accesses', 'max'),
+                              '%d' % pattern.nr_acc_min_max[1].samples)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(os.path.join(dir_path, 'age', 'min'),
+                              '%d' % pattern.age_min_max[0].aggr_intervals)
+    if err is not None:
+        return err
+    return _damo_fs.write_file(os.path.join(dir_path, 'age', 'max'),
+                              '%d' % pattern.age_min_max[1].aggr_intervals)
+
+def write_scheme_dir(dir_path, scheme):
+    err = write_scheme_access_pattern_dir(
+            os.path.join(dir_path, 'access_pattern'), scheme.access_pattern)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(os.path.join(dir_path, 'action'), scheme.action)
+    if err is not None:
+        return err
+
+    # quotas
+    # watermarks
+    # filters
+
+def write_schemes_dir(dir_path, schemes):
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'nr_schemes'), '%d' % len(schemes))
+    if err is not None:
+        return err
+
+    for idx, scheme in enumerate(schemes):
+        err = write_scheme_dir(os.path.join(dir_path, '%d' % idx), scheme)
+        if err is not None:
+            return err
+
+def write_target_region_dir(dir_path, region):
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'start'), '%d' % region.start)
+    if err is not None:
+        return err
+
+    return _damo_fs.write_file(
+            os.path.join(dir_path, 'end'), '%d' % region.end)
+
+def write_target_regions_dir(dir_path, regions):
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'nr_regions'), '%d' % len(regions))
+    if err is not None:
+        return err
+
+    for idx, region in enumerate(regions):
+        err = write_target_region_dir(
+                os.path.join(dir_path, '%d' % idx), region)
+        if err is not None:
+            return err
     return None
+
+def write_target_dir(dir_path, target):
+    if target.pid is not None:
+        err = _damo_fs.write_file(
+                os.path.join(dir_path, 'pid_target'), '%s' % target.pid)
+        if err is not None:
+            return err
+
+    return write_target_regions_dir(
+            os.path.join(dir_path, 'regions'), target.regions)
+
+
+def write_targets_dir(dir_path, targets):
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'nr_targets'), '%d' % len(targets))
+    if err is not None:
+        return err
+
+    for idx, target in enumerate(targets):
+        err = write_target_dir(os.path.join(dir_path, '%d' % idx), target)
+        if err is not None:
+            return err
+    return None
+
+def write_monitoring_attrs_dir(dir_path, context):
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'intervals', 'sample_us'),
+            '%d' % context.intervals.sample)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'intervals', 'aggr_us'),
+            '%d' % context.intervals.aggr)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'intervals', 'update_us'),
+            '%d' % context.intervals.ops_update)
+    if err is not None:
+        return err
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'nr_regions', 'min'),
+            '%d' % context.nr_regions.minimum)
+    if err is not None:
+        return err
+
+    return _damo_fs.write_file(
+            os.path.join(dir_path, 'nr_regions', 'max'),
+            '%d' % context.nr_regions.maximum)
+
+def write_context_dir(dir_path, context):
+    err = _damo_fs.write_file(os.path.join(dir_path, 'operations'),
+                              context.ops)
+    if err is not None:
+        return err
+
+    err = write_monitoring_attrs_dir(
+            os.path.join(dir_path, 'monitoring_attrs'), context)
+    if err is not None:
+        return err
+
+    err = write_targets_dir(
+            os.path.join(dir_path, 'targets'), context.targets)
+    if err is not None:
+        return err
+
+    return write_schemes_dir(
+            os.path.join(dir_path, 'schemes'), context.schemes)
 
 def write_contexts_dir(dir_path, contexts):
     err = _damo_fs.write_file(os.path.join(dir_path, 'nr_contexts'),
