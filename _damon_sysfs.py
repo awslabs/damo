@@ -956,17 +956,17 @@ def write_contexts_dir(dir_path, contexts):
         if err is not None:
             return err
 
-def ensure_nr_greater_or_euqal(file_path, nr):
+def ensure_nr_file_val(file_path, nr):
     content, err = _damo_fs.read_file(file_path)
     if err is not None:
         return err
     current_nr = int(content)
-    if current_nr >= nr:
+    if current_nr == nr:
         return None
     return _damo_fs.write_file(file_path, '%d' % nr)
 
 def write_kdamonds_dir(dir_path, kdamonds):
-    err = ensure_nr_greater_or_euqal(
+    err = ensure_nr_file_val(
             os.path.join(dir_path, 'nr_kdamonds'), len(kdamonds))
     if err:
         return err
