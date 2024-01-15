@@ -957,10 +957,15 @@ def write_contexts_dir(dir_path, contexts):
             return err
 
 def write_kdamonds_dir(dir_path, kdamonds):
-    err = _damo_fs.write_file(os.path.join(dir_path, 'nr_kdamonds'),
-                              '%d' % len(kdamonds))
+    nr_kdamonds_path = os.path.join(dir_path, 'nr_kdamonds')
+    content, err = _damo_fs.read_file(nr_kdamonds_path)
     if err is not None:
         return err
+    nr_kdamonds = int(content)
+    if nr_kdamonds < len(kdamonds):
+        err = _damo_fs.write_file(nr_kdamonds_path, '%d' % len(kdamonds))
+        if err is not None:
+            return err
 
     for idx, kdamond in enumerate(kdamonds):
         err = write_contexts_dir(
