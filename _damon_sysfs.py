@@ -956,18 +956,18 @@ def write_contexts_dir(dir_path, contexts):
         if err is not None:
             return err
 
-def ensure_nr_file_val(file_path, nr):
+def ensure_nr_file_for(file_path, list_):
     content, err = _damo_fs.read_file(file_path)
     if err is not None:
         return err
     current_nr = int(content)
-    if current_nr == nr:
+    desired_nr = len(list_)
+    if current_nr == desired_nr:
         return None
-    return _damo_fs.write_file(file_path, '%d' % nr)
+    return _damo_fs.write_file(file_path, '%d' % desired_nr)
 
 def write_kdamonds_dir(dir_path, kdamonds):
-    err = ensure_nr_file_val(
-            os.path.join(dir_path, 'nr_kdamonds'), len(kdamonds))
+    err = ensure_nr_file_for(os.path.join(dir_path, 'nr_kdamonds'), kdamonds)
     if err:
         return err
 
