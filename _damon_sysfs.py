@@ -669,6 +669,16 @@ def write_filter_dir(dir_path, filter_):
     return _damo_fs.write_file(os.path.join(dir_path, 'matching'),
                                'Y' if filter_.matching else 'N')
 
+def ensure_nr_file_for(file_path, list_):
+    content, err = _damo_fs.read_file(file_path)
+    if err is not None:
+        return err
+    current_nr = int(content)
+    desired_nr = len(list_)
+    if current_nr == desired_nr:
+        return None
+    return _damo_fs.write_file(file_path, '%d' % desired_nr)
+
 def write_filters_dir(dir_path, filters):
     # filters merged in v6.3-rc1
     if not os.path.isdir(dir_path):
@@ -676,8 +686,7 @@ def write_filters_dir(dir_path, filters):
             return None
         return 'the kernel is not supporting filters'
 
-    err = _damo_fs.write_file(
-            os.path.join(dir_path, 'nr_filters'), '%d' % len(filters))
+    err = ensure_nr_file_for(os.path.join(dir_path, 'nr_filters'), filters)
     if err is not None:
         return err
 
@@ -726,8 +735,7 @@ def write_quota_goals_dir(dir_path, goals):
             return None
         return 'the kernel is not supporting schemes quota goals'
 
-    err = _damo_fs.write_file(
-            os.path.join(dir_path, 'nr_goals'), '%d' % len(goals))
+    err = ensure_nr_file_for(os.path.join(dir_path, 'nr_goals'), goals)
     if err is not None:
         return err
 
@@ -837,8 +845,7 @@ def write_scheme_dir(dir_path, scheme):
     return None
 
 def write_schemes_dir(dir_path, schemes):
-    err = _damo_fs.write_file(
-            os.path.join(dir_path, 'nr_schemes'), '%d' % len(schemes))
+    err = ensure_nr_file_for(os.path.join(dir_path, 'nr_schemes'), schemes)
     if err is not None:
         return err
 
@@ -857,8 +864,7 @@ def write_target_region_dir(dir_path, region):
             os.path.join(dir_path, 'end'), '%d' % region.end)
 
 def write_target_regions_dir(dir_path, regions):
-    err = _damo_fs.write_file(
-            os.path.join(dir_path, 'nr_regions'), '%d' % len(regions))
+    err = ensure_nr_file_for(os.path.join(dir_path, 'nr_regions'), regions)
     if err is not None:
         return err
 
@@ -881,8 +887,7 @@ def write_target_dir(dir_path, target):
 
 
 def write_targets_dir(dir_path, targets):
-    err = _damo_fs.write_file(
-            os.path.join(dir_path, 'nr_targets'), '%d' % len(targets))
+    err = ensure_nr_file_for(os.path.join(dir_path, 'nr_targets'), targets)
     if err is not None:
         return err
 
@@ -945,8 +950,7 @@ def write_context_dir(dir_path, context):
             os.path.join(dir_path, 'schemes'), context.schemes)
 
 def write_contexts_dir(dir_path, contexts):
-    err = _damo_fs.write_file(os.path.join(dir_path, 'nr_contexts'),
-                              '%d' % len(contexts))
+    err = ensure_nr_file_for(os.path.join(dir_path, 'nr_contexts'), contexts)
     if err is not None:
         return err
 
@@ -955,16 +959,6 @@ def write_contexts_dir(dir_path, contexts):
                 os.path.join(dir_path, '%d' % idx), context)
         if err is not None:
             return err
-
-def ensure_nr_file_for(file_path, list_):
-    content, err = _damo_fs.read_file(file_path)
-    if err is not None:
-        return err
-    current_nr = int(content)
-    desired_nr = len(list_)
-    if current_nr == desired_nr:
-        return None
-    return _damo_fs.write_file(file_path, '%d' % desired_nr)
 
 def write_kdamonds_dir(dir_path, kdamonds):
     err = ensure_nr_file_for(os.path.join(dir_path, 'nr_kdamonds'), kdamonds)
