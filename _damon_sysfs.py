@@ -330,7 +330,7 @@ def ensure_dirs_populated_for(kdamonds):
         print('sysfs dirs population failed (%s)' % e)
         exit(1)
 
-def stage_kdamonds(kdamonds):
+def stage_kdamonds_v1(kdamonds):
     if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
         return 'currently only <=one damon_ctx is supported'
     ensure_dirs_populated_for(kdamonds)
@@ -972,7 +972,7 @@ def write_kdamonds_dir(dir_path, kdamonds):
         if err is not None:
             return err
 
-def stage_kdamonds_v2(kdamonds):
+def stage_kdamonds(kdamonds):
     """Write DAMON parameters for kdamonds to the sysfs files.
 
     Args:
