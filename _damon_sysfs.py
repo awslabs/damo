@@ -677,7 +677,7 @@ def write_filters_dir(dir_path, filters):
         return 'the kernel is not supporting filters'
 
     err = _damo_fs.write_file(
-            os.path.join(dir_path, 'nr_filters'), len(filters))
+            os.path.join(dir_path, 'nr_filters'), '%d' % len(filters))
     if err is not None:
         return err
 
@@ -691,25 +691,25 @@ def write_watermarks_dir(dir_path, wmarks):
     if wmarks is None:
         # TODO: ensure wmarks is not None
         return None
-    err = _damo_fs.write_file(os.path.join(dir_path, 'metric'), wamrks.metric)
+    err = _damo_fs.write_file(os.path.join(dir_path, 'metric'), wmarks.metric)
     if err is not None:
         return err
 
     err = _damo_fs.write_file(
-            os.path.join(dir_path, 'interval_us'), '%d' % wamrks.interval_us)
+            os.path.join(dir_path, 'interval_us'), '%d' % wmarks.interval_us)
     if err is not None:
         return err
 
     err = _damo_fs.write_file(
-            os.path.join(dir_path, 'high'), '%d' % wamrks.high_permil)
+            os.path.join(dir_path, 'high'), '%d' % wmarks.high_permil)
     if err is not None:
         return err
     err = _damo_fs.write_file(
-            os.path.join(dir_path, 'mid'), '%d' % wamrks.mid_permil)
+            os.path.join(dir_path, 'mid'), '%d' % wmarks.mid_permil)
     if err is not None:
         return err
     return _damo_fs.write_file(
-            os.path.join(dir_path, 'low'), '%d' % wamrks.low_permil)
+            os.path.join(dir_path, 'low'), '%d' % wmarks.low_permil)
 
 def write_quota_goal_dir(dir_path, goal):
     err = _damo_fs.write_file(
@@ -739,17 +739,17 @@ def write_quota_goals_dir(dir_path, goals):
 
 def write_quota_weights_dir(dir_path, quotas):
     err = _damo_fs.write_file(os.path.join(dir_path, 'sz_permil'),
-                              quotas.weight_sz_permil)
+                              '%d' % quotas.weight_sz_permil)
     if err is not None:
         return err
 
     err = _damo_fs.write_file(os.path.join(dir_path, 'nr_accesses_permil'),
-                              quotas.weight_nr_accesses_permil)
+                              '%d' % quotas.weight_nr_accesses_permil)
     if err is not None:
         return err
 
     return _damo_fs.write_file(os.path.join(dir_path, 'age_permil'),
-                              quotas.weight_age_permil)
+                              '%d' % quotas.weight_age_permil)
 
 def write_quotas_dir(dir_path, quotas):
     err = _damo_fs.write_file(
@@ -771,7 +771,7 @@ def write_quotas_dir(dir_path, quotas):
     if err is not None:
         return err
 
-    return write_quota_goals_dir(os.path.join(dir_path, 'goals'), quota.goals)
+    return write_quota_goals_dir(os.path.join(dir_path, 'goals'), quotas.goals)
 
 def write_scheme_access_pattern_dir(dir_path, pattern):
     err = _damo_fs.write_file(
@@ -828,7 +828,7 @@ def write_scheme_dir(dir_path, scheme):
     # schemes apply interval is merged in v6.7-rc1
     if os.path.isfile(apply_interval_file):
         err = _damo_fs.write_file(apply_interval_file,
-                                  scheme.apply_interval_us)
+                                  '%d' % scheme.apply_interval_us)
         if err is not None:
             return err
     else:
@@ -937,6 +937,10 @@ def write_context_dir(dir_path, context):
     if err is not None:
         return err
 
+    for scheme in context.schemes:
+        scheme.access_pattern = scheme.access_pattern.converted_for_units(
+                _damon.unit_samples, _damon.unit_aggr_intervals,
+                context.intervals)
     return write_schemes_dir(
             os.path.join(dir_path, 'schemes'), context.schemes)
 
@@ -948,7 +952,7 @@ def write_contexts_dir(dir_path, contexts):
 
     for idx, context in enumerate(contexts):
         err = write_context_dir(
-                os.path.join(dir_path, '%d' % idx, context))
+                os.path.join(dir_path, '%d' % idx), context)
         if err is not None:
             return err
 
@@ -965,7 +969,7 @@ def write_kdamonds_dir(dir_path, kdamonds):
         if err is not None:
             return err
 
-def stage_kdamonds_v2(kdamodns):
+def stage_kdamonds_v2(kdamonds):
     """Write DAMON parameters for kdamonds to the sysfs files.
 
     Args:
