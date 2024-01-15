@@ -2,7 +2,6 @@
 - Support profiling
   - Support rss recording and reporting wss/rss
   - Support flamegraph-wss-heatmap visualization
-- Support 'cleanup': echo 0 > nr_kdamonds
 - Implement histogram stat regions output
 - Deprecate old features
   - Deprecate translate_damos (done.)
@@ -20,11 +19,10 @@
   - collapse by time
   - collapse by priority value (more histogram control)
   - Implement min/max snapshot format keyword
-- Test DAMOS interval
-- Test quota goals
+- Test DAMOS interval (might make more sense to test from in-tree DAMON tests)
+- Test quota goals (might make more sense to test from in-tree DAMON tests)
 - Handle quota goals tuning error / invalid inputs better
 - Get sysfs/debugfs mount point from /proc/mounts file
-- damo show: use pager if the output is too long
 - Re-write sysfs/debugfs without features detection
 
 Current sysfs/debugfs constructs every file i/o at once and submit it to
