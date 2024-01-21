@@ -12,11 +12,6 @@ import _damon
 
 feature_supports = None
 
-# Use only one kdamond, one context, and one target for now
-root_dir = '/sys/kernel/mm/damon'
-admin_dir = os.path.join(root_dir, 'admin')
-kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
-
 def kdamond_dir_of(kdamond_idx):
     return os.path.join(get_kdamonds_dir(), '%s' % kdamond_idx)
 
