@@ -49,12 +49,17 @@ def get_sysfs_root():
         sysfs_root = _damo_fs.dev_mount_point('sysfs')
     return sysfs_root
 
-def supported():
+def get_kdamonds_dir():
+    '''Returns None if sysfs is not mounted'''
     if get_sysfs_root() is None:
-        return False
+        return None
+    return os.path.join(get_sysfs_root(), 'kernel/mm/damon/admin/kdamonds')
 
-    return os.path.isdir(
-            os.path.join(get_sysfs_root(), 'kernel/mm/damon/admin/kdamonds'))
+def supported():
+    kdamonds_dir = get_kdamonds_dir()
+    if kdamonds_dir is None:
+        return False
+    return os.path.isdir(kdamonds_dir)
 
 def turn_damon_on(kdamonds_idxs):
     # In case of vaddr, too early monitoring shows unstable mapping changes.
@@ -459,12 +464,8 @@ def stage_kdamonds(kdamonds):
     Returns:
         None for success, an error string if failed.
     """
-    if get_sysfs_root() is None:
-        return 'sysfs not mounted'
-
-    return write_kdamonds_dir(
-            os.path.join(get_sysfs_root(), 'kernel/mm/damon/admin/kdamonds'),
-            kdamonds)
+    # Assume caller checked supported()
+    return write_kdamonds_dir(get_kdamonds_dir(), kdamonds)
 
 # for current_kdamonds()
 
@@ -626,11 +627,8 @@ def files_content_to_kdamonds(files_contents):
                 files_contents, 'nr_kdamonds')]
 
 def current_kdamonds():
-    if get_sysfs_root() is None:
-        return 'sysfs not mounted'
-
-    return files_content_to_kdamonds(_damo_fs.read_files(
-        os.path.join(get_sysfs_root(), 'kernel/mm/damon/admin/kdamonds')))
+    # Assume caller checked supported()
+    return files_content_to_kdamonds(_damo_fs.read_files(get_kdamonds_dir()))
 
 def nr_kdamonds():
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
