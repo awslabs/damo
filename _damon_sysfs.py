@@ -627,8 +627,8 @@ def files_content_to_kdamonds(files_contents):
                 files_contents, 'nr_kdamonds')]
 
 def current_kdamonds():
-    return files_content_to_kdamonds(
-            _damo_fs.read_files(kdamonds_dir))
+    return files_content_to_kdamonds(_damo_fs.read_files(
+        os.path.join(get_sysfs_root(), 'kernel/mm/damon/admin/kdamonds')))
 
 def nr_kdamonds():
     nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
