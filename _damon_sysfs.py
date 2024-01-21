@@ -783,7 +783,7 @@ def update_supported_features():
     feature_supports = {x: False for x in _damon.features}
 
     if not supported():
-        return 'damon sysfs dir (%s) not found' % kdamonds_dir
+        return 'damon sysfs not supported'
     for feature in features_sysfs_support_from_begining:
         feature_supports[feature] = True
 
