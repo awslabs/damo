@@ -102,12 +102,7 @@ def get_sysfs_root():
     global sysfs_root
 
     if sysfs_root is None:
-        with open('/proc/mounts', 'r') as f:
-            for line in f:
-                dev, mount_point = line.split()[:2]
-                if dev == 'sysfs':
-                    sysfs_root = mount_point
-                    break
+        sysfs_root = _damo_fs.dev_mount_point('sysfs')
     return sysfs_root
 
 def write_filter_dir(dir_path, filter_):

@@ -96,3 +96,12 @@ def write_files(operations, root=''):
         else:
             return 'filepath (%s) is neither dir nor file' % (filepath)
     return None
+
+def dev_mount_point(dev):
+    '''Returns mount point of specific device.  None if not mounted'''
+    with open('/proc/mounts', 'r') as f:
+        for line in f:
+            dev_name, mount_point = line.split()[:2]
+            if dev_name == dev:
+                return mount_point
+    return None
