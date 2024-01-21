@@ -622,6 +622,9 @@ def files_content_to_kdamonds(files_contents):
                 files_contents, 'nr_kdamonds')]
 
 def current_kdamonds():
+    if get_sysfs_root() is None:
+        return 'sysfs not mounted'
+
     return files_content_to_kdamonds(_damo_fs.read_files(
         os.path.join(get_sysfs_root(), 'kernel/mm/damon/admin/kdamonds')))
 
