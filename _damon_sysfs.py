@@ -61,25 +61,28 @@ def supported():
         return False
     return os.path.isdir(kdamonds_dir)
 
+def get_state_file_of(kdamond_idx):
+    return os.path.join(get_kdamonds_dir(), '%s' % kdamond_idx, 'state')
+
 def turn_damon_on(kdamonds_idxs):
     # In case of vaddr, too early monitoring shows unstable mapping changes.
     # Give the process a time to have stable memory mapping.
     time.sleep(0.5)
     for kdamond_idx in kdamonds_idxs:
-        err = _damo_fs.write_file(state_file_of(kdamond_idx), 'on')
+        err = _damo_fs.write_file(get_state_file_of(kdamond_idx), 'on')
         if err != None:
             return err
     return None
 
 def turn_damon_off(kdamonds_idxs):
     for kdamond_idx in kdamonds_idxs:
-        err = _damo_fs.write_file(state_file_of(kdamond_idx), 'off')
+        err = _damo_fs.write_file(get_state_file_of(kdamond_idx), 'off')
         if err != None:
             return err
     return None
 
 def is_kdamond_running(kdamond_idx):
-    content, err = _damo_fs.read_file(state_file_of(kdamond_idx))
+    content, err = _damo_fs.read_file(get_state_file_of(kdamond_idx))
     if err != None:
         print(err)
         return False
@@ -89,7 +92,7 @@ def is_kdamond_running(kdamond_idx):
 def update_schemes_stats(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
         err = _damo_fs.write_file(
-                state_file_of(kdamond_idx), 'update_schemes_stats')
+                get_state_file_of(kdamond_idx), 'update_schemes_stats')
         if err != None:
             return err
     return None
@@ -98,7 +101,7 @@ def update_schemes_stats(kdamond_idxs):
 def update_schemes_tried_bytes(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
         err = _damo_fs.write_file(
-                state_file_of(kdamond_idx), 'update_schemes_tried_bytes')
+                get_state_file_of(kdamond_idx), 'update_schemes_tried_bytes')
         if err != None:
             return '%s (maybe schemes_tried_regions_sz not supported?)' % err
     return None
@@ -107,7 +110,7 @@ def update_schemes_tried_bytes(kdamond_idxs):
 def update_schemes_tried_regions(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
         err = _damo_fs.write_file(
-                state_file_of(kdamond_idx), 'update_schemes_tried_regions')
+                get_state_file_of(kdamond_idx), 'update_schemes_tried_regions')
         if err != None:
             return '%s (maybe schemes_tried_regions not supported?)' % err
     return None
@@ -638,14 +641,14 @@ def nr_kdamonds():
 
 def commit_staged(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
-        err = _damo_fs.write_file(state_file_of(kdamond_idx), 'commit')
+        err = _damo_fs.write_file(get_state_file_of(kdamond_idx), 'commit')
         if err != None:
             return err
     return None
 
 def commit_quota_goals(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
-        err = _damo_fs.write_file(state_file_of(kdamond_idx),
+        err = _damo_fs.write_file(get_state_file_of(kdamond_idx),
                 'commit_schemes_quota_goals')
         if err != None:
             return err
