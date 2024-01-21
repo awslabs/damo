@@ -1060,6 +1060,8 @@ def initialize(damon_interface, debug_damon,
             _damon_fs = _damon_sysfs
         else:
             _damon_fs = _damon_dbgfs
+    if not _damon_fs.supported():
+        return 'DAMON interface (%s) not supported' % damon_interface
 
     global pr_debug_log
     if debug_damon:
