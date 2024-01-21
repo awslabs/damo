@@ -630,8 +630,11 @@ def current_kdamonds():
     # Assume caller checked supported()
     return files_content_to_kdamonds(_damo_fs.read_files(get_kdamonds_dir()))
 
+def get_nr_kdamonds_file():
+    return os.path.join(get_kdamonds_dir(), 'nr_kdamonds')
+
 def nr_kdamonds():
-    nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
+    nr_kdamonds, err = _damo_fs.read_file(get_nr_kdamonds_file())
     if err != None:
         raise Exception('nr_kdamonds_file read fail (%s)' % err)
     return int(nr_kdamonds)
@@ -757,11 +760,11 @@ def __ensure_kdamond_dir_populated(kdamond_dir, kdamond):
             __ensure_scheme_dir_populated(scheme_dir_path, scheme)
 
 def __ensure_dirs_populated_for(kdamonds):
-    nr_kdamonds, err = _damo_fs.read_file(nr_kdamonds_file)
+    nr_kdamonds, err = _damo_fs.read_file(get_nr_kdamonds_file())
     if err != None:
         raise Exception('nr_kdamonds_file read fail (%s)' % err)
     if int(nr_kdamonds) != len(kdamonds):
-        _damo_fs.write_file(nr_kdamonds_file, '%d' % len(kdamonds))
+        _damo_fs.write_file(get_nr_kdamonds_file(), '%d' % len(kdamonds))
     for idx, kdamond in enumerate(kdamonds):
         kdamond_dir = kdamond_dir_of('%d' % idx)
         __ensure_kdamond_dir_populated(kdamond_dir, kdamond)
