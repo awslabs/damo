@@ -330,13 +330,6 @@ def ensure_dirs_populated_for(kdamonds):
         print('sysfs dirs population failed (%s)' % e)
         exit(1)
 
-def stage_kdamonds_v1(kdamonds):
-    if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
-        return 'currently only <=one damon_ctx is supported'
-    ensure_dirs_populated_for(kdamonds)
-
-    return _damo_fs.write_files({kdamonds_dir: wops_for_kdamonds(kdamonds)})
-
 # for current_kdamonds()
 
 def numbered_dirs_content(files_content, nr_filename):
