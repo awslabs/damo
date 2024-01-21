@@ -10,27 +10,6 @@ import time
 import _damo_fs
 import _damon
 
-feature_supports = None
-
-def kdamond_dir_of(kdamond_idx):
-    return os.path.join(get_kdamonds_dir(), '%s' % kdamond_idx)
-
-def ctx_dir_of(kdamond_idx, context_idx):
-    return os.path.join(
-            kdamond_dir_of(kdamond_idx), 'contexts', '%s' % context_idx)
-
-def schemes_dir_of(kdamond_idx, context_idx):
-    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
-
-def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
-    return os.path.join(
-            schemes_dir_of(kdamond_idx, context_idx), '%s' % scheme_idx)
-
-def scheme_tried_regions_dir_of(kdamond_idx, context_idx, scheme_idx):
-    return os.path.join(
-            scheme_dir_of(kdamond_idx, context_idx, scheme_idx),
-            'tried_regions')
-
 sysfs_root = None
 
 def get_sysfs_root():
@@ -649,6 +628,8 @@ def commit_quota_goals(kdamond_idxs):
 
 # features
 
+feature_supports = None
+
 def feature_supported(feature):
     if feature_supports == None:
         update_supported_features()
@@ -668,6 +649,16 @@ features_sysfs_support_from_begining = [
         'schemes_stat_succ',
         'schemes_stat_qt_exceed',
         ]
+
+def kdamond_dir_of(kdamond_idx):
+    return os.path.join(get_kdamonds_dir(), '%s' % kdamond_idx)
+
+def ctx_dir_of(kdamond_idx, context_idx):
+    return os.path.join(
+            kdamond_dir_of(kdamond_idx), 'contexts', '%s' % context_idx)
+
+def schemes_dir_of(kdamond_idx, context_idx):
+    return os.path.join(ctx_dir_of(kdamond_idx, context_idx), 'schemes')
 
 def _avail_ops():
     '''Assumes called by update_supported_features() assuming one scheme.
@@ -769,6 +760,15 @@ def ensure_dirs_populated_for(kdamonds):
     except Exception as e:
         print('sysfs dirs population failed (%s)' % e)
         exit(1)
+
+def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
+    return os.path.join(
+            schemes_dir_of(kdamond_idx, context_idx), '%s' % scheme_idx)
+
+def scheme_tried_regions_dir_of(kdamond_idx, context_idx, scheme_idx):
+    return os.path.join(
+            scheme_dir_of(kdamond_idx, context_idx, scheme_idx),
+            'tried_regions')
 
 def update_supported_features():
     global feature_supports
