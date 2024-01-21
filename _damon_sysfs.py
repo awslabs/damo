@@ -19,7 +19,7 @@ kdamonds_dir = os.path.join(admin_dir, 'kdamonds')
 nr_kdamonds_file = os.path.join(kdamonds_dir, 'nr_kdamonds')
 
 def kdamond_dir_of(kdamond_idx):
-    return os.path.join(admin_dir, 'kdamonds', '%s' % kdamond_idx)
+    return os.path.join(get_kdamonds_dir(), '%s' % kdamond_idx)
 
 def ctx_dir_of(kdamond_idx, context_idx):
     return os.path.join(
