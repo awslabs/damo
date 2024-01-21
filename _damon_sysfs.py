@@ -40,8 +40,21 @@ def scheme_tried_regions_dir_of(kdamond_idx, context_idx, scheme_idx):
             scheme_dir_of(kdamond_idx, context_idx, scheme_idx),
             'tried_regions')
 
+sysfs_root = None
+
+def get_sysfs_root():
+    global sysfs_root
+
+    if sysfs_root is None:
+        sysfs_root = _damo_fs.dev_mount_point('sysfs')
+    return sysfs_root
+
 def supported():
-    return os.path.isdir(kdamonds_dir)
+    if get_sysfs_root() is None:
+        return False
+
+    return os.path.isdir(
+            os.path.join(get_sysfs_root(), 'kernel/mm/damon/admin/kdamonds'))
 
 def turn_damon_on(kdamonds_idxs):
     # In case of vaddr, too early monitoring shows unstable mapping changes.
@@ -95,15 +108,6 @@ def update_schemes_tried_regions(kdamond_idxs):
     return None
 
 # for stage_kdamonds
-
-sysfs_root = None
-
-def get_sysfs_root():
-    global sysfs_root
-
-    if sysfs_root is None:
-        sysfs_root = _damo_fs.dev_mount_point('sysfs')
-    return sysfs_root
 
 def write_filter_dir(dir_path, filter_):
     err = _damo_fs.write_file(
