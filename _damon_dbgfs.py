@@ -16,19 +16,27 @@ debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
 debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
 debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
 debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
-debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
+
+def get_debugfs_monitor_on_path():
+    path = os.path.join(debugfs_damon, 'monitor_on')
+    if os.path.isfile(path):
+        return path
+    path = os.path.join(debugfs_damon, 'monitor_on_DEPRECATED')
+    if os.path.isfile(path):
+        return path
+    return None
 
 def supported():
     return os.path.isdir(debugfs_damon)
 
 def turn_damon_on(kdamonds_idxs):
-    return _damo_fs.write_files({debugfs_monitor_on: 'on'})
+    return _damo_fs.write_files({get_debugfs_monitor_on_path(): 'on'})
 
 def turn_damon_off(kdamonds_idxs):
-    return _damo_fs.write_files({debugfs_monitor_on: 'off'})
+    return _damo_fs.write_files({get_debugfs_monitor_on_path(): 'off'})
 
 def is_kdamond_running(kdamond_idx):
-    content, err = _damo_fs.read_file(debugfs_monitor_on)
+    content, err = _damo_fs.read_file(get_debugfs_monitor_on_path())
     if err != None:
         raise Exception('monitor_on file read failed: err')
     return content.strip() == 'on'
@@ -232,7 +240,10 @@ def debugfs_output_to_damos(output, intervals_us):
     return damos
 
 def files_content_to_kdamonds(files_content):
-    state = files_content['monitor_on'].strip()
+    if 'monitor_on' in files_content:
+        state = files_content['monitor_on'].strip()
+    else:
+        state = files_content['monitor_on_DEPRECATED'].strip()
     attrs = [int(x) for x in files_content['attrs'].strip().split()]
 
     intervals = _damon.DamonIntervals(attrs[0], attrs[1], attrs[2])
@@ -270,7 +281,10 @@ def files_content_to_kdamonds(files_content):
             schemes.append(debugfs_output_to_damos(line, intervals))
 
     ctx = _damon.DamonCtx(ops, targets, intervals, nr_regions, schemes)
-    state = files_content['monitor_on'].strip()
+    if 'monitor_on' in files_content:
+        state = files_content['monitor_on'].strip()
+    else:
+        state = files_content['monitor_on_DEPRECATED'].strip()
     pid = files_content['kdamond_pid'].strip()
     return [_damon.Kdamond(state, pid, [ctx])]
 
