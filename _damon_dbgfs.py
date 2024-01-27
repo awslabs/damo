@@ -67,15 +67,18 @@ def update_schemes_tried_regions(kdamond_idxs):
 
 # for stage_kdamonds
 
+def get_target_ids_file():
+    return os.path.join(get_damon_dir(), 'target_ids')
+
 def wops_for_target(target, target_has_pid):
     wops = []
     if target_has_pid:
-        wops.append({debugfs_target_ids: '%s' % target.pid})
+        wops.append({get_target_ids_file(): '%s' % target.pid})
         tid = target.pid
     else:
         if not feature_supported('paddr'):
             raise Exception('paddr is not supported')
-        wops.append({debugfs_target_ids: 'paddr\n'})
+        wops.append({get_target_ids_file(): 'paddr\n'})
         tid = 42
     if feature_supported('init_regions_target_idx'):
         tid = 0
@@ -375,7 +378,7 @@ def test_debugfs_file_schemes_stat_extended(nr_fields):
 
 def test_init_regions_version(paddr_supported):
     # Save previous values
-    orig_target_ids, err = read_value_for_restore(debugfs_target_ids)
+    orig_target_ids, err = read_value_for_restore(get_target_ids_file())
     if err != None:
         raise Exception('debugfs target_ids read failed')
     orig_init_regions, err = read_value_for_restore(debugfs_init_regions)
@@ -384,12 +387,12 @@ def test_init_regions_version(paddr_supported):
 
     # Test
     if paddr_supported:
-        err = _damo_fs.write_file(debugfs_target_ids, 'paddr\n')
+        err = _damo_fs.write_file(get_target_ids_file(), 'paddr\n')
         if err != None:
             raise Exception(err)
         v1_input = '42 100 200'
     else:
-        err = _damo_fs.write_file(debugfs_target_ids, '%d\n' % os.getpid())
+        err = _damo_fs.write_file(get_target_ids_file(), '%d\n' % os.getpid())
         if err != None:
             raise Exception(err)
         v1_input = '%d 100 200' % os.getpid()
@@ -406,7 +409,7 @@ def test_init_regions_version(paddr_supported):
 
     # Previous value might be invalid now (e.g., process terminated), so ignore
     # error
-    err = _damo_fs.write_file(debugfs_target_ids, orig_target_ids)
+    err = _damo_fs.write_file(get_target_ids_file(), orig_target_ids)
     err = _damo_fs.write_file(debugfs_init_regions, orig_init_regions)
 
     return version
@@ -445,7 +448,7 @@ def update_supported_features():
 
     # virtual address space has supported since the beginning
     feature_supports['vaddr'] = True
-    if test_debugfs_file(debugfs_target_ids, 'paddr\n', '42\n'):
+    if test_debugfs_file(get_target_ids_file(), 'paddr\n', '42\n'):
         feature_supports['paddr'] = True
 
     if os.path.isfile(debugfs_init_regions):
