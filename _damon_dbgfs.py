@@ -155,6 +155,9 @@ def damos_to_debugfs_input(damos, intervals, quotas_wmarks_supported):
                 watermarks.mid_permil, watermarks.low_permil])
     return scheme_input
 
+def get_schemes_file():
+    return os.path.join(get_damon_dir(), 'schemes')
+
 def wops_for_schemes(schemes, intervals):
     scheme_file_input_lines = []
     for scheme in schemes:
@@ -163,7 +166,7 @@ def wops_for_schemes(schemes, intervals):
     scheme_file_input = '\n'.join(scheme_file_input_lines)
     if scheme_file_input == '':
         scheme_file_input = '\n'
-    return [{debugfs_schemes: scheme_file_input}]
+    return [{get_schemes_file(): scheme_file_input}]
 
 def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
@@ -363,13 +366,13 @@ def test_debugfs_file_schemes(nr_fields):
     input_str = ' '.join(['1'] * nr_fields)
     expected = '%s 0 0\n' % input_str
 
-    return test_debugfs_file(debugfs_schemes, input_str, expected)
+    return test_debugfs_file(get_schemes_file(), input_str, expected)
 
 def test_debugfs_file_schemes_stat_extended(nr_fields):
     input_str = ' '.join(['1'] * nr_fields)
     expected = '%s 0 0 0 0 0\n' % input_str
 
-    return test_debugfs_file(debugfs_schemes, input_str, expected)
+    return test_debugfs_file(get_schemes_file(), input_str, expected)
 
 def test_init_regions_version(paddr_supported):
     # Save previous values
@@ -419,9 +422,9 @@ def update_supported_features():
         return 'damon debugfs dir (%s) not found' % get_damon_dir()
 
     need_schemes_file_test = False
-    if os.path.isfile(debugfs_schemes):
+    if os.path.isfile(get_schemes_file()):
         feature_supports['schemes'] = True
-        with open(debugfs_schemes, 'r') as f:
+        with open(get_schemes_file(), 'r') as f:
             nr_fields = len(f.read().strip().split())
         if nr_fields == 0:
             need_schemes_file_test = True
