@@ -33,10 +33,10 @@ debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
 debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
 
 def get_debugfs_monitor_on_path():
-    path = os.path.join(debugfs_damon, 'monitor_on')
+    path = os.path.join(get_damon_dir(), 'monitor_on')
     if os.path.isfile(path):
         return path
-    path = os.path.join(debugfs_damon, 'monitor_on_DEPRECATED')
+    path = os.path.join(get_damon_dir(), 'monitor_on_DEPRECATED')
     if os.path.isfile(path):
         return path
     return None
@@ -308,7 +308,7 @@ def files_content_to_kdamonds(files_content):
 
 def current_kdamonds():
     return files_content_to_kdamonds(
-            _damo_fs.read_files(debugfs_damon))
+            _damo_fs.read_files(get_damon_dir()))
 
 def nr_kdamonds():
     # TODO: Support manually created kdamonds
@@ -415,8 +415,8 @@ def update_supported_features():
         return None
     feature_supports = {x: False for x in _damon.features}
 
-    if not os.path.isdir(debugfs_damon):
-        return 'damon debugfs dir (%s) not found' % debugfs_damon
+    if not os.path.isdir(get_damon_dir()):
+        return 'damon debugfs dir (%s) not found' % get_damon_dir()
 
     need_schemes_file_test = False
     if os.path.isfile(debugfs_schemes):
