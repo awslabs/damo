@@ -25,10 +25,6 @@ def get_damon_dir():
         return None
     return os.path.join(get_debugfs_root(), 'damon')
 
-debugfs = '/sys/kernel/debug'
-debugfs_damon = os.path.join(debugfs, 'damon')
-debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
-
 def get_debugfs_monitor_on_path():
     path = os.path.join(get_damon_dir(), 'monitor_on')
     if os.path.isfile(path):
