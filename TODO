@@ -22,7 +22,6 @@
 - Test DAMOS interval (might make more sense to test from in-tree DAMON tests)
 - Test quota goals (might make more sense to test from in-tree DAMON tests)
 - Handle quota goals tuning error / invalid inputs better
-- Get sysfs/debugfs mount point from /proc/mounts file
 - Re-write sysfs/debugfs without features detection
 
 Current sysfs/debugfs constructs every file i/o at once and submit it to
