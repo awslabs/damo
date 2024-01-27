@@ -10,6 +10,15 @@ import _damo_deprecation_notice
 import _damo_fs
 import _damon
 
+debugfs_root = None
+
+def get_debugfs_root():
+    global debugfs_root
+
+    if debugfs_root is None:
+        debugfs_root = _damo_fs.dev_mount_point('debugfs')
+    return debugfs_root
+
 debugfs = '/sys/kernel/debug'
 debugfs_damon = os.path.join(debugfs, 'damon')
 debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
