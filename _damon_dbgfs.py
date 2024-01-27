@@ -69,6 +69,9 @@ def update_schemes_tried_regions(kdamond_idxs):
 def get_target_ids_file():
     return os.path.join(get_damon_dir(), 'target_ids')
 
+def get_init_regions_file():
+    return os.path.join(get_damon_dir(), 'init_regions')
+
 def wops_for_target(target, target_has_pid):
     wops = []
     if target_has_pid:
@@ -85,7 +88,7 @@ def wops_for_target(target, target_has_pid):
     if feature_supported('init_regions'):
         string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in
             target.regions])
-        wops.append({debugfs_init_regions: string})
+        wops.append({get_init_regions_file(): string})
     return wops
 
 # note that DAMON debugfs interface is deprecated[1], and hence newer DAMOS
@@ -380,7 +383,7 @@ def test_init_regions_version(paddr_supported):
     orig_target_ids, err = read_value_for_restore(get_target_ids_file())
     if err != None:
         raise Exception('debugfs target_ids read failed')
-    orig_init_regions, err = read_value_for_restore(debugfs_init_regions)
+    orig_init_regions, err = read_value_for_restore(get_init_regions_file())
     if err != None:
         raise Exception('debugfs init_regions read failed')
 
@@ -397,8 +400,8 @@ def test_init_regions_version(paddr_supported):
         v1_input = '%d 100 200' % os.getpid()
 
     # We check if the write was success below anyway, so ignore error
-    err = _damo_fs.write_file(debugfs_init_regions, v1_input)
-    read_val, err = _damo_fs.read_file(debugfs_init_regions)
+    err = _damo_fs.write_file(get_init_regions_file(), v1_input)
+    read_val, err = _damo_fs.read_file(get_init_regions_file())
     if err != None:
         raise Exception(err)
     if read_val.strip() == v1_input:
@@ -409,7 +412,7 @@ def test_init_regions_version(paddr_supported):
     # Previous value might be invalid now (e.g., process terminated), so ignore
     # error
     err = _damo_fs.write_file(get_target_ids_file(), orig_target_ids)
-    err = _damo_fs.write_file(debugfs_init_regions, orig_init_regions)
+    err = _damo_fs.write_file(get_init_regions_file(), orig_init_regions)
 
     return version
 
@@ -450,7 +453,7 @@ def update_supported_features():
     if test_debugfs_file(get_target_ids_file(), 'paddr\n', '42\n'):
         feature_supports['paddr'] = True
 
-    if os.path.isfile(debugfs_init_regions):
+    if os.path.isfile(get_init_regions_file()):
         feature_supports['init_regions'] = True
         init_regions_version = test_init_regions_version(
                 feature_supports['paddr'])
