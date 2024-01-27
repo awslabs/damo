@@ -27,7 +27,6 @@ def get_damon_dir():
 
 debugfs = '/sys/kernel/debug'
 debugfs_damon = os.path.join(debugfs, 'damon')
-debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
 debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
 debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
 
