@@ -19,6 +19,12 @@ def get_debugfs_root():
         debugfs_root = _damo_fs.dev_mount_point('debugfs')
     return debugfs_root
 
+def get_damon_dir():
+    '''Returns None if debugfs is not mounted'''
+    if get_debugfs_root() is None:
+        return None
+    return os.path.join(get_debugfs_root(), 'damon')
+
 debugfs = '/sys/kernel/debug'
 debugfs_damon = os.path.join(debugfs, 'damon')
 debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
@@ -36,7 +42,10 @@ def get_debugfs_monitor_on_path():
     return None
 
 def supported():
-    return os.path.isdir(debugfs_damon)
+    damon_dir = get_damon_dir()
+    if damon_dir is None:
+        return False
+    return os.path.isdir(damon_dir)
 
 def turn_damon_on(kdamonds_idxs):
     return _damo_fs.write_files({get_debugfs_monitor_on_path(): 'on'})
