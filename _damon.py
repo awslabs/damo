@@ -1083,7 +1083,7 @@ def ensure_initialized(args, save_feature_supports, load_feature_supports):
 
     if initialized:
         return
-    err = initialize(args.damon_interface, args.debug_damon,
+    err = initialize(args.damon_interface_DEPRECATED, args.debug_damon,
             save_feature_supports, load_feature_supports)
     if err != None:
         print(err)

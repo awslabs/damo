@@ -31,14 +31,14 @@ __test_stat() {
 		--damos_age 1s max \
 		--damos_quotas 0s "$speed_limit" "$quota_reset_interval" \
 			100% 100% 100% \
-		--damon_interface "$damon_interface"
+		--damon_interface_DEPRECATED "$damon_interface"
 
 	local start_time=$SECONDS
 	test_stat_applied=0
 	while ps --pid "$stairs_pid" > /dev/null
 	do
 		test_stat_applied=$(sudo "$damo" status \
-			--damon_interface "$damon_interface" \
+			--damon_interface_DEPRECATED "$damon_interface" \
 			--damos_stats --damos_stat_fields sz_tried --raw)
 		sleep 1
 	done
@@ -65,7 +65,8 @@ test_stat() {
 
 	testname="schemes-speed-limit $damon_interface"
 	if ! sudo "$damo" features supported \
-		--damon_interface "$damon_interface" 2> /dev/null | \
+		--damon_interface_DEPRECATED "$damon_interface" \
+		2> /dev/null | \
 		grep -w schemes_quotas > /dev/null
 	then
 		echo "SKIP $testname (unsupported)"
@@ -105,8 +106,8 @@ measure_scheme_applied() {
 	wait_for=$3
 	local damon_interface=$4
 
-	sudo "$damo" start -c "$scheme" --damon_interface "$damon_interface" \
-		"$target"
+	sudo "$damo" start -c "$scheme" \
+		--damon_interface_DEPRECATED "$damon_interface" "$target"
 
 	while true
 	do
@@ -119,17 +120,19 @@ measure_scheme_applied() {
 		fi
 	done
 
-	before=$(sudo "$damo" status --damon_interface "$damon_interface" \
+	before=$(sudo "$damo" status \
+		--damon_interface_DEPRECATED "$damon_interface" \
 		--damos_stats --damos_stat_fields sz_tried --raw)
 	if [ "$before" = "" ]
 	then
 		before=0
 	fi
 	sleep "$wait_for"
-	after=$(sudo "$damo" status --damon_interface "$damon_interface" \
+	after=$(sudo "$damo" status \
+		--damon_interface_DEPRECATED "$damon_interface" \
 		--damos_stats --damos_stat_fields sz_tried --raw)
 
-	sudo "$damo" stop --damon_interface "$damon_interface"
+	sudo "$damo" stop --damon_interface_DEPRECATED "$damon_interface"
 
 	applied=$((after - before))
 }
@@ -144,14 +147,16 @@ test_wmarks() {
 	testname="schemes-wmarks $damon_interface"
 
 	if ! sudo "$damo" features supported \
-		--damon_interface "$damon_interface" 2> /dev/null | \
+		--damon_interface_DEPRECATED "$damon_interface" \
+		2> /dev/null | \
 		grep -w schemes_wmarks > /dev/null
 	then
 		echo "SKIP $testname (unsupported)"
 		return
 	fi
 	if ! sudo "$damo" features supported \
-		--damon_interface "$damon_interface" 2> /dev/null | \
+		--damon_interface_DEPRECATED "$damon_interface" \
+		2> /dev/null | \
 		grep -w paddr > /dev/null
 	then
 		echo "SKIP $testname (paddr unsupported)"
@@ -334,7 +339,8 @@ fi
 for damon_interface in $damon_interfaces
 do
 	if ! sudo "$damo" features supported \
-	       --damon_interface "$damon_interface" 2> /dev/null | \
+	       --damon_interface_DEPRECATED "$damon_interface" \
+	       2> /dev/null | \
 	       grep -w "schemes" > /dev/null
 	then
 		echo "SKIP $(basename $(pwd))"
@@ -345,7 +351,8 @@ do
 	test_wmarks "$damon_interface"
 
 	if sudo "$damo" features supported \
-	       --damon_interface "$damon_interface" 2> /dev/null | \
+	       --damon_interface_DEPRECATED "$damon_interface" \
+	       2> /dev/null | \
 		grep -w "schemes_filters" > /dev/null
 	then
 		test_filters

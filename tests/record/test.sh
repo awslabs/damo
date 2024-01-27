@@ -53,7 +53,8 @@ test_record_validate()
 	testname+=" $damon_interface"
 
 	if [ "$target" = "paddr" ] && ! sudo "$damo" features \
-		--damon_interface "$damon_interface" supported 2> /dev/null | \
+		--damon_interface_DEPRECATED "$damon_interface" supported \
+		2> /dev/null | \
 		grep -w paddr &> /dev/null
 	then
 		echo "SKIP record-validate $target $timeout (paddr unsupported)"
@@ -63,11 +64,13 @@ test_record_validate()
 	if [ "$regions_boundary" = "none" ]
 	then
 		sudo timeout "$timeout" "$damo" record "$target" \
-			--damon_interface "$damon_interface" &> /dev/null
+			--damon_interface_DEPRECATED "$damon_interface" \
+			&> /dev/null
 	else
 		sudo timeout "$timeout" "$damo" record "$target" \
 			--regions "$regions_boundary" \
-			--damon_interface "$damon_interface" &> /dev/null
+			--damon_interface_DEPRECATED "$damon_interface" \
+			&> /dev/null
 	fi
 
 	rc=$?
@@ -136,7 +139,8 @@ do
 done
 
 if sudo "$damo" features \
-	--damon_interface "$damon_interface" supported 2> /dev/null | \
+	--damon_interface_DEPRECATED "$damon_interface" supported \
+	2> /dev/null | \
 	grep -w fvaddr &> /dev/null
 then
 	test_record_validate "sleep 3" 4 "4096-81920" "sysfs"

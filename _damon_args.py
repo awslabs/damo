@@ -395,7 +395,7 @@ def turn_damon_on(args):
 # Commandline options setup helpers
 
 def set_common_argparser(parser):
-    parser.add_argument('--damon_interface',
+    parser.add_argument('--damon_interface_DEPRECATED',
             choices=['sysfs', 'debugfs', 'auto'],
             default='auto',
             help='underlying DAMON interface to use (!! DEPRECATED)')

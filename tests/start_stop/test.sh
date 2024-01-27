@@ -30,7 +30,8 @@ do
 	else
 		do_show_test="false"
 	fi
-	sudo "$damo" start --ops paddr --damon_interface "$damon_interface" \
+	sudo "$damo" start --ops paddr \
+		--damon_interface_DEPRECATED "$damon_interface" \
 		-c monitoring_damos.json 2> /dev/null
 	if ! pgrep kdamond.0 > /dev/null
 	then
@@ -40,7 +41,7 @@ do
 	echo "PASS $testname2 start"
 
 	sudo timeout 3 "$damo" record ongoing \
-		--damon_interface "$damon_interface" &> /dev/null
+		--damon_interface_DEPRECATED "$damon_interface" &> /dev/null
 	if ! "$damo" validate 2> /dev/null
 	then
 		echo "FAIL $testname2 (invalid record file)"
@@ -84,7 +85,7 @@ do
 	fi
 
 	if ! sudo "$damo" tune --aggr 200000 --ops paddr \
-		--damon_interface "$damon_interface" &> /dev/null
+		--damon_interface_DEPRECATED "$damon_interface" &> /dev/null
 	then
 		echo "FAIL $testname2 tune"
 		if ! sudo "$damo" stop
@@ -95,7 +96,7 @@ do
 		exit 1
 	fi
 	sudo timeout 3 "$damo" record ongoing \
-		--damon_interface "$damon_interface" &> /dev/null
+		--damon_interface_DEPRECATED "$damon_interface" &> /dev/null
 	if ! "$damo" validate --aggr 180000 220000 2> /dev/null
 	then
 		echo "FAIL $testname2 (invalid record file after tune)"
@@ -138,7 +139,8 @@ do
 		echo "PASS $testname2 tune-show $i"
 	fi
 
-	sudo "$damo" stop --damon_interface "$damon_interface" 2> /dev/null
+	sudo "$damo" stop --damon_interface_DEPRECATED "$damon_interface" \
+		2> /dev/null
 	if pgrep kdamond.0 > /dev/null
 	then
 		echo "FAIL $testname2 (kdamond.0 pid found after stop)"
