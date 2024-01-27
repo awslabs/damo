@@ -183,7 +183,8 @@ def wops_for_kdamonds(kdamonds):
     ctx = kdamonds[0].contexts[0]
 
     write_contents = []
-    write_contents.append({debugfs_attrs: attr_str_ctx(ctx)})
+    write_contents.append(
+            {os.path.join(get_damon_dir(), 'attrs'): attr_str_ctx(ctx)})
 
     if len(ctx.targets) > 0:
         write_contents += wops_for_target(ctx.targets[0],
