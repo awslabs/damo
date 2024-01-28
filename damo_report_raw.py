@@ -81,12 +81,7 @@ def set_argparser(parser):
             help='print in json format')
     parser.description='Show raw data of the monitoring results record file'
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     file_path = args.input
 
     if not os.path.isfile(file_path):
@@ -108,7 +103,3 @@ def main(args=None):
     except BrokenPipeError as e:
         # maybe user piped to 'less' like pager and quit from it
         pass
-
-
-if __name__ == '__main__':
-    main()

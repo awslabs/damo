@@ -98,11 +98,7 @@ def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
     return parser
 
-def main(args=None):
-    if not args:
-        parser = set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     _damon.ensure_root_and_initialized(args)
     # ignore the error.  status could be called before feature saving commands.
     err = _damon.read_feature_supports_file()
@@ -122,6 +118,3 @@ def main(args=None):
         print('cannot update and read kdamonds: %s' % err)
         exit(1)
     pr_kdamonds(kdamonds, args.json, args.raw)
-
-if __name__ == '__main__':
-    main()

@@ -17,11 +17,7 @@ def set_argparser(parser):
     parser.add_argument('--raw', action='store_true',
             help='print numbers in machine friendly raw form')
 
-def main(args=None):
-    if not args:
-        parser = set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     _damon.ensure_root_permission()
 
     kdamonds, err = _damon_args.kdamonds_for(args)
@@ -44,6 +40,3 @@ def main(args=None):
         return
     print(json.dumps({'kdamonds': [k.to_kvpairs(args.raw) for k in kdamonds]},
         indent=4))
-
-if __name__ == '__main__':
-    main()

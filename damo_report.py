@@ -27,15 +27,7 @@ def set_argparser(parser):
     for subcmd in subcmds:
         subcmd.add_parser(subparsers)
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     for subcmd in subcmds:
         if subcmd.name == args.report_type:
             subcmd.execute(args)
-
-if __name__ == '__main__':
-    main()

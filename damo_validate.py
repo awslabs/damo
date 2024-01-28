@@ -50,12 +50,7 @@ def set_argparser(parser):
     parser.add_argument('--regions_boundary', metavar='<start>-<end>',
             nargs='+', help='regions boundary')
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     if not os.path.isfile(args.input):
         print('the file (%s) not found' % args.input)
         exit(1)
@@ -103,6 +98,3 @@ def main(args=None):
 
                 assert_value_in_range(region.nr_accesses.samples,
                         args.nr_accesses, 'nr_accesses', False)
-
-if __name__ == '__main__':
-    main()

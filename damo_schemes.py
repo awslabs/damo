@@ -30,13 +30,9 @@ def sighandler(signum, frame):
 def set_argparser(parser):
     return _damon_args.set_argparser(parser, add_record_options=False)
 
-def main(args=None):
+def main(args):
     global orig_kdamonds
     global kdamonds_idxs
-
-    if not args:
-        parser = set_argparser(None)
-        args = parser.parse_args()
 
     _damon.ensure_root_and_initialized(args, save_feature_supports=True)
 
@@ -60,6 +56,3 @@ def main(args=None):
     _damon.wait_kdamonds_turned_off()
 
     cleanup_exit(0)
-
-if __name__ == '__main__':
-    main()

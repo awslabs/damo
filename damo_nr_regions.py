@@ -20,12 +20,7 @@ def set_argparser(parser):
     parser.add_argument('--plot', '-p', type=str, metavar='<file>',
             help='plot the distribution to an image file')
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     percentiles = [0, 25, 50, 75, 100]
 
     file_path = args.input
@@ -77,6 +72,3 @@ def main(args=None):
                 'number of monitoring target regions')
         if err:
             print('plot failed (%s)' % err)
-
-if __name__ == '__main__':
-    main()

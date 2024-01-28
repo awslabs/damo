@@ -102,12 +102,7 @@ def set_argparser(parser):
             help='Do not print percentile but all calculated wss')
     parser.description = 'Show distribution of working set size'
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     file_path = args.input
     percentiles = range(args.range[0], args.range[1], args.range[2])
     wss_sort = True
@@ -146,6 +141,3 @@ def main(args=None):
                 'working set size (bytes)')
         if err:
             print('plot failed (%s)' % err)
-
-if __name__ == '__main__':
-    main()

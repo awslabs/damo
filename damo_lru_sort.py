@@ -91,12 +91,7 @@ def set_argparser(parser):
             nargs=2, default=[None] * 2,
             help='start and end addresses of the target memory region')
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     _damon.ensure_root_permission()
     chk_plrus_sysfs()
 
@@ -120,6 +115,3 @@ def main(args=None):
     set_param('monitor_region_end', args.monitor_region[1])
 
     plrus_enable(args.action == 'enable')
-
-if __name__ == '__main__':
-    main()

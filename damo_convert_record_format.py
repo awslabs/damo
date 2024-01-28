@@ -14,12 +14,7 @@ def set_argparser(parser):
     parser.add_argument('--output_file', metavar='<file>',
             help='the path to converted file')
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     if not os.path.isfile(args.record_file):
         print('record file (%s) is not exist' % args.record_file)
         exit(1)
@@ -37,6 +32,3 @@ def main(args=None):
     if err != None:
         print('writing records again failed (%s)' % err)
         exit(1)
-
-if __name__ == '__main__':
-    main()

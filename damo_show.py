@@ -612,12 +612,7 @@ def set_argparser(parser):
     parser.description = 'Show DAMON-monitored access pattern'
     parser.epilog='If --input_file is not provided, capture snapshot'
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     handled = handle_ls_keywords(args)
     if handled:
         return
@@ -657,6 +652,3 @@ def main(args=None):
         except BrokenPipeError as e:
             # maybe user piped to 'less' like pager, and quit from it
             pass
-
-if __name__ == '__main__':
-    main()

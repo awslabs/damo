@@ -119,18 +119,10 @@ def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     records, err = _damon_records.get_records(record_file=args.input)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (args.input, err))
         exit(1)
     pr_guide(records)
-
-if __name__ == '__main__':
-    main()

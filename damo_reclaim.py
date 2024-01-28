@@ -91,12 +91,7 @@ def set_argparser(parser):
     parser.add_argument('--skip_anon', action='store_true',
             help='skip reclaiming anonymous pages')
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     _damon.ensure_root_permission()
     chk_darc_sysfs()
 
@@ -121,6 +116,3 @@ def main(args=None):
     set_param('skip_anon', 'Y' if args.skip_anon else 'N')
 
     darc_enable(args.action == 'enable')
-
-if __name__ == '__main__':
-    main()

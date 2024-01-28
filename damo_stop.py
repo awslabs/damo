@@ -12,11 +12,7 @@ def set_argparser(parser):
     parser.description = 'Stop DAMON'
     return parser
 
-def main(args=None):
-    if not args:
-        parser = set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     _damon.ensure_root_and_initialized(args)
 
     running_kdamond_idxs = _damon.running_kdamond_idxs()
@@ -28,6 +24,3 @@ def main(args=None):
     if err:
         print('DAMON turn off failed (%s)' % err)
         exit(1)
-
-if __name__ == '__main__':
-    main()

@@ -13,11 +13,7 @@ def set_argparser(parser):
             help='commit quota goals change only')
     return _damon_args.set_argparser(parser, add_record_options=False)
 
-def main(args=None):
-    if not args:
-        parser = set_argparser(None)
-        args = parser.parse_args()
-
+def main(args):
     _damon.ensure_root_and_initialized(args)
 
     if not _damon.any_kdamond_running():
@@ -28,6 +24,3 @@ def main(args=None):
     if err:
         print('tuning failed (%s)' % err)
         exit(1)
-
-if __name__ == '__main__':
-    main()

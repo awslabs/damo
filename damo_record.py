@@ -137,12 +137,8 @@ def set_argparser(parser):
     parser.description = 'Record monitoring results'
     return parser
 
-def main(args=None):
+def main(args):
     global data_for_cleanup
-
-    if not args:
-        parser = set_argparser(None)
-        args = parser.parse_args()
 
     is_ongoing = _damon_args.is_ongoing_target(args)
     _damon.ensure_root_and_initialized(args,
@@ -192,6 +188,3 @@ def main(args=None):
     _damon.wait_kdamonds_turned_off()
 
     cleanup_exit(0)
-
-if __name__ == '__main__':
-    main()

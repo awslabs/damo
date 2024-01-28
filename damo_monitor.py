@@ -29,12 +29,7 @@ def set_argparser(parser):
     parser.add_argument('--count', type=int, metavar='<count>', default=0,
             help='number of updates.')
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     _damon.ensure_root_permission()
 
     global target_type
@@ -92,6 +87,3 @@ def main(args=None):
         nr_reports += 1
 
     cleanup()
-
-if __name__ == '__main__':
-    main()

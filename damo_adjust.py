@@ -22,12 +22,7 @@ def set_argparser(parser):
     parser.add_argument('--skip', type=int, metavar='<int>', default=20,
             help='number of first snapshots to skip')
 
-def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
+def main(args):
     file_path = args.input
 
     output_permission, err = _damon_records.parse_file_permission_str(
@@ -51,6 +46,3 @@ def main(args=None):
     if err != None:
         print('writing adjusted result failed (%s)' % err)
         exit(1)
-
-if __name__ == '__main__':
-    main()

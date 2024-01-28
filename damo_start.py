@@ -12,17 +12,10 @@ def set_argparser(parser):
     parser.description = 'Start DAMON with specified parameters'
     return parser
 
-def main(args=None):
-    if not args:
-        parser = set_pargparser(None)
-        args = parser.parse_args()
-
+def main(args):
     _damon.ensure_root_and_initialized(args, save_feature_supports=True)
 
     err, kdamonds = _damon_args.turn_damon_on(args)
     if err:
         print('could not turn on damon (%s)' % err)
         exit(1)
-
-if __name__ == '__main__':
-    main()

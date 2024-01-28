@@ -281,11 +281,6 @@ def set_argparser(parser):
     parser.description = 'Show when which address ranges were how frequently accessed'
 
 def main(args=None):
-    if not args:
-        parser = argparse.ArgumentParser()
-        set_argparser(parser)
-        args = parser.parse_args()
-
     # --plot_ascii and --ascii_color is used in the demo screenshop[1].
     # Support those.
     #
@@ -325,6 +320,3 @@ def main(args=None):
         tmp_file.flush()
         tmp_file.close()
         plot_heatmap(tmp_path, args.heatmap, args)
-
-if __name__ == '__main__':
-    main()
