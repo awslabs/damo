@@ -4,6 +4,8 @@ picked by human sense, so could be incomplete and missing many things.
 v2.1.9
 - dbgfs: Use proc/mounts
 - Rename --damon_interface to --damon_interface_DEPRECATED
+- Support damon/next kernel change for DAMON debugfs deprecation
+  (https://git.kernel.org/pub/scm/linux/kernel/git/sj/damon-hack.git/tree/todo?id=90812522ebb5#n9)
 
 v2.1.8
 - sysfs: Use proc/mounts
