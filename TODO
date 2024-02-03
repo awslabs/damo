@@ -25,3 +25,5 @@
 - damo reclaim: add a command for basic investigation
   - helps ensure DAMON_RECLAIM is working as expected
   - helps reporting issue
+- Handle _damon_sysfs file i/o error for unsupported kernel features and
+  conflicts with concurrent ones
