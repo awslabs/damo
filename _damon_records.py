@@ -562,11 +562,16 @@ def find_install_scheme(scheme_to_find):
             ctx_has_the_scheme = False
             for sidx, scheme in enumerate(ctx.schemes):
                 if scheme.effectively_equal(scheme_to_find, ctx.intervals):
+                    if _damon.feature_supported('schemes_apply_interval'):
+                        scheme_to_find.apply_interval_us = ctx.intervals.sample
                     ctx_has_the_scheme = True
                     indices.append([kidx, cidx, sidx])
                     break
             if ctx_has_the_scheme:
                 continue
+
+            if _damon.feature_supported('schemes_apply_interval'):
+                scheme_to_find.apply_interval_us = ctx.intervals.sample
             ctx.schemes.append(scheme_to_find)
             installed = True
             indices.append([kidx, cidx, len(ctx.schemes) - 1])
