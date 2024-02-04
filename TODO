@@ -19,7 +19,6 @@
   - collapse by time
   - collapse by priority value (more histogram control)
   - Implement min/max snapshot format keyword
-- Test DAMOS interval (might make more sense to test from in-tree DAMON tests)
 - Test quota goals (might make more sense to test from in-tree DAMON tests)
 - Handle quota goals tuning error / invalid inputs better
 - damo reclaim: add a command for basic investigation
