@@ -178,12 +178,14 @@ def write_watermarks_dir(dir_path, wmarks):
 
 def write_quota_goal_dir(dir_path, goal):
     err = _damo_fs.write_file(
-            os.path.join(dir_path, 'target_value'), goal.target_value_bp)
+            os.path.join(dir_path, 'target_value'),
+            '%d' % goal.target_value_bp)
     if err is not None:
         return err
 
     return _damo_fs.write_file(
-            os.path.join(dir_path, 'current_value'), goal.current_value_bp)
+            os.path.join(dir_path, 'current_value'),
+            '%d' % goal.current_value_bp)
 def write_quota_goals_dir(dir_path, goals):
     # goals dir has merged in 6.8-rc1
     if not os.path.isdir(dir_path):
