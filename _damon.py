@@ -496,7 +496,7 @@ class DamosQuotas:
         lines = [
             '%s / %s / %s per %s' % (
                 _damo_fmt_str.format_time_ns(self.time_ms * 1000000, raw),
-                _damo_fmt_str.format_time_ns(self.sz_bytes, raw),
+                _damo_fmt_str.format_sz(self.sz_bytes, raw),
                 _damo_fmt_str.format_sz(self.effective_sz_bytes, raw),
                 _damo_fmt_str.format_time_ms(self.reset_interval_ms, raw))]
         for idx, goal in enumerate(self.goals):
