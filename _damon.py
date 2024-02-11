@@ -1160,7 +1160,13 @@ def update_schemes_tried_regions(kdamond_idxs=None):
         kdamond_idxs = running_kdamond_idxs()
     return _damon_fs.update_schemes_tried_regions(kdamond_idxs)
 
-def update_schemes_status(stats=True, tried_regions=True):
+def update_schemes_quota_effective_bytes(kdamond_idxs=None):
+    if kdamond_idxs == None:
+        kdamond_idxs = running_kdamond_idxs()
+    return _damon_fs.update_schemes_quota_effective_bytes(kdamond_idxs)
+
+def update_schemes_status(stats=True, tried_regions=True,
+                          quota_effective_bytes=False):
     '''Returns error string or None'''
     idxs = running_kdamond_idxs()
     if len(idxs) == 0:
@@ -1170,7 +1176,13 @@ def update_schemes_status(stats=True, tried_regions=True):
         if err != None:
             return err
     if tried_regions and feature_supported('schemes_tried_regions'):
-        return update_schemes_tried_regions(idxs)
+        err = update_schemes_tried_regions(idxs)
+        if err != None:
+            return err
+
+    if quota_effective_bytes and feature_supported('schemes_quota_effective_bytes'):
+        return update_schemes_quota_effective_bytes(idxs)
+
     return None
 
 def turn_damon_on(kdamonds_idxs):
@@ -1194,11 +1206,12 @@ def current_kdamonds():
     return _damon_fs.current_kdamonds()
 
 def update_read_kdamonds(nr_retries=0, update_stats=True,
-        update_tried_regions=True):
+        update_tried_regions=True, update_quota_effective_bytes=False):
     err = 'assumed error'
     nr_tries = 0
     while True:
-        err = update_schemes_status(update_stats, update_tried_regions)
+        err = update_schemes_status(update_stats, update_tried_regions,
+                                    update_quota_effective_bytes)
         nr_tries += 1
         if err == None or nr_tries > nr_retries:
             break

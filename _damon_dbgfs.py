@@ -60,6 +60,9 @@ def update_schemes_stats(kdamond_idxs):
 def update_schemes_tried_regions(kdamond_idxs):
     return 'DAMON debugfs doesn\'t support schemes tried regions'
 
+def update_schemes_quota_effective_bytes(kdamond_idxs):
+    return 'DAMON debugfs doesn\'t support schemes effective quota'
+
 # for stage_kdamonds
 
 def get_target_ids_file():

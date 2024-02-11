@@ -85,6 +85,17 @@ def update_schemes_tried_regions(kdamond_idxs):
             return '%s (maybe schemes_tried_regions not supported?)' % err
     return None
 
+'Return error'
+def update_schemes_quota_effective_bytes(kdamond_idxs):
+    print('update effective quota')
+    for kdamond_idx in kdamond_idxs:
+        err = _damo_fs.write_file(
+                get_state_file_of(kdamond_idx),
+                'update_schemes_effective_quotas')
+        if err != None:
+            return '%s (maybe schemes_effective_quotas not supported?)' % err
+    return None
+
 # for stage_kdamonds
 
 def write_filter_dir(dir_path, filter_):
