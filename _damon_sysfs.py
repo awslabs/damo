@@ -818,6 +818,10 @@ def update_supported_features():
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'quotas', 'goals')):
         feature_supports['schemes_quota_goals'] = True
 
+    if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'quotas',
+                                   'effective_bytes')):
+        feature_supports['schemes_quota_effective_bytes'] = True
+
     avail_ops, err = _avail_ops()
     if err == None:
         for ops in ['vaddr', 'paddr', 'fvaddr']:
