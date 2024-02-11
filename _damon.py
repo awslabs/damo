@@ -449,10 +449,11 @@ class DamosQuotas:
     weight_nr_accesses_permil = None
     weight_age_permil = None
     goals = None
+    effective_sz_bytes = None
     scheme = None
 
     def __init__(self, time_ms=0, sz_bytes=0, reset_interval_ms='max',
-            weights=['0 %', '0 %', '0 %'], goals=[]):
+            weights=['0 %', '0 %', '0 %'], goals=[], effective_sz_bytes=0):
         self.time_ms = _damo_fmt_str.text_to_ms(time_ms)
         self.sz_bytes = _damo_fmt_str.text_to_bytes(sz_bytes)
         self.reset_interval_ms = _damo_fmt_str.text_to_ms(reset_interval_ms)
@@ -461,6 +462,8 @@ class DamosQuotas:
                 weights[1])
         self.weight_age_permil = _damo_fmt_str.text_to_permil(weights[2])
         self.goals = goals
+        self.effective_sz_bytes = _damo_fmt_str.text_to_bytes(
+                effective_sz_bytes)
         for goal in self.goals:
             goal.quotas = self
 
@@ -485,13 +488,16 @@ class DamosQuotas:
                 kv['reset_interval_ms'],
                 [kv['weights']['sz_permil'],
                     kv['weights']['nr_accesses_permil'],
-                    kv['weights']['age_permil'],], goals)
+                    kv['weights']['age_permil'],],
+                goals,
+                kv['effective_sz_bytes'] if 'effective_sz_bytes' in kv else 0)
 
     def to_str(self, raw):
         lines = [
-            '%s / %s per %s' % (
+            '%s / %s / %s per %s' % (
                 _damo_fmt_str.format_time_ns(self.time_ms * 1000000, raw),
                 _damo_fmt_str.format_time_ns(self.sz_bytes, raw),
+                _damo_fmt_str.format_sz(self.effective_sz_bytes, raw),
                 _damo_fmt_str.format_time_ms(self.reset_interval_ms, raw))]
         for idx, goal in enumerate(self.goals):
             lines.append('goal %d: %s' % (idx, goal.to_str(raw)))
@@ -510,6 +516,8 @@ class DamosQuotas:
             ('reset_interval_ms', _damo_fmt_str.format_time_ms_exact(
                 self.reset_interval_ms, raw)),
             ('goals', [goal.to_kvpairs(raw) for goal in self.goals]),
+            ('effective_sz_bytes',
+             _damo_fmt_str.format_sz(self.effective_sz_bytes, raw)),
             ('weights', (collections.OrderedDict([
                 ('sz_permil',
                     _damo_fmt_str.format_permil(self.weight_sz_permil, raw)),
@@ -973,6 +981,7 @@ features = ['record',       # was in DAMON patchset, but not merged in mainline
             'schemes_filters_target',   # merged in v6.6-rc1
             'schemes_apply_interval',   # merged in v6.7-rc1
             'schemes_quota_goals',      # merged in v6.8-rc1
+            'schemes_quota_effective_bytes',    # in development
             ]
 
 _damon_fs = None
