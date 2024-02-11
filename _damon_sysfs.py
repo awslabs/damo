@@ -34,30 +34,6 @@ def supported():
 def get_state_file_of(kdamond_idx):
     return os.path.join(get_kdamonds_dir(), '%s' % kdamond_idx, 'state')
 
-def turn_damon_on(kdamonds_idxs):
-    # In case of vaddr, too early monitoring shows unstable mapping changes.
-    # Give the process a time to have stable memory mapping.
-    time.sleep(0.5)
-    for kdamond_idx in kdamonds_idxs:
-        err = _damo_fs.write_file(get_state_file_of(kdamond_idx), 'on')
-        if err != None:
-            return err
-    return None
-
-def turn_damon_off(kdamonds_idxs):
-    for kdamond_idx in kdamonds_idxs:
-        err = _damo_fs.write_file(get_state_file_of(kdamond_idx), 'off')
-        if err != None:
-            return err
-    return None
-
-def is_kdamond_running(kdamond_idx):
-    content, err = _damo_fs.read_file(get_state_file_of(kdamond_idx))
-    if err != None:
-        print(err)
-        return False
-    return content.strip() == 'on'
-
 def __write_state_file(kdamond_idxs, command):
     'Return error'
     err = None
@@ -66,6 +42,22 @@ def __write_state_file(kdamond_idxs, command):
         if err != None:
             break
     return err
+
+def turn_damon_on(kdamonds_idxs):
+    # In case of vaddr, too early monitoring shows unstable mapping changes.
+    # Give the process a time to have stable memory mapping.
+    time.sleep(0.5)
+    return __write_state_file(kdamonds_idxs, 'on')
+
+def turn_damon_off(kdamonds_idxs):
+    return __write_state_file(kdamonds_idxs, 'off')
+
+def is_kdamond_running(kdamond_idx):
+    content, err = _damo_fs.read_file(get_state_file_of(kdamond_idx))
+    if err != None:
+        print(err)
+        return False
+    return content.strip() == 'on'
 
 'Return error'
 def update_schemes_stats(kdamond_idxs):
