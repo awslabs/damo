@@ -96,7 +96,6 @@ def update_schemes_tried_regions(kdamond_idxs):
 
 'Return error'
 def update_schemes_quota_effective_bytes(kdamond_idxs):
-    print('update effective quota')
     for kdamond_idx in kdamond_idxs:
         err = _damo_fs.write_file(
                 get_state_file_of(kdamond_idx),
