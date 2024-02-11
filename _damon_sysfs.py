@@ -69,40 +69,28 @@ def __write_state_file(kdamond_idxs, command):
 
 'Return error'
 def update_schemes_stats(kdamond_idxs):
-    for kdamond_idx in kdamond_idxs:
-        err = _damo_fs.write_file(
-                get_state_file_of(kdamond_idx), 'update_schemes_stats')
-        if err != None:
-            return err
-    return None
+    return __write_state_file(kdamond_idxs, 'update_schemes_stats')
 
 'Return error'
 def update_schemes_tried_bytes(kdamond_idxs):
-    for kdamond_idx in kdamond_idxs:
-        err = _damo_fs.write_file(
-                get_state_file_of(kdamond_idx), 'update_schemes_tried_bytes')
-        if err != None:
-            return '%s (maybe schemes_tried_regions_sz not supported?)' % err
-    return None
+    err = __write_state_file(kdamond_idxs, 'update_schemes_tried_bytes')
+    if err != None:
+        err = '%s (maybe schemes_tried_regions_sz not supported?)' % err
+    return err
 
 'Return error'
 def update_schemes_tried_regions(kdamond_idxs):
-    for kdamond_idx in kdamond_idxs:
-        err = _damo_fs.write_file(
-                get_state_file_of(kdamond_idx), 'update_schemes_tried_regions')
-        if err != None:
-            return '%s (maybe schemes_tried_regions not supported?)' % err
-    return None
+    err = __write_state_file(kdamond_idxs, 'update_schemes_tried_regions')
+    if err != None:
+        err = '%s (maybe schemes_tried_regions not supported?)' % err
+    return err
 
 'Return error'
 def update_schemes_quota_effective_bytes(kdamond_idxs):
-    for kdamond_idx in kdamond_idxs:
-        err = _damo_fs.write_file(
-                get_state_file_of(kdamond_idx),
-                'update_schemes_effective_quotas')
-        if err != None:
-            return '%s (maybe schemes_effective_quotas not supported?)' % err
-    return None
+    err = __write_state_file(kdamond_idxs, 'update_schemes_effective_quotas')
+    if err != None:
+        err = '%s (maybe schemes_effective_quotas not supported?)' % err
+    return err
 
 # for stage_kdamonds
 
