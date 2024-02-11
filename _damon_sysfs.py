@@ -58,6 +58,15 @@ def is_kdamond_running(kdamond_idx):
         return False
     return content.strip() == 'on'
 
+def __write_state_file(kdamond_idxs, command):
+    'Return error'
+    err = None
+    for kdamond_idx in kdamond_idxs:
+        err = _damo_fs.write_file(get_state_file_of(kdamond_idx), command)
+        if err != None:
+            break
+    return err
+
 'Return error'
 def update_schemes_stats(kdamond_idxs):
     for kdamond_idx in kdamond_idxs:
