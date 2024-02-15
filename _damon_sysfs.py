@@ -790,9 +790,10 @@ def update_supported_features():
         kdamonds_for_feature_check = [_damon.Kdamond(state=None,
             pid=None, contexts=[_damon.DamonCtx(ops=None, targets=[],
                 intervals=None, nr_regions=None,
-                schemes=[_damon.Damos(access_pattern=None,
-                    action='stat', quotas=None, watermarks=None, filters=[],
-                    stats=None)])])]
+                schemes=[_damon.Damos(
+                    access_pattern=None, action='stat',
+                    quotas=DamosQuotas(goals=DamosQuotaGoal()),
+                    watermarks=None, filters=[], stats=None)])])]
         ensure_dirs_populated_for(kdamonds_for_feature_check)
 
     if os.path.isdir(scheme_tried_regions_dir_of(0, 0, 0)):
@@ -821,6 +822,11 @@ def update_supported_features():
     if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'quotas',
                                    'effective_bytes')):
         feature_supports['schemes_quota_effective_bytes'] = True
+
+    if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'quotas', 'goals',
+                                   'goal_metric')):
+        feature_supports['schemes_quota_goal_metric'] = True
+        feature_supports['schemes_quota_goal_some_psi'] = True
 
     avail_ops, err = _avail_ops()
     if err == None:

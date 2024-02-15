@@ -982,6 +982,8 @@ features = ['record',       # was in DAMON patchset, but not merged in mainline
             'schemes_apply_interval',   # merged in v6.7-rc1
             'schemes_quota_goals',      # merged in v6.8-rc1
             'schemes_quota_effective_bytes',    # in development
+            'schemes_quota_goal_metric',    # in development
+            'schemes_quota_goal_some_psi',  # in development
             ]
 
 _damon_fs = None
