@@ -417,6 +417,7 @@ class DamosQuotaGoal:
     def __init__(self, metric='user_input',
                  target_value='0', current_value='0'):
         self.metric = metric
+        # todo: support time string for some_mem_psi_us
         self.target_value = _damo_fmt_str.text_to_nr(target_value)
         self.current_value = _damo_fmt_str.text_to_nr(current_value)
 
