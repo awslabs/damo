@@ -129,9 +129,17 @@ def damos_options_to_scheme(sz_region, access_rate, age, action,
         apply_interval, quotas, goals, wmarks, filters):
     if quotas != None:
         gargs = goals
+        # garg should be <metric> <target value> [current value]
+        # [current value] is given for only 'user_input' <metric>
+        for garg in gargs:
+            if not len(garg) in [2, 3]:
+                return None, 'Wrong --damos_quota_goal (%s)' % garg
+            if garg[0] == 'user_input' and len(garg) != 3:
+                return None, 'Wrong --damos_quota_goal (%s)' % garg
+            if garg[0] != 'user_input' and len(garg) != 2:
+                return None, 'Wrong --damos_quota_goal (%s)' % garg
         try:
-            goals = [_damon.DamosQuotaGoal(
-                target_value=garg[0], current_value=garg[1]) for garg in gargs]
+            goals = [_damon.DamosQuotaGoal(*garg) for garg in gargs]
         except Exception as e:
             return None, 'Wrong --damos_quota_goal (%s, %s)' % (gargs, e)
 
@@ -459,10 +467,10 @@ def set_damos_argparser(parser):
                 '<access rate priority weight> (permil)',
                 '<age priority weight> (permil)'), nargs=6, action='append',
             help='damos quotas')
-    parser.add_argument('--damos_quota_goal', nargs=2, action='append',
+    parser.add_argument('--damos_quota_goal', nargs='+', action='append',
             default=[],
-            metavar=('<target value>', '<current value>'),
-            help='damos quota goal (target and current values')
+            metavar='<metric or target value or current value>',
+            help='damos quota goal (<metric> <target value> [current value])')
     parser.add_argument('--damos_nr_quota_goals', type=int, nargs='+',
             default=[], metavar='<integer>',
             help='number of quota goals for each scheme (in order)')
