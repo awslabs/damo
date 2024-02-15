@@ -409,36 +409,40 @@ class DamosAccessPattern:
                     unit_samples, unit_aggr_intervals, intervals))
 
 class DamosQuotaGoal:
-    target_value_bp = None
-    current_value_bp = None
+    target_value = None
+    current_value = None
     quotas = None
 
-    def __init__(self, target_value_bp='0 %', current_value_bp='0 %'):
-        self.target_value_bp = _damo_fmt_str.text_to_bp(target_value_bp)
-        self.current_value_bp = _damo_fmt_str.text_to_bp(current_value_bp)
+    def __init__(self, target_value='0', current_value='0'):
+        self.target_value = _damo_fmt_str.text_to_nr(target_value)
+        self.current_value = _damo_fmt_str.text_to_nr(current_value)
 
     def to_str(self, raw):
         return 'target %s current %s' % (
-                _damo_fmt_str.format_bp(self.target_value_bp, raw),
-                _damo_fmt_str.format_bp(self.current_value_bp, raw),)
+                _damo_fmt_str.format_nr(self.target_value, raw),
+                _damo_fmt_str.format_nr(self.current_value, raw),)
 
     def __str__(self):
         return self.to_str(False)
 
     def __eq__(self, other):
         return (type(self) == type(other) and
-                self.target_value_bp == other.target_value_bp and
-                self.current_value_bp == other.current_value_bp)
+                self.target_value == other.target_value and
+                self.current_value == other.current_value)
 
     @classmethod
     def from_kvpairs(cls, kv):
-        return DamosQuotaGoal(kv['target_value_bp'], kv['current_value_bp'])
+        if 'target_value_bp' in kv:
+            # For supporing old version of bad naming.  Should deprecate later.
+            return DamosQuotaGoal(kv['target_value_bp'],
+                                  kv['current_value_bp'])
+        return DamosQuotaGoal(kv['target_value'], kv['current_value'])
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
-            ('target_value_bp', _damo_fmt_str.format_bp(self.target_value_bp,
+            ('target_value', _damo_fmt_str.format_nr(self.target_value,
                 raw)),
-            ('current_value_bp', _damo_fmt_str.format_bp(self.current_value_bp,
+            ('current_value', _damo_fmt_str.format_nr(self.current_value,
                 raw))])
 
 class DamosQuotas:

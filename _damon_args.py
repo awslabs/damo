@@ -460,8 +460,8 @@ def set_damos_argparser(parser):
             help='damos quotas')
     parser.add_argument('--damos_quota_goal', nargs=2, action='append',
             default=[],
-            metavar=('<target value bp>', '<current value bp>'),
-            help='damos quota goal (target and current values in bp')
+            metavar=('<target value>', '<current value>'),
+            help='damos quota goal (target and current values')
     parser.add_argument('--damos_nr_quota_goals', type=int, nargs='+',
             default=[], metavar='<integer>',
             help='number of quota goals for each scheme (in order)')

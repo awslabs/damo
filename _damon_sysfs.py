@@ -178,13 +178,13 @@ def write_watermarks_dir(dir_path, wmarks):
 def write_quota_goal_dir(dir_path, goal):
     err = _damo_fs.write_file(
             os.path.join(dir_path, 'target_value'),
-            '%d' % goal.target_value_bp)
+            '%d' % goal.target_value)
     if err is not None:
         return err
 
     return _damo_fs.write_file(
             os.path.join(dir_path, 'current_value'),
-            '%d' % goal.current_value_bp)
+            '%d' % goal.current_value)
 def write_quota_goals_dir(dir_path, goals):
     # goals dir has merged in 6.8-rc1
     if not os.path.isdir(dir_path):
@@ -873,8 +873,8 @@ def wops_for_scheme_watermarks(wmarks):
 
 def wops_for_scheme_quota_goal(goal):
     return {
-            'target_value': '%s' % goal.target_value_bp,
-            'current_value': '%s' % goal.current_value_bp,
+            'target_value': '%s' % goal.target_value,
+            'current_value': '%s' % goal.current_value,
             }
 
 def wops_for_scheme_quota_goals(goals):
