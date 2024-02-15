@@ -812,7 +812,7 @@ def update_supported_features():
                 intervals=None, nr_regions=None,
                 schemes=[_damon.Damos(
                     access_pattern=None, action='stat',
-                    quotas=DamosQuotas(goals=DamosQuotaGoal()),
+                    quotas=_damon.DamosQuotas(goals=_damon.DamosQuotaGoal()),
                     watermarks=None, filters=[], stats=None)])])]
         ensure_dirs_populated_for(kdamonds_for_feature_check)
 
