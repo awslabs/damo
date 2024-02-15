@@ -409,16 +409,20 @@ class DamosAccessPattern:
                     unit_samples, unit_aggr_intervals, intervals))
 
 class DamosQuotaGoal:
+    metric = None
     target_value = None
     current_value = None
     quotas = None
 
-    def __init__(self, target_value='0', current_value='0'):
+    def __init__(self, metric='user_input',
+                 target_value='0', current_value='0'):
+        self.metric = metric
         self.target_value = _damo_fmt_str.text_to_nr(target_value)
         self.current_value = _damo_fmt_str.text_to_nr(current_value)
 
     def to_str(self, raw):
-        return 'target %s current %s' % (
+        return 'metric %s target %s current %s' % (
+                self.metric,
                 _damo_fmt_str.format_nr(self.target_value, raw),
                 _damo_fmt_str.format_nr(self.current_value, raw),)
 
@@ -426,7 +430,7 @@ class DamosQuotaGoal:
         return self.to_str(False)
 
     def __eq__(self, other):
-        return (type(self) == type(other) and
+        return (type(self) == type(other) and self.metric == other.metric and
                 self.target_value == other.target_value and
                 self.current_value == other.current_value)
 
@@ -436,11 +440,13 @@ class DamosQuotaGoal:
             # For supporing old version of bad naming.  Should deprecate later.
             return DamosQuotaGoal(target_value=kv['target_value_bp'],
                                   current_value=kv['current_value_bp'])
-        return DamosQuotaGoal(target_value=kv['target_value'],
-                              current_value=kv['current_value'])
+        return DamosQuotaGoal(
+                metric=kv['metric'], target_value=kv['target_value'],
+                current_value=kv['current_value'])
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
+            ('metric', self.metric),
             ('target_value', _damo_fmt_str.format_nr(self.target_value,
                 raw)),
             ('current_value', _damo_fmt_str.format_nr(self.current_value,
