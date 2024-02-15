@@ -130,7 +130,8 @@ def damos_options_to_scheme(sz_region, access_rate, age, action,
     if quotas != None:
         gargs = goals
         try:
-            goals = [_damon.DamosQuotaGoal(garg[0], garg[1]) for garg in gargs]
+            goals = [_damon.DamosQuotaGoal(
+                target_value=garg[0], current_value=garg[1]) for garg in gargs]
         except Exception as e:
             return None, 'Wrong --damos_quota_goal (%s, %s)' % (gargs, e)
 

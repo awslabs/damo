@@ -478,8 +478,9 @@ def files_content_to_quota_goals(files_content):
     goals = []
     for goal_kv in number_sorted_dirs(files_content):
         goals.append(
-                _damon.DamosQuotaGoal(goal_kv['target_value'],
-                    goal_kv['current_value']))
+                _damon.DamosQuotaGoal(
+                    target_value=goal_kv['target_value'],
+                    current_value=goal_kv['current_value']))
     return goals
 
 def files_content_to_quotas(files_content):

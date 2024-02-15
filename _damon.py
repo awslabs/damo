@@ -434,9 +434,10 @@ class DamosQuotaGoal:
     def from_kvpairs(cls, kv):
         if 'target_value_bp' in kv:
             # For supporing old version of bad naming.  Should deprecate later.
-            return DamosQuotaGoal(kv['target_value_bp'],
-                                  kv['current_value_bp'])
-        return DamosQuotaGoal(kv['target_value'], kv['current_value'])
+            return DamosQuotaGoal(target_value=kv['target_value_bp'],
+                                  current_value=kv['current_value_bp'])
+        return DamosQuotaGoal(target_value=kv['target_value'],
+                              current_value=kv['current_value'])
 
     def to_kvpairs(self, raw=False):
         return collections.OrderedDict([
