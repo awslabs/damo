@@ -176,6 +176,17 @@ def write_watermarks_dir(dir_path, wmarks):
             os.path.join(dir_path, 'low'), '%d' % wmarks.low_permil)
 
 def write_quota_goal_dir(dir_path, goal):
+    # goal metric is wip as of 6.8-rc4 days.
+    if (not os.path.isfile(os.path.join(dir_path, 'goal_metric')) and
+        goal.metric != 'user_input'):
+        return 'the kernel is not supporting quota goal metric'
+
+    if os.path.isfile('goal_metric'):
+        err = _damo_fs.write_file(os.path.join(dir_path, 'goal_metric'),
+                                  '%s' % goal.metric)
+        if err is not None:
+            return err
+
     err = _damo_fs.write_file(
             os.path.join(dir_path, 'target_value'),
             '%d' % goal.target_value)
@@ -185,6 +196,7 @@ def write_quota_goal_dir(dir_path, goal):
     return _damo_fs.write_file(
             os.path.join(dir_path, 'current_value'),
             '%d' % goal.current_value)
+
 def write_quota_goals_dir(dir_path, goals):
     # goals dir has merged in 6.8-rc1
     if not os.path.isdir(dir_path):
@@ -477,10 +489,17 @@ def files_content_to_access_pattern(files_content):
 def files_content_to_quota_goals(files_content):
     goals = []
     for goal_kv in number_sorted_dirs(files_content):
-        goals.append(
-                _damon.DamosQuotaGoal(
-                    target_value=goal_kv['target_value'],
-                    current_value=goal_kv['current_value']))
+        if 'goal_metric' in goal_kv:
+            goals.append(
+                    _damon.DamosQuotaGoal(
+                        metric=goal_kv['goal_metric'].strip(),
+                        target_value=goal_kv['target_value'],
+                        current_value=goal_kv['current_value']))
+        else:
+            goals.append(
+                    _damon.DamosQuotaGoal(
+                        target_value=goal_kv['target_value'],
+                        current_value=goal_kv['current_value']))
     return goals
 
 def files_content_to_quotas(files_content):
