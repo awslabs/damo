@@ -181,7 +181,7 @@ def write_quota_goal_dir(dir_path, goal):
         goal.metric != 'user_input'):
         return 'the kernel is not supporting quota goal metric'
 
-    if os.path.isfile('goal_metric'):
+    if os.path.isfile(os.path.join(dir_path, 'goal_metric')):
         err = _damo_fs.write_file(os.path.join(dir_path, 'goal_metric'),
                                   '%s' % goal.metric)
         if err is not None:
