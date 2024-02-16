@@ -177,12 +177,12 @@ def write_watermarks_dir(dir_path, wmarks):
 
 def write_quota_goal_dir(dir_path, goal):
     # goal metric is wip as of 6.8-rc4 days.
-    if (not os.path.isfile(os.path.join(dir_path, 'goal_metric')) and
+    if (not os.path.isfile(os.path.join(dir_path, 'target_metric')) and
         goal.metric != 'user_input'):
         return 'the kernel is not supporting quota goal metric'
 
-    if os.path.isfile(os.path.join(dir_path, 'goal_metric')):
-        err = _damo_fs.write_file(os.path.join(dir_path, 'goal_metric'),
+    if os.path.isfile(os.path.join(dir_path, 'target_metric')):
+        err = _damo_fs.write_file(os.path.join(dir_path, 'target_metric'),
                                   '%s' % goal.metric)
         if err is not None:
             return err
@@ -489,10 +489,10 @@ def files_content_to_access_pattern(files_content):
 def files_content_to_quota_goals(files_content):
     goals = []
     for goal_kv in number_sorted_dirs(files_content):
-        if 'goal_metric' in goal_kv:
+        if 'target_metric' in goal_kv:
             goals.append(
                     _damon.DamosQuotaGoal(
-                        metric=goal_kv['goal_metric'].strip(),
+                        metric=goal_kv['target_metric'].strip(),
                         target_value=goal_kv['target_value'],
                         current_value=goal_kv['current_value']))
         else:
@@ -844,7 +844,7 @@ def update_supported_features():
         feature_supports['schemes_quota_effective_bytes'] = True
 
     if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'quotas', 'goals',
-                                   'goal_metric')):
+                                   'target_metric')):
         feature_supports['schemes_quota_goal_metric'] = True
         feature_supports['schemes_quota_goal_some_psi'] = True
 
