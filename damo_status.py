@@ -79,25 +79,6 @@ def pr_kdamonds(kdamonds, json_format, raw_nr):
             print('kdamond %d' % idx)
             print(_damo_fmt_str.indent_lines( k.to_str(raw_nr), 4))
 
-
-def set_argparser(parser):
-    parser.add_argument('--json', action='store_true', default=False,
-            help='print output in json format')
-    parser.add_argument('--raw', action='store_true', default=False,
-            help='print raw numbers')
-    parser.add_argument('--kdamonds_summary', action='store_true',
-            help='print kdamond summary only')
-    parser.add_argument('--damos_stats', action='store_true',
-            help='print DAMOS scheme stats only')
-    parser.add_argument('--damos_stat_fields', metavar='<stat field name>',
-            choices=['nr_tried', 'sz_tried', 'nr_applied', 'sz_applied',
-                'qt_exceeds'], nargs='+',
-            help='DAMOS stat fiedls to print')
-    parser.add_argument('--damon_params', action='store_true',
-            help='print entered DAMON parameters only')
-    _damon_args.set_common_argparser(parser)
-    return parser
-
 def main(args):
     _damon.ensure_root_and_initialized(args)
     # ignore the error.  status could be called before feature saving commands.
@@ -120,3 +101,21 @@ def main(args):
         print('cannot update and read kdamonds: %s' % err)
         exit(1)
     pr_kdamonds(kdamonds, args.json, args.raw)
+
+def set_argparser(parser):
+    parser.add_argument('--json', action='store_true', default=False,
+            help='print output in json format')
+    parser.add_argument('--raw', action='store_true', default=False,
+            help='print raw numbers')
+    parser.add_argument('--kdamonds_summary', action='store_true',
+            help='print kdamond summary only')
+    parser.add_argument('--damos_stats', action='store_true',
+            help='print DAMOS scheme stats only')
+    parser.add_argument('--damos_stat_fields', metavar='<stat field name>',
+            choices=['nr_tried', 'sz_tried', 'nr_applied', 'sz_applied',
+                'qt_exceeds'], nargs='+',
+            help='DAMOS stat fiedls to print')
+    parser.add_argument('--damon_params', action='store_true',
+            help='print entered DAMON parameters only')
+    _damon_args.set_common_argparser(parser)
+    return parser

@@ -7,11 +7,6 @@ Start DAMON with given parameters.
 import _damon
 import _damon_args
 
-def set_argparser(parser):
-    parser = _damon_args.set_argparser(parser, add_record_options=False)
-    parser.description = 'Start DAMON with specified parameters'
-    return parser
-
 def main(args):
     _damon.ensure_root_and_initialized(args, save_feature_supports=True)
 
@@ -19,3 +14,8 @@ def main(args):
     if err:
         print('could not turn on damon (%s)' % err)
         exit(1)
+
+def set_argparser(parser):
+    parser = _damon_args.set_argparser(parser, add_record_options=False)
+    parser.description = 'Start DAMON with specified parameters'
+    return parser

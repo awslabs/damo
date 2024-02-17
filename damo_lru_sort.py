@@ -63,6 +63,31 @@ def plrus_read_status():
         with open(param_file, 'r') as f:
             print('%s: %s' % (param, f.read().strip()))
 
+def main(args):
+    _damon.ensure_root_permission()
+    chk_plrus_sysfs()
+
+    if args.action == 'status':
+        plrus_read_status()
+        return
+
+    set_param('hot_thres_access_freq', args.hot_thres_access_freq)
+    set_param('cold_min_age', args.cold_min_age)
+    set_param('quota_ms', args.quota[0])
+    set_param('quota_reset_interval_ms', args.quota[1])
+    set_param('wmarks_interval', args.wmarks[0])
+    set_param('wmarks_high', args.wmarks[1])
+    set_param('wmarks_mid', args.wmarks[2])
+    set_param('wmarks_low', args.wmarks[3])
+    set_param('sample_interval', args.monitor_intervals[0])
+    set_param('aggr_interval', args.monitor_intervals[1])
+    set_param('min_nr_regions', args.nr_regions[0])
+    set_param('max_nr_regions', args.nr_regions[1])
+    set_param('monitor_region_start', args.monitor_region[0])
+    set_param('monitor_region_end', args.monitor_region[1])
+
+    plrus_enable(args.action == 'enable')
+
 def set_argparser(parser):
     parser.add_argument('action', type=str, nargs='?',
             choices=['status', 'enable', 'disable'], default='status',
@@ -90,28 +115,3 @@ def set_argparser(parser):
     parser.add_argument('--monitor_region', type=int, metavar='<phy addr>',
             nargs=2, default=[None] * 2,
             help='start and end addresses of the target memory region')
-
-def main(args):
-    _damon.ensure_root_permission()
-    chk_plrus_sysfs()
-
-    if args.action == 'status':
-        plrus_read_status()
-        return
-
-    set_param('hot_thres_access_freq', args.hot_thres_access_freq)
-    set_param('cold_min_age', args.cold_min_age)
-    set_param('quota_ms', args.quota[0])
-    set_param('quota_reset_interval_ms', args.quota[1])
-    set_param('wmarks_interval', args.wmarks[0])
-    set_param('wmarks_high', args.wmarks[1])
-    set_param('wmarks_mid', args.wmarks[2])
-    set_param('wmarks_low', args.wmarks[3])
-    set_param('sample_interval', args.monitor_intervals[0])
-    set_param('aggr_interval', args.monitor_intervals[1])
-    set_param('min_nr_regions', args.nr_regions[0])
-    set_param('max_nr_regions', args.nr_regions[1])
-    set_param('monitor_region_start', args.monitor_region[0])
-    set_param('monitor_region_end', args.monitor_region[1])
-
-    plrus_enable(args.action == 'enable')

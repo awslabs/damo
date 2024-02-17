@@ -19,16 +19,6 @@ def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
     cleanup()
 
-def set_argparser(parser):
-    parser.add_argument('target', type=str, metavar='<target>',
-            help='monitoring target (command, pid or \'paddr\')')
-    parser.add_argument('--report_type', type=str, choices=['heats', 'wss'],
-            default='heats', help='report type')
-    parser.add_argument('--delay', type=float, metavar='<seconds>', default=3,
-            help='deplay between updates in seconds.')
-    parser.add_argument('--count', type=int, metavar='<count>', default=0,
-            help='number of updates.')
-
 def main(args):
     _damon.ensure_root_permission()
 
@@ -87,3 +77,13 @@ def main(args):
         nr_reports += 1
 
     cleanup()
+
+def set_argparser(parser):
+    parser.add_argument('target', type=str, metavar='<target>',
+            help='monitoring target (command, pid or \'paddr\')')
+    parser.add_argument('--report_type', type=str, choices=['heats', 'wss'],
+            default='heats', help='report type')
+    parser.add_argument('--delay', type=float, metavar='<seconds>', default=3,
+            help='deplay between updates in seconds.')
+    parser.add_argument('--count', type=int, metavar='<count>', default=0,
+            help='number of updates.')

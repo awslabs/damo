@@ -120,23 +120,6 @@ def poll_target_pids(kdamonds, add_childs):
             cleanup_exit(1)
     return True
 
-def set_argparser(parser):
-    parser = _damon_args.set_argparser(parser, add_record_options=True)
-    parser.add_argument('--output_type',
-            choices=_damon_records.file_types,
-            default=_damon_records.file_type_json_compressed,
-            help='output file\'s type')
-    parser.add_argument('--output_permission', type=str, default='600',
-            help='permission of the output file')
-    parser.add_argument('--perf_path', type=str, default='perf',
-            help='path of perf tool ')
-    parser.add_argument('--include_child_tasks', action='store_true',
-            help='record accesses of child processes')
-    parser.add_argument('--schemes_target_regions', action='store_true',
-            help='record schemes tried to be applied regions')
-    parser.description = 'Record monitoring results'
-    return parser
-
 def main(args):
     global data_for_cleanup
 
@@ -188,3 +171,20 @@ def main(args):
     _damon.wait_kdamonds_turned_off()
 
     cleanup_exit(0)
+
+def set_argparser(parser):
+    parser = _damon_args.set_argparser(parser, add_record_options=True)
+    parser.add_argument('--output_type',
+            choices=_damon_records.file_types,
+            default=_damon_records.file_type_json_compressed,
+            help='output file\'s type')
+    parser.add_argument('--output_permission', type=str, default='600',
+            help='permission of the output file')
+    parser.add_argument('--perf_path', type=str, default='perf',
+            help='path of perf tool ')
+    parser.add_argument('--include_child_tasks', action='store_true',
+            help='record accesses of child processes')
+    parser.add_argument('--schemes_target_regions', action='store_true',
+            help='record schemes tried to be applied regions')
+    parser.description = 'Record monitoring results'
+    return parser

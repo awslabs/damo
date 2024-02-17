@@ -18,6 +18,11 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='nr_regions', module=damo_nr_regions,
             msg='number of regions')]
 
+def main(args):
+    for subcmd in subcmds:
+        if subcmd.name == args.report_type:
+            subcmd.execute(args)
+
 def set_argparser(parser):
     subparsers = parser.add_subparsers(title='report type', dest='report_type',
             metavar='<report type>', help='the type of the report to generate')
@@ -26,8 +31,3 @@ def set_argparser(parser):
 
     for subcmd in subcmds:
         subcmd.add_parser(subparsers)
-
-def main(args):
-    for subcmd in subcmds:
-        if subcmd.name == args.report_type:
-            subcmd.execute(args)

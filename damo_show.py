@@ -521,6 +521,47 @@ def handle_ls_keywords(args):
         return True
     return False
 
+def main(args):
+    handled = handle_ls_keywords(args)
+    if handled:
+        return
+
+    args.region_box_values = [v if v != 'none' else None
+            for v in args.region_box_values]
+
+    access_pattern = _damon.DamosAccessPattern(args.sz_region,
+            args.access_rate, _damon.unit_percent, args.age * 1000000,
+            _damon.unit_usec)
+
+    addr_range = None
+    if args.address != None:
+        addr_range, err = parse_sort_addr_ranges_input(args.address)
+        if err != None:
+            print('wrong --address input (%s)' % err)
+            exit(1)
+
+    if args.input_file == None:
+        _damon.ensure_root_and_initialized(args, load_feature_supports=True)
+
+    records, err = _damon_records.get_records(
+                args.tried_regions_of, args.input_file,
+                access_pattern, addr_range,
+                args.total_sz_only, args.dont_merge_regions)
+    if err != None:
+        print(err)
+        exit(1)
+
+    if len([r for r in records if r.intervals is None]) != 0:
+        print('some records lack the intervals information')
+        exit(1)
+
+    for record in records:
+        try:
+            pr_records(args, records)
+        except BrokenPipeError as e:
+            # maybe user piped to 'less' like pager, and quit from it
+            pass
+
 def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
 
@@ -611,44 +652,3 @@ def set_argparser(parser):
 
     parser.description = 'Show DAMON-monitored access pattern'
     parser.epilog='If --input_file is not provided, capture snapshot'
-
-def main(args):
-    handled = handle_ls_keywords(args)
-    if handled:
-        return
-
-    args.region_box_values = [v if v != 'none' else None
-            for v in args.region_box_values]
-
-    access_pattern = _damon.DamosAccessPattern(args.sz_region,
-            args.access_rate, _damon.unit_percent, args.age * 1000000,
-            _damon.unit_usec)
-
-    addr_range = None
-    if args.address != None:
-        addr_range, err = parse_sort_addr_ranges_input(args.address)
-        if err != None:
-            print('wrong --address input (%s)' % err)
-            exit(1)
-
-    if args.input_file == None:
-        _damon.ensure_root_and_initialized(args, load_feature_supports=True)
-
-    records, err = _damon_records.get_records(
-                args.tried_regions_of, args.input_file,
-                access_pattern, addr_range,
-                args.total_sz_only, args.dont_merge_regions)
-    if err != None:
-        print(err)
-        exit(1)
-
-    if len([r for r in records if r.intervals is None]) != 0:
-        print('some records lack the intervals information')
-        exit(1)
-
-    for record in records:
-        try:
-            pr_records(args, records)
-        except BrokenPipeError as e:
-            # maybe user piped to 'less' like pager, and quit from it
-            pass

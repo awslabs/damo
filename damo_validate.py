@@ -32,24 +32,6 @@ def check_boundary(region, regions_boundary):
                 (region.start, region.end))
         exit(1)
 
-
-def set_argparser(parser):
-    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-            default='damon.data', help='input file name')
-    parser.add_argument('--aggr', metavar='<microseconds>', type=int, nargs=2,
-            default=[80000, 120000],
-            help='min/max valid sample intervals (us)')
-    parser.add_argument('--nr_regions', metavar='<number of regions>',
-            type=int, nargs=2, default=[3, 1200],
-            help='min/max number of regions')
-    parser.add_argument('--nr_accesses', metavar='<number of accesses>',
-            type=int, nargs=2, default=[0, 24],
-            help='min/max number of measured accesses per aggregate interval')
-    parser.add_argument('--allow_error', metavar='<percent>', default=2,
-            help='allowed percent of error samples')
-    parser.add_argument('--regions_boundary', metavar='<start>-<end>',
-            nargs='+', help='regions boundary')
-
 def main(args):
     if not os.path.isfile(args.input):
         print('the file (%s) not found' % args.input)
@@ -98,3 +80,20 @@ def main(args):
 
                 assert_value_in_range(region.nr_accesses.samples,
                         args.nr_accesses, 'nr_accesses', False)
+
+def set_argparser(parser):
+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
+            default='damon.data', help='input file name')
+    parser.add_argument('--aggr', metavar='<microseconds>', type=int, nargs=2,
+            default=[80000, 120000],
+            help='min/max valid sample intervals (us)')
+    parser.add_argument('--nr_regions', metavar='<number of regions>',
+            type=int, nargs=2, default=[3, 1200],
+            help='min/max number of regions')
+    parser.add_argument('--nr_accesses', metavar='<number of accesses>',
+            type=int, nargs=2, default=[0, 24],
+            help='min/max number of measured accesses per aggregate interval')
+    parser.add_argument('--allow_error', metavar='<percent>', default=2,
+            help='allowed percent of error samples')
+    parser.add_argument('--regions_boundary', metavar='<start>-<end>',
+            nargs='+', help='regions boundary')

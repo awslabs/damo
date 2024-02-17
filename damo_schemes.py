@@ -27,9 +27,6 @@ def sighandler(signum, frame):
     print('\nsignal %s received' % signum)
     cleanup_exit(signum)
 
-def set_argparser(parser):
-    return _damon_args.set_argparser(parser, add_record_options=False)
-
 def main(args):
     global orig_kdamonds
     global kdamonds_idxs
@@ -56,3 +53,6 @@ def main(args):
     _damon.wait_kdamonds_turned_off()
 
     cleanup_exit(0)
+
+def set_argparser(parser):
+    return _damon_args.set_argparser(parser, add_record_options=False)

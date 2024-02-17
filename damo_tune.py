@@ -7,12 +7,6 @@ Update DAMON input parameters.
 import _damon
 import _damon_args
 
-def set_argparser(parser):
-    parser.description = 'Update DAMON parameters'
-    parser.add_argument('--quota_goals_only', action='store_true',
-            help='commit quota goals change only')
-    return _damon_args.set_argparser(parser, add_record_options=False)
-
 def main(args):
     _damon.ensure_root_and_initialized(args)
 
@@ -24,3 +18,9 @@ def main(args):
     if err:
         print('tuning failed (%s)' % err)
         exit(1)
+
+def set_argparser(parser):
+    parser.description = 'Update DAMON parameters'
+    parser.add_argument('--quota_goals_only', action='store_true',
+            help='commit quota goals change only')
+    return _damon_args.set_argparser(parser, add_record_options=False)

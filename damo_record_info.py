@@ -115,10 +115,6 @@ def pr_guide(records):
     for guide in get_guide_info(records):
         print(guide)
 
-def set_argparser(parser):
-    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-            default='damon.data', help='input file name')
-
 def main(args):
     records, err = _damon_records.get_records(record_file=args.input)
     if err != None:
@@ -126,3 +122,7 @@ def main(args):
                 (args.input, err))
         exit(1)
     pr_guide(records)
+
+def set_argparser(parser):
+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
+            default='damon.data', help='input file name')

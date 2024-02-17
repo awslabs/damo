@@ -4,16 +4,6 @@ import os
 
 import _damon_records
 
-def set_argparser(parser):
-    parser.add_argument('--record_file', metavar='<file>',
-            default='damon.data', help='the record file')
-    parser.add_argument('--format',
-            choices=_damon_records.self_write_supported_file_types,
-            default=_damon_records.file_type_json_compressed,
-            help='new file format')
-    parser.add_argument('--output_file', metavar='<file>',
-            help='the path to converted file')
-
 def main(args):
     if not os.path.isfile(args.record_file):
         print('record file (%s) is not exist' % args.record_file)
@@ -32,3 +22,13 @@ def main(args):
     if err != None:
         print('writing records again failed (%s)' % err)
         exit(1)
+
+def set_argparser(parser):
+    parser.add_argument('--record_file', metavar='<file>',
+            default='damon.data', help='the record file')
+    parser.add_argument('--format',
+            choices=_damon_records.self_write_supported_file_types,
+            default=_damon_records.file_type_json_compressed,
+            help='new file format')
+    parser.add_argument('--output_file', metavar='<file>',
+            help='the path to converted file')

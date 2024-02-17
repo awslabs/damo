@@ -10,13 +10,6 @@ import json
 import _damon
 import _damon_args
 
-def set_argparser(parser):
-    _damon_args.set_argparser(parser, add_record_options=False)
-    parser.add_argument('--schemes_only', action='store_true',
-            help='print schemes part only')
-    parser.add_argument('--raw', action='store_true',
-            help='print numbers in machine friendly raw form')
-
 def main(args):
     _damon.ensure_root_permission()
 
@@ -40,3 +33,10 @@ def main(args):
         return
     print(json.dumps({'kdamonds': [k.to_kvpairs(args.raw) for k in kdamonds]},
         indent=4))
+
+def set_argparser(parser):
+    _damon_args.set_argparser(parser, add_record_options=False)
+    parser.add_argument('--schemes_only', action='store_true',
+            help='print schemes part only')
+    parser.add_argument('--raw', action='store_true',
+            help='print numbers in machine friendly raw form')
