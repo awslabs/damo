@@ -28,3 +28,5 @@
   conflicts with concurrent ones
 - Implement 'replay'
   - Receive recorded access pattern and replay it
+- Implement 'profile'
+  - https://sjp38.github.io/post/damon_profile_callstack_example/
