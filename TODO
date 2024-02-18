@@ -28,5 +28,10 @@
   conflicts with concurrent ones
 - Implement 'replay'
   - Receive recorded access pattern and replay it
-- Implement 'profile'
+- Implement 'profile' feature
   - https://sjp38.github.io/post/damon_profile_callstack_example/
+  - Option 1: implement as a new command
+  - Option 2: extend record to save the trace, extend report to show profile
+  - idea: run 'perf record [-g]' together with DAMON, show user most frequently
+    executed functions or code in specific time interval.  Let the time
+    interval specified by access pattern.
