@@ -59,8 +59,12 @@ def main(args):
         for region in snapshot.regions:
             region.nr_accesses.add_unset_unit(record.intervals)
 
-    for snapshot in record.snapshots:
+    progress_notice_time = int(time.time()) + 3
+    for idx, snapshot in enumerate(record.snapshots):
         replay_snapshot(snapshot, record.intervals)
+        if int(time.time()) > progress_notice_time:
+            print('%d/%d snapshot replayed' % (idx, len(record.snapshots)))
+            progress_notice_time += 3
 
 def set_argparser(parser):
     parser.add_argument('--input', metavar='<file>', default='damon.data',
