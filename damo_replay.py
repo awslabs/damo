@@ -4,6 +4,7 @@ import os
 import random
 import time
 
+import _damo_fmt_str
 import _damon_records
 import damo_record_info
 
@@ -34,7 +35,29 @@ def replay_snapshot(snapshot, mon_intervals):
         while time.time() - start_time < time_slice:
             pass
 
+def test_perf(size_mem):
+    access_start_time = time.time()
+    next_output_time = time.time() + 1
+    nr_accesses = 0
+    while True:
+        access_region(0, size_mem)
+        nr_accesses += 1
+
+        if time.time() >= next_output_time:
+            print('replayer can access %s memory per second' %
+                  _damo_fmt_str.format_sz(
+                      size_mem * nr_accesses /
+                      (time.time() - access_start_time),
+                      machine_friendly=False))
+            next_output_time = time.time() + 1
+            nr_accesses = 0
+            access_start_time = time.time()
+
 def main(args):
+    if args.test_perf is not None:
+        size_mem = _damo_fmt_str.text_to_bytes(args.test_perf)
+        return test_perf(size_mem)
+
     input_file = args.input
 
     if not os.path.isfile(input_file):
@@ -76,5 +99,8 @@ def set_argparser(parser):
     parser.add_argument('--progress_notice_interval', metavar='<seconds>',
                         type=float,
                         help='time interval between replay progress notice')
+    parser.add_argument(
+            '--test_perf', metavar='<bytes>',
+            help='measure performance of replayer for given amount of memory')
     parser.description = 'Replay monitored access pattern'
     return parser
