@@ -14,8 +14,8 @@ def get_page(pfn):
         page_map[pfn] = bytearray(4096)
     return page_map[pfn]
 
-def access_region(region):
-    for addr in range(region.start, region.end, 4096):
+def access_region(start_addr, end_addr):
+    for addr in range(start_addr, end_addr, 4096):
         page = get_page(addr / 4096)
         not_real_use = 0
         for a in range(0, 4096, 4096):
@@ -30,7 +30,7 @@ def replay_snapshot(snapshot, mon_intervals):
         start_time = time.time()
         for region in snapshot.regions:
             if slice_idx < region.nr_accesses.samples:
-                access_region(region)
+                access_region(region.start, region.end)
         while time.time() - start_time < time_slice:
             pass
 
