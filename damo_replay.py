@@ -1,15 +1,38 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import os
+import random
+import time
 
 import _damon_records
 import damo_record_info
 
-def replay_snapshot(snapshot):
-    for region in snapshot.regions:
-        print('access %s-%s with %s percent access rate for %s nanosecs' %
-              (region.start, region.end, region.nr_accesses.percent,
-               snapshot.end_time - snapshot.start_time))
+page_map = {}
+
+def get_page(pfn):
+    if not pfn in page_map:
+        page_map[pfn] = bytearray(4096)
+    return page_map[pfn]
+
+def access_region(region):
+    for addr in range(region.start, region.end, 4096):
+        page = get_page(addr / 4096)
+        not_real_use = 0
+        for a in range(0, 4096, 4096):
+            not_real_use += page[a]
+
+def replay_snapshot(snapshot, mon_intervals):
+    runtime_sec = (snapshot.end_time - snapshot.start_time) / 1000000000
+    max_nr_accesses = mon_intervals.aggr / mon_intervals.sample
+    time_slice = runtime_sec / max_nr_accesses
+    nr_slices = int(runtime_sec / time_slice)
+    for slice_idx in range(nr_slices):
+        start_time = time.time()
+        for region in snapshot.regions:
+            if slice_idx < region.nr_accesses.samples:
+                access_region(region)
+        while time.time() - start_time < time_slice:
+            pass
 
 def main(args):
     input_file = args.input
@@ -37,7 +60,7 @@ def main(args):
             region.nr_accesses.add_unset_unit(record.intervals)
 
     for snapshot in record.snapshots:
-        replay_snapshot(snapshot)
+        replay_snapshot(snapshot, record.intervals)
 
 def set_argparser(parser):
     parser.add_argument('--input', metavar='<file>', default='damon.data',
