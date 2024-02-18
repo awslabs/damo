@@ -125,6 +125,28 @@ def damos_options_to_filters(filters_args):
             return None, 'unsupported filter type'
     return filters, None
 
+def damos_quotas_cons_arg(cmd_args):
+    time_ms = 0
+    sz_bytes = 0
+    reset_interval_ms = 'max'
+    weights = ['0 %', '0 %', '0 %']
+
+    nr_cmd_args = len(cmd_args)
+    if nr_cmd_args >= 1:
+        time_ms = cmd_args[0]
+    if nr_cmd_args >= 2:
+        sz_bytes = cmd_args[1]
+    if nr_cmd_args >= 3:
+        reset_interval_ms = cmd_args[2]
+    if nr_cmd_args >= 4:
+        weights[0] = cmd_args[3]
+    if nr_cmd_args >= 5:
+        weights[1] = cmd_args[4]
+    if nr_cmd_args >= 6:
+        weights[2] = cmd_args[5]
+
+    return [time_ms, sz_bytes, reset_interval_ms, weights]
+
 def damos_options_to_scheme(sz_region, access_rate, age, action,
         apply_interval, quotas, goals, wmarks, filters):
     if quotas != None:
@@ -147,7 +169,8 @@ def damos_options_to_scheme(sz_region, access_rate, age, action,
         if len(qargs) > 6:
             return None, 'Wrong --damos_quotas (%s, >6 parameters)' % qargs
         try:
-            quotas = _damon.DamosQuotas(*qargs, goals=goals)
+            quotas = _damon.DamosQuotas(*damos_quotas_cons_arg(qargs),
+                                        goals=goals)
         except Exception as e:
             return None, 'Wrong --damos_quotas (%s, %s)' % (qargs, e)
 
