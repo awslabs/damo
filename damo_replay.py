@@ -63,10 +63,10 @@ def main(args):
     if progress_notice_interval is None:
         progress_notice_interval = 3
 
-    progress_notice_time = int(time.time()) + progress_notice_interval
+    progress_notice_time = time.time() + progress_notice_interval
     for idx, snapshot in enumerate(record.snapshots):
         replay_snapshot(snapshot, record.intervals)
-        if int(time.time()) > progress_notice_time:
+        if time.time() >= progress_notice_time:
             print('%d/%d snapshot replayed' % (idx, len(record.snapshots)))
             progress_notice_time += progress_notice_interval
 
