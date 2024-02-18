@@ -17,6 +17,7 @@ import damo_monitor
 import damo_reclaim
 import damo_record
 import damo_record_info
+import damo_replay
 import damo_report
 import damo_schemes
 import damo_show
@@ -46,11 +47,13 @@ subcmds = [
             module=damo_status,
             msg='show DAMON status'),
 
-        # DAMON result recording and reporting
+        # DAMON result recording and reporting/replaying
         _damo_subcmds.DamoSubCmd(name='record', module=damo_record,
             msg='record data accesses'),
         _damo_subcmds.DamoSubCmd(name='report', module=damo_report,
             msg='report the recorded data accesses in the specified form'),
+        _damo_subcmds.DamoSubCmd(name='replay', module=damo_replay,
+            msg='replay the recorded data accesses'),
 
         # DAMON modules control
         _damo_subcmds.DamoSubCmd(name='reclaim', module=damo_reclaim,
