@@ -59,15 +59,22 @@ def main(args):
         for region in snapshot.regions:
             region.nr_accesses.add_unset_unit(record.intervals)
 
-    progress_notice_time = int(time.time()) + 3
+    progress_notice_interval = args.progress_notice_interval
+    if progress_notice_interval is None:
+        progress_notice_interval = 3
+
+    progress_notice_time = int(time.time()) + progress_notice_interval
     for idx, snapshot in enumerate(record.snapshots):
         replay_snapshot(snapshot, record.intervals)
         if int(time.time()) > progress_notice_time:
             print('%d/%d snapshot replayed' % (idx, len(record.snapshots)))
-            progress_notice_time += 3
+            progress_notice_time += progress_notice_interval
 
 def set_argparser(parser):
     parser.add_argument('--input', metavar='<file>', default='damon.data',
                         help='record file to replay')
+    parser.add_argument('--progress_notice_interval', metavar='<seconds>',
+                        type=float,
+                        help='time interval between replay progress notice')
     parser.description = 'Replay monitored access pattern'
     return parser
