@@ -26,6 +26,7 @@
   - helps reporting issue
 - Handle _damon_sysfs file i/o error for unsupported kernel features and
   conflicts with concurrent ones
+- Let DAMOS quota specified in more easy way
 - Implement 'replay'
   - Receive recorded access pattern and replay it
 - Implement 'profile' feature
