@@ -144,9 +144,10 @@ def damos_options_to_scheme(sz_region, access_rate, age, action,
             return None, 'Wrong --damos_quota_goal (%s, %s)' % (gargs, e)
 
         qargs = quotas
+        if len(qargs) > 6:
+            return None, 'Wrong --damos_quotas (%s, >6 parameters)' % qargs
         try:
-            quotas = _damon.DamosQuotas(qargs[0], qargs[1], qargs[2],
-                    [qargs[3], qargs[4], qargs[5]], goals)
+            quotas = _damon.DamosQuotas(*qargs, goals=goals)
         except Exception as e:
             return None, 'Wrong --damos_quotas (%s, %s)' % (qargs, e)
 
@@ -462,11 +463,12 @@ def set_damos_argparser(parser):
             action='append', default=[],
             help='the apply interval for the scheme')
     parser.add_argument('--damos_quotas', default=[],
-            metavar=('<time (ms)>', '<size (bytes)>', '<reset interval (ms)>',
-                '<size priority weight (permil)>',
-                '<access rate priority weight> (permil)',
-                '<age priority weight> (permil)'), nargs=6, action='append',
-            help='damos quotas')
+            metavar='<quota parameter>', nargs='+', action='append',
+            help=' '.join([
+            'damos quotas (<time (ms)> [<size (bytes)> [<reset interval (ms)>',
+                '[<size priority weight (permil)>',
+                '[<access rate priority weight> (permil)',
+                '[<age priority weight> (permil)]]]]])']))
     parser.add_argument('--damos_quota_goal', nargs='+', action='append',
             default=[],
             metavar='<metric or target value or current value>',
