@@ -27,8 +27,6 @@
 - Handle _damon_sysfs file i/o error for unsupported kernel features and
   conflicts with concurrent ones
 - Let DAMOS quota specified in more easy way
-- Implement 'replay'
-  - Receive recorded access pattern and replay it
 - Implement 'profile' feature
   - https://sjp38.github.io/post/damon_profile_callstack_example/
   - Option 1: implement as a new command
@@ -36,3 +34,5 @@
   - idea: run 'perf record [-g]' together with DAMON, show user most frequently
     executed functions or code in specific time interval.  Let the time
     interval specified by access pattern.
+- Optimize page management in 'replay'
+  - Maybe we could manage it in 2 MiB granularity.
