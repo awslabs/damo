@@ -574,6 +574,14 @@ Then, the command reproduces the recorded accesses in the file by making
 articial memory accesses.  This could be useful for some types of system
 analysis or experiments with real-world memory access pattern.
 
+Note that current implementation of `damo replay` runs on Python with single
+thread.  Hence it might not performant enough to saturate full memory bandwidth
+of the system.  If the record is made by workloads and/or systems that utilize
+memory bandwidth more than 'damo replay' and/or replaying systems could, and as
+the difference of the performance is big, the replayed accesses would be less
+similar to the original one.  To show the real memory access performance of
+`damo replay` on specific system, users could use `--test_perf` option.
+
 Miscelleneous Helper Commands
 =============================
 
