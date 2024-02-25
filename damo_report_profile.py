@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
+import subprocess
 
 import _damon
 import _damon_records
@@ -20,14 +21,28 @@ def main(args):
 
     records, err = _damon_records.get_records(
                 tried_regions_of=False, record_file=args.inputs[0],
-                access_pattern=access_pattern, address_range=addr_range,
+                access_pattern=access_pattern, address_ranges=addr_range,
                 total_sz_only=False, dont_merge_regions=False)
     if err != None:
         print(err)
         exit(1)
 
-    # count symbols in profile records that recorded on time of snapshots in
-    # 'records', and show
+    times = []
+    for record in records:
+        for snapshot in record.snapshots:
+            if len(times) == 0:
+                times.append([snapshot.start_time, snapshot.end_time])
+                continue
+            last_time = times[-1]
+            if last_time[1] == snapshot.start_time:
+                last_time[1] = snapshot.end_time
+            else:
+                times.append([snapshot.start_time, snapshot.end_time])
+
+    cmd = ['perf', 'report', '-i', args.inputs[1]]
+    for interval in times:
+        cmd += ['--time', ','.join(['%s' % (t / 1000000000) for t in interval])]
+    subprocess.call(cmd)
 
 def set_argparser(parser):
     parser.add_argument('--inputs', metavar='<file>', nargs=2,
