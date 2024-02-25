@@ -82,9 +82,11 @@ def main(args):
         for region in snapshot.regions:
             region.nr_accesses.add_unset_unit(record.intervals)
 
-    progress_notice_interval = args.progress_notice_interval
-    if progress_notice_interval is None:
+    if args.progress_notice_interval is None:
         progress_notice_interval = 3
+    else:
+        progress_notice_interval = _damo_fmt_str.text_to_sec(
+                args.progress_notice_interval)
 
     progress_notice_time = time.time() + progress_notice_interval
     for idx, snapshot in enumerate(record.snapshots):
@@ -98,7 +100,6 @@ def set_argparser(parser):
     parser.add_argument('--input', metavar='<file>', default='damon.data',
                         help='record file to replay')
     parser.add_argument('--progress_notice_interval', metavar='<seconds>',
-                        type=float,
                         help='time interval between replay progress notice')
     parser.add_argument(
             '--test_perf', metavar='<bytes>',
