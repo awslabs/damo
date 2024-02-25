@@ -20,9 +20,7 @@ def get_page(pfn):
 def access_region(start_addr, end_addr):
     for addr in range(start_addr, end_addr, sz_page):
         page = get_page(addr / sz_page)
-        not_real_use = 0
-        for a in range(0, sz_page, sz_page):
-            not_real_use += page[a]
+        just_for_access = page[int(sz_page / 2)]
 
 def replay_snapshot(snapshot, mon_intervals):
     runtime_sec = (snapshot.end_time - snapshot.start_time) / 1000000000
