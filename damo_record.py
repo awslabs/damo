@@ -161,7 +161,8 @@ def main(args):
 
     data_for_cleanup.record_handle = _damon_records.start_recording(
             tracepoint, args.out, args.output_type, args.output_permission,
-            monitoring_intervals)
+            monitoring_intervals,
+            profile=args.profile is True, profile_target_pid=None)
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
@@ -186,5 +187,7 @@ def set_argparser(parser):
                         help='record accesses of child processes')
     parser.add_argument('--schemes_target_regions', action='store_true',
                         help='record schemes tried to be applied regions')
+    parser.add_argument('--profile', action='store_true',
+                        help='record profiling information together')
     parser.description = 'Record monitoring results'
     return parser
