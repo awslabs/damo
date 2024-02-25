@@ -506,14 +506,16 @@ class RecordingHandle:
     file_permission = None
     monitoring_intervals = None
     perf_pipe = None
+    perf_profile_pipe = None
 
     def __init__(self, file_path, file_format, file_permission,
-            monitoring_intervals, perf_pipe):
+            monitoring_intervals, perf_pipe, perf_profile_pipe):
         self.file_path = file_path
         self.file_format = file_format
         self.file_permission = file_permission
         self.monitoring_intervals = monitoring_intervals
         self.perf_pipe = perf_pipe
+        self.perf_profile_pipe = perf_profile_pipe
 
 '''
 Start recording DAMON's monitoring results using perf.
@@ -521,12 +523,19 @@ Start recording DAMON's monitoring results using perf.
 Returns pipe for the perf.  The pipe should be passed to finish_recording()
 later.
 '''
-def start_recording(tracepoint, file_path, file_format,
-        file_permission, monitoring_intervals):
+def start_recording(tracepoint, file_path, file_format, file_permission,
+                    monitoring_intervals,
+                    profile=False, profile_target_pid=None):
     pipe = subprocess.Popen(
             [PERF, 'record', '-a', '-e', tracepoint, '-o', file_path])
+    profile_pipe = None
+    if profile is True:
+        cmd = [PERF, 'record', '-o', '%s.profile' % file_path]
+        if profile_target_pid is not None:
+            cmd += ['--pid', profile_target_pid]
+        profile_pipe = subprocess.Popen(cmd)
     return RecordingHandle(file_path, file_format, file_permission,
-            monitoring_intervals, pipe)
+            monitoring_intervals, pipe, profile_pipe)
 
 def finish_recording(handle):
     try:
@@ -545,6 +554,16 @@ def finish_recording(handle):
     if err != None:
         print('converting format from perf_data to %s failed (%s)' %
                 (handle.file_format, err))
+
+    if handle.perf_profile_pipe is None:
+        return
+
+    try:
+        handle.perf_profile_pipe.send_signal(signal.SIGINT)
+    except:
+        # perf might already finished
+        pass
+    os.chmod('%s.profile' % handle.file_path, handle.file_permission)
 
 # for snapshot
 
