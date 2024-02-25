@@ -10,16 +10,18 @@ import damo_record_info
 
 page_map = {}
 
+sz_page = 4096
+
 def get_page(pfn):
     if not pfn in page_map:
-        page_map[pfn] = bytearray(4096)
+        page_map[pfn] = bytearray(sz_page)
     return page_map[pfn]
 
 def access_region(start_addr, end_addr):
-    for addr in range(start_addr, end_addr, 4096):
-        page = get_page(addr / 4096)
+    for addr in range(start_addr, end_addr, sz_page):
+        page = get_page(addr / sz_page)
         not_real_use = 0
-        for a in range(0, 4096, 4096):
+        for a in range(0, sz_page, sz_page):
             not_real_use += page[a]
 
 def replay_snapshot(snapshot, mon_intervals):
