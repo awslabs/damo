@@ -102,7 +102,8 @@ def main(args):
     print('all snapshots are replayed')
 
 def set_argparser(parser):
-    parser.add_argument('--input', metavar='<file>', default='damon.data',
+    parser.add_argument('input', metavar='<file>', nargs='?',
+                        default='damon.data',
                         help='record file to replay')
     parser.add_argument('--progress_notice_interval', metavar='<seconds>',
                         help='time interval between replay progress notice')
