@@ -75,8 +75,8 @@ commands can be categorized as below:
 - For snapshot and visualization of DAMON's monitoring results and running
   status
   - `show`, and `status` are included
-- For recording the access monitoring results and visualizing those
-  - `record` and `report` are included
+- For recording the access monitoring results and utilizing the records
+  - `record`, `report` and `replay` are included
 - For more convenient use of `damo`
   - `version` and `fmt_json` are included
 
@@ -561,6 +561,15 @@ duration spikes could be more easily found.
 
 Similar to that of ``heats --heatmap``, it also supports `gnuplot` based simple
 visualization of the distribution via ``--plot`` option.
+
+`damo replay` (Replay Recorded Data Access Pattern)
+---------------------------------------------------
+
+`damo replay` reads a data access pattern record file (if not explicitly
+specified using ``--input`` option, reads ``./damon.data`` file by default) and
+reproduce the recorded access pattern by making articial memory accesses.  This
+could be useful for various purpose system analysis with real-world memory
+access pattern.
 
 Miscelleneous Helper Commands
 =============================
