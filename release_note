@@ -3,6 +3,8 @@ picked by human sense, so could be incomplete and missing many things.
 
 v2.2.3
 - Document 'replay' command
+- Support profiling data record (--profile option of 'damo record')
+- Add a prototype of access pattern-based profiling report generation
 
 v2.2.2
 - Implement 'replay' command
