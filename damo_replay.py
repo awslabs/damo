@@ -97,7 +97,7 @@ def main(args):
     for idx, snapshot in enumerate(record.snapshots):
         replay_snapshot(snapshot, record.intervals)
         if time.time() >= progress_notice_time:
-            print('%d/%d snapshot replayed' % (idx, len(record.snapshots)))
+            print('%d/%d snapshots replayed' % (idx, len(record.snapshots)))
             progress_notice_time += progress_notice_interval
     print('all snapshots are replayed')
 
