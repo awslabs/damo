@@ -35,7 +35,8 @@ def replay_snapshot(snapshot, mon_intervals):
         while time.time() - start_time < time_slice:
             pass
 
-def test_perf(size_mem):
+def test_perf(size_mem, test_time):
+    test_start_time = time.time()
     access_start_time = time.time()
     next_output_time = time.time() + 1
     nr_accesses = 0
@@ -53,10 +54,13 @@ def test_perf(size_mem):
             nr_accesses = 0
             access_start_time = time.time()
 
+        if time.time() - test_start_time >= test_time:
+            break
+
 def main(args):
     if args.test_perf is True:
         size_mem = _damo_fmt_str.text_to_bytes(args.test_perf_sz_mem)
-        return test_perf(size_mem)
+        return test_perf(size_mem, 60)
 
     input_file = args.input
 
