@@ -93,11 +93,13 @@ def main(args):
         progress_notice_interval = _damo_fmt_str.text_to_sec(
                 args.progress_notice_interval)
 
-    progress_notice_time = time.time() + progress_notice_interval
+    play_start_time = time.time()
+    progress_notice_time = play_start_time + + progress_notice_interval
     for idx, snapshot in enumerate(record.snapshots):
         replay_snapshot(snapshot, record.intervals)
         if time.time() >= progress_notice_time:
-            print('%d/%d snapshots replayed' % (idx, len(record.snapshots)))
+            print('%d/%d snapshots replayed in %.3f seconds' %
+                  (idx, len(record.snapshots), time.time() - play_start_time))
             progress_notice_time += progress_notice_interval
     print('all snapshots are replayed')
 
