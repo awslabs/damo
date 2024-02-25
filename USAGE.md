@@ -566,9 +566,9 @@ visualization of the distribution via ``--plot`` option.
 ---------------------------------------------------
 
 `damo replay` reads a data access pattern record file (if not explicitly
-specified using ``--input`` option, reads ``./damon.data`` file by default) and
-reproduce the recorded access pattern by making articial memory accesses.  This
-could be useful for various purpose system analysis with real-world memory
+specified via command line argument, reads ``./damon.data`` file by default)
+and reproduce the recorded access pattern by making articial memory accesses.
+This could be useful for various purpose system analysis with real-world memory
 access pattern.
 
 Miscelleneous Helper Commands
