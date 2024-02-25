@@ -92,6 +92,7 @@ def main(args):
         if time.time() >= progress_notice_time:
             print('%d/%d snapshot replayed' % (idx, len(record.snapshots)))
             progress_notice_time += progress_notice_interval
+    print('all snapshots are replayed')
 
 def set_argparser(parser):
     parser.add_argument('--input', metavar='<file>', default='damon.data',
