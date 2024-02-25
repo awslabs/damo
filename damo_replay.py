@@ -54,8 +54,8 @@ def test_perf(size_mem):
             access_start_time = time.time()
 
 def main(args):
-    if args.test_perf is not None:
-        size_mem = _damo_fmt_str.text_to_bytes(args.test_perf)
+    if args.test_perf is True:
+        size_mem = _damo_fmt_str.text_to_bytes(args.test_perf_sz_mem)
         return test_perf(size_mem)
 
     input_file = args.input
@@ -101,8 +101,10 @@ def set_argparser(parser):
                         help='record file to replay')
     parser.add_argument('--progress_notice_interval', metavar='<seconds>',
                         help='time interval between replay progress notice')
-    parser.add_argument(
-            '--test_perf', metavar='<bytes>',
-            help='measure performance of replayer for given amount of memory')
+    parser.add_argument('--test_perf', action='store_true',
+                        help='measure performance of replayer')
+    parser.add_argument('--test_perf_sz_mem', metavar='<bytes>',
+                        default='1 GiB',
+                        help='size of memory to use for --test_perf')
     parser.description = 'Replay monitored access pattern'
     return parser
