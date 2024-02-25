@@ -60,7 +60,8 @@ def test_perf(size_mem, test_time):
 def main(args):
     if args.test_perf is True:
         size_mem = _damo_fmt_str.text_to_bytes(args.test_perf_sz_mem)
-        return test_perf(size_mem, 60)
+        test_time = _damo_fmt_str.text_to_sec(args.test_perf_runtime)
+        return test_perf(size_mem, test_time)
 
     input_file = args.input
 
@@ -110,5 +111,8 @@ def set_argparser(parser):
     parser.add_argument('--test_perf_sz_mem', metavar='<bytes>',
                         default='1 GiB',
                         help='size of memory to use for --test_perf')
+    parser.add_argument('--test_perf_runtime', metavar='<seconds>',
+                        default='1 m',
+                        help='runtime of --test_perf')
     parser.description = 'Replay monitored access pattern'
     return parser
