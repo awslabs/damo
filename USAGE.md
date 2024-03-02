@@ -5,6 +5,47 @@ improvement of this document via GitHub
 [issues](https://github.com/awslabs/damo/issues) or
 [mails](https://lore.kernel.org/damon).
 
+Table of Contents
+=================
+
+- [Prerequisites](#prerequisites)
+  * [Kernel](#kernel)
+  * [Sysfs or Debugfs](#sysfs-or-debugfs)
+  * [Perf](#perf)
+  * [Basic Concepts of DAMON](#basic-concepts-of-damon)
+- [Install](#install)
+- [Overview](#overview)
+- [DAMON Control (Access Monitoring and Monitoring-based System Optimization)](#damon-control--access-monitoring-and-monitoring-based-system-optimization-)
+  * [`damo start`](#-damo-start-)
+    + [Simple Target Argument](#simple-target-argument)
+    + [Partial DAMON Parameters Update](#partial-damon-parameters-update)
+    + [Partial DAMOS Parameters Update](#partial-damos-parameters-update)
+    + [Full DAMON Parameters Update](#full-damon-parameters-update)
+    + [Full DAMOS Parameters Update](#full-damos-parameters-update)
+  * [`damo tune`](#-damo-tune-)
+  * [`damo stop`](#-damo-stop-)
+- [Snapshot and Visualization of DAMON Monitoring Results and Running Status](#snapshot-and-visualization-of-damon-monitoring-results-and-running-status)
+  * [`damo show`](#-damo-show-)
+    + [DAMON Monitoring Results Structure](#damon-monitoring-results-structure)
+    + [`damo`'s way of showing DAMON Monitoring Results](#-damo--s-way-of-showing-damon-monitoring-results)
+    + [Customization of The Output](#customization-of-the-output)
+      - [Region Visualization via Boxes](#region-visualization-via-boxes)
+      - [Sorting and Filtering Regions Based on Access Pattern](#sorting-and-filtering-regions-based-on-access-pattern)
+  * [`damo status`](#-damo-status-)
+- [For recording the access monitoring results and visualizing those](#for-recording-the-access-monitoring-results-and-visualizing-those)
+  * [`damo record` (Recording Data Access Pattern)](#-damo-record---recording-data-access-pattern-)
+    + [Recording Profile Information](#recording-profile-information)
+  * [`damo report` (Visualizing Recorded Data Access Pattern)](#-damo-report---visualizing-recorded-data-access-pattern-)
+    + [raw](#raw)
+    + [heats](#heats)
+    + [wss](#wss)
+    + [profile](#profile)
+    + [times](#times)
+  * [`damo replay` (Replay Recorded Data Access Pattern)](#-damo-replay---replay-recorded-data-access-pattern-)
+- [Miscelleneous Helper Commands](#miscelleneous-helper-commands)
+  * [`damo version`](#-damo-version-)
+  * [`damo fmt_json`](#-damo-fmt-json-)
+
 Prerequisites
 =============
 
