@@ -410,6 +410,22 @@ or, for already running process, like below:
 
     # damo record $(pidof my_workload)
 
+### Recording Profile Information
+
+Note: This feature is an experimental one.  Some changes could be made, or the
+support can be dropped in future.
+
+Users can record profiling information of the system together with the access
+pattern by adding `--profile` command line option to the `damo record` command.
+Internally, it runs `perf record` while `damo record` is running, and store the
+`perf` output as a file of name same to the access pattern record file
+(specified by `--out` option of `damo record`) except having `.profile` suffix.
+Hence, `damon.data.profile` is the default name of the profile information.
+
+Because the profile information record file is simply `perf record` output,
+users can further analyze the profile information using `perf` or any `perf
+record` output compatible tools.
+
 `damo report` (Visualizing Recorded Data Access Pattern)
 --------------------------------------------------------
 
