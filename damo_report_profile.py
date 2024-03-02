@@ -30,6 +30,8 @@ def main(args):
     times = []
     for record in records:
         for snapshot in record.snapshots:
+            if len(snapshot.regions) == 0:
+                continue
             if len(times) == 0:
                 times.append([snapshot.start_time, snapshot.end_time])
                 continue
