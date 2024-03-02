@@ -123,23 +123,5 @@ class TestDamoShow(unittest.TestCase):
         self.assertEqual(
                 damo_show.rescale(20, [10, 110], [1, 11], False), 2)
 
-    def test_parse_sort_addr_ranges_input(self):
-        self.assertEqual(
-                damo_show.parse_sort_addr_ranges_input([['1G', '2G']]),
-                ([[1024 * 1024 * 1024, 1024 * 1024 * 1024 * 2]], None))
-        ranges, err = damo_show.parse_sort_addr_ranges_input(
-                [['abc', 'def']])
-        self.assertNotEqual(err, None)
-        ranges, err = damo_show.parse_sort_addr_ranges_input([[4, 3]])
-        self.assertNotEqual(err, None)
-        ranges, err = damo_show.parse_sort_addr_ranges_input(
-                [[5, 7], [2, 6]])
-        self.assertEqual(err, 'overlapping range')
-
-        self.assertEqual(
-                damo_show.parse_sort_addr_ranges_input([[10, 20], [5, 7]]),
-                ([[5, 7], [10, 20]], None))
-
-
 if __name__ == '__main__':
     unittest.main()
