@@ -898,6 +898,23 @@ def get_records(tried_regions_of=None, record_file=None, access_pattern=None,
         filter_records_by_addr(records, request.address_ranges)
     return records, None
 
+def parse_sort_addr_ranges_input(addr_ranges_input):
+    try:
+        ranges = [[_damo_fmt_str.text_to_bytes(start),
+            _damo_fmt_str.text_to_bytes(end)]
+            for start, end in addr_ranges_input]
+    except Exception as e:
+        return None, 'conversion to bytes failed (%s)' % e
+
+    ranges.sort(key=lambda x: x[0])
+    for idx, arange in enumerate(ranges):
+        start, end = arange
+        if start > end:
+            return None, 'start > end (%s)' % arange
+        if idx > 0 and ranges[idx - 1][1] > start:
+            return None, 'overlapping range'
+    return ranges, None
+
 def set_access_pattern_argparser(parser):
     parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
