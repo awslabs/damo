@@ -535,7 +535,8 @@ def main(args):
 
     addr_range = None
     if args.address != None:
-        addr_range, err = parse_sort_addr_ranges_input(args.address)
+        addr_range, err = _damon_records.parse_sort_addr_ranges_input(
+                args.address)
         if err != None:
             print('wrong --address input (%s)' % err)
             exit(1)
