@@ -609,6 +609,29 @@ happened.
        0.03%  ps               [kernel.vmlinux]      [k] do_syscall_64
        0.03%  swapper          [kernel.vmlinux]      [k] __do_softirq
 
+### times
+
+Note: This feature is an experimental one.  Some changes could be made, or the
+support can be dropped in future.
+
+The `times` type shows time intervals in an access pattern record that showing
+specific access pattern.  This can be useful when user runs `damo` together
+with other tools such as profilers.
+
+For example, below shows when there was no access to 50 MiB size address range
+starting from `139,798,348,038,144`.
+
+    $ sudo ./damo report times --access_rate 50% 100% \
+            --address 139798348038144 $((139798348038144 + 50 * 1024 * 1024))
+    93904.291408-93904.393156
+    93905.919058-93910.903176
+    93915.994039-93920.876248
+    93926.049032-93930.918094
+    93935.988105-93940.956402
+    93946.027539-93950.997432
+    93956.067597-93961.036500
+    93966.101779-93966.910657
+
 `damo replay` (Replay Recorded Data Access Pattern)
 ---------------------------------------------------
 
