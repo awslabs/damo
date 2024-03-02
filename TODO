@@ -36,3 +36,5 @@
     interval specified by access pattern.
 - Optimize page management in 'replay'
   - Maybe we could manage it in 2 MiB granularity.
+- Deduplicate access pattern filtering options
+- report-profile: Implement working set size-based filtering
