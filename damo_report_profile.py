@@ -54,17 +54,6 @@ def set_argparser(parser):
     parser.add_argument('--inputs', metavar='<file>', nargs=2,
                         default=['damon.data', 'damon.data.profile'],
                         help='access pattern and profile record files')
-    parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
-            default=['min', 'max'],
-            help='min/max size of regions (bytes) to show')
-    parser.add_argument('--access_rate', metavar=('<min>', '<max>'), nargs=2,
-            default=['min', 'max'],
-            help='min/max access rate of regions (percent) to show')
-    parser.add_argument('--age', metavar=('<min>', '<max>'), nargs=2,
-            default=['min', 'max'],
-            help='min/max age of regions (seconds) to show')
-    parser.add_argument('--address', metavar=('<start>', '<end>'), nargs=2,
-            action='append',
-            help='address ranges to show')
+    _damon_records.set_access_pattern_argparser(parser)
 
     parser.description='Show profiling report for specific access pattern'
