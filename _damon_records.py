@@ -897,3 +897,17 @@ def get_records(tried_regions_of=None, record_file=None, access_pattern=None,
     if request.address_ranges:
         filter_records_by_addr(records, request.address_ranges)
     return records, None
+
+def set_access_pattern_argparser(parser):
+    parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
+            default=['min', 'max'],
+            help='min/max size of regions (bytes) to show')
+    parser.add_argument('--access_rate', metavar=('<min>', '<max>'), nargs=2,
+            default=['min', 'max'],
+            help='min/max access rate of regions (percent) to show')
+    parser.add_argument('--age', metavar=('<min>', '<max>'), nargs=2,
+            default=['min', 'max'],
+            help='min/max age of regions (seconds) to show')
+    parser.add_argument('--address', metavar=('<start>', '<end>'), nargs=2,
+            action='append',
+            help='address ranges to show')
