@@ -7,6 +7,7 @@ import damo_heats
 import damo_nr_regions
 import damo_report_profile
 import damo_report_raw
+import damo_report_times
 import damo_wss
 
 subcmds = [
@@ -19,7 +20,10 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='nr_regions', module=damo_nr_regions,
             msg='number of regions'),
         _damo_subcmds.DamoSubCmd(name='profile', module=damo_report_profile,
-            msg='profile report for specific access pattern')]
+            msg='profile report for specific access pattern'),
+        _damo_subcmds.DamoSubCmd(name='times', module=damo_report_times,
+            msg='times of record having specific access pattern'),
+        ]
 
 def main(args):
     for subcmd in subcmds:
