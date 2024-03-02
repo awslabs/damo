@@ -41,6 +41,10 @@ def main(args):
             else:
                 times.append([snapshot.start_time, snapshot.end_time])
 
+    if len(times) == 0:
+        print('No snapshot of the condition found')
+        exit(1)
+
     cmd = ['perf', 'report', '-i', args.inputs[1]]
     for interval in times:
         cmd += ['--time', ','.join(['%s' % (t / 1000000000) for t in interval])]
