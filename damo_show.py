@@ -550,7 +550,7 @@ def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
 
     # what to show
-    _damon_records.set_access_pattern_argparser(parser)
+    _damon_records.set_filter_argparser(parser)
 
     parser.add_argument('--input_file', metavar='<file>',
             help='source of the access pattern to show')

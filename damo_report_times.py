@@ -49,6 +49,6 @@ def set_argparser(parser):
     parser.add_argument('--inputs', metavar='<file>', nargs=2,
                         default=['damon.data', 'damon.data.profile'],
                         help='access pattern and profile record files')
-    _damon_records.set_access_pattern_argparser(parser)
+    _damon_records.set_filter_argparser(parser)
 
     parser.description='Show times of record having specific access pattern'

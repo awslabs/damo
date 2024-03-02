@@ -915,7 +915,7 @@ def parse_sort_addr_ranges_input(addr_ranges_input):
             return None, 'overlapping range'
     return ranges, None
 
-def set_access_pattern_argparser(parser):
+def set_filter_argparser(parser):
     parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
             help='min/max size of regions (bytes) to show')
