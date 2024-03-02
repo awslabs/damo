@@ -492,23 +492,6 @@ def pr_records(args, records):
     outputs = [o for o in outputs if o is not None]
     _damo_print.pr_with_pager_if_needed('\n'.join(outputs))
 
-def parse_sort_addr_ranges_input(addr_ranges_input):
-    try:
-        ranges = [[_damo_fmt_str.text_to_bytes(start),
-            _damo_fmt_str.text_to_bytes(end)]
-            for start, end in addr_ranges_input]
-    except Exception as e:
-        return None, 'conversion to bytes failed (%s)' % e
-
-    ranges.sort(key=lambda x: x[0])
-    for idx, arange in enumerate(ranges):
-        start, end = arange
-        if start > end:
-            return None, 'start > end (%s)' % arange
-        if idx > 0 and ranges[idx - 1][1] > start:
-            return None, 'overlapping range'
-    return ranges, None
-
 def handle_ls_keywords(args):
     if args.ls_record_format_keywords:
         print('\n\n'.join(['%s' % f for f in record_formatters]))
