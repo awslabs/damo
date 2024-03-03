@@ -966,6 +966,19 @@ def args_to_filters(args):
             return None, None, 'wrong --address input (%s)' % err
     return access_pattern, addr_range, None
 
+def args_to_filter(args):
+    access_pattern = _damon.DamosAccessPattern(args.sz_region,
+            args.access_rate, _damon.unit_percent, args.age * 1000000,
+            _damon.unit_usec)
+
+    addr_range = None
+    if args.address != None:
+        addr_range, err = parse_sort_addr_ranges_input(
+                args.address)
+        if err != None:
+            return None, 'wrong --address input (%s)' % err
+    return RecordFilter(access_pattern, addr_range), None
+
 def set_filter_argparser(parser):
     parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
             default=['min', 'max'],
