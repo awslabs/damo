@@ -512,7 +512,7 @@ def main(args):
     args.region_box_values = [v if v != 'none' else None
             for v in args.region_box_values]
 
-    access_pattern, addr_range, err = _damon_records.args_to_filters(args)
+    record_filter, err = _damon_records.args_to_filter(args)
     if err != None:
         print(err)
         exit(1)
@@ -522,8 +522,8 @@ def main(args):
 
     records, err = _damon_records.get_records(
                 tried_regions_of=args.tried_regions_of,
-                record_file=args.input_file, access_pattern=access_pattern,
-                address_ranges=addr_range, total_sz_only=args.total_sz_only,
+                record_file=args.input_file, record_filter=record_filter,
+                total_sz_only=args.total_sz_only,
                 dont_merge_regions=args.dont_merge_regions)
     if err != None:
         print(err)
