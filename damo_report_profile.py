@@ -8,17 +8,10 @@ import _damon_records
 import damo_show
 
 def main(args):
-    access_pattern = _damon.DamosAccessPattern(args.sz_region,
-            args.access_rate, _damon.unit_percent, args.age * 1000000,
-            _damon.unit_usec)
-
-    addr_range = None
-    if args.address != None:
-        addr_range, err = _damon_records.parse_sort_addr_ranges_input(
-                args.address)
-        if err != None:
-            print('wrong --address input (%s)' % err)
-            exit(1)
+    access_pattern, addr_range, err = _damon_records.args_to_filters(args)
+    if err != None:
+        print(err)
+        exit(1)
 
     records, err = _damon_records.get_records(
                 tried_regions_of=False, record_file=args.inputs[0],
