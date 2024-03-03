@@ -4,6 +4,7 @@ picked by human sense, so could be incomplete and missing many things.
 v2.2.4
 - Implement 'damo report profile'
 - Implement 'damo report times'
+- Implement snapshot size based record filtering (--sz_snapshot)
 
 v2.2.3
 - Document 'replay' command
