@@ -914,11 +914,11 @@ def get_records(tried_regions_of=None, record_file=None, record_filter=None,
                     records, request.record_filter.address_ranges)
     return records, None
 
-def parse_sort_addr_ranges_input(addr_ranges_input):
+def parse_sort_bytes_ranges_input(bytes_ranges_input):
     try:
         ranges = [[_damo_fmt_str.text_to_bytes(start),
             _damo_fmt_str.text_to_bytes(end)]
-            for start, end in addr_ranges_input]
+            for start, end in bytes_ranges_input]
     except Exception as e:
         return None, 'conversion to bytes failed (%s)' % e
 
@@ -938,7 +938,7 @@ def args_to_filter(args):
 
     addr_range = None
     if args.address != None:
-        addr_range, err = parse_sort_addr_ranges_input(
+        addr_range, err = parse_sort_bytes_ranges_input(
                 args.address)
         if err != None:
             return None, 'wrong --address input (%s)' % err
