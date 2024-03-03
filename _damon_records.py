@@ -896,11 +896,10 @@ class RecordGetRequest:
         self.dont_merge_regions = dont_merge_regions
 
 def get_records(tried_regions_of=None, record_file=None, record_filter=None,
-                access_pattern=None, address_ranges=None, total_sz_only=False,
-                dont_merge_regions=True):
+                total_sz_only=False, dont_merge_regions=True):
     request = RecordGetRequest(
-            tried_regions_of, record_file, record_filter, access_pattern,
-            address_ranges, total_sz_only, dont_merge_regions)
+            tried_regions_of, record_file, record_filter, None, None,
+            total_sz_only, dont_merge_regions)
     if request.record_file == None:
         records, err = get_snapshot_records_of(request)
         if err != None:
@@ -922,18 +921,10 @@ def get_records(tried_regions_of=None, record_file=None, record_filter=None,
                     filter_by_pattern(record,
                                       request.record_filter.access_pattern)
 
-        if request.access_pattern is not None:
-            for record in records:
-                filter_by_pattern(record, request.access_pattern)
-
     if request.record_filter is not None:
         if request.record_filter.address_ranges:
             filter_records_by_addr(
                     records, request.record_filter.address_ranges)
-        return records, None
-
-    if request.address_ranges:
-        filter_records_by_addr(records, request.address_ranges)
     return records, None
 
 def parse_sort_addr_ranges_input(addr_ranges_input):
