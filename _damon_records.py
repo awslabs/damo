@@ -906,6 +906,10 @@ def get_records(tried_regions_of=None, record_file=None, record_filter=None,
             return None, err
         if _damon.feature_supported('schemes_filters_addr'):
             # get_snapshot_records_of() has already handled address filter
+            if request.record_filter is not None:
+                if request.record_filter.snapshot_sz_ranges:
+                    filter_records_by_snapshot_sz(
+                            records, request.record_filter.snapshot_sz_ranges)
             return records, None
     else:
         if not os.path.isfile(request.record_file):
@@ -925,6 +929,9 @@ def get_records(tried_regions_of=None, record_file=None, record_filter=None,
         if request.record_filter.address_ranges:
             filter_records_by_addr(
                     records, request.record_filter.address_ranges)
+        if request.record_filter.snapshot_sz_ranges:
+            filter_records_by_snapshot_sz(
+                    records, request.record_filter.snapshot_sz_ranges)
     return records, None
 
 def parse_sort_bytes_ranges_input(bytes_ranges_input):
