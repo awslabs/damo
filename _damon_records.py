@@ -867,32 +867,25 @@ class RecordGetRequest:
     tried_regions_of = None
     record_file = None
 
-    # filters of the record
     record_filter = None
-    access_pattern = None
-    address_ranges = None
 
     # more detailed requests
     total_sz_only = None
     dont_merge_regions = None
 
     def __init__(
-            self, tried_regions_of=None, record_file=None,
-            record_filter=None,
-            access_pattern=None, address_ranges=None, total_sz_only=False,
-            dont_merge_regions=True):
+            self, tried_regions_of=None, record_file=None, record_filter=None,
+            total_sz_only=False, dont_merge_regions=True):
         self.tried_regions_of = tried_regions_of
         self.record_file = record_file
         self.record_filter = record_filter
-        self.access_pattern = access_pattern
-        self.address_ranges = address_ranges
         self.total_sz_only = total_sz_only
         self.dont_merge_regions = dont_merge_regions
 
 def get_records(tried_regions_of=None, record_file=None, record_filter=None,
                 total_sz_only=False, dont_merge_regions=True):
     request = RecordGetRequest(
-            tried_regions_of, record_file, record_filter, None, None,
+            tried_regions_of, record_file, record_filter,
             total_sz_only, dont_merge_regions)
     if request.record_file == None:
         records, err = get_snapshot_records_of(request)
