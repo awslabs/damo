@@ -830,13 +830,25 @@ def get_snapshot_records_of(request):
     '''
     if request.tried_regions_of == None:
         filters = []
-        if request.address_ranges and _damon.feature_supported('schemes_filters_addr'):
-            for start, end in request.address_ranges:
-                filters.append(_damon.DamosFilter('addr', False,
-                    address_range=_damon.DamonRegion(start, end)))
+        if request.record_filter:
+            addr_ranges = request.record_filter.address_ranges
+            if addr_ranges and _damon.feature_supported('schemes_filters_addr'):
+                for start, end in addr_ranges:
+                    filters.append(_damon.DamosFilter(
+                        'addr', False,
+                        address_range=_damon.DamonRegion(start, end)))
+            monitor_scheme = _damon.Damos(
+                    access_pattern=request.record_filter.access_pattern,
+                    filters=filters)
 
-        monitor_scheme = _damon.Damos(access_pattern=request.access_pattern,
-                filters=filters)
+        else:
+            if request.address_ranges and _damon.feature_supported('schemes_filters_addr'):
+                for start, end in request.address_ranges:
+                    filters.append(_damon.DamosFilter('addr', False,
+                        address_range=_damon.DamonRegion(start, end)))
+
+            monitor_scheme = _damon.Damos(access_pattern=request.access_pattern,
+                    filters=filters)
 
         records, err = get_snapshot_records(monitor_scheme,
                 request.total_sz_only, not request.dont_merge_regions)
@@ -862,6 +874,7 @@ class RecordGetRequest:
     record_file = None
 
     # filters of the record
+    record_filter = None
     access_pattern = None
     address_ranges = None
 
@@ -869,19 +882,24 @@ class RecordGetRequest:
     total_sz_only = None
     dont_merge_regions = None
 
-    def __init__(self, tried_regions_of=None, record_file=None,
+    def __init__(
+            self, tried_regions_of=None, record_file=None,
+            record_filter=None,
             access_pattern=None, address_ranges=None, total_sz_only=False,
             dont_merge_regions=True):
         self.tried_regions_of = tried_regions_of
         self.record_file = record_file
+        self.record_filter = record_filter
         self.access_pattern = access_pattern
         self.address_ranges = address_ranges
         self.total_sz_only = total_sz_only
         self.dont_merge_regions = dont_merge_regions
 
-def get_records(tried_regions_of=None, record_file=None, access_pattern=None,
-        address_ranges=None, total_sz_only=False, dont_merge_regions=True):
-    request = RecordGetRequest(tried_regions_of, record_file, access_pattern,
+def get_records(tried_regions_of=None, record_file=None, record_filter=None,
+                access_pattern=None, address_ranges=None, total_sz_only=False,
+                dont_merge_regions=True):
+    request = RecordGetRequest(
+            tried_regions_of, record_file, record_filter, access_pattern,
             address_ranges, total_sz_only, dont_merge_regions)
     if request.record_file == None:
         records, err = get_snapshot_records_of(request)
@@ -898,9 +916,21 @@ def get_records(tried_regions_of=None, record_file=None, access_pattern=None,
         if err:
             return None, ('parsing %s failed (%s)' %
                     (request.record_file, err))
+        if request.record_filter is not None:
+            if request.record_filter.access_pattern is not None:
+                for record in records:
+                    filter_by_pattern(record,
+                                      request.record_filter.access_pattern)
+
         if request.access_pattern is not None:
             for record in records:
                 filter_by_pattern(record, request.access_pattern)
+
+    if request.record_filter is not None:
+        if request.record_filter.address_ranges:
+            filter_records_by_addr(
+                    records, request.record_filter.address_ranges)
+        return records, None
 
     if request.address_ranges:
         filter_records_by_addr(records, request.address_ranges)
