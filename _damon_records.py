@@ -855,10 +855,12 @@ def get_snapshot_records_of(request):
 class RecordFilter:
     access_pattern = None
     address_ranges = None
+    snapshot_sz_ranges = None
 
-    def __init__(self, access_pattern, address_ranges):
+    def __init__(self, access_pattern, address_ranges, snapshot_sz_ranges):
         self.access_pattern = access_pattern
         self.address_ranges = address_ranges
+        self.snapshot_sz_ranges = snapshot_sz_ranges
 
 class RecordGetRequest:
     # TODO: Extend to be used for recording
@@ -942,7 +944,7 @@ def args_to_filter(args):
                 args.address)
         if err != None:
             return None, 'wrong --address input (%s)' % err
-    return RecordFilter(access_pattern, addr_range), None
+    return RecordFilter(access_pattern, addr_range, None), None
 
 def set_filter_argparser(parser):
     parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
