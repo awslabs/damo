@@ -662,7 +662,7 @@ with other tools such as profilers.
 For example, below shows when there was no access to 50 MiB size address range
 starting from `139,798,348,038,144`.
 
-    $ sudo ./damo report times --access_rate 50% 100% \
+    $ sudo ./damo report times --access_rate 0% 0% \
             --address 139798348038144 $((139798348038144 + 50 * 1024 * 1024))
     93904.291408-93904.393156
     93905.919058-93910.903176
