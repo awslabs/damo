@@ -962,7 +962,15 @@ def args_to_filter(args):
                 args.address)
         if err != None:
             return None, 'wrong --address input (%s)' % err
-    return RecordFilter(access_pattern, addr_range, None), None
+
+    snapshot_sz_ranges = None
+    if args.snapshot_regions_sz is not None:
+        snapshot_sz_ranges, err = parse_sort_bytes_ranges_input(
+                args.snapshot_regions_sz)
+        if err != None:
+            return None, 'wrong --snapshot_regions_sz input (%s)' % err
+
+    return RecordFilter(access_pattern, addr_range, snapshot_sz_ranges), None
 
 def set_filter_argparser(parser):
     parser.add_argument('--sz_region', metavar=('<min>', '<max>'), nargs=2,
@@ -977,3 +985,7 @@ def set_filter_argparser(parser):
     parser.add_argument('--address', metavar=('<start>', '<end>'), nargs=2,
             action='append',
             help='address ranges to show')
+    parser.add_argument(
+            '--snapshot_regions_sz', metavar=('<min>', '<max>'), nargs=2,
+            action='append',
+            help='min/max total size of regions of snapshots to show')
