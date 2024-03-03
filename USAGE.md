@@ -637,11 +637,13 @@ access pattern happened, collect profiling information for the time ranges, and
 generate the report with the filtered information.
 
 For example, below shows what was consuming CPU while 50% or more rate of
-access to 50 MiB size address range starting from `139,798,348,038,144`
-happened.
+access was made towards 50 MiB size address range starting from
+`139,798,348,038,144`, and the total size of the memory regions that got the
+access in the address range was 40 or more MiB.
 
     $ sudo ./damo report profile --access_rate 50% 100% \
-            --address 139798348038144 $((139798348038144 + 50 * 1024 * 1024))
+            --address 139798348038144 $((139798348038144 + 50 * 1024 * 1024)) \
+            --sz_snapshot 40MiB max
     Samples: 69K of event 'cpu-clock:pppH', Event count (approx.): 17449500000
     Overhead  Command          Shared Object         Symbol
       70.32%  swapper          [kernel.vmlinux]      [k] pv_native_safe_halt
