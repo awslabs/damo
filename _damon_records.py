@@ -842,13 +842,7 @@ def get_snapshot_records_of(request):
                     filters=filters)
 
         else:
-            if request.address_ranges and _damon.feature_supported('schemes_filters_addr'):
-                for start, end in request.address_ranges:
-                    filters.append(_damon.DamosFilter('addr', False,
-                        address_range=_damon.DamonRegion(start, end)))
-
-            monitor_scheme = _damon.Damos(access_pattern=request.access_pattern,
-                    filters=filters)
+            monitor_scheme = _damon.Damos()
 
         records, err = get_snapshot_records(monitor_scheme,
                 request.total_sz_only, not request.dont_merge_regions)
