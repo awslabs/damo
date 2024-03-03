@@ -846,6 +846,14 @@ def get_snapshot_records_of(request):
                  not request.dont_merge_regions)
     return records, err
 
+class RecordFilter:
+    access_pattern = None
+    address_ranges = None
+
+    def __init__(self, access_pattern, address_ranges):
+        self.access_pattern = access_pattern
+        self.address_ranges = address_ranges
+
 class RecordGetRequest:
     # TODO: Extend to be used for recording
 
