@@ -824,6 +824,17 @@ def filter_records_by_addr(records, addr_ranges):
             snapshot.regions = filtered_regions
             snapshot.update_total_bytes()
 
+def filter_records_by_snapshot_sz(records, sz_ranges):
+    for record in records:
+        filtered_snapshots = []
+        for snapshot in record.snapshots:
+            for min_, max_ in sz_ranges:
+                if (min_ <= snapshot.total_bytes and
+                        snapshot.total_bytes <= max_):
+                    filtered_snapshots.append(snapshot)
+                    break
+        record.snapshots = filtered_snapshots
+
 def get_snapshot_records_of(request):
     '''
     get records containing single snapshot from running kdamonds
