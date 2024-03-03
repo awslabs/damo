@@ -512,17 +512,10 @@ def main(args):
     args.region_box_values = [v if v != 'none' else None
             for v in args.region_box_values]
 
-    access_pattern = _damon.DamosAccessPattern(args.sz_region,
-            args.access_rate, _damon.unit_percent, args.age * 1000000,
-            _damon.unit_usec)
-
-    addr_range = None
-    if args.address != None:
-        addr_range, err = _damon_records.parse_sort_addr_ranges_input(
-                args.address)
-        if err != None:
-            print('wrong --address input (%s)' % err)
-            exit(1)
+    access_pattern, addr_range, err = _damon_records.args_to_filters(args)
+    if err != None:
+        print(err)
+        exit(1)
 
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args, load_feature_supports=True)
