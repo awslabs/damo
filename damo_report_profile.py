@@ -8,15 +8,15 @@ import _damon_records
 import damo_show
 
 def main(args):
-    access_pattern, addr_range, err = _damon_records.args_to_filters(args)
+    record_filter, err = _damon_records.args_to_filter(args)
     if err != None:
         print(err)
         exit(1)
 
     records, err = _damon_records.get_records(
                 tried_regions_of=False, record_file=args.inputs[0],
-                access_pattern=access_pattern, address_ranges=addr_range,
-                total_sz_only=False, dont_merge_regions=False)
+                record_filter=record_filter, total_sz_only=False,
+                dont_merge_regions=False)
     if err != None:
         print(err)
         exit(1)
