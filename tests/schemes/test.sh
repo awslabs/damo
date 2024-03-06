@@ -24,7 +24,7 @@ __test_stat() {
 		local quota_reset_interval="max"
 	fi
 
-	python ./stairs.py &
+	python3 ./stairs.py &
 	local stairs_pid=$!
 	sudo "$damo" start "$stairs_pid" --damos_action stat \
 		--damos_sz_region 4K max --damos_access_rate 0% 0% \
