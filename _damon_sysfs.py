@@ -657,11 +657,11 @@ def feature_supported(feature):
         update_supported_features()
     return feature_supports[feature]
 
+# sysfs was merged in v5.18-rc1
 features_sysfs_support_from_begining = [
         'schemes',
         'init_regions',
         'vaddr',
-        'fvaddr',
         'paddr',
         'init_regions_target_idx',
         'schemes_speed_limit',
