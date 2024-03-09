@@ -4,6 +4,7 @@ import json
 
 import _damon
 import _damon_args
+import _damon_sysfs
 
 def main(args):
     _damon.ensure_root_and_initialized(args)
@@ -24,8 +25,14 @@ def main(args):
     if args.type == 'json':
         print(json.dumps(feature_supports, indent=4, sort_keys=True))
 
+    if args.infer_version:
+        print('Seems the version of DAMON is %s' %
+              _damon_sysfs.infer_damon_version())
+
 def set_argparser(parser):
     parser.add_argument('type', nargs='?',
             choices=['supported', 'unsupported', 'all', 'json'], default='all',
             help='type of features to listed')
+    parser.add_argument('--infer_version', action='store_true',
+                        help='infer version of DAMON')
     _damon_args.set_common_argparser(parser)
