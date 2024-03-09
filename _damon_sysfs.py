@@ -722,9 +722,6 @@ def infer_damon_version():
                         nr_regions=_damon.DamonNrRegionsRange(),
                         schemes=[
                             _damon.Damos(
-                                access_pattern=None, action='stat',
-                                quotas=_damon.DamosQuotas(),
-                                watermarks=None,
                                 filters=[_damon.DamosFilter('young', True)]
                                 )])])]
     err = stage_kdamonds(kdamonds)
