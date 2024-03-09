@@ -766,23 +766,6 @@ def __ensure_kdamond_dir_populated(kdamond_dir, kdamond):
             scheme_dir_path = os.path.join(schemes_dir_path, '%d' % scheme_idx)
             __ensure_scheme_dir_populated(scheme_dir_path, scheme)
 
-def __ensure_dirs_populated_for(kdamonds):
-    nr_kdamonds, err = _damo_fs.read_file(get_nr_kdamonds_file())
-    if err != None:
-        raise Exception('nr_kdamonds_file read fail (%s)' % err)
-    if int(nr_kdamonds) != len(kdamonds):
-        _damo_fs.write_file(get_nr_kdamonds_file(), '%d' % len(kdamonds))
-    for idx, kdamond in enumerate(kdamonds):
-        kdamond_dir = kdamond_dir_of('%d' % idx)
-        __ensure_kdamond_dir_populated(kdamond_dir, kdamond)
-
-def ensure_dirs_populated_for(kdamonds):
-    try:
-        __ensure_dirs_populated_for(kdamonds)
-    except Exception as e:
-        print('sysfs dirs population failed (%s)' % e)
-        exit(1)
-
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(
             schemes_dir_of(kdamond_idx, context_idx), '%s' % scheme_idx)
