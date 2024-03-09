@@ -602,7 +602,7 @@ class DamosWatermarks:
                 ])
 
 class DamosFilter:
-    filter_type = None  # anon, memcg, addr, or target
+    filter_type = None  # anon, memcg, young, addr, or target
     matching = None
     memcg_path = None
     address_range = None    # DamonRegion
@@ -621,7 +621,7 @@ class DamosFilter:
     def to_str(self, raw):
         txt = '%s %s' % (self.filter_type,
                 'matching' if self.matching else 'nomatching')
-        if self.filter_type == 'anon':
+        if self.filter_type in ['anon', 'young']:
             return txt
         if self.filter_type == 'memcg':
             return '%s %s' % (txt, self.memcg_path)
