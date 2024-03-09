@@ -823,6 +823,11 @@ def update_supported_features():
         # anon and memcg were supported from the beginning
         feature_supports['schemes_filters_anon'] = True
         feature_supports['schemes_filters_memcg'] = True
+        kdamonds_for_feature_check[0].contexts[0].schemes[0].filters = [
+                _damon.DamosFilter('young', True)]
+        err = stage_kdamonds(kdamonds_for_feature_check)
+        if err is None:
+            feature_supports['schemes_filters_young'] = True
 
     if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'apply_interval_us')):
         feature_supports['schemes_apply_interval'] = True
