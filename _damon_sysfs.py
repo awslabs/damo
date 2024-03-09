@@ -798,8 +798,7 @@ def update_supported_features():
                         schemes=[
                             _damon.Damos(
                                 access_pattern=None, action='stat',
-                                quotas=_damon.DamosQuotas(
-                                    goals=[_damon.DamosQuotaGoal()]),
+                                quotas=_damon.DamosQuotas(),
                                 watermarks=None, filters=[], stats=None)])])]
     err = stage_kdamonds(kdamonds_for_feature_check)
     if err is not None:
@@ -839,10 +838,10 @@ def update_supported_features():
                                    'effective_bytes')):
         feature_supports['schemes_quota_effective_bytes'] = True
 
-    if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'quotas', 'goals',
-                                   'target_metric')):
-        feature_supports['schemes_quota_goal_metric'] = True
-        feature_supports['schemes_quota_goal_some_psi'] = True
+        if os.path.isfile(os.path.join(
+            scheme_dir_of(0, 0, 0), 'quotas', 'goals', 'target_metric')):
+            feature_supports['schemes_quota_goal_metric'] = True
+            feature_supports['schemes_quota_goal_some_psi'] = True
 
     avail_ops, err = _avail_ops()
     if err == None:
