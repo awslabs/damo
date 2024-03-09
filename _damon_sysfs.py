@@ -777,11 +777,7 @@ def update_supported_features():
                         ops='paddr', targets=[],
                         intervals=_damon.DamonIntervals(),
                         nr_regions=_damon.DamonNrRegionsRange(),
-                        schemes=[
-                            _damon.Damos(
-                                access_pattern=None, action='stat',
-                                quotas=_damon.DamosQuotas(),
-                                watermarks=None, filters=[], stats=None)])])]
+                        schemes=[_damon.Damos()])])]
     err = stage_kdamonds(kdamonds_for_feature_check)
     if err is not None:
         print('staging feature check purpose kdamond failed')
