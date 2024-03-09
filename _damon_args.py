@@ -102,6 +102,11 @@ def damos_options_to_filters(filters_args):
                 return None, 'wrong number of memcg arguments (%s)' % fargs
             memcg_path = fargs[0]
             filters.append(_damon.DamosFilter(ftype, fmatching, memcg_path))
+        elif ftype == 'young':
+            if len(fargs):
+                return (None,
+                        'young filter receives no arguments but (%s)' % fargs)
+            filters.append(_damon.DamosFilter(ftype, fmatching))
         elif ftype == 'addr':
             if len(fargs) != 2:
                 return None, 'wrong number of addr arguments (%s)' % fargs
