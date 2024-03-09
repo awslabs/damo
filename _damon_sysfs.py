@@ -731,41 +731,6 @@ def __ensure_target_dir_populated(target_dir, target):
     if int(nr_regions) != len(target.regions):
         _damo_fs.write_file(nr_regions_path, '%d' % len(target.regions))
 
-def __ensure_kdamond_dir_populated(kdamond_dir, kdamond):
-    contexts_dir_path = os.path.join(kdamond_dir, 'contexts')
-    nr_contexts_path = os.path.join(kdamond_dir, 'contexts', 'nr_contexts')
-    nr_contexts, err = _damo_fs.read_file(nr_contexts_path)
-    if err != None:
-        raise Exception('nr_contexts read fail (%s)' % err)
-    if int(nr_contexts) != len(kdamond.contexts):
-        _damo_fs.write_file(nr_contexts_path, '%d' % len(kdamond.contexts))
-
-    for ctx_idx, ctx in enumerate(kdamond.contexts):
-        ctx_dir_path = os.path.join(contexts_dir_path, '%d' % ctx_idx)
-        targets_dir_path = os.path.join(ctx_dir_path, 'targets')
-        nr_targets_path = os.path.join(targets_dir_path, 'nr_targets')
-        nr_targets, err = _damo_fs.read_file(nr_targets_path)
-        if err != None:
-            raise Exception('nr_targets read fail (%s)' % err)
-        if int(nr_targets) != len(ctx.targets):
-            _damo_fs.write_file(nr_targets_path, '%d' % len(ctx.targets))
-
-        for target_idx, target in enumerate(ctx.targets):
-            target_dir_path = os.path.join(targets_dir_path, '%d' % target_idx)
-            __ensure_target_dir_populated(target_dir_path, target)
-
-        schemes_dir_path = os.path.join(ctx_dir_path, 'schemes')
-        nr_schemes_path = os.path.join(schemes_dir_path, 'nr_schemes')
-        nr_schemes, err = _damo_fs.read_file(nr_schemes_path)
-        if err != None:
-            raise Exception('nr_schemes read fail (%s)' % err)
-        if int(nr_schemes) != len(ctx.schemes):
-            _damo_fs.write_file(nr_schemes_path, '%d' % len(ctx.schemes))
-
-        for scheme_idx, scheme in enumerate(ctx.schemes):
-            scheme_dir_path = os.path.join(schemes_dir_path, '%d' % scheme_idx)
-            __ensure_scheme_dir_populated(scheme_dir_path, scheme)
-
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(
             schemes_dir_of(kdamond_idx, context_idx), '%s' % scheme_idx)
