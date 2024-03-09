@@ -804,17 +804,25 @@ def update_supported_features():
     for feature in features_sysfs_support_from_begining:
         feature_supports[feature] = True
 
-    orig_kdamonds = None
-    if not os.path.isdir(scheme_dir_of(0, 0, 0)):
-        orig_kdamonds = current_kdamonds()
-        kdamonds_for_feature_check = [_damon.Kdamond(state=None,
-            pid=None, contexts=[_damon.DamonCtx(ops=None, targets=[],
-                intervals=None, nr_regions=None,
-                schemes=[_damon.Damos(
-                    access_pattern=None, action='stat',
-                    quotas=_damon.DamosQuotas(goals=[_damon.DamosQuotaGoal()]),
-                    watermarks=None, filters=[], stats=None)])])]
-        ensure_dirs_populated_for(kdamonds_for_feature_check)
+    orig_kdamonds = current_kdamonds()
+    kdamonds_for_feature_check = [
+            _damon.Kdamond(
+                state=None, pid=None, contexts=[
+                    _damon.DamonCtx(
+                        ops='paddr', targets=[],
+                        intervals=_damon.DamonIntervals(),
+                        nr_regions=_damon.DamonNrRegionsRange(),
+                        schemes=[
+                            _damon.Damos(
+                                access_pattern=None, action='stat',
+                                quotas=_damon.DamosQuotas(
+                                    goals=[_damon.DamosQuotaGoal()]),
+                                watermarks=None, filters=[], stats=None)])])]
+    err = stage_kdamonds(kdamonds_for_feature_check)
+    if err is not None:
+        print('staging feature check purpose kdamond failed')
+        stage_kdamonds(orig_kdamonds)
+        exit(1)
 
     if os.path.isdir(scheme_tried_regions_dir_of(0, 0, 0)):
         feature_supports['schemes_tried_regions'] = True
@@ -852,8 +860,7 @@ def update_supported_features():
     if err == None:
         for ops in ['vaddr', 'paddr', 'fvaddr']:
             feature_supports[ops] = ops in avail_ops
-    if orig_kdamonds != None:
-        err = stage_kdamonds(orig_kdamonds)
+    err = stage_kdamonds(orig_kdamonds)
     return err
 
 # For old tests
