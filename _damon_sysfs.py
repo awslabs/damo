@@ -837,11 +837,9 @@ def update_supported_features():
     if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'quotas',
                                    'effective_bytes')):
         feature_supports['schemes_quota_effective_bytes'] = True
-
-        if os.path.isfile(os.path.join(
-            scheme_dir_of(0, 0, 0), 'quotas', 'goals', 'target_metric')):
-            feature_supports['schemes_quota_goal_metric'] = True
-            feature_supports['schemes_quota_goal_some_psi'] = True
+        # goal_metric and goal_some_psi will be merged together with effective bytes.
+        feature_supports['schemes_quota_goal_metric'] = True
+        feature_supports['schemes_quota_goal_some_psi'] = True
 
     avail_ops, err = _avail_ops()
     if err == None:
