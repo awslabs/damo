@@ -723,14 +723,6 @@ def __ensure_scheme_dir_populated(scheme_dir, scheme):
     if int(nr_goals) != len(scheme.quotas.goals):
         _damo_fs.write_file(nr_goals_path, '%d' % len(scheme.quotas.goals))
 
-def __ensure_target_dir_populated(target_dir, target):
-    nr_regions_path = os.path.join(target_dir, 'regions', 'nr_regions')
-    nr_regions, err = _damo_fs.read_file(nr_regions_path)
-    if err != None:
-        raise Exception('nr_regions read fail (%s)' % err)
-    if int(nr_regions) != len(target.regions):
-        _damo_fs.write_file(nr_regions_path, '%d' % len(target.regions))
-
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(
             schemes_dir_of(kdamond_idx, context_idx), '%s' % scheme_idx)
