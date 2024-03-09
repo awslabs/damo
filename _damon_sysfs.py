@@ -710,6 +710,53 @@ def scheme_tried_regions_dir_of(kdamond_idx, context_idx, scheme_idx):
             scheme_dir_of(kdamond_idx, context_idx, scheme_idx),
             'tried_regions')
 
+def infer_damon_version():
+    version = '<5.15'
+    orig_kdamonds = current_kdamonds()
+    kdamonds = [
+            _damon.Kdamond(
+                state=None, pid=None, contexts=[
+                    _damon.DamonCtx(
+                        ops='paddr', targets=[],
+                        intervals=_damon.DamonIntervals(),
+                        nr_regions=_damon.DamonNrRegionsRange(),
+                        schemes=[
+                            _damon.Damos(
+                                access_pattern=None, action='stat',
+                                quotas=_damon.DamosQuotas(),
+                                watermarks=None,
+                                filters=[_damon.DamosFilter('young', True)]
+                                )])])]
+    err = stage_kdamonds(kdamonds)
+    if err is None:
+        err = stage_kdamonds(orig_kdamonds)
+        return '>6.9'
+
+    kdamonds[0].contexts[0].schemes[0].filters = []
+    err = stage_kdamonds(kdamonds)
+
+    if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'quotas',
+                                   'effective_bytes')):
+        return '6.9'
+
+    if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'quotas', 'goals')):
+        return '6.8'
+
+    if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'apply_interval_us')):
+        return '6.7'
+
+    if os.path.isfile(os.path.join(scheme_tried_regions_dir_of(0, 0, 0),
+            'total_bytes')):
+        return '6.6'
+
+    if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'filters')):
+        return '6.3'
+
+    if os.path.isdir(scheme_tried_regions_dir_of(0, 0, 0)):
+        return '6.2'
+
+    return '<6.2'
+
 def update_supported_features():
     global feature_supports
 
