@@ -701,28 +701,6 @@ def _avail_ops():
         return None, err
     return content.strip().split(), None
 
-def __ensure_scheme_dir_populated(scheme_dir, scheme):
-    if not feature_supported('schemes_filters'):
-        return
-
-    nr_filters_path = os.path.join(scheme_dir, 'filters', 'nr_filters')
-
-    nr_filters, err = _damo_fs.read_file(nr_filters_path)
-    if err != None:
-        raise Exception('nr_filters read fail (%s)' % err)
-    if int(nr_filters) != len(scheme.filters):
-        _damo_fs.write_file(nr_filters_path, '%d' % len(scheme.filters))
-
-    if not feature_supported('schemes_quota_goals'):
-        return
-
-    nr_goals_path = os.path.join(scheme_dir, 'quotas', 'goals', 'nr_goals')
-    nr_goals, err = _damo_fs.read_file(nr_goals_path)
-    if err != None:
-        raise Exception('nr_goals read fail (%s)' % err)
-    if int(nr_goals) != len(scheme.quotas.goals):
-        _damo_fs.write_file(nr_goals_path, '%d' % len(scheme.quotas.goals))
-
 def scheme_dir_of(kdamond_idx, context_idx, scheme_idx):
     return os.path.join(
             schemes_dir_of(kdamond_idx, context_idx), '%s' % scheme_idx)
