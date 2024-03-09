@@ -29,3 +29,5 @@
 - Let DAMOS quota specified in more easy way
 - Optimize page management in 'replay'
   - Maybe we could manage it in 2 MiB granularity.
+- detect young type DAMOS filter support
+- Cleanup features detection code of sysfs
