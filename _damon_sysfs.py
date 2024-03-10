@@ -734,24 +734,31 @@ def infer_damon_version():
 
     if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'quotas',
                                    'effective_bytes')):
+        stage_kdamonds(orig_kdamonds)
         return '6.9'
 
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'quotas', 'goals')):
+        stage_kdamonds(orig_kdamonds)
         return '6.8'
 
     if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'apply_interval_us')):
+        stage_kdamonds(orig_kdamonds)
         return '6.7'
 
     if os.path.isfile(os.path.join(scheme_tried_regions_dir_of(0, 0, 0),
             'total_bytes')):
+        stage_kdamonds(orig_kdamonds)
         return '6.6'
 
     if os.path.isdir(os.path.join(scheme_dir_of(0, 0, 0), 'filters')):
+        stage_kdamonds(orig_kdamonds)
         return '6.3'
 
     if os.path.isdir(scheme_tried_regions_dir_of(0, 0, 0)):
+        stage_kdamonds(orig_kdamonds)
         return '6.2'
 
+    stage_kdamonds(orig_kdamonds)
     return '<6.2'
 
 def update_supported_features():
