@@ -775,9 +775,6 @@ def update_supported_features():
             _damon.Kdamond(
                 state=None, pid=None, contexts=[
                     _damon.DamonCtx(
-                        ops='paddr', targets=[],
-                        intervals=_damon.DamonIntervals(),
-                        nr_regions=_damon.DamonNrRegionsRange(),
                         schemes=[_damon.Damos()])])]
     err = stage_kdamonds(kdamonds_for_feature_check)
     if err is not None:
