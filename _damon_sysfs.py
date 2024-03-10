@@ -717,9 +717,6 @@ def infer_damon_version():
             _damon.Kdamond(
                 state=None, pid=None, contexts=[
                     _damon.DamonCtx(
-                        ops='paddr', targets=[],
-                        intervals=_damon.DamonIntervals(),
-                        nr_regions=_damon.DamonNrRegionsRange(),
                         schemes=[
                             _damon.Damos(
                                 filters=[_damon.DamosFilter('young', True)]
