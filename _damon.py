@@ -859,8 +859,8 @@ class DamonCtx:
             target.context = self
         self.intervals = (intervals
                           if intervals is not None else DamonIntervals())
-        self.nr_regions = (nr_regions
-                           if nr_regions is not None else DamonRegionsRange())
+        self.nr_regions = (nr_regions if nr_regions is not None
+                           else DamonNrRegionsRange())
         self.schemes = schemes if schemes is not None else Damos()
         for scheme in self.schemes:
             scheme.context = self
