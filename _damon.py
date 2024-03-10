@@ -851,14 +851,17 @@ class DamonCtx:
     schemes = None
     kdamond = None
 
-    def __init__(self, ops, targets, intervals, nr_regions, schemes):
+    def __init__(self, ops='paddr', targets=None, intervals=None,
+                 nr_regions=None, schemes=None):
         self.ops = ops
-        self.targets = targets
+        self.targets = targets if targets is not None else []
         for target in self.targets:
             target.context = self
-        self.intervals = intervals
-        self.nr_regions = nr_regions
-        self.schemes = schemes
+        self.intervals = (intervals
+                          if intervals is not None else DamonIntervals())
+        self.nr_regions = (nr_regions if nr_regions is not None
+                           else DamonNrRegionsRange())
+        self.schemes = schemes if schemes is not None else Damos()
         for scheme in self.schemes:
             scheme.context = self
 
