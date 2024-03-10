@@ -1,6 +1,10 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v2.2.5
+- Support damon/next tree feature, the DAMOS filter type for young pages
+- Implement '--infer_version' of 'damo feature'
+
 v2.2.4
 - Implement 'damo report profile'
 - Implement 'damo report times'
