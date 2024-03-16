@@ -90,8 +90,15 @@ notice and grace periods.  The documented features could also be deprecated,
 but those will provide some notification and grace periods.
 
 
+Quick Intro for Major Features
+==============================
+
+Below are quick introductions for `damo`'s major features.
+For more detailed usage, please refer to [USAGE.md](USAGE.md) file.
+
+
 Snapshot Data Access Pattern
-============================
+----------------------------
 
 Below commands repeatedly get a snapshot of the access pattern of a program for
 every second.
@@ -112,7 +119,7 @@ every second and show on terminal.
 
 
 Recording Data Access Patterns
-==============================
+------------------------------
 
 Below commands record memory access patterns of a program and save the
 monitoring results in `damon.data` file.
@@ -129,7 +136,7 @@ workload.  The last line asks ``damo`` to record the access pattern in
 
 
 Visualizing Recorded Patterns
-=============================
+-----------------------------
 
 Below three commands visualize the recorded access patterns into three
 image files.
@@ -155,7 +162,7 @@ workloads are also available [2,3,4].
 
 
 Data Access Pattern Aware Memory Management
-===========================================
+-------------------------------------------
 
 Below command makes every memory region of size >=4K that hasn't accessed for
 >=60 seconds in your workload to be swapped out.  By doing this, you can make
