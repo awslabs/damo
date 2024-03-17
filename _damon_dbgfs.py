@@ -71,25 +71,6 @@ def get_target_ids_file():
 def get_init_regions_file():
     return os.path.join(get_damon_dir(), 'init_regions')
 
-def wops_for_target(target, target_has_pid):
-    wops = []
-    if target_has_pid:
-        wops.append({get_target_ids_file(): '%s' % target.pid})
-        tid = target.pid
-    else:
-        if not feature_supported('paddr'):
-            raise Exception('paddr is not supported')
-        wops.append({get_target_ids_file(): 'paddr\n'})
-        tid = 42
-    if feature_supported('init_regions_target_idx'):
-        tid = 0
-
-    if feature_supported('init_regions'):
-        string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in
-            target.regions])
-        wops.append({get_init_regions_file(): string})
-    return wops
-
 # note that DAMON debugfs interface is deprecated[1], and hence newer DAMOS
 # actions including _damon.damos_action_lru_prio and
 # _damon.damos_action_lru_deprio are not supported.
@@ -161,46 +142,11 @@ def damos_to_debugfs_input(damos, intervals, quotas_wmarks_supported):
 def get_schemes_file():
     return os.path.join(get_damon_dir(), 'schemes')
 
-def wops_for_schemes(schemes, intervals):
-    scheme_file_input_lines = []
-    for scheme in schemes:
-        scheme_file_input_lines.append(damos_to_debugfs_input(scheme,
-            intervals, feature_supported('schemes_quotas')))
-    scheme_file_input = '\n'.join(scheme_file_input_lines)
-    if scheme_file_input == '':
-        scheme_file_input = '\n'
-    return [{get_schemes_file(): scheme_file_input}]
-
 def attr_str_ctx(damon_ctx):
     intervals = damon_ctx.intervals
     nr_regions = damon_ctx.nr_regions
     return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
             intervals.ops_update, nr_regions.minimum, nr_regions.maximum)
-
-def wops_for_kdamonds(kdamonds):
-    if len(kdamonds) > 1:
-        raise Exception('Currently only <=one kdamond is supported')
-    if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
-        raise Exception('currently only <= one damon_ctx is supported')
-    if (len(kdamonds) == 1 and len(kdamonds[0].contexts) == 1 and
-            len(kdamonds[0].contexts[0].targets) > 1):
-        raise Exception('currently only <= one target is supported')
-    ctx = kdamonds[0].contexts[0]
-
-    write_contents = []
-    write_contents.append(
-            {os.path.join(get_damon_dir(), 'attrs'): attr_str_ctx(ctx)})
-
-    if len(ctx.targets) > 0:
-        write_contents += wops_for_target(ctx.targets[0],
-                _damon.target_has_pid(ctx.ops))
-
-    if not feature_supported('schemes'):
-        return write_contents
-
-    write_contents += wops_for_schemes(ctx.schemes, ctx.intervals)
-
-    return write_contents
 
 def write_schemes(dir_path, schemes, intervals):
     scheme_file_input_lines = []
