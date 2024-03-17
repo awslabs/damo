@@ -65,12 +65,6 @@ def update_schemes_quota_effective_bytes(kdamond_idxs):
 
 # for stage_kdamonds
 
-def get_target_ids_file():
-    return os.path.join(get_damon_dir(), 'target_ids')
-
-def get_init_regions_file():
-    return os.path.join(get_damon_dir(), 'init_regions')
-
 # note that DAMON debugfs interface is deprecated[1], and hence newer DAMOS
 # actions including _damon.damos_action_lru_prio and
 # _damon.damos_action_lru_deprio are not supported.
@@ -139,15 +133,6 @@ def damos_to_debugfs_input(damos, intervals, quotas_wmarks_supported):
                 watermarks.mid_permil, watermarks.low_permil])
     return scheme_input
 
-def get_schemes_file():
-    return os.path.join(get_damon_dir(), 'schemes')
-
-def attr_str_ctx(damon_ctx):
-    intervals = damon_ctx.intervals
-    nr_regions = damon_ctx.nr_regions
-    return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
-            intervals.ops_update, nr_regions.minimum, nr_regions.maximum)
-
 def write_schemes(dir_path, schemes, intervals):
     scheme_file_input_lines = []
     for scheme in schemes:
@@ -185,6 +170,12 @@ def write_target(dir_path, target, target_has_pid):
         if err is not None:
             return err
     return None
+
+def attr_str_ctx(damon_ctx):
+    intervals = damon_ctx.intervals
+    nr_regions = damon_ctx.nr_regions
+    return '%d %d %d %d %d ' % (intervals.sample, intervals.aggr,
+            intervals.ops_update, nr_regions.minimum, nr_regions.maximum)
 
 def write_kdamonds(dir_path, kdamonds):
     if len(kdamonds) > 1:
@@ -371,6 +362,9 @@ def test_debugfs_file(path, input_str, expected):
         return False
     return passed
 
+def get_schemes_file():
+    return os.path.join(get_damon_dir(), 'schemes')
+
 def test_debugfs_file_schemes(nr_fields):
     input_str = ' '.join(['1'] * nr_fields)
     expected = '%s 0 0\n' % input_str
@@ -382,6 +376,12 @@ def test_debugfs_file_schemes_stat_extended(nr_fields):
     expected = '%s 0 0 0 0 0\n' % input_str
 
     return test_debugfs_file(get_schemes_file(), input_str, expected)
+
+def get_target_ids_file():
+    return os.path.join(get_damon_dir(), 'target_ids')
+
+def get_init_regions_file():
+    return os.path.join(get_damon_dir(), 'init_regions')
 
 def test_init_regions_version(paddr_supported):
     # Save previous values
