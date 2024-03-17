@@ -202,6 +202,17 @@ def wops_for_kdamonds(kdamonds):
 
     return write_contents
 
+def write_schemes(dir_path, schemes, intervals):
+    scheme_file_input_lines = []
+    for scheme in schemes:
+        scheme_file_input_lines.append(damos_to_debugfs_input(scheme,
+            intervals, feature_supported('schemes_quotas')))
+    scheme_file_input = '\n'.join(scheme_file_input_lines)
+    if scheme_file_input == '':
+        scheme_file_input = '\n'
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'schemes'), scheme_file_input)
+
 def stage_kdamonds(kdamonds):
     '''Return error'''
     if _damon.any_kdamond_running():
