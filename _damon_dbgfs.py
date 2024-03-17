@@ -213,6 +213,33 @@ def write_schemes(dir_path, schemes, intervals):
     err = _damo_fs.write_file(
             os.path.join(dir_path, 'schemes'), scheme_file_input)
 
+def write_target(dir_path, target, target_has_pid):
+    if target_has_pid:
+        err = _damo_fs.write_file(
+                os.path.join(dir_path, 'target_ids'), '%s' % target.pid)
+        if err is not None:
+            return err
+        tid = target.pid
+    else:
+        if not feature_supported('paddr'):
+            raise Exception('paddr is not supported')
+        err = _damo_fs.write_file(
+                os.path.join(dir_path, 'target_ids'), 'paddr\n')
+        if err is not None:
+            return err
+        tid = 42
+    if feature_supported('init_regions_target_idx'):
+        tid = 0
+
+    if feature_supported('init_regions'):
+        string = ' '.join(['%s %d %d' % (tid, r.start, r.end) for r in
+            target.regions])
+        err = _damo_fs.write_file(
+                os.path.join(dir_path, 'init_regions'), string)
+        if err is not None:
+            return err
+    return None
+
 def stage_kdamonds(kdamonds):
     '''Return error'''
     if _damon.any_kdamond_running():
