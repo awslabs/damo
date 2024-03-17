@@ -1004,8 +1004,6 @@ features = ['record',       # was in DAMON patchset, but not merged in mainline
 
 _damon_fs = None
 
-pr_debug_log = False
-
 def ensure_root_permission():
     if os.geteuid() != 0:
         print('Run as root')
@@ -1090,9 +1088,8 @@ def initialize(damon_interface, debug_damon,
     if not _damon_fs.supported():
         return 'DAMON interface (%s) not supported' % damon_interface
 
-    global pr_debug_log
     if debug_damon:
-        pr_debug_log = True
+        _damo_fs.debug_print_ops(True)
 
     if load_feature_supports:
         err = read_feature_supports_file()

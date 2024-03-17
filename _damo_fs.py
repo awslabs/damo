@@ -2,8 +2,6 @@
 
 import os
 
-import _damon
-
 debug_do_print = False
 
 def debug_print_ops(do_print):
@@ -17,7 +15,7 @@ def read_file(filepath):
             content = f.read()
     except Exception as e:
         return None, 'reading %s failed (%s)' % (filepath, e)
-    if _damon.pr_debug_log or debug_do_print:
+    if debug_do_print:
         print('read \'%s\': \'%s\'' % (filepath, content.strip()))
     return content, None
 
@@ -37,7 +35,7 @@ def read_files(root):
 Returns None if success error string otherwise
 '''
 def write_file(filepath, content):
-    if _damon.pr_debug_log or debug_do_print:
+    if debug_do_print:
         print('write \'%s\' to \'%s\'' % (content.strip(), filepath))
     try:
         with open(filepath, 'w') as f:
