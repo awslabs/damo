@@ -41,10 +41,10 @@ def supported():
     return os.path.isdir(damon_dir)
 
 def turn_damon_on(kdamonds_idxs):
-    return _damo_fs.write_files({get_debugfs_monitor_on_path(): 'on'})
+    return _damo_fs.write_file(get_debugfs_monitor_on_path(), 'on')
 
 def turn_damon_off(kdamonds_idxs):
-    return _damo_fs.write_files({get_debugfs_monitor_on_path(): 'off'})
+    return _damo_fs.write_file(get_debugfs_monitor_on_path(), 'off')
 
 def is_kdamond_running(kdamond_idx):
     content, err = _damo_fs.read_file(get_debugfs_monitor_on_path())
