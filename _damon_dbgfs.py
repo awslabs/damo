@@ -271,11 +271,7 @@ def stage_kdamonds(kdamonds):
     if _damon.any_kdamond_running():
         return 'DAMON debugfs doesn\'t support online staging'
 
-    try:
-        wops = wops_for_kdamonds(kdamonds)
-    except Exception as e:
-        return 'staging kdamond failed (%s)' % e
-    return _damo_fs.write_files(wops)
+    return write_kdamonds(get_damon_dir(), kdamonds)
 
 # for current_kdamonds
 
