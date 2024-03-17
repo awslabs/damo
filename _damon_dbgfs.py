@@ -240,6 +240,32 @@ def write_target(dir_path, target, target_has_pid):
             return err
     return None
 
+def write_kdamonds(dir_path, kdamonds):
+    if len(kdamonds) > 1:
+        raise Exception('Currently only <=one kdamond is supported')
+    if len(kdamonds) == 1 and len(kdamonds[0].contexts) > 1:
+        raise Exception('currently only <= one damon_ctx is supported')
+    if (len(kdamonds) == 1 and len(kdamonds[0].contexts) == 1 and
+            len(kdamonds[0].contexts[0].targets) > 1):
+        raise Exception('currently only <= one target is supported')
+    ctx = kdamonds[0].contexts[0]
+
+    err = _damo_fs.write_file(
+            os.path.join(dir_path, 'attrs'), attr_str_ctx(ctx))
+    if err is not None:
+        return err
+
+    if len(ctx.targets) > 0:
+        err = write_target(
+                dir_path, ctx.targets[0], _damon.target_has_pid(ctx.ops))
+        if err:
+            return err
+    if not feature_supported('schemes'):
+        return None
+
+    err = write_schemes(dir_path, ctx.schemes, ctx.intervals)
+    return err
+
 def stage_kdamonds(kdamonds):
     '''Return error'''
     if _damon.any_kdamond_running():
