@@ -237,7 +237,7 @@ class SortedAccessPatterns:
         self.access_rates_percent.sort()
         self.ages_us.sort()
 
-class RegionBoxValArgs:
+class RegionBoxAttr:
     value_name = None
     display_min_max = None
     display_logscale = None
@@ -450,13 +450,13 @@ def pr_records(args, records):
     set_formats(args, records)
     sorted_access_patterns = SortedAccessPatterns(records)
     region_box_args = RegionBox(sorted_access_patterns,
-            RegionBoxValArgs(args.region_box_values[0],
+            RegionBoxAttr(args.region_box_values[0],
                 args.region_box_min_max_length,
                 args.region_box_scales[0] == 'log'), args.region_box_align,
-            RegionBoxValArgs(args.region_box_values[1],
+            RegionBoxAttr(args.region_box_values[1],
                 [0, 9], args.region_box_scales[1] == 'log'),
             args.region_box_colorset,
-            RegionBoxValArgs(args.region_box_values[2],
+            RegionBoxAttr(args.region_box_values[2],
                 args.region_box_min_max_height,
                 args.region_box_scales[2] == 'log'))
 
