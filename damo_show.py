@@ -247,7 +247,7 @@ class RegionBoxValArgs:
         self.display_min_max = display_min_max
         self.display_logscale = display_logscale
 
-class RegionBoxArgs:
+class RegionBox:
     sorted_access_patterns = None
     length = None
     horizontal_align = None
@@ -449,7 +449,7 @@ def pr_records(args, records):
 
     set_formats(args, records)
     sorted_access_patterns = SortedAccessPatterns(records)
-    region_box_args = RegionBoxArgs(sorted_access_patterns,
+    region_box_args = RegionBox(sorted_access_patterns,
             RegionBoxValArgs(args.region_box_values[0],
                 args.region_box_min_max_length,
                 args.region_box_scales[0] == 'log'), args.region_box_align,
