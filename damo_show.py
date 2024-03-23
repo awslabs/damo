@@ -177,10 +177,12 @@ class ColoredBox:
     height = None
 
     colorset = None
+    horizontal_align = None
 
-    def __init__(self, length, color, colorset, height):
+    def __init__(self, length, horizontal_align, color, colorset, height):
         self.length = length
         self.color = color
+        self.horizontal_align = horizontal_align
         self.colorset = colorset
         self.height = height
 
@@ -200,6 +202,10 @@ class ColoredBox:
             row = '%s' % _damo_ascii_color.colored(
                     ('%d' % color_level) * length, self.colorset, color_level)
         row = '|%s|' % row
+
+        if self.horizontal_align == 'right':
+            indent = ' ' * (self.length.display_min_max[1] - length)
+            row = indent + row
 
         box = '\n'.join([row] * height)
         if self.height.display_min_max[1] > 1:
@@ -244,14 +250,16 @@ class RegionBoxValArgs:
 class RegionBoxArgs:
     sorted_access_patterns = None
     length = None
+    horizontal_align = None
     color = None
     colorset = None
     height = None
 
-    def __init__(self, sorted_access_patterns, length, color, colorset,
-            height):
+    def __init__(self, sorted_access_patterns, length, horizontal_align, color,
+                 colorset, height):
         self.sorted_access_patterns = sorted_access_patterns
         self.length = length
+        self.horizontal_align = horizontal_align
         self.color = color
         self.colorset = colorset
         self.height = height
@@ -285,14 +293,16 @@ class RegionBoxArgs:
         height_val, height_val_minmax = self.val_minmax(region,
                 self.height.value_name)
 
-        return '%s' % ColoredBox(
+        box = '%s' % ColoredBox(
                 BoxValue(length_val, length_val_minmax,
                     self.length.display_min_max, self.length.display_logscale),
+                self.horizontal_align,
                 BoxValue(color_val, color_val_minmax, [0, 9],
                     self.color.display_logscale),
                 self.colorset,
                 BoxValue(height_val, height_val_minmax,
                     self.height.display_min_max, self.height.display_logscale))
+        return box
 
     def format_min_max(self, minval, maxval, value_name, raw):
         if value_name == 'size':
@@ -442,7 +452,7 @@ def pr_records(args, records):
     region_box_args = RegionBoxArgs(sorted_access_patterns,
             RegionBoxValArgs(args.region_box_values[0],
                 args.region_box_min_max_length,
-                args.region_box_scales[0] == 'log'),
+                args.region_box_scales[0] == 'log'), args.region_box_align,
             RegionBoxValArgs(args.region_box_values[1],
                 [0, 9], args.region_box_scales[1] == 'log'),
             args.region_box_colorset,
@@ -602,6 +612,9 @@ def set_argparser(parser):
     parser.add_argument('--region_box_scales', choices=['linear', 'log'],
             nargs=3, default=['log', 'linear', 'log'],
             help='scale of region box\' length, color, and height')
+    parser.add_argument(
+            '--region_box_align', choices=['left', 'right'], default='left',
+            help='where to align the region box')
     parser.add_argument('--min_chars_for', nargs=2,
             metavar=('<keyword>', '<number>'), action='append',
             default=[['<index>', 3],
