@@ -413,7 +413,10 @@ def set_formats(args, records):
         args.format_snapshot_tail = '<total bytes>'
 
     if args.region_box:
-        args.format_region = '<box>%s' % default_region_format
+        if args.region_box_min_max_height[1] > 1:
+            args.format_region = '<box>%s' % default_region_format
+        else:
+            args.format_region = '<box>\n%s' % default_region_format
         if args.format_snapshot_tail.find('<region box description>') == -1:
             args.format_snapshot_tail = ('%s\n<region box description>' %
                     args.format_record_tail)
