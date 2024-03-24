@@ -39,8 +39,9 @@ Kernel
 ------
 
 You should first ensure your system is running on a kernel built with at least
-``CONFIG_DAMON``, ``CONFIG_DAMON_VADDR``, ``CONFIG_DAMON_PADDR``,
-``CONFIG_DAMON_SYSFS``, and ``CONFIG_DAMON_DBGFS``.
+``CONFIG_DAMON``, ``CONFIG_DAMON_VADDR``, ``CONFIG_DAMON_PADDR``, and
+``CONFIG_DAMON_SYSFS``.  Depending on the kernel version, you may need to
+enable ``CONFIG_DAMON_DBGFS`` instead of ``CONFIG_DAMON_SYSFS``.
 
 Sysfs or Debugfs
 ----------------
