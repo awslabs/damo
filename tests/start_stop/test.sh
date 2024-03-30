@@ -97,7 +97,7 @@ do
 	fi
 	sudo timeout 3 "$damo" record ongoing \
 		--damon_interface_DEPRECATED "$damon_interface" &> /dev/null
-	if ! "$damo" validate --aggr 180000 220000 2> /dev/null
+	if ! "$damo" validate --aggr 180000 220000 --nr_accesses 0 44 2> /dev/null
 	then
 		echo "FAIL $testname2 (invalid record file after tune)"
 		if ! sudo "$damo" stop
