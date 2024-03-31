@@ -71,6 +71,11 @@ def handle_args(args):
     if os.path.isfile(args.out):
         os.rename(args.out, args.out + '.old')
 
+    if args.footprint is True:
+        footprint_file_path = '%s.mem_footprint' % args.out
+        if os.path.isfile(footprint_file_path):
+            os.rename(footprint_file_path, footprint_file_path + '.old')
+
     err = _damon_records.set_perf_path(args.perf_path)
     if err != None:
         print(err)
