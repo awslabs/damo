@@ -63,22 +63,6 @@ def handle_args(args):
         print(err)
         exit(-3)
 
-class MemFootprintsSnapshot:
-    time = None
-    pid_statms = {}
-
-    def __init__(self, pids):
-        self.time = time.time()
-        for pid in pids:
-            with open('/proc/%s/statm' % pid, 'r') as f:
-                self.pid_statms[pid] = f.read()
-
-    def to_kvpairs(self):
-        return {
-                'time': self.time,
-                'pid_statms': self.pid_statms
-                }
-
 def pid_running(pid):
     '''pid should be string'''
     try:
@@ -136,6 +120,22 @@ def poll_target_pids(kdamonds, add_childs):
             print('adding child as target failed (%s)' % err)
             cleanup_exit(1)
     return True
+
+class MemFootprintsSnapshot:
+    time = None
+    pid_statms = {}
+
+    def __init__(self, pids):
+        self.time = time.time()
+        for pid in pids:
+            with open('/proc/%s/statm' % pid, 'r') as f:
+                self.pid_statms[pid] = f.read()
+
+    def to_kvpairs(self):
+        return {
+                'time': self.time,
+                'pid_statms': self.pid_statms
+                }
 
 def record_mem_footprint(kdamonds, snapshots):
     pids = []
