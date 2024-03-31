@@ -277,6 +277,6 @@ def set_argparser(parser):
     parser.add_argument('--profile', action='store_true',
                         help='record profiling information together')
     parser.add_argument('--footprint', action='store_true',
-                        help='record memory footprint (VSZ and RSS)')
+                        help='record memory footprint')
     parser.description = 'Record monitoring results'
     return parser
