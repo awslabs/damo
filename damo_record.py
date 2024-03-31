@@ -147,9 +147,10 @@ def record_mem_footprint(kdamonds, snapshots):
                 pids.append(target.pid)
     snapshots.append(MemFootprintsSnapshot(pids))
 
-def save_mem_footprint(snapshots, filepath):
+def save_mem_footprint(snapshots, filepath, file_permission):
     with open(filepath, 'w') as f:
         json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
+    os.chmod(filepath, file_permission)
 
 def main(args):
     global data_for_cleanup
@@ -204,7 +205,8 @@ def main(args):
             time.sleep(1)
 
     if args.footprint:
-        save_mem_footprint(footprint_snapshots, '%s.mem_footprint' % args.out)
+        save_mem_footprint(footprint_snapshots, '%s.mem_footprint' % args.out,
+                           args.output_permission)
 
     _damon.wait_kdamonds_turned_off()
 
