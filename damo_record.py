@@ -121,6 +121,28 @@ def poll_target_pids(kdamonds, add_childs):
             cleanup_exit(1)
     return True
 
+class MemFootprint:
+    # Refer to 'statm' file part of linux/Documentation/filesystems/proc.rst
+    # for meaning of the fields
+    size = None
+    resident = None
+    shared = None
+    trs = None
+    lrs = None
+    drs = None
+    dt = None
+
+    def __init__(self, pid):
+        with open('/proc/%s/statm' % pid, 'r') as f:
+            fields = [int(x) for x in f.read().split()]
+        self.size = fields[0]
+        self.resident = fields[1]
+        self.shared = fields[2]
+        self.trs = fields[3]
+        self.lrs = fields[4]
+        self.drs = fields[5]
+        self.dt = fields[6]
+
 class MemFootprintsSnapshot:
     time = None
     pid_statms = {}
