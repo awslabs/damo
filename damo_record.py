@@ -143,6 +143,9 @@ class MemFootprint:
         self.drs = fields[5]
         self.dt = fields[6]
 
+    def to_kvpairs(self):
+        return self.__dict__
+
 class MemFootprintsSnapshot:
     time = None
     pid_statms = {}
