@@ -148,19 +148,19 @@ class MemFootprint:
 
 class MemFootprintsSnapshot:
     time = None
-    pid_statms = {}
+    footprints = None
 
     def __init__(self, pids):
         self.time = time.time()
+        self.footprints = {}
         for pid in pids:
-            with open('/proc/%s/statm' % pid, 'r') as f:
-                self.pid_statms[pid] = f.read()
+            self.footprints[pid] = MemFootprint(pid)
 
     def to_kvpairs(self):
-        return {
-                'time': self.time,
-                'pid_statms': self.pid_statms
-                }
+        footprints = []
+        for pid, fp in self.footprints.items():
+            footprints.append({'pid': pid, 'footprint': fp.to_kvpairs()})
+        return {'time': self.time, 'footprints': footprints}
 
 def record_mem_footprint(kdamonds, snapshots):
     pids = []
