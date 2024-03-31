@@ -72,6 +72,12 @@ class MemFootprintsSnapshot:
             with open('/proc/%s/statm' % pid, 'r') as f:
                 self.pid_statms[pid] = f.read()
 
+    def to_kvpairs(self):
+        return {
+                'time': self.time,
+                'pid_statms': self.pid_statms
+                }
+
 def pid_running(pid):
     '''pid should be string'''
     try:
