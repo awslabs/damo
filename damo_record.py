@@ -18,10 +18,17 @@ class DataForCleanup:
     kdamonds_idxs = None
     orig_kdamonds = None
     record_handle = None
+    footprint_snapshots = None
 
 data_for_cleanup = DataForCleanup()
 
 cleaning = False
+
+def save_mem_footprint(snapshots, filepath, file_permission):
+    with open(filepath, 'w') as f:
+        json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
+    os.chmod(filepath, file_permission)
+
 def cleanup_exit(exit_code):
     global cleaning
     if cleaning == True:
@@ -36,6 +43,12 @@ def cleanup_exit(exit_code):
 
     if data_for_cleanup.record_handle:
         _damon_records.finish_recording(data_for_cleanup.record_handle)
+
+        if data_for_cleanup.footprint_snapshots is not None:
+            save_mem_footprint(
+                    data_for_cleanup.footprint_snapshots, '%s.mem_footprint' %
+                    data_for_cleanup.record_handle.file_path,
+                    data_for_cleanup.record_handle.file_permission)
 
     exit(exit_code)
 
@@ -172,11 +185,6 @@ def record_mem_footprint(kdamonds, snapshots):
                 pids.append(target.pid)
     snapshots.append(MemFootprintsSnapshot(pids))
 
-def save_mem_footprint(snapshots, filepath, file_permission):
-    with open(filepath, 'w') as f:
-        json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
-    os.chmod(filepath, file_permission)
-
 def main(args):
     global data_for_cleanup
 
@@ -220,18 +228,16 @@ def main(args):
             tracepoint, args.out, args.output_type, args.output_permission,
             monitoring_intervals,
             profile=args.profile is True, profile_target_pid=None)
+    if args.footprint is True:
+        footprint_snapshots = []
+        data_for_cleanup.footprint_snapshots = footprint_snapshots
     print('Press Ctrl+C to stop')
 
-    footprint_snapshots = []
     if _damon_args.self_started_target(args):
         while poll_target_pids(kdamonds, args.include_child_tasks):
             if args.footprint:
                 record_mem_footprint(kdamonds, footprint_snapshots)
             time.sleep(1)
-
-    if args.footprint:
-        save_mem_footprint(footprint_snapshots, '%s.mem_footprint' % args.out,
-                           args.output_permission)
 
     _damon.wait_kdamonds_turned_off()
 
