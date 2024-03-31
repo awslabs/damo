@@ -454,6 +454,25 @@ Because the profile information record file is simply `perf record` output,
 users can further analyze the profile information using `perf` or any `perf
 record` output compatible tools.
 
+### Recording Memory Footprints
+
+Note: This is an experimental feature at the moment.  Some changes could be
+made, or the support can be dropped in future.
+
+Users can record memory usage information of the record target processes
+together with the access pattern by adding `--footprint` command line option to
+the `damo record` command.  Internally, it parses `/proc/<pid>/statm` files for
+the monitoring target processes, and save the results as a json file of the
+name same to the access pattern record file (specified by `--out` option of
+`damo record`) except having `.mem_footprint` suffix.  Hence,
+`damon.data.mem_footprint` is the default name of the profile information.
+
+Users could use the files for vaious purpose.  For an example, users could find
+when how much memory is allocated by the process and really accessed, by
+comparing the recorded residential set size and DAMON-based working set size.
+Support of visualization of such information is one of the future works at the
+moment.
+
 `damo report` (Visualizing Recorded Data Access Pattern)
 --------------------------------------------------------
 
