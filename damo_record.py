@@ -134,9 +134,26 @@ def poll_target_pids(kdamonds, add_childs):
             cleanup_exit(1)
     return True
 
+# Meaning of the fileds of MemFootprint are as below.
+#
+# ======== ===============================       ==============================
+# Field    Content
+# ======== ===============================       ==============================
+# size     total program size (pages)            (same as VmSize in status)
+# resident size of memory portions (pages)       (same as VmRSS in status)
+# shared   number of pages that are shared       (i.e. backed by a file, same
+#                                                as RssFile+RssShmem in status)
+# trs      number of pages that are 'code'       (not including libs; broken,
+#                                                includes data segment)
+# lrs      number of pages of library            (always 0 on 2.6)
+# drs      number of pages of data/stack         (including libs; broken,
+#                                                includes library text)
+# dt       number of dirty pages                 (always 0 on 2.6)
+# ======== ===============================       ==============================
+#
+# The above table is tolen from Documentation/filesystems/proc.rst file of
+# Linux
 class MemFootprint:
-    # Refer to 'statm' file part of linux/Documentation/filesystems/proc.rst
-    # for meaning of the fields
     size = None
     resident = None
     shared = None
