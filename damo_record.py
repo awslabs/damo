@@ -4,6 +4,7 @@
 Record monitored data access patterns.
 """
 
+import json
 import os
 import signal
 import subprocess
@@ -136,6 +137,20 @@ def poll_target_pids(kdamonds, add_childs):
             cleanup_exit(1)
     return True
 
+def record_mem_footprint(kdamonds, snapshots):
+    pids = []
+    for kdamond in kdamonds:
+        for ctx in kdamond.contexts:
+            for target in ctx.targets:
+                if target.pid is None:
+                    continue
+                pids.append(target.pid)
+    snapshots.append(MemFootprintsSnapshot(pids))
+
+def save_mem_footprint(snapshots, filepath):
+    with open(filepath, 'w') as f:
+        json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
+
 def main(args):
     global data_for_cleanup
 
@@ -181,9 +196,15 @@ def main(args):
             profile=args.profile is True, profile_target_pid=None)
     print('Press Ctrl+C to stop')
 
+    footprint_snapshots = []
     if _damon_args.self_started_target(args):
         while poll_target_pids(kdamonds, args.include_child_tasks):
+            if args.footprint:
+                record_mem_footprint(kdamonds, footprint_snapshots)
             time.sleep(1)
+
+    if args.footprint:
+        save_mem_footprint(footprint_snapshots, '%s.mem_footprint' % args.out)
 
     _damon.wait_kdamonds_turned_off()
 
@@ -205,5 +226,7 @@ def set_argparser(parser):
                         help='record schemes tried to be applied regions')
     parser.add_argument('--profile', action='store_true',
                         help='record profiling information together')
+    parser.add_argument('--footprint', action='store_true',
+                        help='record memory footprint (VSZ and RSS)')
     parser.description = 'Record monitoring results'
     return parser
