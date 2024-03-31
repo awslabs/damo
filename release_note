@@ -1,6 +1,9 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v2.2.8
+- Support recording memory usage of monitoring target process
+
 v2.2.7
 - Support region box right-side aligning (--region_box_align) of 'damo show'
 - Cleanup code
