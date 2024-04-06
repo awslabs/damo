@@ -709,15 +709,13 @@ def finish_recording(handle):
         print('converting format from perf_data to %s failed (%s)' %
                 (handle.file_format, err))
 
-    if handle.perf_profile_pipe is None:
-        return
-
-    try:
-        handle.perf_profile_pipe.send_signal(signal.SIGINT)
-    except:
-        # perf might already finished
-        pass
-    os.chmod('%s.profile' % handle.file_path, handle.file_permission)
+    if handle.perf_profile_pipe is not None:
+        try:
+            handle.perf_profile_pipe.send_signal(signal.SIGINT)
+        except:
+            # perf might already finished
+            pass
+        os.chmod('%s.profile' % handle.file_path, handle.file_permission)
 
     if handle.mem_footprint_snapshots is not None:
         save_mem_footprint(
