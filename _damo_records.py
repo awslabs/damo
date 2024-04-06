@@ -658,8 +658,7 @@ Returns pipe for the perf.  The pipe should be passed to finish_recording()
 later.
 '''
 def start_recording(tracepoint, file_path, file_format, file_permission,
-                    monitoring_intervals,
-                    profile=False, profile_target_pid=None):
+                    monitoring_intervals, profile, profile_target_pid):
     pipe = subprocess.Popen(
             [PERF, 'record', '-a', '-e', tracepoint, '-o', file_path])
     profile_pipe = None
