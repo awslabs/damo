@@ -591,8 +591,11 @@ def all_targets_terminated(targets):
             return False
     return True
 
-def poll_target_pids(kdamonds, add_childs):
+def poll_target_pids(handle):
     '''Return if polling should continued'''
+    kdamonds = handle.kdamonds
+    add_childs = handle.poll_add_child_tasks
+
     current_targets = kdamonds[0].contexts[0].targets
     if all_targets_terminated(current_targets):
         return False
@@ -641,15 +644,21 @@ class RecordingHandle:
     monitoring_intervals = None
     perf_pipe = None
     perf_profile_pipe = None
+    # for polling
+    kdamonds = None
+    poll_add_child_tasks = None
 
     def __init__(self, file_path, file_format, file_permission,
-            monitoring_intervals, perf_pipe, perf_profile_pipe):
+                 monitoring_intervals, perf_pipe, perf_profile_pipe,
+                 kdamonds, poll_add_child_tasks):
         self.file_path = file_path
         self.file_format = file_format
         self.file_permission = file_permission
         self.monitoring_intervals = monitoring_intervals
         self.perf_pipe = perf_pipe
         self.perf_profile_pipe = perf_profile_pipe
+        self.kdamonds = kdamonds
+        self.poll_add_child_tasks = poll_add_child_tasks
 
 '''
 Start recording DAMON's monitoring results using perf.
@@ -658,7 +667,8 @@ Returns pipe for the perf.  The pipe should be passed to finish_recording()
 later.
 '''
 def start_recording(tracepoint, file_path, file_format, file_permission,
-                    monitoring_intervals, profile, profile_target_pid):
+                    monitoring_intervals, profile, profile_target_pid,
+                    kdamonds, poll_add_child_tasks):
     pipe = subprocess.Popen(
             [PERF, 'record', '-a', '-e', tracepoint, '-o', file_path])
     profile_pipe = None
@@ -667,8 +677,9 @@ def start_recording(tracepoint, file_path, file_format, file_permission,
         if profile_target_pid is not None:
             cmd += ['--pid', profile_target_pid]
         profile_pipe = subprocess.Popen(cmd)
-    return RecordingHandle(file_path, file_format, file_permission,
-            monitoring_intervals, pipe, profile_pipe)
+    return RecordingHandle(
+            file_path, file_format, file_permission, monitoring_intervals,
+            pipe, profile_pipe, kdamonds, poll_add_child_tasks)
 
 def finish_recording(handle, mem_footprint_snapshots):
     try:

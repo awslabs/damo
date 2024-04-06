@@ -113,15 +113,15 @@ def main(args):
     data_for_cleanup.record_handle = _damo_records.start_recording(
             tracepoint, args.out, args.output_type, args.output_permission,
             monitoring_intervals,
-            profile=args.profile is True, profile_target_pid=None)
+            profile=args.profile is True, profile_target_pid=None,
+            kdamonds=kdamonds, poll_add_child_tasks=args.include_child_tasks)
     if args.footprint is True:
         footprint_snapshots = []
         data_for_cleanup.footprint_snapshots = footprint_snapshots
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
-        while _damo_records.poll_target_pids(kdamonds,
-                                             args.include_child_tasks):
+        while _damo_records.poll_target_pids(data_for_cleanup.record_handle):
             if args.footprint:
                 _damo_records.record_mem_footprint(
                         kdamonds, footprint_snapshots)
