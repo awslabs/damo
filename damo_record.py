@@ -102,6 +102,7 @@ def main(args):
         # TODO: Support multiple kdamonds, multiple contexts
         monitoring_intervals = data_for_cleanup.orig_kdamonds[
                 0].contexts[0].intervals
+        kdamonds = None
 
     if args.schemes_target_regions == False:
         tracepoint = _damo_records.perf_event_damon_aggregated
