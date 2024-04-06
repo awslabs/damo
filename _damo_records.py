@@ -591,7 +591,7 @@ def all_targets_terminated(targets):
             return False
     return True
 
-def poll_target_pids(handle):
+def __poll_target_pids(handle):
     '''Return if polling should continued'''
     kdamonds = handle.kdamonds
     add_childs = handle.poll_add_child_tasks
@@ -637,6 +637,12 @@ def poll_target_pids(handle):
             return False
     return True
 
+def poll_target_pids(handle):
+    rc = __poll_target_pids(handle)
+    if rc is True and handle.mem_footprint_snapshots is not None:
+        record_mem_footprint(handle.kdamonds, handle.mem_footprint_snapshots)
+    return rc
+
 class RecordingHandle:
     file_path = None
     file_format = None
@@ -647,10 +653,11 @@ class RecordingHandle:
     # for polling
     kdamonds = None
     poll_add_child_tasks = None
+    mem_footprint_snapshots = None
 
     def __init__(self, file_path, file_format, file_permission,
                  monitoring_intervals, perf_pipe, perf_profile_pipe,
-                 kdamonds, poll_add_child_tasks):
+                 kdamonds, poll_add_child_tasks, poll_add_mem_footprint):
         self.file_path = file_path
         self.file_format = file_format
         self.file_permission = file_permission
@@ -659,6 +666,8 @@ class RecordingHandle:
         self.perf_profile_pipe = perf_profile_pipe
         self.kdamonds = kdamonds
         self.poll_add_child_tasks = poll_add_child_tasks
+        if poll_add_mem_footprint is True:
+            self.mem_footprint_snapshots = []
 
 '''
 Start recording DAMON's monitoring results using perf.
@@ -668,7 +677,7 @@ later.
 '''
 def start_recording(tracepoint, file_path, file_format, file_permission,
                     monitoring_intervals, profile, profile_target_pid,
-                    kdamonds, poll_add_child_tasks):
+                    kdamonds, poll_add_child_tasks, poll_add_mem_footprint):
     pipe = subprocess.Popen(
             [PERF, 'record', '-a', '-e', tracepoint, '-o', file_path])
     profile_pipe = None
@@ -679,9 +688,10 @@ def start_recording(tracepoint, file_path, file_format, file_permission,
         profile_pipe = subprocess.Popen(cmd)
     return RecordingHandle(
             file_path, file_format, file_permission, monitoring_intervals,
-            pipe, profile_pipe, kdamonds, poll_add_child_tasks)
+            pipe, profile_pipe, kdamonds, poll_add_child_tasks,
+            poll_add_mem_footprint)
 
-def finish_recording(handle, mem_footprint_snapshots):
+def finish_recording(handle):
     try:
         handle.perf_pipe.send_signal(signal.SIGINT)
         handle.perf_pipe.wait()
@@ -709,10 +719,10 @@ def finish_recording(handle, mem_footprint_snapshots):
         pass
     os.chmod('%s.profile' % handle.file_path, handle.file_permission)
 
-    if mem_footprint_snapshots is not None:
+    if handle.mem_footprint_snapshots is not None:
         save_mem_footprint(
-                mem_footprint_snapshots, '%s.mem_footprint' % handle.file_path,
-                handle.file_permission)
+                handle.mem_footprint_snapshots,
+                '%s.mem_footprint' % handle.file_path, handle.file_permission)
 
 # for snapshot
 

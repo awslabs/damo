@@ -37,8 +37,7 @@ def cleanup_exit(exit_code):
             print('failed restoring previous kdamonds setup (%s)' % err)
 
     if data_for_cleanup.record_handle:
-        _damo_records.finish_recording(data_for_cleanup.record_handle,
-                                       data_for_cleanup.footprint_snapshots)
+        _damo_records.finish_recording(data_for_cleanup.record_handle)
 
     exit(exit_code)
 
@@ -114,7 +113,8 @@ def main(args):
             tracepoint, args.out, args.output_type, args.output_permission,
             monitoring_intervals,
             profile=args.profile is True, profile_target_pid=None,
-            kdamonds=kdamonds, poll_add_child_tasks=args.include_child_tasks)
+            kdamonds=kdamonds, poll_add_child_tasks=args.include_child_tasks,
+            poll_add_mem_footprint=args.footprint)
     if args.footprint is True:
         footprint_snapshots = []
         data_for_cleanup.footprint_snapshots = footprint_snapshots
@@ -122,9 +122,6 @@ def main(args):
 
     if _damon_args.self_started_target(args):
         while _damo_records.poll_target_pids(data_for_cleanup.record_handle):
-            if args.footprint:
-                _damo_records.record_mem_footprint(
-                        kdamonds, footprint_snapshots)
             time.sleep(1)
 
     _damon.wait_kdamonds_turned_off()
