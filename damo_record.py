@@ -18,7 +18,6 @@ class DataForCleanup:
     kdamonds_idxs = None
     orig_kdamonds = None
     record_handle = None
-    footprint_snapshots = None
 
 data_for_cleanup = DataForCleanup()
 
@@ -115,9 +114,6 @@ def main(args):
             profile=args.profile is True, profile_target_pid=None,
             kdamonds=kdamonds, poll_add_child_tasks=args.include_child_tasks,
             poll_add_mem_footprint=args.footprint)
-    if args.footprint is True:
-        footprint_snapshots = []
-        data_for_cleanup.footprint_snapshots = footprint_snapshots
     print('Press Ctrl+C to stop')
 
     if _damon_args.self_started_target(args):
