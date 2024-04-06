@@ -498,6 +498,83 @@ def update_records_file(file_path, file_format, file_permission=None,
     return rewrite_record_file(file_path, file_path, file_format,
             file_permission, monitoring_intervals)
 
+# memory footprint recording
+
+
+def save_mem_footprint(snapshots, filepath, file_permission):
+    with open(filepath, 'w') as f:
+        json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
+    os.chmod(filepath, file_permission)
+
+# Meaning of the fileds of MemFootprint are as below.
+#
+# ======== ===============================       ==============================
+# Field    Content
+# ======== ===============================       ==============================
+# size     total program size (pages)            (same as VmSize in status)
+# resident size of memory portions (pages)       (same as VmRSS in status)
+# shared   number of pages that are shared       (i.e. backed by a file, same
+#                                                as RssFile+RssShmem in status)
+# trs      number of pages that are 'code'       (not including libs; broken,
+#                                                includes data segment)
+# lrs      number of pages of library            (always 0 on 2.6)
+# drs      number of pages of data/stack         (including libs; broken,
+#                                                includes library text)
+# dt       number of dirty pages                 (always 0 on 2.6)
+# ======== ===============================       ==============================
+#
+# The above table is tolen from Documentation/filesystems/proc.rst file of
+# Linux
+class MemFootprint:
+    size = None
+    resident = None
+    shared = None
+    trs = None
+    lrs = None
+    drs = None
+    dt = None
+
+    def __init__(self, pid):
+        with open('/proc/%s/statm' % pid, 'r') as f:
+            fields = [int(x) for x in f.read().split()]
+        self.size = fields[0]
+        self.resident = fields[1]
+        self.shared = fields[2]
+        self.trs = fields[3]
+        self.lrs = fields[4]
+        self.drs = fields[5]
+        self.dt = fields[6]
+
+    def to_kvpairs(self):
+        return self.__dict__
+
+class MemFootprintsSnapshot:
+    time = None
+    footprints = None
+
+    def __init__(self, pids):
+        self.time = time.time()
+        self.footprints = {}
+        for pid in pids:
+            self.footprints[pid] = MemFootprint(pid)
+
+    def to_kvpairs(self):
+        footprints = []
+        for pid, fp in self.footprints.items():
+            footprints.append({'pid': pid, 'footprint': fp.to_kvpairs()})
+        return {'time': self.time, 'footprints': footprints}
+
+def record_mem_footprint(kdamonds, snapshots):
+    pids = []
+    for kdamond in kdamonds:
+        for ctx in kdamond.contexts:
+            for target in ctx.targets:
+                if target.pid is None:
+                    continue
+                pids.append(target.pid)
+    snapshots.append(MemFootprintsSnapshot(pids))
+
+
 # for recording
 
 class RecordingHandle:
