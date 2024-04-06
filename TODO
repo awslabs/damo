@@ -30,3 +30,6 @@
   conflicts with concurrent ones
 - Optimize page management in 'replay'
   - Maybe we could manage it in 2 MiB granularity.
+- Support memory footprint record for ongoing record
+- Support memory footprint record for non-process targets
+- Visualize memory footprint
