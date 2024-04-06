@@ -670,9 +670,9 @@ class RecordingHandle:
             self.mem_footprint_snapshots = []
 
 '''
-Start recording DAMON's monitoring results using perf.
+Start recording DAMON's monitoring results and/or profile.
 
-Returns pipe for the perf.  The pipe should be passed to finish_recording()
+Returns a handle object.  The handle should be passed to finish_recording()
 later.
 '''
 def start_recording(tracepoint, file_path, file_format, file_permission,
