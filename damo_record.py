@@ -37,13 +37,8 @@ def cleanup_exit(exit_code):
             print('failed restoring previous kdamonds setup (%s)' % err)
 
     if data_for_cleanup.record_handle:
-        _damo_records.finish_recording(data_for_cleanup.record_handle)
-
-        if data_for_cleanup.footprint_snapshots is not None:
-            _damo_records.save_mem_footprint(
-                    data_for_cleanup.footprint_snapshots, '%s.mem_footprint' %
-                    data_for_cleanup.record_handle.file_path,
-                    data_for_cleanup.record_handle.file_permission)
+        _damo_records.finish_recording(data_for_cleanup.record_handle,
+                                       data_for_cleanup.footprint_snapshots)
 
     exit(exit_code)
 

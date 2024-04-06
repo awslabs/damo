@@ -614,7 +614,7 @@ def start_recording(tracepoint, file_path, file_format, file_permission,
     return RecordingHandle(file_path, file_format, file_permission,
             monitoring_intervals, pipe, profile_pipe)
 
-def finish_recording(handle):
+def finish_recording(handle, mem_footprint_snapshots):
     try:
         handle.perf_pipe.send_signal(signal.SIGINT)
         handle.perf_pipe.wait()
@@ -641,6 +641,11 @@ def finish_recording(handle):
         # perf might already finished
         pass
     os.chmod('%s.profile' % handle.file_path, handle.file_permission)
+
+    if mem_footprint_snapshots is not None:
+        save_mem_footprint(
+                mem_footprint_snapshots, '%s.mem_footprint' % handle.file_path,
+                handle.file_permission)
 
 # for snapshot
 
