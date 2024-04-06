@@ -500,12 +500,6 @@ def update_records_file(file_path, file_format, file_permission=None,
 
 # memory footprint recording
 
-
-def save_mem_footprint(snapshots, filepath, file_permission):
-    with open(filepath, 'w') as f:
-        json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
-    os.chmod(filepath, file_permission)
-
 # Meaning of the fileds of MemFootprint are as below.
 #
 # ======== ===============================       ==============================
@@ -574,8 +568,12 @@ def record_mem_footprint(kdamonds, snapshots):
                 pids.append(target.pid)
     snapshots.append(MemFootprintsSnapshot(pids))
 
+def save_mem_footprint(snapshots, filepath, file_permission):
+    with open(filepath, 'w') as f:
+        json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
+    os.chmod(filepath, file_permission)
 
-# for recording
+# record-polling
 
 def pid_running(pid):
     '''pid should be string'''
@@ -642,6 +640,8 @@ def poll_target_pids(handle):
     if rc is True and handle.mem_footprint_snapshots is not None:
         record_mem_footprint(handle.kdamonds, handle.mem_footprint_snapshots)
     return rc
+
+# for recording
 
 class RecordingHandle:
     file_path = None
