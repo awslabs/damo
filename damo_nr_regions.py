@@ -7,7 +7,7 @@ import sys
 import tempfile
 
 import _damo_dist
-import _damon_records
+import _damo_records
 
 def set_argparser(parser):
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
@@ -30,7 +30,7 @@ def main(args):
     if args.sortby == 'time':
         nr_regions_sort = False
 
-    records, err = _damon_records.get_records(record_file=file_path)
+    records, err = _damo_records.get_records(record_file=file_path)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))

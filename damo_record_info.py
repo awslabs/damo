@@ -7,7 +7,7 @@ Print basic information of the access monitoring results record file.
 import argparse
 
 import _damo_fmt_str
-import _damon_records
+import _damo_records
 
 class GuideInfo:
     tid = None
@@ -116,7 +116,7 @@ def pr_guide(records):
         print(guide)
 
 def main(args):
-    records, err = _damon_records.get_records(record_file=args.input)
+    records, err = _damo_records.get_records(record_file=args.input)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (args.input, err))

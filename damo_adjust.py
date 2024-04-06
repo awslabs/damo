@@ -4,28 +4,28 @@
 
 import argparse
 
-import _damon_records
+import _damo_records
 
 def main(args):
     file_path = args.input
 
-    output_permission, err = _damon_records.parse_file_permission_str(
+    output_permission, err = _damo_records.parse_file_permission_str(
             args.output_permission)
     if err != None:
         print('wrong --output_permission (%s) (%s)' %
                 (args.output_permission, err))
         exit(1)
 
-    records, err = _damon_records.get_records(record_file=file_path)
+    records, err = _damo_records.get_records(record_file=file_path)
     if err:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))
         exit(1)
 
     if args.aggregate_interval != None:
-        _damon_records.adjust_records(records, args.aggregate_interval,
+        _damo_records.adjust_records(records, args.aggregate_interval,
                 args.skip)
-    err = _damon_records.write_damon_records(records, args.output,
+    err = _damo_records.write_damon_records(records, args.output,
             args.output_type, output_permission)
     if err != None:
         print('writing adjusted result failed (%s)' % err)
@@ -39,8 +39,8 @@ def set_argparser(parser):
     parser.add_argument('--output', '-o', type=str, metavar='<file>',
             default='damon.adjusted.data', help='output file name')
     parser.add_argument('--output_type',
-            choices=_damon_records.self_write_supported_file_types,
-            default=_damon_records.file_type_json_compressed,
+            choices=_damo_records.self_write_supported_file_types,
+            default=_damo_records.file_type_json_compressed,
             help='output file\'s type')
     parser.add_argument('--output_permission', type=str, default='600',
             help='permission of the output file')

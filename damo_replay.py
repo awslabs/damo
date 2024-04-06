@@ -5,7 +5,7 @@ import random
 import time
 
 import _damo_fmt_str
-import _damon_records
+import _damo_records
 import damo_record_info
 
 page_map = {}
@@ -69,7 +69,7 @@ def main(args):
         print('input file (%s) not exists' % input_file)
         exit(1)
 
-    records, err = _damon_records.get_records(record_file=input_file)
+    records, err = _damo_records.get_records(record_file=input_file)
     if err:
         print('parsing damon records file (%s) failed (%s)' %
               (input_file, err))

@@ -8,12 +8,12 @@ import _test_damo_common
 _test_damo_common.add_damo_dir_to_syspath()
 
 import _damon
-import _damon_records
+import _damo_records
 import damo_show
 
 class TestDamoShow(unittest.TestCase):
     def test_sorted_access_pattern(self):
-        record = _damon_records.DamonRecord.from_kvpairs(
+        record = _damo_records.DamonRecord.from_kvpairs(
             {
                 "kdamond_idx": 0, "context_idx": 0,
                 "intervals": {
@@ -67,7 +67,7 @@ class TestDamoShow(unittest.TestCase):
         self.assertEqual(sorted_vals.ages_us[-1], 3000000)
 
     def test_format_template(self):
-        record = _damon_records.DamonRecord.from_kvpairs(
+        record = _damo_records.DamonRecord.from_kvpairs(
             {
                 "kdamond_idx": 0, "context_idx": 0,
                 "intervals": {

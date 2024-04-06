@@ -9,7 +9,7 @@ import _damo_fmt_str
 import _damo_print
 import _damon
 import _damon_args
-import _damon_records
+import _damo_records
 
 class Formatter:
     keyword = None
@@ -525,7 +525,7 @@ def main(args):
     args.region_box_values = [v if v != 'none' else None
             for v in args.region_box_values]
 
-    record_filter, err = _damon_records.args_to_filter(args)
+    record_filter, err = _damo_records.args_to_filter(args)
     if err != None:
         print(err)
         exit(1)
@@ -533,7 +533,7 @@ def main(args):
     if args.input_file == None:
         _damon.ensure_root_and_initialized(args, load_feature_supports=True)
 
-    records, err = _damon_records.get_records(
+    records, err = _damo_records.get_records(
                 tried_regions_of=args.tried_regions_of,
                 record_file=args.input_file, record_filter=record_filter,
                 total_sz_only=args.total_sz_only,
@@ -557,7 +557,7 @@ def set_argparser(parser):
     _damon_args.set_common_argparser(parser)
 
     # what to show
-    _damon_records.set_filter_argparser(parser)
+    _damo_records.set_filter_argparser(parser)
 
     parser.add_argument('--input_file', metavar='<file>',
             help='source of the access pattern to show')

@@ -7,7 +7,7 @@ import sys
 
 import _damo_fmt_str
 import _damo_print
-import _damon_records
+import _damo_records
 
 def filter_snapshots(records, start_time_sec, end_time_sec):
     for record in records:
@@ -88,7 +88,7 @@ def main(args):
         print('input file (%s) is not exist' % file_path)
         exit(1)
 
-    records, err = _damon_records.get_records(record_file=file_path)
+    records, err = _damo_records.get_records(record_file=file_path)
     if err:
         print('parsing damon result file (%s) failed (%s)' %
                 (file_path, err))

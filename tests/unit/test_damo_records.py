@@ -8,28 +8,28 @@ import _test_damo_common
 _test_damo_common.add_damo_dir_to_syspath()
 
 import _damon
-import _damon_records
+import _damo_records
 
 class TestDamon(unittest.TestCase):
     def test_parse_file_permission_str(self):
-        perm, err = _damon_records.parse_file_permission_str('777')
+        perm, err = _damo_records.parse_file_permission_str('777')
         self.assertEqual(perm, 0o777)
         self.assertIsNone(err)
 
-        perm, err = _damon_records.parse_file_permission_str('-123')
+        perm, err = _damo_records.parse_file_permission_str('-123')
         self.assertIsNone(perm)
         self.assertIsNotNone(err)
 
-        perm, err = _damon_records.parse_file_permission_str('1000')
+        perm, err = _damo_records.parse_file_permission_str('1000')
         self.assertIsNone(perm)
         self.assertIsNotNone(err)
 
-        perm, err = _damon_records.parse_file_permission_str('778')
+        perm, err = _damo_records.parse_file_permission_str('778')
         self.assertIsNone(perm)
         self.assertIsNotNone(err)
 
     def test_record_from_kvpairs(self):
-        records = [_damon_records.DamonRecord.from_kvpairs(p) for p in [
+        records = [_damo_records.DamonRecord.from_kvpairs(p) for p in [
             {
                 "kdamond_idx": 0, "context_idx": 0,
                 "intervals": {
@@ -65,7 +65,7 @@ class TestDamon(unittest.TestCase):
 
         # test DamonSnapshot.total_bytes added by commit 98c1bd8f467f6.  Test
         # older output that doesn't have the data.
-        records = [_damon_records.DamonRecord.from_kvpairs(p) for p in [
+        records = [_damo_records.DamonRecord.from_kvpairs(p) for p in [
             {
                 "kdamond_idx": 0, "context_idx": 0,
                 "intervals": {
@@ -102,37 +102,37 @@ class TestDamon(unittest.TestCase):
         ranges = [[3, 5], [6, 9], [10, 12]]
         region = _damon.DamonRegion(7, 8)
         self.assertEqual(
-                _damon_records.filter_by_addr(_damon.DamonRegion(7, 8),
+                _damo_records.filter_by_addr(_damon.DamonRegion(7, 8),
                     ranges), [_damon.DamonRegion(7, 8)])
         self.assertEqual(
-                _damon_records.filter_by_addr(_damon.DamonRegion(1, 2),
+                _damo_records.filter_by_addr(_damon.DamonRegion(1, 2),
                     ranges), [])
         self.assertEqual(
-                _damon_records.filter_by_addr(_damon.DamonRegion(5, 6),
+                _damo_records.filter_by_addr(_damon.DamonRegion(5, 6),
                     ranges), [])
         self.assertEqual(
-                _damon_records.filter_by_addr(_damon.DamonRegion(1, 4),
+                _damo_records.filter_by_addr(_damon.DamonRegion(1, 4),
                     ranges), [_damon.DamonRegion(3, 4)])
         self.assertEqual(
-                _damon_records.filter_by_addr(_damon.DamonRegion(1, 20),
+                _damo_records.filter_by_addr(_damon.DamonRegion(1, 20),
                     ranges), [_damon.DamonRegion(3, 5), _damon.DamonRegion(6,
                         9), _damon.DamonRegion(10, 12)])
 
     def test_parse_sort_bytes_ranges_input(self):
         self.assertEqual(
-                _damon_records.parse_sort_bytes_ranges_input([['1G', '2G']]),
+                _damo_records.parse_sort_bytes_ranges_input([['1G', '2G']]),
                 ([[1024 * 1024 * 1024, 1024 * 1024 * 1024 * 2]], None))
-        ranges, err = _damon_records.parse_sort_bytes_ranges_input(
+        ranges, err = _damo_records.parse_sort_bytes_ranges_input(
                 [['abc', 'def']])
         self.assertNotEqual(err, None)
-        ranges, err = _damon_records.parse_sort_bytes_ranges_input([[4, 3]])
+        ranges, err = _damo_records.parse_sort_bytes_ranges_input([[4, 3]])
         self.assertNotEqual(err, None)
-        ranges, err = _damon_records.parse_sort_bytes_ranges_input(
+        ranges, err = _damo_records.parse_sort_bytes_ranges_input(
                 [[5, 7], [2, 6]])
         self.assertEqual(err, 'overlapping range')
 
         self.assertEqual(
-                _damon_records.parse_sort_bytes_ranges_input(
+                _damo_records.parse_sort_bytes_ranges_input(
                     [[10, 20], [5, 7]]), ([[5, 7], [10, 20]], None))
 
 if __name__ == '__main__':

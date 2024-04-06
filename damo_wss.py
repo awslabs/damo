@@ -8,7 +8,7 @@ import tempfile
 
 import _damo_dist
 import _damo_fmt_str
-import _damon_records
+import _damo_records
 
 def get_wss_dists(records, acc_thres, sz_thres, do_sort):
     wss_dists = {}
@@ -110,13 +110,13 @@ def main(args):
         wss_sort = False
     raw_number = args.raw_number
 
-    records, err = _damon_records.get_records(record_file=file_path)
+    records, err = _damo_records.get_records(record_file=file_path)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (file_path, err))
         exit(1)
 
-    _damon_records.adjust_records(records, args.work_time, args.exclude_samples)
+    _damo_records.adjust_records(records, args.work_time, args.exclude_samples)
     wss_dists = get_wss_dists(records, args.acc_thres, args.sz_thres, wss_sort)
 
     if args.plot:

@@ -29,7 +29,7 @@ import damo_record_info
 
 import _damo_ascii_color
 import _damo_fmt_str
-import _damon_records
+import _damo_records
 
 class HeatPixel:
     time = None
@@ -292,7 +292,7 @@ def main(args=None):
     if args.ascii_color == None and args.stdout_heatmap_color == None:
         args.stdout_heatmap_color = 'gray'
 
-    records, err = _damon_records.get_records(record_file=args.input)
+    records, err = _damo_records.get_records(record_file=args.input)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
                 (args.input, err))

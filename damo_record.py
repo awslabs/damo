@@ -12,7 +12,7 @@ import time
 
 import _damon
 import _damon_args
-import _damon_records
+import _damo_records
 
 class DataForCleanup:
     kdamonds_idxs = None
@@ -42,7 +42,7 @@ def cleanup_exit(exit_code):
             print('failed restoring previous kdamonds setup (%s)' % err)
 
     if data_for_cleanup.record_handle:
-        _damon_records.finish_recording(data_for_cleanup.record_handle)
+        _damo_records.finish_recording(data_for_cleanup.record_handle)
 
         if data_for_cleanup.footprint_snapshots is not None:
             save_mem_footprint(
@@ -60,7 +60,7 @@ def handle_args(args):
     if _damon.any_kdamond_running() and not args.deducible_target:
         args.deducible_target = 'ongoing'
 
-    args.output_permission, err = _damon_records.parse_file_permission_str(
+    args.output_permission, err = _damo_records.parse_file_permission_str(
             args.output_permission)
     if err != None:
         print('wrong --output permission (%s) (%s)' %
@@ -76,7 +76,7 @@ def handle_args(args):
         if os.path.isfile(footprint_file_path):
             os.rename(footprint_file_path, footprint_file_path + '.old')
 
-    err = _damon_records.set_perf_path(args.perf_path)
+    err = _damo_records.set_perf_path(args.perf_path)
     if err != None:
         print(err)
         exit(-3)
@@ -242,11 +242,11 @@ def main(args):
                 0].contexts[0].intervals
 
     if args.schemes_target_regions == False:
-        tracepoint = _damon_records.perf_event_damon_aggregated
+        tracepoint = _damo_records.perf_event_damon_aggregated
     else:
-        tracepoint = _damon_records.perf_event_damos_before_apply
+        tracepoint = _damo_records.perf_event_damos_before_apply
 
-    data_for_cleanup.record_handle = _damon_records.start_recording(
+    data_for_cleanup.record_handle = _damo_records.start_recording(
             tracepoint, args.out, args.output_type, args.output_permission,
             monitoring_intervals,
             profile=args.profile is True, profile_target_pid=None)
@@ -268,8 +268,8 @@ def main(args):
 def set_argparser(parser):
     parser = _damon_args.set_argparser(parser, add_record_options=True)
     parser.add_argument('--output_type',
-                        choices=_damon_records.file_types,
-                        default=_damon_records.file_type_json_compressed,
+                        choices=_damo_records.file_types,
+                        default=_damo_records.file_type_json_compressed,
                         help='output file\'s type')
     parser.add_argument('--output_permission', type=str, default='600',
                         help='permission of the output file')

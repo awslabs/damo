@@ -4,16 +4,16 @@ import argparse
 import subprocess
 
 import _damon
-import _damon_records
+import _damo_records
 import damo_show
 
 def main(args):
-    record_filter, err = _damon_records.args_to_filter(args)
+    record_filter, err = _damo_records.args_to_filter(args)
     if err != None:
         print(err)
         exit(1)
 
-    records, err = _damon_records.get_records(
+    records, err = _damo_records.get_records(
                 tried_regions_of=False, record_file=args.inputs[0],
                 record_filter=record_filter, total_sz_only=False,
                 dont_merge_regions=False)
@@ -48,6 +48,6 @@ def set_argparser(parser):
     parser.add_argument('--inputs', metavar='<file>', nargs=2,
                         default=['damon.data', 'damon.data.profile'],
                         help='access pattern and profile record files')
-    _damon_records.set_filter_argparser(parser)
+    _damo_records.set_filter_argparser(parser)
 
     parser.description='Show profiling report for specific access pattern'
