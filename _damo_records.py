@@ -577,6 +577,63 @@ def record_mem_footprint(kdamonds, snapshots):
 
 # for recording
 
+def pid_running(pid):
+    '''pid should be string'''
+    try:
+        subprocess.check_output(['ps', '--pid', pid])
+        return True
+    except:
+        return False
+
+def all_targets_terminated(targets):
+    for target in targets:
+        if pid_running('%s' % target.pid):
+            return False
+    return True
+
+def poll_target_pids(kdamonds, add_childs):
+    '''Return if polling should continued'''
+    current_targets = kdamonds[0].contexts[0].targets
+    if all_targets_terminated(current_targets):
+        return False
+    if not add_childs:
+        return True
+
+    for target in current_targets:
+        if target.pid == None:
+            continue
+        try:
+            childs_pids = subprocess.check_output(
+                    ['ps', '--ppid', '%s' % target.pid, '-o', 'pid=']
+                    ).decode().split()
+        except:
+            childs_pids = []
+        if len(childs_pids) == 0:
+            continue
+
+        # TODO: Commit all at once, out of this loop
+        new_targets = []
+        for child_pid in childs_pids:
+            # skip the child if already in the targets
+            if child_pid in ['%s' % t.pid for t in current_targets]:
+                continue
+            # remove already terminated targets, since committing already
+            # terminated targets to DAMON fails
+            new_targets = [target for target in current_targets
+                    if pid_running('%s' % target.pid)]
+            new_targets.append(_damon.DamonTarget(pid=child_pid, regions=[]))
+        if new_targets == []:
+            continue
+
+        # commit the new set of targets
+        kdamonds[0].contexts[0].targets = new_targets
+        err = _damon.commit(kdamonds)
+        if err != None:
+            # this might be not a problem; some of processes might
+            # finished meanwhile
+            return False
+    return True
+
 class RecordingHandle:
     file_path = None
     file_format = None
