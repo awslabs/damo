@@ -114,9 +114,9 @@ def main(args):
             tracepoint=tracepoint, file_path=args.out,
             file_format=args.output_type,
             file_permission=args.output_permission,
-            monitoring_intervals=monitoring_intervals, perf_pipe=None,
+            monitoring_intervals=monitoring_intervals,
             # for perf profile
-            do_profile=args.profile is True, perf_profile_pipe=None,
+            do_profile=args.profile is True,
             # for childs recording and memory footprint
             kdamonds=kdamonds, poll_add_child_tasks=args.include_child_tasks,
             poll_add_mem_footprint=args.footprint)

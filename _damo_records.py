@@ -665,18 +665,16 @@ class RecordingHandle:
     mem_footprint_snapshots = None
 
     def __init__(self, tracepoint, file_path, file_format, file_permission,
-                 monitoring_intervals, perf_pipe,
-                 do_profile, perf_profile_pipe,
+                 monitoring_intervals,
+                 do_profile,
                  kdamonds, poll_add_child_tasks, poll_add_mem_footprint):
         self.tracepoint = tracepoint
         self.file_path = file_path
         self.file_format = file_format
         self.file_permission = file_permission
         self.monitoring_intervals = monitoring_intervals
-        self.perf_pipe = perf_pipe
 
         self.do_profile = do_profile
-        self.perf_profile_pipe = perf_profile_pipe
 
         self.kdamonds = kdamonds
         self.poll_add_child_tasks = poll_add_child_tasks
