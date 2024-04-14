@@ -545,6 +545,18 @@ class MemFootprint:
     def to_kvpairs(self):
         return self.__dict__
 
+    @classmethod
+    def from_kvpairs(cls, kvpairs):
+        self = cls()
+        self.size = kvpairs['size']
+        self.resident = kvpairs['resident']
+        self.shared = kvpairs['shared']
+        self.trs = kvpairs['trs']
+        self.lrs = kvpairs['lrs']
+        self.drs = kvpairs['drs']
+        self.dt = kvpairs['dt']
+        return self
+
 class MemFootprintsSnapshot:
     time = None
     footprints = None
