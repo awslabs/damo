@@ -470,8 +470,8 @@ name same to the access pattern record file (specified by `--out` option of
 Users could use the files for vaious purpose.  For an example, users could find
 when how much memory is allocated by the process and really accessed, by
 comparing the recorded residential set size and DAMON-based working set size.
-Support of visualization of such information is one of the future works at the
-moment.
+[`damo report footprints`](#footprints) and [`damo report wss`](#wss) could be
+used for the purpose.
 
 `damo report` (Visualizing Recorded Data Access Pattern)
 --------------------------------------------------------
@@ -624,6 +624,45 @@ duration spikes could be more easily found.
 
 Similar to that of ``heats --heatmap``, it also supports `gnuplot` based simple
 visualization of the distribution via ``--plot`` option.
+
+### footprints
+
+Note: This is an experimental feature at the moment.  Some changes could be
+made, or the support can be dropped in future.
+
+The `footprints` type extracts the distribution of the
+[recorded](#recording-memory-footprints) in chronological or size order.  By
+comparing the output against that of [wss](#wss) report type, users can know
+how much memory is being allocated for the workload and what amount of the
+allocated memory is really being accessed.  The output format is similar to
+that of [wss](#wss).
+
+Because there are various memory footprint metrics, the command asks users to
+specify what memory footprint metric they want to visualize.  Currently, `vsz`
+and `rss` are supported.  `vsz` is the amount of virtual memory that allocated 
+to the workloads, which is also known as "virtual set size".  Meanwhile, `rss`
+is the amount of physical memory that allocated to the workloads, which also
+known as "residential set size".
+
+For example:
+
+    $ ./damo report footprints vsz
+    # <percentile> <footprint>
+    # avr:  199.883 MiB
+      0     199.883 MiB |***********************************************************|
+     25     199.883 MiB |***********************************************************|
+     50     199.883 MiB |***********************************************************|
+     75     199.883 MiB |***********************************************************|
+    100     199.883 MiB |***********************************************************|
+    $
+    $ ./damo report footprints rss
+    # <percentile> <footprint>
+    # avr:  196.168 MiB
+      0     196.168 MiB |***********************************************************|
+     25     196.168 MiB |***********************************************************|
+     50     196.168 MiB |***********************************************************|
+     75     196.168 MiB |***********************************************************|
+    100     196.168 MiB |***********************************************************|
 
 ### profile
 
