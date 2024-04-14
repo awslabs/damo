@@ -708,7 +708,7 @@ def start_recording(tracepoint, file_path, file_format, file_permission,
 
 def start_recording_v2(handle):
     if handle.tracepoint is not None:
-        hnalde.perf_pipe = subprocess.Popen(
+        handle.perf_pipe = subprocess.Popen(
                 [PERF, 'record', '-a', '-e', handle.tracepoint,
                  '-o', handle.file_path])
     if handle.do_profile:

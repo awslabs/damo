@@ -109,15 +109,21 @@ def main(args):
     else:
         tracepoint = _damo_records.perf_event_damos_before_apply
 
-    data_for_cleanup.record_handle = _damo_records.start_recording(
-            tracepoint, args.out, args.output_type, args.output_permission,
-            monitoring_intervals,
-            profile=args.profile is True, profile_target_pid=None,
+    record_handle = _damo_records.RecordingHandle(
+            # for access pattern monitoring
+            tracepoint=tracepoint, file_path=args.out,
+            file_format=args.output_type,
+            file_permission=args.output_permission,
+            monitoring_intervals=monitoring_intervals, perf_pipe=None,
+            # for perf profile
+            do_profile=args.profile is True, perf_profile_pipe=None,
+            # for childs recording and memory footprint
             kdamonds=kdamonds, poll_add_child_tasks=args.include_child_tasks,
             poll_add_mem_footprint=args.footprint)
-    print('Press Ctrl+C to stop')
+    data_for_cleanup.record_handle = record_handle
 
-    _damo_records.wait_recording(data_for_cleanup.record_handle)
+    print('Press Ctrl+C to stop')
+    _damo_records.start_recording_v2(record_handle)
     cleanup_exit(0)
 
 def set_argparser(parser):
