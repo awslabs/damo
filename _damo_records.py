@@ -683,29 +683,6 @@ class RecordingHandle:
         if poll_add_mem_footprint is True:
             self.mem_footprint_snapshots = []
 
-'''
-Start recording DAMON's monitoring results and/or profile.
-
-Returns a handle object.  The handle should be passed to finish_recording()
-later.
-'''
-def start_recording(tracepoint, file_path, file_format, file_permission,
-                    monitoring_intervals, profile, profile_target_pid,
-                    kdamonds, poll_add_child_tasks, poll_add_mem_footprint):
-    pipe = subprocess.Popen(
-            [PERF, 'record', '-a', '-e', tracepoint, '-o', file_path])
-    profile_pipe = None
-    if profile is True:
-        cmd = [PERF, 'record', '-o', '%s.profile' % file_path]
-        if profile_target_pid is not None:
-            cmd += ['--pid', profile_target_pid]
-        profile_pipe = subprocess.Popen(cmd)
-    return RecordingHandle(
-            tracepoint, file_path, file_format, file_permission,
-            monitoring_intervals, pipe,
-            profile, profile_pipe,
-            kdamonds, poll_add_child_tasks, poll_add_mem_footprint)
-
 def start_recording_v2(handle):
     if handle.tracepoint is not None:
         handle.perf_pipe = subprocess.Popen(
