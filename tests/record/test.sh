@@ -24,7 +24,8 @@ cleanup_files()
 
 test_record_permission()
 {
-	sudo "$damo" record "sleep 1" --output_permission 611 &> /dev/null
+	sudo timeout 3 "$damo" record "sleep 3" --output_permission 611 \
+		&> /dev/null
 	if [ ! "$(stat -c %a damon.data)" = "611" ]
 	then
 		echo "FAIL record-permission"
