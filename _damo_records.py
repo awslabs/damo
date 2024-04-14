@@ -576,6 +576,16 @@ class MemFootprintsSnapshot:
             footprints.append({'pid': pid, 'footprint': fp.to_kvpairs()})
         return {'time': self.time, 'footprints': footprints}
 
+    @classmethod
+    def from_kvpairs(cls, kvpairs):
+        self = cls()
+        self.time = kvpairs['time']
+        self.footprints = {}
+        for fp in kvpairs['footprints']:
+            pid, footprint = fp['pid'], fp['footprint']
+            self.footprints[pid] = MemFootprint.from_kvpairs(footprint)
+        return self
+
 def record_mem_footprint(kdamonds, snapshots):
     pids = []
     for kdamond in kdamonds:
