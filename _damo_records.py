@@ -561,7 +561,10 @@ class MemFootprintsSnapshot:
     time = None
     footprints = None
 
-    def __init__(self, pids):
+    def __init__(self, pids=None):
+        if pids is None:
+            return
+
         self.time = time.time()
         self.footprints = {}
         for pid in pids:
