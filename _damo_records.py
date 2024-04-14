@@ -528,7 +528,10 @@ class MemFootprint:
     drs = None
     dt = None
 
-    def __init__(self, pid):
+    def __init__(self, pid=None):
+        if pid is None:
+            return
+
         with open('/proc/%s/statm' % pid, 'r') as f:
             fields = [int(x) for x in f.read().split()]
         self.size = fields[0]
