@@ -647,13 +647,17 @@ def poll_target_pids(handle):
 # for recording
 
 class RecordingHandle:
+    # for tracepoint recording
     file_path = None
     file_format = None
     file_permission = None
     monitoring_intervals = None
     perf_pipe = None
+
+    # for CPU clock event recording
     perf_profile_pipe = None
-    # for polling
+
+    # for adding child tasks and memory footprint recording
     kdamonds = None
     poll_add_child_tasks = None
     mem_footprint_snapshots = None
