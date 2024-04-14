@@ -636,6 +636,9 @@ def __poll_target_pids(handle):
     return True
 
 def poll_target_pids(handle):
+    if (not handle.poll_add_child_tasks and
+        handle.mem_footprint_snapshots is None):
+        return False
     rc = __poll_target_pids(handle)
     if rc is True and handle.mem_footprint_snapshots is not None:
         record_mem_footprint(handle.kdamonds, handle.mem_footprint_snapshots)
