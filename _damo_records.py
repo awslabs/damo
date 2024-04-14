@@ -695,12 +695,6 @@ def start_recording(handle):
         time.sleep(1)
     _damon.wait_kdamonds_turned_off()
 
-def wait_recording(handle):
-    while poll_target_pids(handle):
-        time.sleep(1)
-
-    _damon.wait_kdamonds_turned_off()
-
 def finish_recording(handle):
     try:
         handle.perf_pipe.send_signal(signal.SIGINT)
