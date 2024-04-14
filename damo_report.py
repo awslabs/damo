@@ -5,6 +5,7 @@ import argparse
 import _damo_subcmds
 import damo_heats
 import damo_nr_regions
+import damo_report_footprint
 import damo_report_profile
 import damo_report_raw
 import damo_report_times
@@ -23,6 +24,9 @@ subcmds = [
             msg='profile report for specific access pattern'),
         _damo_subcmds.DamoSubCmd(name='times', module=damo_report_times,
             msg='times of record having specific access pattern'),
+        _damo_subcmds.DamoSubCmd(
+            name='footprints', module=damo_report_footprint,
+            msg='memory footprints'),
         ]
 
 def main(args):
