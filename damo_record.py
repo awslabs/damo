@@ -117,12 +117,7 @@ def main(args):
             poll_add_mem_footprint=args.footprint)
     print('Press Ctrl+C to stop')
 
-    if _damon_args.self_started_target(args):
-        while _damo_records.poll_target_pids(data_for_cleanup.record_handle):
-            time.sleep(1)
-
-    _damon.wait_kdamonds_turned_off()
-
+    _damo_records.wait_recording(data_for_cleanup.record_handle)
     cleanup_exit(0)
 
 def set_argparser(parser):
