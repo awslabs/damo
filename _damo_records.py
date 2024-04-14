@@ -694,6 +694,12 @@ def start_recording(tracepoint, file_path, file_format, file_permission,
             pipe, profile_pipe, kdamonds, poll_add_child_tasks,
             poll_add_mem_footprint)
 
+def wait_recording(handle):
+    while poll_target_pids(handle):
+        time.sleep(1)
+
+    _damon.wait_kdamonds_turned_off()
+
 def finish_recording(handle):
     try:
         handle.perf_pipe.send_signal(signal.SIGINT)
