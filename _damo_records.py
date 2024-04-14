@@ -706,6 +706,18 @@ def start_recording(tracepoint, file_path, file_format, file_permission,
             profile, profile_pipe,
             kdamonds, poll_add_child_tasks, poll_add_mem_footprint)
 
+def start_recording_v2(handle):
+    if handle.tracepoint is not None:
+        hnalde.perf_pipe = subprocess.Popen(
+                [PERF, 'record', '-a', '-e', handle.tracepoint,
+                 '-o', handle.file_path])
+    if handle.do_profile:
+        cmd = [PERF, 'record', '-o', '%s.profile' % file_path]
+        handle.perf_profile_pipe = subprocess.Popen(cmd)
+    while poll_target_pids(handle):
+        time.sleep(1)
+    _damon.wait_kdamonds_turned_off()
+
 def wait_recording(handle):
     while poll_target_pids(handle):
         time.sleep(1)
