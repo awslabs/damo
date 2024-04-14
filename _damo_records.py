@@ -683,7 +683,7 @@ class RecordingHandle:
         if poll_add_mem_footprint is True:
             self.mem_footprint_snapshots = []
 
-def start_recording_v2(handle):
+def start_recording(handle):
     if handle.tracepoint is not None:
         handle.perf_pipe = subprocess.Popen(
                 [PERF, 'record', '-a', '-e', handle.tracepoint,

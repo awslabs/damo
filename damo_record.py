@@ -123,7 +123,7 @@ def main(args):
     data_for_cleanup.record_handle = record_handle
 
     print('Press Ctrl+C to stop')
-    _damo_records.start_recording_v2(record_handle)
+    _damo_records.start_recording(record_handle)
     cleanup_exit(0)
 
 def set_argparser(parser):
