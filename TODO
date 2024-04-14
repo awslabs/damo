@@ -5,16 +5,6 @@
     - support global memory footprint
   - Support flamegraph-wss-heatmap visualization
 - Implement histogram stat regions output
-- Deprecate old features
-  - Deprecate translate_damos (done.)
-  - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
-  - Deprecate v1-v3 schemes (done.  necessary code moved to _damon_deprecated)
-  - Deprecate python2 support (done.  code moved to _damon_deprecated)
-  - Deprecate scheme subcommand
-    - Can be replaced by start or tune
-  - Deprecate old scheme usages in tests
-  - Deprecate DAMON results record binary format (done.  code moved to
-    _damon_deprecated)
 - damo show features implementation
   - support target damos filter
   - time based filtering
@@ -27,8 +17,19 @@
   - helps reporting issue
 - Handle _damon_sysfs file i/o error for unsupported kernel features and
   conflicts with concurrent ones
-- Optimize page management in 'replay'
-  - Maybe we could manage it in 2 MiB granularity.
+- Optimize 'replay' performance
+  - An approach for 2 MiB-granularity page management didn't show improvement
 - Support memory footprint record for ongoing record
 - Support memory footprint record for non-process targets
 - Visualize memory footprint
+
+- Deprecate old features
+  - Deprecate translate_damos (done.)
+  - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
+  - Deprecate v1-v3 schemes (done.  necessary code moved to _damon_deprecated)
+  - Deprecate python2 support (done.  code moved to _damon_deprecated)
+  - Deprecate scheme subcommand
+    - Can be replaced by start or tune
+  - Deprecate old scheme usages in tests
+  - Deprecate DAMON results record binary format (done.  code moved to
+    _damon_deprecated)
