@@ -648,6 +648,7 @@ def poll_target_pids(handle):
 
 class RecordingHandle:
     # for tracepoint recording
+    tracepoint = None
     file_path = None
     file_format = None
     file_permission = None
@@ -655,6 +656,7 @@ class RecordingHandle:
     perf_pipe = None
 
     # for CPU clock event recording
+    do_profile = None
     perf_profile_pipe = None
 
     # for adding child tasks and memory footprint recording
@@ -662,15 +664,20 @@ class RecordingHandle:
     poll_add_child_tasks = None
     mem_footprint_snapshots = None
 
-    def __init__(self, file_path, file_format, file_permission,
-                 monitoring_intervals, perf_pipe, perf_profile_pipe,
+    def __init__(self, tracepoint, file_path, file_format, file_permission,
+                 monitoring_intervals, perf_pipe,
+                 do_profile, perf_profile_pipe,
                  kdamonds, poll_add_child_tasks, poll_add_mem_footprint):
+        self.tracepoint = tracepoint
         self.file_path = file_path
         self.file_format = file_format
         self.file_permission = file_permission
         self.monitoring_intervals = monitoring_intervals
         self.perf_pipe = perf_pipe
+
+        self.do_profile = do_profile
         self.perf_profile_pipe = perf_profile_pipe
+
         self.kdamonds = kdamonds
         self.poll_add_child_tasks = poll_add_child_tasks
         if poll_add_mem_footprint is True:
@@ -694,9 +701,10 @@ def start_recording(tracepoint, file_path, file_format, file_permission,
             cmd += ['--pid', profile_target_pid]
         profile_pipe = subprocess.Popen(cmd)
     return RecordingHandle(
-            file_path, file_format, file_permission, monitoring_intervals,
-            pipe, profile_pipe, kdamonds, poll_add_child_tasks,
-            poll_add_mem_footprint)
+            tracepoint, file_path, file_format, file_permission,
+            monitoring_intervals, pipe,
+            profile, profile_pipe,
+            kdamonds, poll_add_child_tasks, poll_add_mem_footprint)
 
 def wait_recording(handle):
     while poll_target_pids(handle):
