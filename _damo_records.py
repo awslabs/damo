@@ -601,6 +601,11 @@ def save_mem_footprint(snapshots, filepath, file_permission):
         json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
     os.chmod(filepath, file_permission)
 
+def load_mem_footprint(filepath):
+    with open(filepath, 'r') as f:
+        kvpairs = json.load(f)
+    return [MemFootprintsSnapshot.from_kvpairs(x) for x in kvpairs]
+
 # record-polling
 
 def pid_running(pid):
