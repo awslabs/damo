@@ -375,7 +375,37 @@ def deduce_target_update_args(args):
             print('warning: override --ops by <deducible target> and --regions')
         args.ops = 'fvaddr'
 
+def evaluate_args(args):
+    '''
+    Verify if 'damons_action' is present when any 'damos_*' is specified
+    '''
+    if not args.damos_action:
+        for key, value in args.__dict__.items():
+            if key.startswith('damos_') and len(value):
+                if key == 'damos_action': continue
+                return False, '\'damos_action\' not specified while using --damos_* option(s)'
+
+    '''
+    Verify if 'reset_interval_ms' is specified in args when setting quota goals
+    '''
+    if args.damos_quota_goal:
+        damos_quotas = args.damos_quotas
+
+        if not len(damos_quotas):
+            return False, '\'reset_interval_ms\' not specified when setting quota goals'
+
+        #reset_interval_ms is specified in --damos_quotas as 3rd arg
+        for quota in damos_quotas:
+            if len(quota) < 3:
+                return False, '\'reset_interval_ms\' not specified when setting quota goals'
+
+    return True, None
+
 def kdamonds_for(args):
+    correct, err = evaluate_args(args)
+    if err is not None:
+        return None, err
+
     if args.kdamonds:
         return kdamonds_from_json_arg(args.kdamonds)
 
