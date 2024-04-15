@@ -720,7 +720,7 @@ def start_recording(handle):
                 [PERF, 'record', '-a', '-e', handle.tracepoint,
                  '-o', handle.file_path])
     if handle.do_profile:
-        cmd = [PERF, 'record', '-o', '%s.profile' % file_path]
+        cmd = [PERF, 'record', '-o', '%s.profile' % handle.file_path]
         handle.perf_profile_pipe = subprocess.Popen(cmd)
     while poll_target_pids(handle):
         time.sleep(1)
