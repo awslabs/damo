@@ -532,8 +532,12 @@ class MemFootprint:
         if pid is None:
             return
 
-        with open('/proc/%s/statm' % pid, 'r') as f:
-            fields = [int(x) for x in f.read().split()]
+        try:
+            with open('/proc/%s/statm' % pid, 'r') as f:
+                fields = [int(x) for x in f.read().split()]
+        except:
+            # the process may terminated.  Just think it as not using memory.
+            fields = [0 for _ in range(7)]
         self.size = fields[0]
         self.resident = fields[1]
         self.shared = fields[2]
