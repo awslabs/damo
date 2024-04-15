@@ -673,8 +673,16 @@ def __poll_target_pids(handle):
     return True
 
 def poll_target_pids(handle):
-    if (not handle.poll_add_child_tasks and
-        handle.mem_footprint_snapshots is None):
+    has_pid_target = False
+    if handle.kdamonds:
+        for kdamond in handle.kdamonds:
+            for ctx in kdamond.contexts:
+                if _damon.target_has_pid(ctx.ops):
+                    has_pid_target = True
+                    break
+            if has_pid_target:
+                break
+    if has_pid_target is False:
         return False
     rc = __poll_target_pids(handle)
     if rc is True and handle.mem_footprint_snapshots is not None:
