@@ -1,6 +1,9 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v2.3.1
+- Hotfix release for bugs that intorudced with v2.3.0
+
 v2.3.0
 - Implement 'damo report footprints'
 
