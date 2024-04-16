@@ -10,7 +10,7 @@ import _damo_dist
 import _damo_fmt_str
 import _damo_records
 
-def get_wss_dists(records, acc_thres, sz_thres, do_sort):
+def get_wss_dists(records, acc_thres, sz_thres, do_sort, collapse_targets):
     wss_dists = {}
     for record in records:
         wss_dist = []
@@ -27,6 +27,15 @@ def get_wss_dists(records, acc_thres, sz_thres, do_sort):
         if do_sort:
             wss_dist.sort(reverse=False)
         wss_dists[record.target_id] = wss_dist
+    if collapse_targets is True:
+        collapsed_dist = []
+        for t, dist in wss_dists.items():
+            for idx, wss in enumerate(dist):
+                if len(collapsed_dist) <= idx:
+                    collapsed_dist.append(wss)
+                else:
+                    collapsed_dist[idx] += wss
+        wss_dists = {0: collapsed_dist}
     return wss_dists
 
 def pr_wss_dists(wss_dists, percentiles, raw_number, nr_cols_bar, pr_all_wss):
@@ -100,6 +109,8 @@ def set_argparser(parser):
             help='use machine-friendly raw numbers')
     parser.add_argument('--all_wss', action='store_true',
             help='Do not print percentile but all calculated wss')
+    parser.add_argument('--collapse_targets', action='store_true',
+                        help='Collapse targets in the record into one')
     parser.description = 'Show distribution of working set size'
 
 def main(args):
@@ -117,7 +128,8 @@ def main(args):
         exit(1)
 
     _damo_records.adjust_records(records, args.work_time, args.exclude_samples)
-    wss_dists = get_wss_dists(records, args.acc_thres, args.sz_thres, wss_sort)
+    wss_dists = get_wss_dists(records, args.acc_thres, args.sz_thres, wss_sort,
+                              args.collapse_targets)
 
     if args.plot:
         orig_stdout = sys.stdout
