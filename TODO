@@ -23,6 +23,9 @@
 - Support memory footprint record for non-process targets
 - Visualize memory footprint
 - Support human-readable goal value
+- Split quota options
+  - damos_quota_sz, damos_quota_time, damos_quota_goal,
+    dmos_quota_reset_interval
 
 - Deprecate old features
   - Deprecate translate_damos (done.)
