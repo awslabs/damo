@@ -26,6 +26,8 @@
 - Split quota options
   - damos_quota_sz, damos_quota_time, damos_quota_goal,
     dmos_quota_reset_interval
+- damo report wss: Do --collapse_targets by default
+- damo record: Do --include_child_tasks by default
 
 - Deprecate old features
   - Deprecate translate_damos (done.)
