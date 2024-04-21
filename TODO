@@ -1,9 +1,4 @@
 - Test --numa_node 0 case
-- Support profiling
-  - Support rss recording and reporting wss/rss
-    - partially implemented with 'damo record --footprint' option
-    - support global memory footprint
-  - Support flamegraph-wss-heatmap visualization
 - Implement histogram stat regions output
 - damo show features implementation
   - support target damos filter
