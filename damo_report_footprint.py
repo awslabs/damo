@@ -84,17 +84,17 @@ def main(args):
     footprint_snapshots = _damo_records.load_mem_footprint(args.input)
     dists = []
     for snapshot in footprint_snapshots:
-        footprint_pages = 0
+        footprint_bytes = 0
         for pid, fp in snapshot.footprints.items():
             # ignore SysMemFootprint
             if pid is None:
                 continue
+            # todo: get real page size of the system
             if args.metric == 'vsz':
-                footprint_pages += fp.size
+                footprint_bytes += fp.size * 4096
             elif args.metric == 'rss':
-                footprint_pages += fp.resident
-        # todo: get real page size of the system
-        dists.append(footprint_pages * 4096)
+                footprint_bytes += fp.resident * 4096
+        dists.append(footprint_bytes)
 
     if args.sortby == 'size':
         dists.sort()
