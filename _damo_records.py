@@ -588,6 +588,16 @@ class SysMemFootprint:
     def to_kvpairs(self):
         return self.__dict__
 
+    @classmethod
+    def from_kvpairs(cls, kvpairs):
+        self = cls(populate=False)
+        self.total = kvpairs['total']
+        self.free = kvpairs['free']
+        self.available = kvpairs['available']
+        self.buffers = kvpairs['buffers']
+        self.cached = kvpairs['cached']
+        return self
+
 class MemFootprintsSnapshot:
     time = None
     footprints = None
