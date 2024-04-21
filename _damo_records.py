@@ -500,7 +500,7 @@ def update_records_file(file_path, file_format, file_permission=None,
 
 # memory footprint recording
 
-# Meaning of the fileds of MemFootprint are as below.
+# Meaning of the fileds of ProcMemFootprint are as below.
 #
 # ======== ===============================       ==============================
 # Field    Content
@@ -519,7 +519,7 @@ def update_records_file(file_path, file_format, file_permission=None,
 #
 # The above table is tolen from Documentation/filesystems/proc.rst file of
 # Linux
-class MemFootprint:
+class ProcMemFootprint:
     size = None
     resident = None
     shared = None
@@ -572,7 +572,7 @@ class MemFootprintsSnapshot:
         self.time = time.time()
         self.footprints = {}
         for pid in pids:
-            self.footprints[pid] = MemFootprint(pid)
+            self.footprints[pid] = ProcMemFootprint(pid)
 
     def to_kvpairs(self):
         footprints = []
@@ -587,7 +587,7 @@ class MemFootprintsSnapshot:
         self.footprints = {}
         for fp in kvpairs['footprints']:
             pid, footprint = fp['pid'], fp['footprint']
-            self.footprints[pid] = MemFootprint.from_kvpairs(footprint)
+            self.footprints[pid] = ProcMemFootprint.from_kvpairs(footprint)
         return self
 
 def record_mem_footprint(kdamonds, snapshots):
