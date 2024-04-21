@@ -748,13 +748,12 @@ def finish_recording(handle):
 
     if handle.file_format == file_type_perf_data:
         os.chmod(handle.file_path, handle.file_permission)
-        return
-
-    err = update_records_file(handle.file_path, handle.file_format,
-            handle.file_permission, handle.monitoring_intervals)
-    if err != None:
-        print('converting format from perf_data to %s failed (%s)' %
-                (handle.file_format, err))
+    else:
+        err = update_records_file(handle.file_path, handle.file_format,
+                handle.file_permission, handle.monitoring_intervals)
+        if err != None:
+            print('converting format from perf_data to %s failed (%s)' %
+                    (handle.file_format, err))
 
     if handle.perf_profile_pipe is not None:
         try:
