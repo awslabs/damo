@@ -51,7 +51,7 @@ def pr_dists(dists, percentiles, raw_number, nr_cols_bar, pr_all_footprints):
         print(line)
 
 def set_argparser(parser):
-    parser.add_argument('metric', choices=['vsz', 'rss'],
+    parser.add_argument('metric', choices=['vsz', 'rss', 'sys_used'],
                         help='memory footprint metric to show')
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
                         default='damon.data.mem_footprint',
@@ -86,6 +86,10 @@ def main(args):
     for snapshot in footprint_snapshots:
         footprint_bytes = 0
         for pid, fp in snapshot.footprints.items():
+            if args.metric == 'sys_used':
+                if pid is not None:
+                    continue
+                footprint_bytes = (fp.total - fp.free) * 1024
             # ignore SysMemFootprint
             if pid is None:
                 continue
