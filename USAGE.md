@@ -645,6 +645,8 @@ metrics are supported.
   "virtual set size".
 - `rss`: The amount of physical memory that allocated to the workloads; a.k.a
   "residential set size".
+- `sys_used`: The amount of system's memory that allocated for any usage
+  (`MemTotal - MemFree`).
 
 For example:
 
