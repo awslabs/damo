@@ -561,6 +561,33 @@ class ProcMemFootprint:
         self.dt = kvpairs['dt']
         return self
 
+class SysMemFootprint:
+    total = None
+    free = None
+    available = None
+    buffers = None
+    cached = None
+
+    def __init__(self, populate):
+        if populate is False:
+            return
+        with open('/proc/meminfo', 'r') as f:
+            for line in f:
+                fields = line.split()
+                if fields[0] == 'MemTotal:':
+                    self.total = int(fields[1])
+                if fields[0] == 'MemFree:':
+                    self.free = int(fields[1])
+                if fields[0] == 'MemAvailable:':
+                    self.available = int(fields[1])
+                if fields[0] == 'Buffers:':
+                    self.buffers = int(fields[1])
+                if fields[0] == 'Cached:':
+                    self.cached = int(fields[1])
+
+    def to_kvpairs(self):
+        return self.__dict__
+
 class MemFootprintsSnapshot:
     time = None
     footprints = None
