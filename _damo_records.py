@@ -610,10 +610,15 @@ class MemFootprintsSnapshot:
         self.footprints = {}
         for pid in pids:
             self.footprints[pid] = ProcMemFootprint(pid)
+        self.footprints['sys'] = SysMemFootprint(populate=True)
 
     def to_kvpairs(self):
         footprints = []
-        for pid, fp in self.footprints.items():
+        for target, fp in self.footprints.items():
+            if target == 'sys':
+                pid = None
+            else:
+                pid = target
             footprints.append({'pid': pid, 'footprint': fp.to_kvpairs()})
         return {'time': self.time, 'footprints': footprints}
 
@@ -624,7 +629,10 @@ class MemFootprintsSnapshot:
         self.footprints = {}
         for fp in kvpairs['footprints']:
             pid, footprint = fp['pid'], fp['footprint']
-            self.footprints[pid] = ProcMemFootprint.from_kvpairs(footprint)
+            if pid is None:
+                self.footprints[pid] = SysMemFootprint.from_kvpairs(footprint)
+            else:
+                self.footprints[pid] = ProcMemFootprint.from_kvpairs(footprint)
         return self
 
 def record_mem_footprint(kdamonds, snapshots):

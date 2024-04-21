@@ -86,6 +86,9 @@ def main(args):
     for snapshot in footprint_snapshots:
         footprint_pages = 0
         for pid, fp in snapshot.footprints.items():
+            # ignore SysMemFootprint
+            if pid is None:
+                continue
             if args.metric == 'vsz':
                 footprint_pages += fp.size
             elif args.metric == 'rss':
