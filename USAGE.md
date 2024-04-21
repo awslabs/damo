@@ -638,11 +638,13 @@ allocated memory is really being accessed.  The output format is similar to
 that of [wss](#wss).
 
 Because there are various memory footprint metrics, the command asks users to
-specify what memory footprint metric they want to visualize.  Currently, `vsz`
-and `rss` are supported.  `vsz` is the amount of virtual memory that allocated 
-to the workloads, which is also known as "virtual set size".  Meanwhile, `rss`
-is the amount of physical memory that allocated to the workloads, which also
-known as "residential set size".
+specify what memory footprint metric they want to visualize.  Currently, below
+metrics are supported.
+
+- `vsz`: The amount of virtual memory that allocated to the workloads; a.k.a
+  "virtual set size".
+- `rss`: The amount of physical memory that allocated to the workloads; a.k.a
+  "residential set size".
 
 For example:
 
