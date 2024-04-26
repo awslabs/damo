@@ -5,32 +5,6 @@ improvement of this document via GitHub
 [issues](https://github.com/awslabs/damo/issues) or
 [mails](https://lore.kernel.org/damon).
 
-Table of Contents
-=================
-
-- [Prerequisites](#prerequisites)
-- [Install](#install)
-- [Overview](#overview)
-- [DAMON Control (Access Monitoring and Monitoring-based System Optimization)](#damon-control--access-monitoring-and-monitoring-based-system-optimization-)
-  * [`damo start`](#-damo-start-)
-  * [`damo tune`](#-damo-tune-)
-  * [`damo stop`](#-damo-stop-)
-- [Snapshot and Visualization of DAMON Monitoring Results and Running Status](#snapshot-and-visualization-of-damon-monitoring-results-and-running-status)
-  * [`damo show`](#-damo-show-)
-  * [`damo status`](#-damo-status-)
-- [For recording the access monitoring results and visualizing those](#for-recording-the-access-monitoring-results-and-visualizing-those)
-  * [`damo record` (Recording Data Access Pattern)](#-damo-record---recording-data-access-pattern-)
-    + [Recording Profile Information](#recording-profile-information)
-  * [`damo report` (Visualizing Recorded Data Access Pattern)](#-damo-report---visualizing-recorded-data-access-pattern-)
-    + [raw](#raw)
-    + [heats](#heats)
-    + [wss](#wss)
-    + [profile](#profile)
-    + [times](#times)
-  * [`damo replay` (Replay Recorded Data Access Pattern)](#-damo-replay---replay-recorded-data-access-pattern-)
-- [Miscelleneous Helper Commands](#miscelleneous-helper-commands)
-  * [`damo version`](#-damo-version-)
-  * [`damo fmt_json`](#-damo-fmt-json-)
 
 Prerequisites
 =============
