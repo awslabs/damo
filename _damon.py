@@ -408,6 +408,10 @@ class DamosAccessPattern:
                 other.converted_for_units(
                     unit_samples, unit_aggr_intervals, intervals))
 
+qgoal_user_input = 'user_input'
+qgoal_some_mem_psi_us = 'some_mem_psi_us'
+qgoal_metrics = [qgoal_user_input, qgoal_some_mem_psi_us]
+
 class DamosQuotaGoal:
     metric = None
     target_value = None
@@ -416,6 +420,8 @@ class DamosQuotaGoal:
 
     def __init__(self, metric='user_input',
                  target_value='0', current_value='0'):
+        if not metric in qgoal_metrics:
+            raise Exception('unsupported DAMOS quota goal metric')
         self.metric = metric
         if metric == 'some_mem_psi_us':
             self.target_value = _damo_fmt_str.text_to_us(target_value)
