@@ -671,10 +671,8 @@ def all_targets_terminated(targets):
             return False
     return True
 
-def __poll_target_pids(handle):
+def __poll_target_pids(kdamonds, add_childs):
     '''Return if polling should continued'''
-    kdamonds = handle.kdamonds
-    add_childs = handle.poll_add_child_tasks
 
     current_targets = kdamonds[0].contexts[0].targets
     if all_targets_terminated(current_targets):
@@ -729,7 +727,7 @@ def poll_target_pids(handle):
                 break
     if has_pid_target is False:
         return False
-    return __poll_target_pids(handle)
+    return __poll_target_pids(handle.kdamonds, handle.poll_add_child_tasks)
 
 # for recording
 
