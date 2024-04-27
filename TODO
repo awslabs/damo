@@ -6,7 +6,6 @@
   - collapse by time
   - collapse by priority value (more histogram control)
   - Implement min/max snapshot format keyword
-- Test quota goals (might make more sense to test from in-tree DAMON tests)
 - damo reclaim: add a command for basic investigation
   - helps ensure DAMON_RECLAIM is working as expected
   - helps reporting issue
