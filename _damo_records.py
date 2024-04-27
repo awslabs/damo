@@ -729,10 +729,7 @@ def poll_target_pids(handle):
                 break
     if has_pid_target is False:
         return False
-    rc = __poll_target_pids(handle)
-    if rc is True and handle.mem_footprint_snapshots is not None:
-        record_mem_footprint(handle.kdamonds, handle.mem_footprint_snapshots)
-    return rc
+    return __poll_target_pids(handle)
 
 # for recording
 
@@ -780,6 +777,9 @@ def start_recording(handle):
         cmd = [PERF, 'record', '-o', '%s.profile' % handle.file_path]
         handle.perf_profile_pipe = subprocess.Popen(cmd)
     while poll_target_pids(handle):
+        if handle.mem_footprint_snapshots is not None:
+            record_mem_footprint(handle.kdamonds,
+                                 handle.mem_footprint_snapshots)
         time.sleep(1)
     _damon.wait_kdamonds_turned_off()
 
