@@ -781,7 +781,11 @@ def start_recording(handle):
             record_mem_footprint(handle.kdamonds,
                                  handle.mem_footprint_snapshots)
         time.sleep(1)
-    _damon.wait_kdamonds_turned_off()
+    while _damon.any_kdamond_running():
+        if handle.mem_footprint_snapshots is not None:
+            record_mem_footprint(handle.kdamonds,
+                                 handle.mem_footprint_snapshots)
+        time.sleep(1)
 
 def finish_recording(handle):
     try:
