@@ -529,8 +529,11 @@ def set_damos_argparser(parser):
                 '[<age priority weight> (permil)]]]]])']))
     parser.add_argument('--damos_quota_goal', nargs='+', action='append',
             default=[],
-            metavar='<metric or target value or current value>',
-            help='damos quota goal (<metric> <target value> [current value])')
+            metavar='<metric or value>',
+            help=' '.join([
+                'damos quota goal (<metric> <target value> [current value]).',
+                '<metric> shoule be {%s}.' %
+                ','.join(_damon.qgoal_metrics)]))
     parser.add_argument('--damos_nr_quota_goals', type=int, nargs='+',
             default=[], metavar='<integer>',
             help='number of quota goals for each scheme (in order)')
