@@ -418,12 +418,12 @@ class DamosQuotaGoal:
     current_value = None
     quotas = None
 
-    def __init__(self, metric='user_input',
+    def __init__(self, metric=qgoal_user_input,
                  target_value='0', current_value='0'):
         if not metric in qgoal_metrics:
             raise Exception('unsupported DAMOS quota goal metric')
         self.metric = metric
-        if metric == 'some_mem_psi_us':
+        if metric == qgoal_some_mem_psi_us:
             self.target_value = _damo_fmt_str.text_to_us(target_value)
         else:
             self.target_value = _damo_fmt_str.text_to_nr(target_value)
