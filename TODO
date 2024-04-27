@@ -15,7 +15,6 @@
 - Optimize 'replay' performance
   - An approach for 2 MiB-granularity page management didn't show improvement
 - Support memory footprint record for ongoing record
-- Support memory footprint record for non-process targets
 - Visualize memory footprint
 - Support human-readable goal value
 - Split quota options
