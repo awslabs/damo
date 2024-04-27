@@ -119,7 +119,7 @@ def main(args):
             do_profile=args.profile is True,
             # for childs recording and memory footprint
             kdamonds=kdamonds, poll_add_child_tasks=args.include_child_tasks,
-            poll_add_mem_footprint=args.footprint)
+            record_mem_footprint=args.footprint)
     data_for_cleanup.record_handle = record_handle
 
     print('Press Ctrl+C to stop')

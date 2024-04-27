@@ -752,7 +752,7 @@ class RecordingHandle:
     def __init__(self, tracepoint, file_path, file_format, file_permission,
                  monitoring_intervals,
                  do_profile,
-                 kdamonds, poll_add_child_tasks, poll_add_mem_footprint):
+                 kdamonds, poll_add_child_tasks, record_mem_footprint):
         self.tracepoint = tracepoint
         self.file_path = file_path
         self.file_format = file_format
@@ -763,7 +763,7 @@ class RecordingHandle:
 
         self.kdamonds = kdamonds
         self.poll_add_child_tasks = poll_add_child_tasks
-        if poll_add_mem_footprint is True:
+        if record_mem_footprint is True:
             self.mem_footprint_snapshots = []
 
 def start_recording(handle):
