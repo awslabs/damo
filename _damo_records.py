@@ -746,13 +746,13 @@ class RecordingHandle:
 
     # for adding child tasks and memory footprint recording
     kdamonds = None
-    poll_add_child_tasks = None
+    add_child_tasks = None
     mem_footprint_snapshots = None
 
     def __init__(self, tracepoint, file_path, file_format, file_permission,
                  monitoring_intervals,
                  do_profile,
-                 kdamonds, poll_add_child_tasks, record_mem_footprint):
+                 kdamonds, add_child_tasks, record_mem_footprint):
         self.tracepoint = tracepoint
         self.file_path = file_path
         self.file_format = file_format
@@ -762,7 +762,7 @@ class RecordingHandle:
         self.do_profile = do_profile
 
         self.kdamonds = kdamonds
-        self.poll_add_child_tasks = poll_add_child_tasks
+        self.add_child_tasks = add_child_tasks
         if record_mem_footprint is True:
             self.mem_footprint_snapshots = []
 
@@ -774,7 +774,7 @@ def start_recording(handle):
     if handle.do_profile:
         cmd = [PERF, 'record', '-o', '%s.profile' % handle.file_path]
         handle.perf_profile_pipe = subprocess.Popen(cmd)
-    while (poll_target_pids(handle.kdamonds, handle.poll_add_child_tasks) or
+    while (poll_target_pids(handle.kdamonds, handle.add_child_tasks) or
            _damon.any_kdamond_running()):
         if handle.mem_footprint_snapshots is not None:
             record_mem_footprint(handle.kdamonds,
