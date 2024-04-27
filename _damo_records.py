@@ -776,12 +776,7 @@ def start_recording(handle):
     if handle.do_profile:
         cmd = [PERF, 'record', '-o', '%s.profile' % handle.file_path]
         handle.perf_profile_pipe = subprocess.Popen(cmd)
-    while poll_target_pids(handle):
-        if handle.mem_footprint_snapshots is not None:
-            record_mem_footprint(handle.kdamonds,
-                                 handle.mem_footprint_snapshots)
-        time.sleep(1)
-    while _damon.any_kdamond_running():
+    while poll_target_pids(handle) or _damon.any_kdamond_running():
         if handle.mem_footprint_snapshots is not None:
             record_mem_footprint(handle.kdamonds,
                                  handle.mem_footprint_snapshots)
