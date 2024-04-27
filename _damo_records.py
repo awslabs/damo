@@ -715,10 +715,10 @@ def __poll_target_pids(kdamonds, add_childs):
             return False
     return True
 
-def poll_target_pids(handle):
+def poll_target_pids(kdamonds, add_childs):
     has_pid_target = False
-    if handle.kdamonds:
-        for kdamond in handle.kdamonds:
+    if kdamonds:
+        for kdamond in kdamonds:
             for ctx in kdamond.contexts:
                 if _damon.target_has_pid(ctx.ops):
                     has_pid_target = True
@@ -727,7 +727,7 @@ def poll_target_pids(handle):
                 break
     if has_pid_target is False:
         return False
-    return __poll_target_pids(handle.kdamonds, handle.poll_add_child_tasks)
+    return __poll_target_pids(kdamonds, add_childs)
 
 # for recording
 
@@ -774,7 +774,8 @@ def start_recording(handle):
     if handle.do_profile:
         cmd = [PERF, 'record', '-o', '%s.profile' % handle.file_path]
         handle.perf_profile_pipe = subprocess.Popen(cmd)
-    while poll_target_pids(handle) or _damon.any_kdamond_running():
+    while (poll_target_pids(handle.kdamonds, handle.poll_add_child_tasks) or
+           _damon.any_kdamond_running()):
         if handle.mem_footprint_snapshots is not None:
             record_mem_footprint(handle.kdamonds,
                                  handle.mem_footprint_snapshots)
