@@ -10,8 +10,8 @@ test_report() {
 	cmd=$1
 	test_name=$2
 
-	expected="expects/report-$test_name"
-	result="results/report-$test_name"
+	expected=$(realpath "expects/report-$test_name")
+	result=$(realpath "results/report-$test_name")
 
 	eval "python3 $cmd" > "$result" 2> /dev/null
 	if ! diff -q "$expected" "$result"
