@@ -109,6 +109,9 @@ def set_argparser(parser):
             help='use machine-friendly raw numbers')
     parser.add_argument('--all_wss', action='store_true',
             help='Do not print percentile but all calculated wss')
+    parser.add_argument('--per_target', action='store_false',
+                        dest='collapse_targets',
+                        help='Report workingset size per monitoring target')
     parser.add_argument('--collapse_targets', action='store_true',
                         help='Collapse targets in the record into one')
     parser.description = 'Show distribution of working set size'
