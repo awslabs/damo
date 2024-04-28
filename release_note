@@ -3,6 +3,8 @@ picked by human sense, so could be incomplete and missing many things.
 
 v2.3.3
 - Support memory footprint recording for non-process and ongoing targets
+- damo report wss: Do --collapse_targets by default
+- damo record: Do --include_child_tasks by default
 
 v2.3.2
 - Support system memory footprints recording/reporting
