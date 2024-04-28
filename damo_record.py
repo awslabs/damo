@@ -136,6 +136,9 @@ def set_argparser(parser):
                         help='permission of the output file')
     parser.add_argument('--perf_path', type=str, default='perf',
                         help='path of perf tool ')
+    parser.add_argument('--exclude_child_tasks', action='store_false',
+                        dest='include_child_tasks',
+                        help='do not record access of child processes')
     parser.add_argument('--include_child_tasks', action='store_true',
                         help='record accesses of child processes')
     parser.add_argument('--schemes_target_regions', action='store_true',
