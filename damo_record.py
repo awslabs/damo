@@ -143,6 +143,8 @@ def set_argparser(parser):
                         help='record accesses of child processes')
     parser.add_argument('--schemes_target_regions', action='store_true',
                         help='record schemes tried to be applied regions')
+    parser.add_argument('--no_profile', action='store_false', dest='profile',
+                        help='do not record profiling information')
     parser.add_argument('--profile', action='store_true',
                         help='record profiling information together')
     parser.add_argument('--footprint', action='store_true',
