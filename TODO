@@ -17,7 +17,6 @@
   - damos_quota_sz, damos_quota_time, damos_quota_goal,
     dmos_quota_reset_interval
 - Move module files to a dedicated directory (src or modules)
-- damo record: Do --profile and --footprint by default
 - damo record: Let recording without access pattern
 
 - Deprecate old features
