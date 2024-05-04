@@ -147,6 +147,9 @@ def set_argparser(parser):
                         help='do not record profiling information')
     parser.add_argument('--profile', action='store_true',
                         help='record profiling information together')
+    parser.add_argument('--no_footprint', action='store_false',
+                        dest='footprint',
+                        help='do not record memory footprint')
     parser.add_argument('--footprint', action='store_true',
                         help='record memory footprint')
     parser.description = 'Record monitoring results'
