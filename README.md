@@ -80,14 +80,16 @@ Please refer to
 [CONTRIBUTING](https://github.com/awslabs/damo/blob/next/CONTRIBUTING) file.
 
 
-Why some subcommands are not documented on [USAGE.md](USAGE.md) file?
----------------------------------------------------------------------
+Why some features are not documented on [USAGE.md](USAGE.md) file?
+------------------------------------------------------------------
 
-Only sufficiently stabilized features are documented there.  In other words,
-any feature that not documented on [USAGE.md](USAGE.md) are in experimental
-stage.  Such experimental features could be deprecated and removed without any
-notice and grace periods.  The documented features could also be deprecated,
-but those will provide some notification and grace periods.
+Because those are not yet stabilized.  In other words, such features are in
+their experimental stages, and therefore could be deprecated and removed
+without notice and grace periods.  The documented features could also be
+deprecated, but those will provide some notifications and grace periods.  If
+there are some features you're relying on but not documented, please report
+your usecase to the community via GitHub issue, sj@kernel.org,
+damon@lists.linux.dev, and/or linux-mm@kvack.org.
 
 
 Quick Intro for Major Features
