@@ -87,9 +87,8 @@ Because those are not yet stabilized.  In other words, such features are in
 their experimental stages, and therefore could be deprecated and removed
 without notice and grace periods.  The documented features could also be
 deprecated, but those will provide some notifications and grace periods.  If
-there are some features you're relying on but not documented, please report
-your usecase to the community via GitHub issue, sj@kernel.org,
-damon@lists.linux.dev, and/or linux-mm@kvack.org.
+there are some features you're relying on but not documented, please
+[report](REPORTING.md) your usecase to the community.
 
 
 How can I know deprecation schedule and alternatives of specific features?

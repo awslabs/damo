@@ -2,8 +2,7 @@ Deprecated, or Will be Deprecated Features
 ==========================================
 
 Below are features that deprecated, or will be deprecated.  If you depend on
-any of those, please report your usecase to the community via github issue,
-sj@kernel.org, damon@lists.linux.dev, and/or linux-mm@kvack.org.
+any of those, please [report](REPORTING.md).
 
 `damo translate_damos`
 ----------------------
