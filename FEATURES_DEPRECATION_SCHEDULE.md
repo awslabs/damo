@@ -4,6 +4,22 @@ Deprecated, or Will be Deprecated Features
 Below are features that deprecated, or will be deprecated.  If you depend on
 any of those, please [report](REPORTING.md).
 
+
+`--damon_interface`
+-------------------
+
+Deprecated.  Use `--damon_interface_DEPRECATED` instead.
+
+DAMON provides two major user interfaces, namely 'DAMON debugfs' and 'DAMON
+sysfs' interfaces.  `damo` subcommands for DAMON control such as `start`,
+`stop`, `tune` therefore provided `--damon_interface` option to allow selection
+of the interface.  That's mostly for testing purpose, not for real users.  Also
+DAMON debugfs interface is deprecated in Linux kernel.  Hence
+`--damon_interface` is deprecated, and replaced by
+`--damon_interface_DEPRECATED`.  `--damon_interface_DEPRECTED` will also be
+deprecated and removed soon.
+
+
 `damo translate_damos`
 ----------------------
 
