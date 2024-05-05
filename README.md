@@ -30,12 +30,13 @@ pattern of your workload.
     $ # ensure DAMON is enabled on your kernel
     $ # install damo from PyPI, or use your distribution's package manager
     $ sudo pip3 install damo
+    $ sudo damo show $(pidof <your workload>)
     $ sudo damo record $(pidof <your workload>)
     $ sudo damo report heats --heatmap stdout --stdout_heatmap_color emotion
 
 The last command will show the access pattern of your workload, like below:
 
-![masim zigzag heatmap in ascii](images/masim_zigzag_heatmap_ascii.png)
+![masim_stairs_snapshot](images/masim_stairs_snapshot.png)
 ![masim stairs heatmap in ascii](images/masim_stairs_heatmap_ascii.png)
 
 
