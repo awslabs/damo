@@ -34,7 +34,8 @@ pattern of your workload.
     $ sudo damo record $(pidof <your workload>)
     $ sudo damo report heats --heatmap stdout --stdout_heatmap_color emotion
 
-The last command will show the access pattern of your workload, like below:
+The second and last commands will show the access pattern of your workload,
+like below:
 
 ![masim_stairs_snapshot](images/masim_stairs_snapshot.png)
 ![masim stairs heatmap in ascii](images/masim_stairs_heatmap_ascii.png)
