@@ -4,9 +4,7 @@
 import argparse
 import os
 
-damo_dir = os.path.dirname(os.path.abspath(__file__))
-damo_src_dir = os.path.join(damo_dir, 'src')
-os.sys.path.insert(0, damo_src_dir)
+os.sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sys
 
 import _damo_subcmds
