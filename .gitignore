@@ -1,8 +1,6 @@
 __pycache__/*
 *.pyc
-damon.data
-damon.data.old
-damon.data.perf.data.old
+damon.data*
 damon.snap.data
 damon.adjusted.data
 tests/schemes/alloc_1gb_spin
