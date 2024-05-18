@@ -28,8 +28,8 @@ Follow below instructions and commands to monitor and visualize the access
 pattern of your workload.
 
     $ # ensure DAMON is enabled on your kernel
-    $ # install damo from PyPI, or use your distribution's package manager
-    $ sudo pip3 install damo
+    $ # install damo using packaging systems listed above,
+    $ # or cloning the source repo and updating $PATH.
     $ sudo damo show $(pidof <your workload>)
     $ sudo damo record $(pidof <your workload>)
     $ sudo damo report heats --heatmap stdout --stdout_heatmap_color emotion
