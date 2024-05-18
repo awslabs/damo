@@ -45,8 +45,7 @@ done
 damo_dir="$bindir/.."
 
 mkdir -p "$work_dir/src/damo"
-cp -p "$damo_dir/"*.py "$work_dir/src/damo"
-cp -p "$damo_dir/damo" "$work_dir/src/damo/damo.py"
+cp -p "$damo_dir/src/"*.py "$work_dir/src/damo"
 touch "$work_dir/src/damo/__init__.py"
 
 cd "$work_dir"

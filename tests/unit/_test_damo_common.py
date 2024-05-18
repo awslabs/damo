@@ -15,5 +15,5 @@ def test_input_expects_funcs(testcase, functions, input_expects):
 
 def add_damo_dir_to_syspath():
     bindir = os.path.dirname(os.path.realpath(__file__))
-    damo_dir = os.path.join(bindir, '..', '..')
+    damo_dir = os.path.join(bindir, '..', '..', 'src')
     sys.path.append(damo_dir)
