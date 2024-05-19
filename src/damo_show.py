@@ -522,6 +522,13 @@ def main(args):
     if handled:
         return
 
+    if args.style == 'simple-boxes':
+        args.format_region = '<box> size <size> access rate <access rate> age <age>'
+        args.region_box_min_max_height = [1, 1]
+        args.region_box_min_max_length = [1, 40]
+        args.region_box_align = 'right'
+        args.region_box_colorset = 'emotion'
+
     args.region_box_values = [v if v != 'none' else None
             for v in args.region_box_values]
 
@@ -568,7 +575,8 @@ def set_argparser(parser):
 
     # how to show, in simple selection
     parser.add_argument(
-            '--style', choices=['detailed'], default='detailed',
+            '--style', choices=['detailed', 'simple-boxes'],
+            default='detailed',
             help='output format selection among pre-configures ones')
     # how to show, in highly tunable way
     parser.add_argument('--sort_regions_by',
