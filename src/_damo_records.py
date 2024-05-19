@@ -707,14 +707,6 @@ def add_childs_target(kdamonds):
             return 'commit failed (%s)' % err
     return None
 
-def __poll_target_pids(kdamonds):
-    '''Return if polling should continued'''
-
-    current_targets = kdamonds[0].contexts[0].targets
-    if all_targets_terminated(current_targets):
-        return False
-    return True
-
 def poll_target_pids(kdamonds):
     '''Return True if >=1 target processes are running'''
     has_running_process = False
