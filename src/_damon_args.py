@@ -152,32 +152,38 @@ def damos_quotas_cons_arg(cmd_args):
 
     return [time_ms, sz_bytes, reset_interval_ms, weights]
 
+def damos_options_to_quotas(quotas, goals):
+    gargs = goals
+    # garg should be <metric> <target value> [current value]
+    # [current value] is given for only 'user_input' <metric>
+    for garg in gargs:
+        if not len(garg) in [2, 3]:
+            return None, 'Wrong --damos_quota_goal (%s)' % garg
+        if garg[0] == 'user_input' and len(garg) != 3:
+            return None, 'Wrong --damos_quota_goal (%s)' % garg
+        if garg[0] != 'user_input' and len(garg) != 2:
+            return None, 'Wrong --damos_quota_goal (%s)' % garg
+    try:
+        goals = [_damon.DamosQuotaGoal(*garg) for garg in gargs]
+    except Exception as e:
+        return None, 'Wrong --damos_quota_goal (%s, %s)' % (gargs, e)
+
+    qargs = quotas
+    if len(qargs) > 6:
+        return None, 'Wrong --damos_quotas (%s, >6 parameters)' % qargs
+    try:
+        quotas = _damon.DamosQuotas(*damos_quotas_cons_arg(qargs),
+                                    goals=goals)
+    except Exception as e:
+        return None, 'Wrong --damos_quotas (%s, %s)' % (qargs, e)
+    return quotas, None
+
 def damos_options_to_scheme(sz_region, access_rate, age, action,
         apply_interval, quotas, goals, wmarks, filters):
     if quotas != None:
-        gargs = goals
-        # garg should be <metric> <target value> [current value]
-        # [current value] is given for only 'user_input' <metric>
-        for garg in gargs:
-            if not len(garg) in [2, 3]:
-                return None, 'Wrong --damos_quota_goal (%s)' % garg
-            if garg[0] == 'user_input' and len(garg) != 3:
-                return None, 'Wrong --damos_quota_goal (%s)' % garg
-            if garg[0] != 'user_input' and len(garg) != 2:
-                return None, 'Wrong --damos_quota_goal (%s)' % garg
-        try:
-            goals = [_damon.DamosQuotaGoal(*garg) for garg in gargs]
-        except Exception as e:
-            return None, 'Wrong --damos_quota_goal (%s, %s)' % (gargs, e)
-
-        qargs = quotas
-        if len(qargs) > 6:
-            return None, 'Wrong --damos_quotas (%s, >6 parameters)' % qargs
-        try:
-            quotas = _damon.DamosQuotas(*damos_quotas_cons_arg(qargs),
-                                        goals=goals)
-        except Exception as e:
-            return None, 'Wrong --damos_quotas (%s, %s)' % (qargs, e)
+        quotas, err = damos_options_to_quotas(quotas, goals)
+        if err is not None:
+            return None, err
 
     if wmarks != None:
         wargs = wmarks
