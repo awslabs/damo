@@ -707,7 +707,7 @@ def add_childs_target(kdamonds):
             return 'commit failed (%s)' % err
     return None
 
-def __poll_target_pids(kdamonds, add_childs):
+def __poll_target_pids(kdamonds):
     '''Return if polling should continued'''
 
     current_targets = kdamonds[0].contexts[0].targets
@@ -715,7 +715,7 @@ def __poll_target_pids(kdamonds, add_childs):
         return False
     return True
 
-def poll_target_pids(kdamonds, add_childs):
+def poll_target_pids(kdamonds):
     has_pid_target = False
     if kdamonds:
         for kdamond in kdamonds:
@@ -727,7 +727,7 @@ def poll_target_pids(kdamonds, add_childs):
                 break
     if has_pid_target is False:
         return False
-    return __poll_target_pids(kdamonds, add_childs)
+    return __poll_target_pids(kdamonds)
 
 # for recording
 
@@ -774,7 +774,7 @@ def start_recording(handle):
     if handle.do_profile:
         cmd = [PERF, 'record', '-o', '%s.profile' % handle.file_path]
         handle.perf_profile_pipe = subprocess.Popen(cmd)
-    while (poll_target_pids(handle.kdamonds, handle.add_child_tasks) or
+    while (poll_target_pids(handle.kdamonds) or
            _damon.any_kdamond_running()):
         if handle.add_child_tasks is True:
             add_childs_target(handle.kdamonds)
