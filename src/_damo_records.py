@@ -710,12 +710,14 @@ def add_childs_target(kdamonds):
 def poll_target_pids(kdamonds):
     '''Return True if >=1 target processes are running'''
     has_running_process = False
-    if kdamonds:
-        for kdamond in kdamonds:
-            for ctx in kdamond.contexts:
-                if _damon.target_has_pid(ctx.ops):
-                    if not all_targets_terminated(ctx.targets):
-                        return True
+    if not kdamonds:
+        return False
+    for kdamond in kdamonds:
+        for ctx in kdamond.contexts:
+            if not _damon.target_has_pid(ctx.ops):
+                continue
+            if not all_targets_terminated(ctx.targets):
+                return True
     return False
 
 # for recording
