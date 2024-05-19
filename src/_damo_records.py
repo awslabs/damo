@@ -655,22 +655,6 @@ def load_mem_footprint(filepath):
         kvpairs = json.load(f)
     return [MemFootprintsSnapshot.from_kvpairs(x) for x in kvpairs]
 
-# record-polling
-
-def pid_running(pid):
-    '''pid should be string'''
-    try:
-        subprocess.check_output(['ps', '--pid', pid])
-        return True
-    except:
-        return False
-
-def all_targets_terminated(targets):
-    for target in targets:
-        if pid_running('%s' % target.pid):
-            return False
-    return True
-
 def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
 
@@ -706,6 +690,22 @@ def add_childs_target(kdamonds):
         if err is not None:
             return 'commit failed (%s)' % err
     return None
+
+# record-polling
+
+def pid_running(pid):
+    '''pid should be string'''
+    try:
+        subprocess.check_output(['ps', '--pid', pid])
+        return True
+    except:
+        return False
+
+def all_targets_terminated(targets):
+    for target in targets:
+        if pid_running('%s' % target.pid):
+            return False
+    return True
 
 def poll_target_pids(kdamonds):
     '''Return True if >=1 target processes are running'''
