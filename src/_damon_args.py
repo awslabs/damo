@@ -209,14 +209,16 @@ def damos_options_to_scheme(sz_region, access_rate, age, action,
 def damos_options_to_schemes(args):
     if args.damos_quota_interval:
         for i, interval in enumerate(args.damos_quota_interval):
-            t = 0
+            t, s = 0, 0
             if i < len(args.damos_quota_time):
                 t = args.damos_quota_time[i]
+            if i < len(args.damos_quota_space):
+                s = args.damos_quota_space[i]
             if i < len(args.damos_quota_weights):
                 w1, w2, w3 = args.damos_quota_weights[i]
             else:
                 w1, w2, w3 = 1, 1, 1
-            args.damos_quotas.append([t, 0, interval, w1, w2, w3])
+            args.damos_quotas.append([t, s, interval, w1, w2, w3])
     nr_schemes = len(args.damos_action)
     if len(args.damos_sz_region) > nr_schemes:
         return [], 'too much --damos_sz_region'
@@ -552,6 +554,8 @@ def set_damos_argparser(parser):
     parser.add_argument('--damos_quota_time', default=[],
                         metavar='<milliseconds>', action='append',
                         help='time quota')
+    parser.add_argument('--damos_quota_space', default=[], metavar='<bytes>',
+                        action='append', help='space quota')
     parser.add_argument('--damos_quota_weights', default=[],
                         metavar='<permil>', nargs=3, action='append',
                         help='quota\'s prioritization weights')
