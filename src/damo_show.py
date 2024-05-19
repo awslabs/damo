@@ -566,7 +566,11 @@ def set_argparser(parser):
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
 
-    # how to show
+    # how to show, in simple selection
+    parser.add_argument(
+            '--style', choices=['detailed'], default='detailed',
+            help='output format selection among pre-configures ones')
+    # how to show, in highly tunable way
     parser.add_argument('--sort_regions_by',
             choices=['address', 'access_rate', 'age', 'size'], nargs='+',
             default=['address'],
