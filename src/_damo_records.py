@@ -671,14 +671,8 @@ def all_targets_terminated(targets):
             return False
     return True
 
-def __poll_target_pids(kdamonds, add_childs):
-    '''Return if polling should continued'''
-
+def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
-    if all_targets_terminated(current_targets):
-        return False
-    if not add_childs:
-        return True
 
     for target in current_targets:
         if target.pid == None:
@@ -709,11 +703,19 @@ def __poll_target_pids(kdamonds, add_childs):
         # commit the new set of targets
         kdamonds[0].contexts[0].targets = new_targets
         err = _damon.commit(kdamonds)
-        if err != None:
-            # this might be not a problem; some of processes might
-            # finished meanwhile
-            return False
-    return True
+        if err is not None:
+            return 'commit failed (%s)' % err
+    return None
+
+def __poll_target_pids(kdamonds, add_childs):
+    '''Return if polling should continued'''
+
+    current_targets = kdamonds[0].contexts[0].targets
+    if all_targets_terminated(current_targets):
+        return False
+    if add_childs:
+        err = add_childs_target(kdamonds)
+    return err is None
 
 def poll_target_pids(kdamonds, add_childs):
     has_pid_target = False
