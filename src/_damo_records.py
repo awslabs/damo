@@ -498,7 +498,7 @@ def update_records_file(file_path, file_format, file_permission=None,
     return rewrite_record_file(file_path, file_path, file_format,
             file_permission, monitoring_intervals)
 
-# memory footprint recording
+# for recording
 
 # Meaning of the fileds of ProcMemFootprint are as below.
 #
@@ -691,8 +691,6 @@ def add_childs_target(kdamonds):
             return 'commit failed (%s)' % err
     return None
 
-# record-polling
-
 def pid_running(pid):
     '''pid should be string'''
     try:
@@ -719,8 +717,6 @@ def poll_target_pids(kdamonds):
             if not all_targets_terminated(ctx.targets):
                 return True
     return False
-
-# for recording
 
 class RecordingHandle:
     # for tracepoint recording
