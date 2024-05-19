@@ -421,6 +421,12 @@ def set_formats(args, records):
             args.format_snapshot_tail = ('%s\n<region box description>' %
                     args.format_record_tail)
 
+def temperature_of(region):
+    if region.nr_accesses.percent > 0:
+        return region.nr_accesses.percent * region.age.usec
+    else:
+        return -1 * region.age.usec
+
 def sorted_regions(regions, sort_fields, sort_dsc_keys):
     for field in sort_fields:
         if field == 'address':
@@ -441,6 +447,11 @@ def sorted_regions(regions, sort_fields, sort_dsc_keys):
             dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
                     'size' in sort_dsc_keys)
             regions = sorted(regions, key=lambda r: r.size(), reverse=dsc)
+        elif field == 'temperature':
+            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
+                                             'temperature' in sort_dsc_keys)
+            regions = sorted(regions, key=lambda r: temperature_of(r),
+                             reverse=dsc)
     return regions
 
 def pr_records(args, records):
@@ -579,12 +590,14 @@ def set_argparser(parser):
             default='detailed',
             help='output format selection among pre-configures ones')
     # how to show, in highly tunable way
-    parser.add_argument('--sort_regions_by',
-            choices=['address', 'access_rate', 'age', 'size'], nargs='+',
+    parser.add_argument(
+            '--sort_regions_by', nargs='+',
+            choices=['address', 'access_rate', 'age', 'size', 'temperature'],
             default=['address'],
             help='fields to sort regions by')
     parser.add_argument('--sort_regions_dsc',
-            choices=['address', 'access_rate', 'age', 'size', 'all'],
+            choices=['address', 'access_rate', 'age', 'size', 'temperature',
+                     'all'],
             nargs='+',
             help='sort regions in descending order for the given keys')
     parser.add_argument('--dont_merge_regions', action='store_true',
