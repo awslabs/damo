@@ -207,6 +207,9 @@ def damos_options_to_scheme(sz_region, access_rate, age, action,
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
 
 def damos_options_to_schemes(args):
+    if args.damos_quota_interval:
+        args.damos_quotas = [[0, 0, interval, 1, 1, 1]
+                             for interval in args.damos_quota_interval]
     nr_schemes = len(args.damos_action)
     if len(args.damos_sz_region) > nr_schemes:
         return [], 'too much --damos_sz_region'
@@ -391,13 +394,16 @@ def evaluate_args(args):
                 if key == 'damos_action': continue
                 return False, '\'damos_action\' not specified while using --damos_* option(s)'
 
+    if len(args.damos_quotas) > 0 and len(args.damos_quota_interval) > 0:
+        return False, '--damos_quotas and --damos_quota_interval cannot passed together'
+
     '''
     Verify if 'reset_interval_ms' is specified in args when setting quota goals
     '''
     if args.damos_quota_goal:
         damos_quotas = args.damos_quotas
 
-        if not len(damos_quotas):
+        if not len(damos_quotas) and not len(args.damos_quota_interval):
             return False, '\'reset_interval_ms\' not specified when setting quota goals'
 
         #reset_interval_ms is specified in --damos_quotas as 3rd arg
@@ -533,6 +539,9 @@ def set_damos_argparser(parser):
                 '[<size priority weight (permil)>',
                 '[<access rate priority weight> (permil)',
                 '[<age priority weight> (permil)]]]]])']))
+    parser.add_argument('--damos_quota_interval', default=[],
+                        metavar='<milliseconds>', action='append',
+                        help='quota reset interval')
     parser.add_argument('--damos_quota_goal', nargs='+', action='append',
             default=[],
             metavar='<metric or value>',
