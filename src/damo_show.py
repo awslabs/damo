@@ -429,27 +429,18 @@ def temperature_of(region):
 
 def sorted_regions(regions, sort_fields, sort_dsc_keys):
     for field in sort_fields:
+        dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
+                                         field in sort_dsc_keys)
         if field == 'address':
-            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
-                    'address' in sort_dsc_keys)
             regions = sorted(regions, key=lambda r: r.start, reverse=dsc)
         elif field == 'access_rate':
-            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
-                    'access_rate' in sort_dsc_keys)
             regions = sorted(regions, key=lambda r: r.nr_accesses.percent,
                     reverse=dsc)
         elif field == 'age':
-            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
-                    'age' in sort_dsc_keys)
-            regions = sorted(regions, key=lambda r: r.age.usec,
-                    reverse=dsc)
+            regions = sorted(regions, key=lambda r: r.age.usec, reverse=dsc)
         elif field == 'size':
-            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
-                    'size' in sort_dsc_keys)
             regions = sorted(regions, key=lambda r: r.size(), reverse=dsc)
         elif field == 'temperature':
-            dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
-                                             'temperature' in sort_dsc_keys)
             regions = sorted(regions, key=lambda r: temperature_of(r),
                              reverse=dsc)
     return regions
