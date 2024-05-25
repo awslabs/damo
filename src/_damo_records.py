@@ -655,6 +655,26 @@ def load_mem_footprint(filepath):
         kvpairs = json.load(f)
     return [MemFootprintsSnapshot.from_kvpairs(x) for x in kvpairs]
 
+class Vma:
+    start = None
+    end = None
+    name = None
+
+    def __init__(self, start, end, name):
+        self.start = start
+        self.end = end
+        self.name = name
+
+    def to_kvpairs(self):
+        return self.__dict__
+
+    @classmethod
+    def from_kvpairs(cls, kvpairs):
+        self = cls(None, None, None)
+        self.start = kvpairs['start']
+        self.end = kvpairs['end']
+        self.name = kvpairs['name']
+
 def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
 
