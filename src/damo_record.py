@@ -119,7 +119,8 @@ def main(args):
             do_profile=args.profile is True,
             # for childs recording and memory footprint
             kdamonds=kdamonds, add_child_tasks=args.include_child_tasks,
-            record_mem_footprint=args.footprint)
+            record_mem_footprint=args.footprint,
+            record_vmas=args.vmas)
     data_for_cleanup.record_handle = record_handle
 
     print('Press Ctrl+C to stop')
@@ -152,5 +153,7 @@ def set_argparser(parser):
                         help='do not record memory footprint')
     parser.add_argument('--footprint', action='store_true',
                         help='record memory footprint')
+    parser.add_argument('--vmas', action='store_true',
+                        help='record virtual memory areas (/proc/<pid>/maps)')
     parser.description = 'Record monitoring results'
     return parser
