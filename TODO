@@ -14,6 +14,7 @@
 - Optimize 'replay' performance
   - An approach for 2 MiB-granularity page management didn't show improvement
 - damo record: Let recording without access pattern
+- Let 'replay' further parse vmas and alloc/release memory
 
 - Deprecate old features
   - Deprecate translate_damos (done.)
