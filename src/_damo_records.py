@@ -830,10 +830,14 @@ class RecordingHandle:
     add_child_tasks = None
     mem_footprint_snapshots = None
 
+    # for vmas recording
+    vmas_snapshots = None
+
     def __init__(self, tracepoint, file_path, file_format, file_permission,
                  monitoring_intervals,
                  do_profile,
-                 kdamonds, add_child_tasks, record_mem_footprint):
+                 kdamonds, add_child_tasks, record_mem_footprint,
+                 record_vmas=False):
         self.tracepoint = tracepoint
         self.file_path = file_path
         self.file_format = file_format
@@ -846,6 +850,8 @@ class RecordingHandle:
         self.add_child_tasks = add_child_tasks
         if record_mem_footprint is True:
             self.mem_footprint_snapshots = []
+        if record_vmas is True:
+            self.vmas_snapshots = []
 
 def start_recording(handle):
     if handle.tracepoint is not None:
@@ -863,6 +869,8 @@ def start_recording(handle):
         if handle.mem_footprint_snapshots is not None:
             record_mem_footprint(handle.kdamonds,
                                  handle.mem_footprint_snapshots)
+        if handle.vmas_snapshots is not None:
+            record_proc_vmas(handle.kdamonds, handle.vmas_snapshots)
         time.sleep(1)
 
 def finish_recording(handle):
@@ -894,6 +902,9 @@ def finish_recording(handle):
         save_mem_footprint(
                 handle.mem_footprint_snapshots,
                 '%s.mem_footprint' % handle.file_path, handle.file_permission)
+    if handle.vmas_snapshots is not None:
+        save_proc_vmas(handle.vmas_snapshots, '%s.vmas' % handle.file_path,
+                       handle.file_permission)
 
 # for snapshot
 
