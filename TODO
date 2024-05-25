@@ -13,6 +13,7 @@
   conflicts with concurrent ones
 - Optimize 'replay' performance
   - An approach for 2 MiB-granularity page management didn't show improvement
+  - Optionally use C program like 'masim'
 - damo record: Let recording without access pattern
 - Let 'replay' further parse vmas and alloc/release memory
 
