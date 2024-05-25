@@ -729,6 +729,26 @@ class ProcVmasSnapshot:
         self.procvmas = [ProcVmas.from_kvpairs(kvp)
                          for kvp in kvapirs['procvmas']]
 
+def record_proc_vmas(kdamonds, snapshots):
+    pids = []
+    for kdamond in kdamonds:
+        for ctx in kdamond.contexts:
+            for target in ctx.targets:
+                if target.pid is None:
+                    continue
+                pids.append(target.pid)
+    snapshots.append(ProcVmasSnapshot(pids))
+
+def save_proc_vmas(snapshots, filepath, file_permission):
+    with open(filepath, 'w') as f:
+        json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
+    os.chmod(filepath, file_permission)
+
+def load_proc_vmas(filepath):
+    with open(filepath, 'r') as f:
+        kvpairs = json.load(f)
+    return [ProcVmasSnapshot.from_kvpairs(x) for x in kvpairs]
+
 def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
 
