@@ -675,6 +675,35 @@ class Vma:
         self.end = kvpairs['end']
         self.name = kvpairs['name']
 
+class ProcVmas:
+    pid = None
+    vmas = None
+
+    def __init__(self, pid):
+        self.pid = pid
+        self.vmas = []
+
+        if pid is None:
+            return
+
+        with open('/proc/%s/maps' % pid, 'r') as f:
+            for line in f:
+                fields = line.split()
+                start, end = [int(addr, 16) for addr in fields[0].split('-')]
+                name = fields[-1]
+                self.vmas.append(Vma(start, end, name))
+
+    def to_kvpairs(self):
+        kvpairs = {'pid': self.pid}
+        kvpairs['vmas'] = [v.to_kvpairs() for v in self.vmas]
+        return kvpairs
+
+    @classmethod
+    def from_kvpairs(cls, kvpairs):
+        self = cls(None)
+        self.pid = kvpairs['pid']
+        self.vmas = [Vma.from_kvpairs(kvp) for kvp in kvpairs['vmas']]
+
 def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
 
