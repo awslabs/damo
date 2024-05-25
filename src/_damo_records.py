@@ -704,6 +704,31 @@ class ProcVmas:
         self.pid = kvpairs['pid']
         self.vmas = [Vma.from_kvpairs(kvp) for kvp in kvpairs['vmas']]
 
+class ProcVmasSnapshot:
+    time = None
+    procvmas = None
+
+    def __init__(self, pids):
+        if pids is None:
+            return
+
+        self.time = time.time()
+        self.procvmas = []
+        for pid in pids:
+            self.procvmas.append(ProcVmas(pid))
+
+    def to_kvpairs(self):
+        kvpairs = {'time': self.time}
+        kvpairs['procvmas'] = [p.to_kvpairs() for p in self.procvmas]
+        return kvpairs
+
+    @classmethod
+    def from_kvpairs(cls, kvpairs):
+        self = cls(None)
+        self.time = kvpairs['time']
+        self.procvmas = [ProcVmas.from_kvpairs(kvp)
+                         for kvp in kvapirs['procvmas']]
+
 def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
 
