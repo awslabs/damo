@@ -447,6 +447,19 @@ comparing the recorded residential set size and DAMON-based working set size.
 [`damo report footprints`](#footprints) and [`damo report wss`](#wss) could be
 used for the purpose.
 
+### Recording Memory Mappings
+
+Note: This is an experimental feature at the moment.  Some changes could be
+made, or the support can be dropped in future.
+
+Users can record virtual memory mapping information of the record target
+processes by adding `--vmas` command line option to the `damo record` command.
+Internally, it parses `/proc/<pid>/maps` files of the monitoring target
+processes, and save the results as a json file of the name same to the access
+pattern record file (specified by `--out` option of `damo record`) except
+having `.vmas` suffix.  Hence, `damon.data.vmas` is the default name of the
+memory mapping information.
+
 `damo report` (Visualizing Recorded Data Access Pattern)
 --------------------------------------------------------
 
