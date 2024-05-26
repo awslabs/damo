@@ -7,6 +7,7 @@ v2.3.6
 v2.3.5
 - Add --style option of 'damo show'
 - Add --damos_quotas_{time,space,interval,weights} options
+- Add 'temperature' regions sorting key for 'damo show'
 
 v2.3.4
 - damo record: Set --profile and --footprint by default
