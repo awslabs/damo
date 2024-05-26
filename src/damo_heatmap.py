@@ -256,7 +256,6 @@ def set_argparser(parser):
     parser.add_argument('--tid', metavar='<id>', type=int,
             help='target id')
     parser.add_argument('--resol', metavar='<resolution>', type=int, nargs=2,
-            default=[500, 500],
             help='resolutions for time and address axes')
     parser.add_argument('--time_range', metavar='<time>', type=int, nargs=2,
             help='start and end time of the output')
@@ -284,9 +283,12 @@ def main(args=None):
                 (args.input, err))
         exit(1)
 
-    # Use 80x40 resolution as default for ascii plot
-    if args.output == 'stdout' and args.resol == [500, 500]:
-        args.resol = [40, 80]
+    # Use 80x40 or 500x500 resolution as default for stdout or image plots
+    if args.resol is None:
+        if args.output == 'stdout':
+            args.resol = [40, 80]
+        else:
+            args.resol = [500, 500]
 
     if args.guide:
         damo_record_info.pr_guide(records)
