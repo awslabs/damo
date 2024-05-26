@@ -421,13 +421,19 @@ def set_formats(args, records):
             args.format_snapshot_tail = ('%s\n<region box description>' %
                     args.format_record_tail)
 
-def temperature_of(region):
-    if region.nr_accesses.percent > 0:
-        return region.nr_accesses.percent * region.age.usec
-    else:
-        return -1 * region.age.usec
+def temperature_of(region, weights):
+    sz_weight, access_rate_weight, age_weight = weights
+    sz_score = region.size() * sz_weight
+    ar_score = region.nr_accesses.percent * access_rate_weight
+    age_score = region.age.usec * age_weight
+    score = sz_score + ar_score + age_score
 
-def sorted_regions(regions, sort_fields, sort_dsc_keys):
+    if region.nr_accesses.percent > 0:
+        return score
+    else:
+        return -1 * score
+
+def sorted_regions(regions, sort_fields, sort_dsc_keys, temperature_weights):
     for field in sort_fields:
         dsc = sort_dsc_keys != None and ('all' in sort_dsc_keys or
                                          field in sort_dsc_keys)
@@ -441,8 +447,9 @@ def sorted_regions(regions, sort_fields, sort_dsc_keys):
         elif field == 'size':
             regions = sorted(regions, key=lambda r: r.size(), reverse=dsc)
         elif field == 'temperature':
-            regions = sorted(regions, key=lambda r: temperature_of(r),
-                             reverse=dsc)
+            regions = sorted(
+                    regions, reverse=dsc,
+                    key=lambda r: temperature_of(r, temperature_weights))
     return regions
 
 def pr_records(args, records):
@@ -485,7 +492,7 @@ def pr_records(args, records):
                 r.age.add_unset_unit(record.intervals)
             for idx, r in enumerate(
                     sorted_regions(snapshot.regions, args.sort_regions_by,
-                        args.sort_regions_dsc)):
+                        args.sort_regions_dsc, args.temperature_weights)):
                 outputs.append(
                         format_output(
                             args.format_region, region_formatters,
@@ -591,6 +598,12 @@ def set_argparser(parser):
                      'all'],
             nargs='+',
             help='sort regions in descending order for the given keys')
+    parser.add_argument(
+            '--temperature_weights', type=int, metavar='<int>', nargs=3,
+            default=[0, 100, 100],
+            help=' '.join(
+                ['temperature weights for size, access rate, and age',
+                 'of each region']))
     parser.add_argument('--dont_merge_regions', action='store_true',
             help='don\'t merge contiguous regions of same access pattern')
 
