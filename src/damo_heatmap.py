@@ -178,7 +178,7 @@ def pr_heats(args, __records):
 
         if args.output == 'stdout':
             heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax],
-                    [tres, ares], args.stdout_heatmap_color, not
+                    [tres, ares], args.stdout_colorset, not
                     args.stdout_heatmap_skip_color_example)
             return
 
@@ -269,7 +269,7 @@ def set_argparser(parser):
 
     parser.add_argument('--guide', action='store_true',
             help='print a guidance for the ranges and resolution settings')
-    parser.add_argument('--stdout_heatmap_color', default='gray',
+    parser.add_argument('--stdout_colorset', default='gray',
             choices=['gray', 'flame', 'emotion'],
             help='color theme for access frequencies')
     parser.add_argument('--stdout_heatmap_skip_color_example',
