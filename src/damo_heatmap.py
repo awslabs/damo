@@ -267,31 +267,15 @@ def set_argparser(parser):
             help='print a guidance for the ranges and resolution settings')
     parser.add_argument('--heatmap', metavar='<file>', type=str,
             help='heatmap image file to create.  stdout for terminal output')
-    parser.add_argument('--stdout_heatmap_color',
+    parser.add_argument('--stdout_heatmap_color', default='gray',
             choices=['gray', 'flame', 'emotion'],
             help='color theme for access frequencies')
-    parser.add_argument('--ascii_color',
-            choices=['gray', 'flame', 'emotion'],
-            help='another name of stdout_heatmap_color')
-    parser.add_argument('--plot_ascii', action='store_true',
-            help='shortcut of \'--heatmap stdout\'')
     parser.add_argument('--stdout_heatmap_skip_color_example',
             action='store_true',
             help='skip printing example colors at the output')
     parser.description = 'Show when which address ranges were how frequently accessed'
 
 def main(args=None):
-    # --plot_ascii and --ascii_color is used in the demo screenshop[1].
-    # Support those.
-    #
-    # [1] https://sjp38.github.io/img/masim_stairs_heatmap_ascii.png
-    if args.heatmap == None and args.plot_ascii:
-        args.heatmap = 'stdout'
-    if args.ascii_color != None and args.stdout_heatmap_color == None:
-        args.stdout_heatmap_color = args.ascii_color
-    if args.ascii_color == None and args.stdout_heatmap_color == None:
-        args.stdout_heatmap_color = 'gray'
-
     records, err = _damo_records.get_records(record_file=args.input)
     if err != None:
         print('monitoring result file (%s) parsing failed (%s)' %
