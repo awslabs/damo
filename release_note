@@ -3,6 +3,7 @@ picked by human sense, so could be incomplete and missing many things.
 
 v2.3.6
 - Support memory mapping recording (--vmas)
+- Support custom temperature weights from 'damo show' (--temperature_weights)
 
 v2.3.5
 - Add --style option of 'damo show'
