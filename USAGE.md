@@ -358,6 +358,20 @@ pattern and address ranges using options including `--sz_region`,
 reduce DAMON's overhead, and therefore recommended to be used if you don't need
 full results and your system is sensitive to any resource waste.
 
+#### Sorting Regions Based on Hotness
+
+Note: This is an experimental feature at the moment.  Some changes could be
+made, or the support can be dropped in future.
+
+Users can sort the regions based on hotness of the regions by providing
+'temperature' as the sort key (`--sort_regions_by`).
+
+The hotness is calculated as weighted sum of the access pattern values (`size`,
+`access_rate`, and `age`).  If `access_rate` is zero, the hotness becomes the
+weighted sum multiplies `-1`.  By default, the weights for the three values are
+0, 100, and 100, respectively.  Users can set custom weights using
+`--temperature_weights` option.
+
 `damo status`
 -------------
 
