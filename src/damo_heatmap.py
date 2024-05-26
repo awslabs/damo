@@ -179,7 +179,7 @@ def pr_heats(args, __records):
         if args.output == 'stdout':
             heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax],
                     [tres, ares], args.stdout_colorset, not
-                    args.stdout_heatmap_skip_color_example)
+                    args.stdout_skip_colorset_example)
             return
 
         for row in pixels:
@@ -272,7 +272,7 @@ def set_argparser(parser):
     parser.add_argument('--stdout_colorset', default='gray',
             choices=['gray', 'flame', 'emotion'],
             help='color theme for access frequencies')
-    parser.add_argument('--stdout_heatmap_skip_color_example',
+    parser.add_argument('--stdout_skip_colorset_example',
             action='store_true',
             help='skip printing example colors at the output')
     parser.description = 'Show when which address ranges were how frequently accessed'
