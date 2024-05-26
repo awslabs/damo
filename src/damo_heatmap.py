@@ -176,7 +176,7 @@ def pr_heats(args, __records):
         pixels = heat_pixels_from_snapshots(record.snapshots,
                 [tmin, tmax], [amin, amax], [tres, ares])
 
-        if args.heatmap == 'stdout':
+        if args.output == 'stdout':
             heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax],
                     [tres, ares], args.stdout_heatmap_color, not
                     args.stdout_heatmap_skip_color_example)
@@ -246,6 +246,10 @@ def plot_heatmap(data_file, output_file, args):
     os.remove(data_file)
 
 def set_argparser(parser):
+    parser.add_argument('--output', metavar='<output>', default='stdout',
+                        help=' '.join(
+                            ['output heatmap to generate.',
+                            'can be file or special keywords (\'stdout\')']))
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
 
@@ -265,8 +269,6 @@ def set_argparser(parser):
 
     parser.add_argument('--guide', action='store_true',
             help='print a guidance for the ranges and resolution settings')
-    parser.add_argument('--heatmap', metavar='<file>', type=str,
-            help='heatmap image file to create.  stdout for terminal output')
     parser.add_argument('--stdout_heatmap_color', default='gray',
             choices=['gray', 'flame', 'emotion'],
             help='color theme for access frequencies')
@@ -283,7 +285,7 @@ def main(args=None):
         exit(1)
 
     # Use 80x40 resolution as default for ascii plot
-    if args.heatmap == 'stdout' and args.resol == [500, 500]:
+    if args.output == 'stdout' and args.resol == [500, 500]:
         args.resol = [40, 80]
 
     if args.guide:
@@ -292,15 +294,15 @@ def main(args=None):
 
     set_missed_args(args, records)
     orig_stdout = sys.stdout
-    if args.heatmap and args.heatmap != 'stdout':
+    if args.output and args.output != 'stdout':
         tmp_path = tempfile.mkstemp()[1]
         tmp_file = open(tmp_path, 'w')
         sys.stdout = tmp_file
 
     pr_heats(args, records)
 
-    if args.heatmap and args.heatmap != 'stdout':
+    if args.output and args.output != 'stdout':
         sys.stdout = orig_stdout
         tmp_file.flush()
         tmp_file.close()
-        plot_heatmap(tmp_path, args.heatmap, args)
+        plot_heatmap(tmp_path, args.output, args)
