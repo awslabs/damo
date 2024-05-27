@@ -372,6 +372,19 @@ weighted sum multiplies `-1`.  By default, the weights for the three values are
 0, 100, and 100, respectively.  Users can set custom weights using
 `--temperature_weights` option.
 
+For example:
+
+    $ sudo damo show --style simple-boxes --sort_regions_by temperature
+    |0000000000000000000000000000000000000000| size 36.488 MiB  access rate 0 %   age 42.300 s
+     |000000000000000000000000000000000000000| size 4.000 KiB   access rate 0 %   age 42 s
+     |000000000000000000000000000000000000000| size 18.367 MiB  access rate 0 %   age 32.800 s
+      |00000000000000000000000000000000000000| size 11.234 MiB  access rate 0 %   age 21.300 s
+       |0000000000000000000000000000000000000| size 18.219 MiB  access rate 0 %   age 14.300 s
+        |000000000000000000000000000000000000| size 17.859 MiB  access rate 0 %   age 7.400 s
+                                           |3| size 8.000 KiB   access rate 35 %  age 0 ns
+              |555555555555555555555555555555| size 8.000 KiB   access rate 65 %  age 500 ms
+           |999999999999999999999999999999999| size 9.535 MiB   access rate 100 % age 2.300 s
+
 `damo status`
 -------------
 
