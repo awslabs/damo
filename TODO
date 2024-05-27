@@ -5,6 +5,7 @@
   - time based filtering
   - collapse by time
   - collapse by priority value (more histogram control)
+    - --histogram hotness?
   - Implement min/max snapshot format keyword
 - damo reclaim: add a command for basic investigation
   - helps ensure DAMON_RECLAIM is working as expected
