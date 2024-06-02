@@ -19,6 +19,7 @@
 - Let 'replay' further parse vmas and alloc/release memory
 
 - Deprecate old features
+  - Deprecate heats report type in favor of heatmap report type
   - Deprecate translate_damos (done.)
   - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
   - Deprecate v1-v3 schemes (done.  necessary code moved to _damon_deprecated)
