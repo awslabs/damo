@@ -7,8 +7,10 @@ constructed with pixels that each shows when (time), which memory region
 by the location of the pixel on the map, while the heat is represented by it's
 color.
 
-By default, the output shows the relative time, space, and heat values of each
-pixel of the map on each line, like below.
+By default, the output shows the heatmap on the terminal.
+
+If --output raw is given, the output shows the relative time, space, and heat
+values of each pixel of the map on each line, like below.
 
     <time> <space> <heat>
     ...
@@ -17,6 +19,9 @@ By constructing the pixels based on the values, the user can draw more
 human-readable heatmap.  gnuplot like plot tools can be used.  If '--heatmap'
 option is givne, this tool does that on behalf of the human when '--heatmap'
 option is given.
+
+If --output option is given with a file, the gnuplot-based heatmap image is
+generated as the file.
 """
 
 import argparse
