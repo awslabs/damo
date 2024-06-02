@@ -249,7 +249,8 @@ def set_argparser(parser):
     parser.add_argument('--output', metavar='<output>', default='stdout',
                         help=' '.join(
                             ['output heatmap to generate.',
-                            'can be file or special keywords (\'stdout\')']))
+                             'can be a pdf/png/jpeg/svg file or',
+                             'special keywords (\'stdout\', \'raw\')']))
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
             default='damon.data', help='input file name')
 
@@ -296,14 +297,14 @@ def main(args=None):
 
     set_missed_args(args, records)
     orig_stdout = sys.stdout
-    if args.output and args.output != 'stdout':
+    if args.output and not args.output in ['stdout', 'raw']:
         tmp_path = tempfile.mkstemp()[1]
         tmp_file = open(tmp_path, 'w')
         sys.stdout = tmp_file
 
     pr_heats(args, records)
 
-    if args.output and args.output != 'stdout':
+    if args.output and not args.output in ['stdout', 'raw']:
         sys.stdout = orig_stdout
         tmp_file.flush()
         tmp_file.close()
