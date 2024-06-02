@@ -2,7 +2,6 @@
 
 "Control DAMON_LRU_SORT"
 
-import argparse
 import os
 import time
 

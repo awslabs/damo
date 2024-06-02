@@ -4,8 +4,6 @@
 Print basic information of the access monitoring results record file.
 """
 
-import argparse
-
 import _damo_fmt_str
 import _damo_records
 

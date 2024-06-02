@@ -2,7 +2,6 @@
 
 "Print out the distribution of the working set sizes of the given trace"
 
-import argparse
 import sys
 import tempfile
 

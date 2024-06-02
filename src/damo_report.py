@@ -1,7 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
 
-import argparse
-
 import _damo_subcmds
 import damo_heatmap
 import damo_heats

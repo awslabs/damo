@@ -2,7 +2,6 @@
 
 "Print out the distribution of the memory footprint of the given trace"
 
-import argparse
 import sys
 import tempfile
 

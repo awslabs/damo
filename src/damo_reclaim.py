@@ -2,7 +2,6 @@
 
 "Control DAMON_RECLAIM"
 
-import argparse
 import os
 import time
 

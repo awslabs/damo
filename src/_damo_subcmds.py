@@ -1,7 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
 
-import argparse
-
 class DamoSubCmdModule:
     set_argparser = lambda self, args: args
     main = lambda self, args: args

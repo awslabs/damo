@@ -2,7 +2,6 @@
 
 "Validate a given damo-record result file"
 
-import argparse
 import os
 
 import _damo_records

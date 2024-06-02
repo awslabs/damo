@@ -2,8 +2,6 @@
 
 "Adjust a damon monitoring result with new attributes"
 
-import argparse
-
 import _damo_records
 
 def main(args):

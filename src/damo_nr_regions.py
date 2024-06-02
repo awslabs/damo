@@ -2,7 +2,6 @@
 
 "Print out distribution of the number of regions in the given record"
 
-import argparse
 import sys
 import tempfile
 

@@ -2,7 +2,6 @@
 
 "Record and report data access pattern in realtime"
 
-import argparse
 import os
 import signal
 import subprocess

@@ -24,7 +24,6 @@ If --output option is given with a file, the gnuplot-based heatmap image is
 generated as the file.
 """
 
-import argparse
 import os
 import subprocess
 import sys

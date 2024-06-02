@@ -19,7 +19,6 @@ option is givne, this tool does that on behalf of the human when '--heatmap'
 option is given.
 """
 
-import argparse
 import os
 import subprocess
 import sys

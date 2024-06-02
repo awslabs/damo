@@ -4,7 +4,6 @@
 Convert args to DAMON json input.
 """
 
-import argparse
 import json
 
 import _damon
