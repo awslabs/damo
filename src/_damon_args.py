@@ -9,6 +9,8 @@ import json
 import os
 import subprocess
 
+import yaml
+
 import _damo_paddr_layout
 import _damon
 
@@ -338,6 +340,17 @@ def kdamonds_from_json_arg(arg):
     except Exception as e:
         return None, e
 
+def kdamonds_from_yaml_arg(arg):
+    try:
+        assert os.path.isfile(arg)
+        with open(arg, 'r') as f:
+            kdamonds_str = f.read()
+        kdamonds_kvpairs = yaml.safe_load(kdamonds_str)['kdamonds']
+        return [_damon.Kdamond.from_kvpairs(kvp)
+                for kvp in kdamonds_kvpairs], None
+    except Exception as e:
+        return None, e
+
 target_type_explicit = 'explicit'
 target_type_cmd = 'cmd'
 target_type_pid = 'pid'
@@ -431,7 +444,10 @@ def kdamonds_for(args):
         return kdamonds_from_json_arg(args.kdamonds)
 
     if args.deducible_target:
-        kdamonds, e = kdamonds_from_json_arg(args.deducible_target)
+        if args.deducible_target.endswith('.yaml'):
+            kdamonds, e = kdamonds_from_yaml_arg(args.deducible_target)
+        else:
+            kdamonds, e = kdamonds_from_json_arg(args.deducible_target)
         if e == None:
             return kdamonds, e
         err = deduce_target_update_args(args)
@@ -592,8 +608,8 @@ def set_argparser(parser, add_record_options):
     parser.add_argument('--kdamonds', metavar='<json string or file>',
             help='json format kdamonds specification to run DAMON for')
     parser.add_argument('deducible_target', type=str,
-            metavar='<command, pid, special keywords, or kdamonds json spec>', nargs='?',
-            help='the implicit monitoring requests')
+            metavar='<command, pid, special keywords, or kdamonds json or yaml spec>',
+            nargs='?', help='the implicit monitoring requests')
     if add_record_options:
         parser.add_argument('-o', '--out', metavar='<file path>', type=str,
                 default='damon.data', help='output file path')
