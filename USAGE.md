@@ -112,9 +112,8 @@ will be non-zero.
 ### Simple Target Argument
 
 The command receives one positional argument called deducible target.  It could
-be used for specifying monitoring target, or full DAMON parameters in a json
-format.  The command will try to deduce the type of the argument value and use
-it.
+be used for specifying monitoring target, or full DAMON parameters.  The
+command will try to deduce the type of the argument value and use it.
 
 With the argument, users can specify the monitoring target with 1) the command
 for execution of the monitoring target process, 2) pid of running target
@@ -147,10 +146,9 @@ RAM' region specified in `/proc/iomem` file.  Note that the initial monitoring
 target region is maintained rather than dynamically updated like the virtual
 memory address spaces monitoring case.
 
-Users can specify full DAMON parameters at once in json format, by passing the
-json string or a path to a file containing the json string.  Refer to "Full
-DAMON Parameters Update" section below for the detail of the concept, and
-"`damo fmt_json`" section below for the format of the json input.
+Users can specify full DAMON parameters at once.  Refer to "Full DAMON
+Parameters Update" section below for the detail of the concept, and "`damo
+fmt_json`" section below for the format of the input.
 
 ### Partial DAMON Parameters Update
 
@@ -162,8 +160,8 @@ difficult.
 
 Note that these command line options support only single kdamond, single DAMON
 context, and single monitoring target case at the moment.  Users can make
-requests without such limitation using json format input.  Refer to 'Full DAMON
-Parameters Update' section below for the detail.
+requests without such limitation using full DAMON parameters input.  Refer to
+'Full DAMON Parameters Update' section below for the detail.
 
 ### Partial DAMOS Parameters Update
 
@@ -190,13 +188,16 @@ for many use cases, but for system-wide dynamic DAMON usages, that could be
 restrictive.  Also, specifying each parameter that different from their default
 values could be not convenient.  Users may want to specify full parameters at
 once in such cases.  For such users, the command supports `--kdamonds` option.
-It receives a json-format specification of kdamonds that would contains all
-DAMON parameters.  Then, `damo` starts DAMON with the specification.
+It receives a specification of kdamonds that would contains all DAMON
+parameters in `json` or `yaml` format.  Either a string of the format, or a
+path to a file containing the string can be passed to the option.  Then, `damo`
+starts DAMON with the specification.
 
-For the format of the json input, please refer to `damo fmt_json` documentation
-below, or simply try the command.  The `--kdamonds` option keyword can also
-simply omitted because the json input can used as is for the `deducible target`
-(refer to "Simple Target Argument" section above).
+For the full DAMON parameters input format, please refer to `damo fmt_json`
+documentation below, or simply try the command.  The `--kdamonds` option
+keyword can also simply omitted because the full DAMON parameters input can
+used as is for the `deducible target` (refer to "Simple Target Argument"
+section above).
 
 Note that multiple DAMON contexts per kdamond is not supported as of
 2023-09-12, though.
@@ -780,12 +781,13 @@ time of the release.  Later one would have more features and bug fixes.
 
 As mentioned for `damo start` above, DAMON control commands including `start`,
 `tune`, and additionally `record` allows passing DAMON parameters or DAMOS
-specification all at once via a json format.  That's for making specifying and
-managing complex requests easier, but writing the whole json manually could be
-annoying, while the partial DAMON/DAMOS parameters setup command line options
-are easy for simple use case.  To help formatting the json input easier, `damo
-fmt_json` receives the partial DMAON/DAMOS parameters setup options and print
-out resulting json format Kdamond parameters.  For example,
+specification all at once via json or yaml formats.  That's for making
+specifying and managing complex requests easier, but writing the whole json or
+yaml manually could be annoying, while the partial DAMON/DAMOS parameters setup
+command line options are easy for simple use case.  To help formatting the json
+or yaml input easier, `damo fmt_json` receives the partial DMAON/DAMOS
+parameters setup options and print out resulting json format Kdamond
+parameters.  For example,
 
     # damo fmt_json --damos_action stat
 
@@ -793,6 +795,9 @@ prints json format DAMON parameters specification that will be result in a
 DAMON configuration that same to one that can be made with `damo start
 --damos_action stat`.  In other words, `damo start $(damo fmt_json
 --damos_action stat)` will be same to `damo start --damos_action stat`.
+
+For yaml format input, users can simply convert the json input to a valid yaml
+format, using common tools.
 
 Note that starting DAMON with the partial DAMON parameter command line option
 and then getting the DAMON parameters in the json format using `damo status`
