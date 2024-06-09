@@ -613,9 +613,14 @@ def set_argparser(parser, add_record_options):
 	    help='data access monitoring-based operation schemes')
     parser.add_argument('--kdamonds', metavar='<json string or file>',
             help='json format kdamonds specification to run DAMON for')
-    parser.add_argument('deducible_target', type=str,
-            metavar='<command, pid, special keywords, or kdamonds json or yaml spec>',
-            nargs='?', help='the implicit monitoring requests')
+    parser.add_argument(
+            'deducible_target', type=str, metavar='<deducible string>',
+            nargs='?',
+            help=' '.join([
+                'The implicit monitoring requests.',
+                'It could be a command, process id, special keywords, or full',
+                'DAMON parameters.  For the full DAMON parameters, json and',
+                'yaml format are supported.']))
     if add_record_options:
         parser.add_argument('-o', '--out', metavar='<file path>', type=str,
                 default='damon.data', help='output file path')
