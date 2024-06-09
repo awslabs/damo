@@ -18,4 +18,3 @@ def pr_with_pager_if_needed(text):
         f.write(text)
     subprocess.call(['less', '--RAW-CONTROL-CHARS', '--no-init', tmp_path])
     os.remove(tmp_path)
-

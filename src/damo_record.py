@@ -10,9 +10,9 @@ import signal
 import subprocess
 import time
 
+import _damo_records
 import _damon
 import _damon_args
-import _damo_records
 
 class DataForCleanup:
     kdamonds_idxs = None

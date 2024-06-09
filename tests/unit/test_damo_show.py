@@ -7,8 +7,8 @@ import _test_damo_common
 
 _test_damo_common.add_damo_dir_to_syspath()
 
-import _damon
 import _damo_records
+import _damon
 import damo_show
 
 class TestDamoShow(unittest.TestCase):

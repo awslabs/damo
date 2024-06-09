@@ -2,8 +2,8 @@
 
 import subprocess
 
-import _damon
 import _damo_records
+import _damon
 import damo_show
 
 def main(args):

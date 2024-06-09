@@ -7,8 +7,8 @@ import _test_damo_common
 
 _test_damo_common.add_damo_dir_to_syspath()
 
-import _damon_sysfs
 import _damo_fs
+import _damon_sysfs
 
 class TestDamonSysfs(unittest.TestCase):
     def test_json_kdamonds_staging(self):

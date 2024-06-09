@@ -24,11 +24,10 @@ import subprocess
 import sys
 import tempfile
 
-import damo_record_info
-
 import _damo_ascii_color
 import _damo_fmt_str
 import _damo_records
+import damo_record_info
 
 class HeatPixel:
     time = None

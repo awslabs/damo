@@ -8,9 +8,9 @@ import _test_damo_common
 
 _test_damo_common.add_damo_dir_to_syspath()
 
+import _damo_fs
 import _damon
 import _damon_dbgfs
-import _damo_fs
 
 def set_damon_dbgfs_features():
     _damon_dbgfs.feature_supports = {'init_regions': True, 'schemes': True,

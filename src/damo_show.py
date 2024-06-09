@@ -6,9 +6,9 @@ import math
 import _damo_ascii_color
 import _damo_fmt_str
 import _damo_print
+import _damo_records
 import _damon
 import _damon_args
-import _damo_records
 
 class Formatter:
     keyword = None
