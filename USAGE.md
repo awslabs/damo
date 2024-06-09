@@ -31,7 +31,7 @@ Perf
 
 `damo` uses `perf`[1] for recording DAMON's access monitoring results.  Please
 ensure your system is having it if you will need to do record DAMON's
-monitoring resluts.  If you will not do the recording, you don't need to
+monitoring results.  If you will not do the recording, you don't need to
 install `perf` on your system, though.
 
 [1] https://perf.wiki.kernel.org/index.php/Main_Page
@@ -69,7 +69,7 @@ Overview
 ========
 
 `damo` provides a subcommands-based interface.  You can show the list of the
-available commands and brief descripton of those via `damo --help`.  The major
+available commands and brief description of those via `damo --help`.  The major
 commands can be categorized as below:
 
 - For controlling DAMON (monitoring and monitoring-based system optimization)
@@ -111,7 +111,7 @@ will be non-zero.
 
 ### Simple Target Argument
 
-The command recieves one positional argument called deducible target.  It could
+The command receives one positional argument called deducible target.  It could
 be used for specifying monitoring target, or full DAMON parameters in a json
 format.  The command will try to deduce the type of the argument value and use
 it.
@@ -224,7 +224,7 @@ unspecified parameters of running DAMON will be updated to their default
 values.
 
 The command exits immediately after updating DAMON parameters as requested.  It
-exits with exit value `0` if the update successed.  Otherwise, the exit value
+exits with exit value `0` if the update succeeded.  Otherwise, the exit value
 will be non-zero.
 
 `damo stop`
@@ -759,7 +759,7 @@ the difference of the performance is big, the replayed accesses would be less
 similar to the original one.  To show the real memory access performance of
 `damo replay` on specific system, users could use `--test_perf` option.
 
-Miscelleneous Helper Commands
+Miscellaneous Helper Commands
 =============================
 
 Abovely explained commands are all core functions of `damo`.  For more

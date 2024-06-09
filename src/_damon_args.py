@@ -93,7 +93,7 @@ def damos_options_to_filters(filters_args):
 
     for fields in filters_args:
         if len(fields) < 2:
-            return None, '<2 filter field legth (%s)' % fields
+            return None, '<2 filter field length (%s)' % fields
         ftype = fields[0]
         fmatching = fields[1]
         fargs = fields[2:]
@@ -586,7 +586,7 @@ def set_damos_argparser(parser):
             metavar='<metric or value>',
             help=' '.join([
                 'damos quota goal (<metric> <target value> [current value]).',
-                '<metric> shoule be {%s}.' %
+                '<metric> should be {%s}.' %
                 ','.join(_damon.qgoal_metrics)]))
     parser.add_argument('--damos_nr_quota_goals', type=int, nargs='+',
             default=[], metavar='<integer>',

@@ -500,7 +500,7 @@ def update_records_file(file_path, file_format, file_permission=None,
 
 # for recording
 
-# Meaning of the fileds of ProcMemFootprint are as below.
+# Meaning of the fields of ProcMemFootprint are as below.
 #
 # ======== ===============================       ==============================
 # Field    Content
@@ -517,7 +517,7 @@ def update_records_file(file_path, file_format, file_permission=None,
 # dt       number of dirty pages                 (always 0 on 2.6)
 # ======== ===============================       ==============================
 #
-# The above table is tolen from Documentation/filesystems/proc.rst file of
+# The above table is stolen from Documentation/filesystems/proc.rst file of
 # Linux
 class ProcMemFootprint:
     size = None

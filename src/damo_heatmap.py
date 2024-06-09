@@ -17,7 +17,7 @@ values of each pixel of the map on each line, like below.
 
 By constructing the pixels based on the values, the user can draw more
 human-readable heatmap.  gnuplot like plot tools can be used.  If '--heatmap'
-option is givne, this tool does that on behalf of the human when '--heatmap'
+option is given, this tool does that on behalf of the human when '--heatmap'
 option is given.
 
 If --output option is given with a file, the gnuplot-based heatmap image is

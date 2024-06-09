@@ -446,7 +446,8 @@ class DamosQuotaGoal:
     @classmethod
     def from_kvpairs(cls, kv):
         if 'target_value_bp' in kv:
-            # For supporing old version of bad naming.  Should deprecate later.
+            # For supporting old version of bad naming.  Should deprecate
+            # later.
             return DamosQuotaGoal(target_value=kv['target_value_bp'],
                                   current_value=kv['current_value_bp'])
         return DamosQuotaGoal(
@@ -1055,7 +1056,7 @@ def write_feature_supports_file():
             try:
                 to_save = json.load(f)
             except:
-                # Maybe previous writing was something wrong.  Just overwirte.
+                # Maybe previous writing was something wrong.  Just overwrite.
                 to_save = {}
         if not 'file_format_ver' in to_save:
             to_save = {}

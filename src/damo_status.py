@@ -114,7 +114,7 @@ def set_argparser(parser):
     parser.add_argument('--damos_stat_fields', metavar='<stat field name>',
             choices=['nr_tried', 'sz_tried', 'nr_applied', 'sz_applied',
                 'qt_exceeds'], nargs='+',
-            help='DAMOS stat fiedls to print')
+            help='DAMOS stat fields to print')
     parser.add_argument('--damon_params', action='store_true',
             help='print entered DAMON parameters only')
     _damon_args.set_common_argparser(parser)

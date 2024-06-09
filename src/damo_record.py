@@ -117,7 +117,7 @@ def main(args):
             monitoring_intervals=monitoring_intervals,
             # for perf profile
             do_profile=args.profile is True,
-            # for childs recording and memory footprint
+            # for children processes recording and memory footprint
             kdamonds=kdamonds, add_child_tasks=args.include_child_tasks,
             record_mem_footprint=args.footprint,
             record_vmas=args.vmas)
