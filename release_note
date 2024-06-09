@@ -1,6 +1,9 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v2.3.8
+- Support yaml format DAMON parameters
+
 v2.3.7
 - Cleanup code and documents
 
