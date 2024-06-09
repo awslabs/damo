@@ -147,8 +147,9 @@ target region is maintained rather than dynamically updated like the virtual
 memory address spaces monitoring case.
 
 Users can specify full DAMON parameters at once.  Refer to "Full DAMON
-Parameters Update" section below for the detail of the concept, and "`damo
-fmt_json`" section below for the format of the input.
+Parameters Update" [section](#full-damon-parameters-update) below for the
+detail of the concept, and "`damo fmt_json`" [section](#damo-fmt_json) below
+for the format of the input.
 
 ### Partial DAMON Parameters Update
 
@@ -161,7 +162,8 @@ difficult.
 Note that these command line options support only single kdamond, single DAMON
 context, and single monitoring target case at the moment.  Users can make
 requests without such limitation using full DAMON parameters input.  Refer to
-'Full DAMON Parameters Update' section below for the detail.
+'Full DAMON Parameters Update' [section](#full-damon-parameters-update) below
+for the detail.
 
 ### Partial DAMOS Parameters Update
 
@@ -194,10 +196,10 @@ path to a file containing the string can be passed to the option.  Then, `damo`
 starts DAMON with the specification.
 
 For the full DAMON parameters input format, please refer to `damo fmt_json`
-documentation below, or simply try the command.  The `--kdamonds` option
-keyword can also simply omitted because the full DAMON parameters input can
-used as is for the `deducible target` (refer to "Simple Target Argument"
-section above).
+[documentation](#damo-fmt_json) below, or simply try the command.  The
+`--kdamonds` option keyword can also simply omitted because the full DAMON
+parameters input can used as is for the `deducible target` (refer to "Simple
+Target Argument" [section](#simple-target-argument) above).
 
 Note that multiple DAMON contexts per kdamond is not supported as of
 2023-09-12, though.
