@@ -9,7 +9,13 @@ import json
 import os
 import subprocess
 
-import yaml
+# for non-python-default modules
+try:
+    import yaml
+except ModuleNotFoundError as e:
+    # do nothing.  The yaml using functions should handle the exception
+    # properly.
+    pass
 
 import _damo_paddr_layout
 import _damon
