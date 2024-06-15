@@ -711,6 +711,8 @@ damos_actions = [
         'nohugepage',
         'lru_prio',
         'lru_deprio',
+        'migrate_hot',
+        'migrate_cold',
         'stat',
         ]
 
@@ -721,7 +723,9 @@ damos_action_hugepage = damos_actions[3]
 damos_action_nohugepage = damos_actions[4]
 damos_action_lru_prio = damos_actions[5]
 damos_action_lru_deprio = damos_actions[6]
-damos_action_stat = damos_actions[7]
+damos_action_migrate_hot = damos_actions[7]
+damos_action_migrate_cold = damos_actions[8]
+damos_action_stat = damos_actions[9]
 
 class Damos:
     access_pattern = None
