@@ -3,6 +3,7 @@ picked by human sense, so could be incomplete and missing many things.
 
 v2.3.9
 - Support migrate_{hot,cold} DAMOS action
+  - Need taget_nid work for fully functioning
 
 v2.3.8
 - Support yaml format DAMON parameters
