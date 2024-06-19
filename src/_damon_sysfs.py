@@ -297,6 +297,11 @@ def write_scheme_dir(dir_path, scheme):
     if err is not None:
         return err
 
+    if scheme.target_nid is not None:
+        err = _damo_fs.write_file(os.path.join(dir_path,'target_nid'), '%s' % scheme.target_nid)
+        if err is not None:
+            return err
+
     err = write_filters_dir(os.path.join(dir_path, 'filters'), scheme.filters)
     if err is not None:
         return err
@@ -559,6 +564,8 @@ def files_content_to_scheme(files_content):
                 if 'apply_interval_us' in files_content else None,
             files_content_to_quotas(files_content['quotas']),
             files_content_to_watermarks(files_content['watermarks']),
+            files_content['target_nid'].strip()
+                if 'target_nid' in files_content else None,
             files_content_to_damos_filters(files_content['filters'])
                 if 'filters' in files_content else [],
             files_content_to_damos_stats(files_content['stats']),

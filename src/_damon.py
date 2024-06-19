@@ -727,9 +727,16 @@ damos_action_migrate_hot = damos_actions[7]
 damos_action_migrate_cold = damos_actions[8]
 damos_action_stat = damos_actions[9]
 
+def is_damos_migrate_action(action):
+    if action == damos_action_migrate_hot or \
+       action == damos_action_migrate_cold:
+        return True
+    return False
+
 class Damos:
     access_pattern = None
     action = None
+    target_nid = None
     apply_interval_us = None
     quotas = None
     watermarks = None
@@ -739,16 +746,18 @@ class Damos:
     tried_bytes = None
     context = None
 
+
     # for monitoring only by default
     def __init__(self, access_pattern=None, action=damos_action_stat,
             apply_interval_us=None,
-            quotas=None, watermarks=None, filters=None, stats=None,
+            quotas=None, watermarks=None, target_nid=None, filters=None, stats=None,
             tried_regions=None, tried_bytes=None):
         self.access_pattern = (access_pattern
                 if access_pattern != None else DamosAccessPattern())
         if not action in damos_actions:
             raise Exception('wrong damos action: %s' % action)
         self.action = action
+        self.target_nid = target_nid
         if apply_interval_us != None:
             self.apply_interval_us = _damo_fmt_str.text_to_us(
                     apply_interval_us)
@@ -785,6 +794,8 @@ class Damos:
         lines.append('watermarks')
         lines.append(_damo_fmt_str.indent_lines(
             self.watermarks.to_str(raw), 4))
+        if is_damos_migrate_action(self.action):
+            lines.append('target_nid: %s' % self.target_nid)
         for idx, damos_filter in enumerate(self.filters):
             lines.append('filter %d' % idx)
             lines.append(_damo_fmt_str.indent_lines(
@@ -828,12 +839,15 @@ class Damos:
                     if 'quotas' in kv else DamosQuotas(),
                 DamosWatermarks.from_kvpairs(kv['watermarks'])
                     if 'watermarks' in kv else DamosWatermarks(),
+                kv['target_nid'] if 'target_nid' in kv else None,
                 filters,
                 None, None)
 
     def to_kvpairs(self, raw=False):
         kv = collections.OrderedDict()
         kv['action'] = self.action
+        if is_damos_migrate_action(self.action):
+            kv['target_nid'] = self.target_nid
         kv['access_pattern'] = self.access_pattern.to_kvpairs(raw)
         kv['apply_interval_us'] = self.apply_interval_us
         kv['quotas'] = self.quotas.to_kvpairs(raw)
