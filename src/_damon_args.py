@@ -187,7 +187,7 @@ def damos_options_to_quotas(quotas, goals):
     return quotas, None
 
 def damos_options_to_scheme(sz_region, access_rate, age, action,
-        apply_interval, quotas, goals, wmarks, filters):
+        apply_interval, quotas, goals, wmarks, target_nid, filters):
     if quotas != None:
         quotas, err = damos_options_to_quotas(quotas, goals)
         if err is not None:
@@ -210,7 +210,7 @@ def damos_options_to_scheme(sz_region, access_rate, age, action,
                 access_pattern=_damon.DamosAccessPattern(sz_region,
                     access_rate, _damon.unit_percent, age, _damon.unit_usec),
                 action=action, apply_interval_us=apply_interval, quotas=quotas,
-                watermarks=wmarks, filters=filters), None
+                watermarks=wmarks, target_nid=target_nid, filters=filters), None
     except Exception as e:
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
 
@@ -265,8 +265,21 @@ def damos_options_to_schemes(args):
             nr_schemes - len(args.damos_apply_interval))
     args.damos_quotas += [None] * (nr_schemes - len(args.damos_quotas))
     args.damos_wmarks += [None] * (nr_schemes - len(args.damos_wmarks))
+    target_nid = [None] * nr_schemes
     schemes = []
+
     for i in range(nr_schemes):
+        action = args.damos_action[i][0]
+        if _damon.is_damos_migrate_action(action):
+            try:
+                target_nid[i] = int(args.damos_action[i][1])
+                args.damos_action[i] = args.damos_action[i][0]
+            except:
+                return [], '"%s" action require a numeric target_nid argument.' \
+                            % args.damos_action[i][0]
+        else:
+            args.damos_action[i] = action
+
         qgoals = []
         if args.damos_quota_goal:
             goal_start_index = sum(args.damos_nr_quota_goals[:i])
@@ -281,7 +294,7 @@ def damos_options_to_schemes(args):
         scheme, err = damos_options_to_scheme(args.damos_sz_region[i],
                 args.damos_access_rate[i], args.damos_age[i],
                 args.damos_action[i], args.damos_apply_interval[i],
-                args.damos_quotas[i], qgoals, args.damos_wmarks[i], filters)
+                args.damos_quotas[i], qgoals, args.damos_wmarks[i], target_nid[i], filters)
         if err != None:
             return [], err
         schemes.append(scheme)
@@ -548,8 +561,8 @@ def set_monitoring_argparser(parser):
     set_monitoring_attrs_argparser(parser)
 
 def set_damos_argparser(parser):
-    parser.add_argument('--damos_action', metavar='<action>',
-            choices=_damon.damos_actions, action='append', default=[],
+    parser.add_argument('--damos_action', metavar='<action>', nargs='+',
+            action='append', default=[],
             help='damos action to apply to the target regions')
     parser.add_argument('--damos_sz_region', metavar=('<min>', '<max>'),
             nargs=2, default=[], action='append',
