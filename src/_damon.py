@@ -748,9 +748,10 @@ class Damos:
 
 
     # for monitoring only by default
-    def __init__(self, access_pattern=None, action=damos_action_stat,
-            apply_interval_us=None,
-            quotas=None, watermarks=None, target_nid=None, filters=None, stats=None,
+    def __init__(
+            self, access_pattern=None,
+            action=damos_action_stat, target_nid=None, apply_interval_us=None,
+            quotas=None, watermarks=None, filters=None, stats=None,
             tried_regions=None, tried_bytes=None):
         self.access_pattern = (access_pattern
                 if access_pattern != None else DamosAccessPattern())
@@ -834,12 +835,12 @@ class Damos:
         return Damos(DamosAccessPattern.from_kvpairs(kv['access_pattern'])
                     if 'access_pattern' in kv else DamosAccessPattern(),
                 kv['action'] if 'action' in kv else damos_action_stat,
+                kv['target_nid'] if 'target_nid' in kv else None,
                 kv['apply_interval_us'] if 'apply_interval_us' in kv else None,
                 DamosQuotas.from_kvpairs(kv['quotas'])
                     if 'quotas' in kv else DamosQuotas(),
                 DamosWatermarks.from_kvpairs(kv['watermarks'])
                     if 'watermarks' in kv else DamosWatermarks(),
-                kv['target_nid'] if 'target_nid' in kv else None,
                 filters,
                 None, None)
 

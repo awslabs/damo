@@ -36,7 +36,7 @@ class TestDamonDbgfs(unittest.TestCase):
                             [4096, 18446744073709551615],
                             [0.0, 0.0], _damon.unit_percent,
                             [1000000.0, 4294900000.0], _damon.unit_usec),
-                        action='stat',
+                        action='stat', target_nid=None,
                         apply_interval_us=None,
                         quotas=_damon.DamosQuotas(time_ms=0,
                             sz_bytes=584792941, reset_interval_ms=1000,

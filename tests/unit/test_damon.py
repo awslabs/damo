@@ -25,7 +25,7 @@ class TestDamon(unittest.TestCase):
         damos = _damon.Damos(
                 _damon.DamosAccessPattern([0, 10], [5, 8], _damon.unit_percent,
                     [54, 88], _damon.unit_usec),
-                'pageout',
+                'pageout', None,
                 None,
                 _damon.DamosQuotas(100, 1024, 1000, [80, 76, 24]),
                 _damon.DamosWatermarks('free_mem_rate', 5000000, 800, 500,
@@ -73,7 +73,7 @@ class TestDamon(unittest.TestCase):
                 access_pattern=_damon.DamosAccessPattern([4096,
                     18446744073709551615], [0.0, 0.0], _damon.unit_percent,
                     [1000000, 4294900000], _damon.unit_usec),
-                action='stat',
+                action='stat', target_nid=None,
                 apply_interval_us=None,
                 quotas=_damon.DamosQuotas(time_ms=0, sz_bytes=584792941,
                     reset_interval_ms=1000, weights=[0,0,0]),

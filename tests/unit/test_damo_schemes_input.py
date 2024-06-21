@@ -109,20 +109,19 @@ class TestDamoSchemesInput(unittest.TestCase):
                 _damon.DamosAccessPattern([0, 0],
                     [0, 0], _damon.unit_samples,
                     [0, 0], _damon.unit_aggr_intervals),
-                'stat',
+                'stat', None,
                 None,
                 _damon.DamosQuotas(0, 0, 0, [0, 0, 0]),
-                _damon.DamosWatermarks('none', 0, 0, 0, 0), None, [], None,
+                _damon.DamosWatermarks('none', 0, 0, 0, 0), [], None,
                 None)]
         expected_damos_w_filters = [_damon.Damos(
                 _damon.DamosAccessPattern([0, 0],
                     [0, 0], _damon.unit_samples,
                     [0, 0], _damon.unit_aggr_intervals),
-                'stat',
+                'stat', None,
                 None,
                 _damon.DamosQuotas(0, 0, 0, [0, 0, 0]),
                 _damon.DamosWatermarks('none', 0, 0, 0, 0),
-                None,   # target_nid
                 [_damon.DamosFilter('anon', True, ''),
                     _damon.DamosFilter('memcg', False,
                         '/all/latency-critical')], None, None)]

@@ -560,12 +560,12 @@ def files_content_to_scheme(files_content):
     return _damon.Damos(
             files_content_to_access_pattern(files_content['access_pattern']),
             files_content['action'].strip(),
+            files_content['target_nid'].strip()
+                if 'target_nid' in files_content else None,
             files_content['apply_interval_us'].strip()
                 if 'apply_interval_us' in files_content else None,
             files_content_to_quotas(files_content['quotas']),
             files_content_to_watermarks(files_content['watermarks']),
-            files_content['target_nid'].strip()
-                if 'target_nid' in files_content else None,
             files_content_to_damos_filters(files_content['filters'])
                 if 'filters' in files_content else [],
             files_content_to_damos_stats(files_content['stats']),
