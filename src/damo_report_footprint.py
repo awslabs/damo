@@ -50,7 +50,8 @@ def pr_dists(dists, percentiles, raw_number, nr_cols_bar, pr_all_footprints):
         print(line)
 
 def set_argparser(parser):
-    parser.add_argument('metric', choices=['vsz', 'rss', 'sys_used'],
+    parser.add_argument('metric', choices=['vsz', 'rss', 'sys_used', 'all'],
+                        default='all', nargs='?',
                         help='memory footprint metric to show')
     parser.add_argument('--input', '-i', type=str, metavar='<file>',
                         default='damon.data.mem_footprint',
@@ -74,6 +75,12 @@ def set_argparser(parser):
     parser.description = 'Show distribution of memory footprint'
 
 def main(args):
+    if args.metric == 'all':
+        for metric in ['vsz', 'rss', 'sys_used']:
+            args.metric = metric
+            print('# %s' % metric)
+            main(args)
+        return
     percentiles = range(args.range[0], args.range[1], args.range[2])
     sort_by_sz = True
     if args.sortby == 'time':
