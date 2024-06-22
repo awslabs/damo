@@ -720,6 +720,10 @@ def scheme_tried_regions_dir_of(kdamond_idx, context_idx, scheme_idx):
 def infer_damon_version():
     version = '<5.15'
     orig_kdamonds = current_kdamonds()
+
+    if os.path.isfile(os.path.join(scheme_dir_of(0, 0, 0), 'target_nid')):
+        return '>6.10'
+
     kdamonds = [
             _damon.Kdamond(
                 state=None, pid=None, contexts=[
