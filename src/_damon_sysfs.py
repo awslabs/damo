@@ -731,7 +731,7 @@ def infer_damon_version():
     err = stage_kdamonds(kdamonds)
     if err is None:
         err = stage_kdamonds(orig_kdamonds)
-        return '>6.9'
+        return '6.10'
 
     kdamonds[0].contexts[0].schemes[0].filters = []
     err = stage_kdamonds(kdamonds)
