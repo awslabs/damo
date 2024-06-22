@@ -1024,10 +1024,10 @@ features = ['record',       # was in DAMON patchset, but not merged in mainline
             'schemes_filters_target',   # merged in v6.6-rc1
             'schemes_apply_interval',   # merged in v6.7-rc1
             'schemes_quota_goals',      # merged in v6.8-rc1
-            'schemes_quota_effective_bytes',    # merged in mm
-            'schemes_quota_goal_metric',    # merged in mm
-            'schemes_quota_goal_some_psi',  # merged in mm
-            'schemes_filters_young',    # under developing
+            'schemes_quota_effective_bytes',    # merged in v6.9-rc1
+            'schemes_quota_goal_metric',    # merged in v6.9-rc1
+            'schemes_quota_goal_some_psi',  # merged in v6.9-rc1
+            'schemes_filters_young',    # merged in v6.10-rc1
             ]
 
 _damon_fs = None
