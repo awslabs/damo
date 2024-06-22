@@ -19,6 +19,7 @@
 - Let 'replay' further parse vmas and alloc/release memory
 - Implement yet another report type for holistic view
   - Show heatmap, footprint, wss, profile at glance
+  - For profile, curses-based TUI might needed
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type

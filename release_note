@@ -3,7 +3,9 @@ picked by human sense, so could be incomplete and missing many things.
 
 v2.4.0
 - Complete support of migrage_{hot,cold} DAMOS action
-  - target_nid support is added
+  - target_nid support and schemes_migrate feature check is added
+- Support 'all' metric for 'damo report footprints'
+
 
 v2.3.9
 - Support migrate_{hot,cold} DAMOS action
