@@ -75,9 +75,9 @@ def set_argparser(parser):
 
 def main(args):
     percentiles = range(args.range[0], args.range[1], args.range[2])
-    wss_sort = True
+    sort_by_sz = True
     if args.sortby == 'time':
-        wss_sort = False
+        sort_by_sz = False
     raw_number = args.raw_number
 
     footprint_snapshots = _damo_records.load_mem_footprint(args.input)
@@ -118,7 +118,7 @@ def main(args):
         tmp_file.flush()
         tmp_file.close()
         xlabel = 'runtime (percent)'
-        if wss_sort:
+        if sort_by_sz:
             xlabel = 'percentile'
         err = _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
                 'memory footprint (kilobytes)')
