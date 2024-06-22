@@ -20,6 +20,7 @@
 - Implement yet another report type for holistic view
   - Show heatmap, footprint, wss, profile at glance
   - For profile, curses-based TUI might needed
+- Unify wss and footprints report types
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type
