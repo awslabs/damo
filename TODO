@@ -21,6 +21,9 @@
   - Show heatmap, footprint, wss, profile at glance
   - For profile, curses-based TUI might needed
 - Unify wss and footprints report types
+- Fixup 'damo show' on schemes_tried_regions unsupported kernels
+  - Either make the warning clear, or support it using trace points
+  - (https://github.com/awslabs/damo/issues/101)
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type
