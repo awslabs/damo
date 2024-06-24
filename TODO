@@ -24,6 +24,8 @@
 - Fixup 'damo show' on schemes_tried_regions unsupported kernels
   - Either make the warning clear, or support it using trace points
   - (https://github.com/awslabs/damo/issues/101)
+- Merge adjacent regions on `damo fmt_json`
+  - https://github.com/awslabs/damo/issues/85
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type
