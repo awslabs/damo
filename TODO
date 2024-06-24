@@ -26,6 +26,8 @@
   - (https://github.com/awslabs/damo/issues/101)
 - Merge adjacent regions on `damo fmt_json`
   - https://github.com/awslabs/damo/issues/85
+- Document files organization
+  - https://github.com/awslabs/damo/issues/101#issuecomment-2186923020
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type
