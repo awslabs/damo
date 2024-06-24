@@ -5,7 +5,7 @@ v2.4.0
 - Complete support of migrage_{hot,cold} DAMOS action
   - target_nid support and schemes_migrate feature check is added
 - Support 'all' metric for 'damo report footprints'
-
+- Add unit test on pre-commit hooks
 
 v2.3.9
 - Support migrate_{hot,cold} DAMOS action
