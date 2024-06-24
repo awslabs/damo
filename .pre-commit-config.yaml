@@ -16,3 +16,11 @@ repos:
     hooks:
     -   id: codespell
         args: ['-I', '.codespell_ignore']
+-   repo: local
+    hooks:
+    -   id: unit-test-run
+        name: ./tests/unit/test.sh
+        entry: ./tests/unit/test.sh
+        language: system
+        files: \.py$
+        pass_filenames: false
