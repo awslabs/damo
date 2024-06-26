@@ -99,5 +99,11 @@ class TestDamonArgs(unittest.TestCase):
                 add_record_options=False)
         self.assertTrue(parser != None)
 
+    def test_merge_cont_ranges(self):
+        merged = _damon_args.merge_cont_ranges(
+                [[10, 20], [25, 40], [40, 90], [90, 120], [125, 135],
+                 [135, 150]])
+        self.assertEqual(merged, [[10, 20], [25, 120], [125, 150]])
+
 if __name__ == '__main__':
     unittest.main()
