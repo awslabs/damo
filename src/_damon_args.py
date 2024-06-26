@@ -22,6 +22,15 @@ import _damon
 
 # Kdamonds construction from command line arguments
 
+def merge_cont_ranges(ranges):
+    merged_ranges = []
+    for start, end in ranges:
+        if len(merged_ranges) > 0 and merged_ranges[-1][1] == start:
+            merged_ranges[-1][1] = end
+        else:
+            merged_ranges.append([start, end])
+    return merged_ranges
+
 def init_regions_for(args):
     init_regions = []
     if args.regions:
@@ -45,6 +54,7 @@ def init_regions_for(args):
                     args.numa_node)
             if err != None:
                 return None, err
+            init_regions = merge_cont_ranges(init_regions)
         else:
             init_regions = [_damo_paddr_layout.default_paddr_region()]
         try:
