@@ -41,3 +41,28 @@ you don't have specific task to do at the moment, you could consider finding
 one from the file.  The list is not well managed at the moment, and the items
 may not well explained.  Please feel free to reach out to the original author
 of the item for asking details.
+
+
+Source Files Organiazation
+==========================
+
+Source files of the repository is organized in directories as below.
+
+The root of this repository is a place for documents and the executable file,
+`damo`.  Users can use `damo` via the executable file.  It is just a symbolic
+link to real executable, `src/damon.py`.
+
+`src` directory is for real source files of `damo`.
+
+`tests` directory is for tests of `damo`.  As mentioned on `Testing First`
+section above, you can run the tests by running `tests/run.sh` file with `sudo`
+permission.  Some tests that not required to run DAMON doesn't really need
+`sudo` though.
+
+`packaging` directory contains files for easier PyPI
+(https://pypi.org/project/damo/) packaging.  It could contain files for other
+packaging systems in future.  If you package `damo` for other packaging systems
+and you have your own files for that out of `damo` tree, please feel free to
+send PR for maintaining that in the tree, if you prefer to.
+
+`images` directory is for image files that linked on documents.
