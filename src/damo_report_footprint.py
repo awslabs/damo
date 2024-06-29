@@ -19,7 +19,7 @@ def set_argparser(parser):
     parser.add_argument('--range', '-r', type=int, nargs=3,
                         metavar=('<start>', '<stop>', '<step>'),
                         default=[0,101,25],
-                        help='range of wss percentiles to print')
+                        help='range of percentiles to print')
     parser.add_argument('--sortby', '-s', choices=['time', 'size'],
                         default='size',
                         help='the metric to sort the footprints for')
