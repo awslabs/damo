@@ -22,21 +22,21 @@ def plot_dist(data_file, output_file, xlabel, ylabel):
     os.remove(data_file)
     return None
 
-def pr_dists(metric_name, dists, percentiles, pr_all, format_fn, raw_number,
+def fmt_dists(metric_name, dists, percentiles, pr_all, format_fn, raw_number,
              nr_cols_bar):
     '''
-    Print distributed metric values for given percentiles or all
+    Format a string for distributed metric values for given percentiles or all
     '''
-    print('# <percentile> <%s>' % metric_name)
+    lines = ['# <percentile> <%s>' % metric_name]
     if len(dists) == 0:
-        print('# no snapshot')
-        return
-    print('# avr:\t%s' % format_fn(sum(dists) / len(dists), raw_number))
+        lines.append('# no snapshot')
+        return '\n'.join(lines)
+    lines.append('# avr:\t%s' % format_fn(sum(dists) / len(dists), raw_number))
 
     if pr_all:
         for idx, val in enumerate(dists):
-            print('%s %s' % (idx, format_fn(val, raw_number)))
-        return
+            lines.append('%s %s' % (idx, format_fn(val, raw_number)))
+        return '\n'.join(lines)
 
     if nr_cols_bar > 0:
         max_val = 0
@@ -62,4 +62,11 @@ def pr_dists(metric_name, dists, percentiles, pr_all, format_fn, raw_number,
             cols = int(val / val_per_col)
             remaining_cols = nr_cols_bar - cols
             line += ' |%s%s|' % ('*' * cols, ' ' * remaining_cols)
-        print(line)
+        lines.append(line)
+
+    return '\n'.join(lines)
+
+def pr_dists(metric_name, dists, percentiles, pr_all, format_fn, raw_number,
+             nr_cols_bar):
+    print(fmt_dists(metric_name, dists, percentiles, pr_all, format_fn,
+                    raw_number, nr_cols_bar))
