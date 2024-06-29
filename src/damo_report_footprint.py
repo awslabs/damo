@@ -68,25 +68,22 @@ def main(args):
     if args.sortby == 'size':
         dists.sort()
 
-    if args.plot:
-        orig_stdout = sys.stdout
-        tmp_path = tempfile.mkstemp()[1]
-        tmp_file = open(tmp_path, 'w')
-        sys.stdout = tmp_file
-        raw_number = True
-        args.nr_cols_bar = 0
+    if not args.plot:
+        _damo_dist.pr_dists(
+                args.metric, dists, percentiles, args.all_footprint,
+                _damo_fmt_str.format_sz, raw_number, args.nr_cols_bar)
+        return
 
-    _damo_dist.pr_dists(args.metric, dists, percentiles, args.all_footprint,
-                        _damo_fmt_str.format_sz, raw_number, args.nr_cols_bar)
+    tmp_path = tempfile.mkstemp()[1]
+    with open(tmp_path, 'w') as f:
+        f.write(_damo_dist.fmt_dists(
+            args.metric, dists, percentiles, args.all_footprint,
+            _damo_fmt_str.format_sz, True, 0))
 
-    if args.plot:
-        sys.stdout = orig_stdout
-        tmp_file.flush()
-        tmp_file.close()
-        xlabel = 'runtime (percent)'
-        if sort_by_sz:
-            xlabel = 'percentile'
-        err = _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
-                'memory footprint (kilobytes)')
-        if err:
-            print('plot failed (%s)' % err)
+    xlabel = 'runtime (percent)'
+    if sort_by_sz:
+        xlabel = 'percentile'
+    err = _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
+            'memory footprint (kilobytes)')
+    if err:
+        print('plot failed (%s)' % err)
