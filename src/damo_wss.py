@@ -91,28 +91,26 @@ def main(args):
     wss_dists = get_wss_dists(records, args.acc_thres, args.sz_thres, wss_sort,
                               args.collapse_targets)
 
-    if args.plot:
-        orig_stdout = sys.stdout
-        tmp_path = tempfile.mkstemp()[1]
-        tmp_file = open(tmp_path, 'w')
-        sys.stdout = tmp_file
-        raw_number = True
-        args.nr_cols_bar = 0
+    if not args.plot:
+        for tid, dists in wss_dists.items():
+            print('# target_id\t%s' % tid)
+            _damo_dist.pr_dists(
+                    'wss', dists, percentiles, args.all_wss,
+                    _damo_fmt_str.format_sz, raw_number, args.nr_cols_bar)
+        return
 
-    for tid, dists in wss_dists.items():
-        print('# target_id\t%s' % tid)
-        _damo_dist.pr_dists(
+    tmp_path = tempfile.mkstemp()[1]
+    with open(tmp_path, 'w') as f:
+        for tid, dists in wss_dists.items():
+            f.write('# target_id\t%s\n' % tid)
+            f.write( _damo_dist.fmt_dists(
                 'wss', dists, percentiles, args.all_wss,
-                _damo_fmt_str.format_sz, raw_number, args.nr_cols_bar)
+                _damo_fmt_str.format_sz, True, 0))
 
-    if args.plot:
-        sys.stdout = orig_stdout
-        tmp_file.flush()
-        tmp_file.close()
-        xlabel = 'runtime (percent)'
-        if wss_sort:
-            xlabel = 'percentile'
-        err = _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
-                'working set size (bytes)')
-        if err:
-            print('plot failed (%s)' % err)
+    xlabel = 'runtime (percent)'
+    if wss_sort:
+        xlabel = 'percentile'
+    err = _damo_dist.plot_dist(tmp_path, args.plot, xlabel,
+            'working set size (bytes)')
+    if err:
+        print('plot failed (%s)' % err)
