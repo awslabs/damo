@@ -78,7 +78,6 @@ def main(args):
     if args.metric == 'all':
         for metric in ['vsz', 'rss', 'sys_used']:
             args.metric = metric
-            print('# %s' % metric)
             main(args)
         return
     percentiles = range(args.range[0], args.range[1], args.range[2])
@@ -117,8 +116,8 @@ def main(args):
         raw_number = True
         args.nr_cols_bar = 0
 
-    pr_dists(dists, percentiles, raw_number, args.nr_cols_bar,
-            args.all_footprint)
+    _damo_dist.pr_dists(args.metric, dists, percentiles, args.all_footprint,
+                        _damo_fmt_str.format_sz, raw_number, args.nr_cols_bar)
 
     if args.plot:
         sys.stdout = orig_stdout
