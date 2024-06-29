@@ -141,8 +141,11 @@ def main(args):
         raw_number = True
         args.nr_cols_bar = 0
 
-    pr_wss_dists(wss_dists, percentiles, raw_number, args.nr_cols_bar,
-            args.all_wss)
+    for tid, dists in wss_dists.items():
+        print('# target_id\t%s' % tid)
+        _damo_dist.pr_dists(
+                'wss', dists, percentiles, args.all_wss,
+                _damo_fmt_str.format_sz, raw_number, args.nr_cols_bar)
 
     if args.plot:
         sys.stdout = orig_stdout
