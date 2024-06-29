@@ -9,46 +9,6 @@ import _damo_dist
 import _damo_fmt_str
 import _damo_records
 
-def pr_dists(dists, percentiles, raw_number, nr_cols_bar, pr_all_footprints):
-    print('# <percentile> <footprint>')
-    if len(dists) == 0:
-        print('# no snapshot')
-        return
-    print('# avr:\t%s' % _damo_fmt_str.format_sz(
-        sum(dists) / len(dists), raw_number))
-
-    if pr_all_footprints:
-        for idx, fp in enumerate(dists):
-            print('%s %s' % (idx, _damo_fmt_str.format_sz(fp, raw_number)))
-        return
-
-    if nr_cols_bar > 0:
-        max_sz = 0
-        for percentile in percentiles:
-            fp_idx = int(percentile / 100.0 * len(dists))
-            if fp_idx == len(dists):
-                fp_idx -= 1
-            fp = dists[fp_idx]
-            if max_sz <= fp:
-                max_sz = fp
-        if max_sz > 0:
-            sz_per_col = max_sz / nr_cols_bar
-        else:
-            sz_per_col = 1
-
-    for percentile in percentiles:
-        idx = int(percentile / 100.0 * len(dists))
-        if idx == len(dists):
-            idx -= 1
-        fp = dists[idx]
-        line = '%3d %15s' % (percentile,
-            _damo_fmt_str.format_sz(fp, raw_number))
-        if nr_cols_bar > 0:
-            cols = int(fp / sz_per_col)
-            remaining_cols = nr_cols_bar - cols
-            line += ' |%s%s|' % ('*' * cols, ' ' * remaining_cols)
-        print(line)
-
 def set_argparser(parser):
     parser.add_argument('metric', choices=['vsz', 'rss', 'sys_used', 'all'],
                         default='all', nargs='?',
