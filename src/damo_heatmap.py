@@ -187,9 +187,9 @@ def pr_heats(args, __records):
                 [tmin, tmax], [amin, amax], [tres, ares])
 
         if args.output == 'stdout':
-            heatmap_plot_ascii(pixels, [tmin, tmax], [amin, amax],
+            print(fmt_ascii_heatmap(pixels, [tmin, tmax], [amin, amax],
                     [tres, ares], args.stdout_colorset, not
-                    args.stdout_skip_colorset_example)
+                    args.stdout_skip_colorset_example))
             return
 
         for row in pixels:
