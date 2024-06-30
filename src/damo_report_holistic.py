@@ -46,6 +46,7 @@ def main(args):
                         stdout_skip_colorset_example=False,
                         ),
                     records)
+    print('# you can get above via \'damo report heatmap\'')
 
     print()
     print('Working Set Size Distribution')
@@ -67,6 +68,7 @@ def main(args):
                     format_fn=_damo_fmt_str.format_sz, raw_number=False,
                     nr_cols_bar=59)
         print()
+    print('# you can get above via \'damo report wss\'')
 
     print()
     print('Memory Footprints Distribution')
@@ -86,6 +88,7 @@ def main(args):
                     sortby=sort_key, plot=None, nr_cols_bar=59, raw_number=False,
                     all_footprint=False))
         print()
+    print('# you can get above via \'damo report footprints\'')
 
 def set_argparser(parser):
     parser.add_argument(
