@@ -24,6 +24,10 @@
 - Fixup 'damo show' on schemes_tried_regions unsupported kernels
   - Either make the warning clear, or support it using trace points
   - (https://github.com/awslabs/damo/issues/101)
+- Implement 'diagnose' command
+  - Check if anything suspicious, including
+    - nr_regions out of {min,max}_nr_regions
+    - DAMOS out of access_pattern/quota/watermarks control
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type
