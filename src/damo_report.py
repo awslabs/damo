@@ -5,6 +5,7 @@ import damo_heatmap
 import damo_heats
 import damo_nr_regions
 import damo_report_footprint
+import damo_report_holistic
 import damo_report_profile
 import damo_report_raw
 import damo_report_times
@@ -28,6 +29,9 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(
             name='footprints', module=damo_report_footprint,
             msg='memory footprints'),
+        _damo_subcmds.DamoSubCmd(
+            name='holistic', module=damo_report_holistic,
+            msg='holistic report'),
         ]
 
 def main(args):
