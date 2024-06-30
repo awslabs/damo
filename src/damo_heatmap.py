@@ -311,14 +311,7 @@ def main(args=None):
         return
 
     # use gnuplot-based image plot
-    orig_stdout = sys.stdout
     tmp_path = tempfile.mkstemp()[1]
-    tmp_file = open(tmp_path, 'w')
-    sys.stdout = tmp_file
-
-    pr_heats(args, records)
-
-    sys.stdout = orig_stdout
-    tmp_file.flush()
-    tmp_file.close()
+    with open(tmp_path, 'w') as f:
+        f.write(fmt_heats(args, records))
     plot_heatmap(tmp_path, args.output, args)
