@@ -7,11 +7,10 @@ import _damo_fmt_str
 import _damo_records
 import damo_heatmap
 import damo_record_info
+import damo_report_footprint
 import damo_wss
 
 def main(args):
-    if args.footprints is None:
-        args.footprints = args.access_pattern + '.mem_footprint'
     records, err = _damo_records.get_records(record_file=args.access_pattern)
     if err is not None:
         print('access pattern record file (%s) parsing failed (%s)' %
@@ -67,6 +66,25 @@ def main(args):
                     'wss', dists, range(0, 101, 25), pr_all=False,
                     format_fn=_damo_fmt_str.format_sz, raw_number=False,
                     nr_cols_bar=59)
+        print()
+
+    print()
+    print('Memory Footprints Distribution')
+    print('==============================')
+    print()
+
+    if args.footprints is None:
+        args.footprints = args.access_pattern + '.mem_footprint'
+
+    for sort_key in ['size', 'time']:
+        print('Sorted by %s' % sort_key)
+        print('--------------')
+        print()
+        damo_report_footprint.main(
+                argparse.Namespace(
+                    metric='all', input=args.footprints, range=[0, 101, 25],
+                    sortby=sort_key, plot=None, nr_cols_bar=59, raw_number=False,
+                    all_footprint=False))
         print()
 
 def set_argparser(parser):
