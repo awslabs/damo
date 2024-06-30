@@ -115,8 +115,9 @@ def heat_pixels_from_snapshots(snapshots, time_range, addr_range, resols):
             time_idx += 1
     return pixels
 
-def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset,
+def fmt_ascii_heatmap(pixels, time_range, addr_range, resols, colorset,
         print_colorset):
+    lines = []
     highest_heat = None
     lowest_heat = None
     for snapshot in pixels:
@@ -137,20 +138,26 @@ def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset,
             chars.append('%s%d' %
                     (_damo_ascii_color.color_mode_start_txt(colorset, heat),
                         heat))
-        print(''.join(chars) + _damo_ascii_color.color_mode_end_txt())
+        lines.append(''.join(chars) + _damo_ascii_color.color_mode_end_txt())
     if print_colorset:
-        print('# access_frequency: %s' %
+        lines.append('# access_frequency: %s' %
                 _damo_ascii_color.color_samples(colorset))
-    print('# x-axis: space (%d-%d: %s)' % (addr_range[0], addr_range[1],
+    lines.append('# x-axis: space (%d-%d: %s)' % (addr_range[0], addr_range[1],
         _damo_fmt_str.format_sz(addr_range[1] - addr_range[0], False)))
-    print('# y-axis: time (%d-%d: %s)' % (time_range[0], time_range[1],
+    lines.append('# y-axis: time (%d-%d: %s)' % (time_range[0], time_range[1],
         _damo_fmt_str.format_time_ns(time_range[1] - time_range[0], False)))
-    print('# resolution: %dx%d (%s and %s for each character)' % (
+    lines.append('# resolution: %dx%d (%s and %s for each character)' % (
         len(pixels[1]), len(pixels),
         _damo_fmt_str.format_sz(
             float(addr_range[1] - addr_range[0]) / len(pixels[1]), False),
         _damo_fmt_str.format_time_ns(
             float(time_range[1] - time_range[0]) / len(pixels), False)))
+    return '\n'.join(lines)
+
+def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset,
+        print_colorset):
+    print(fmt_ascii_heatmap(
+        pixels, time_range, addr_range, resols, colorset, print_colorset))
 
 def pr_heats(args, __records):
     tid = args.tid
