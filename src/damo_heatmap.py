@@ -154,7 +154,7 @@ def fmt_ascii_heatmap(pixels, time_range, addr_range, resols, colorset,
             float(time_range[1] - time_range[0]) / len(pixels), False)))
     return '\n'.join(lines)
 
-def pr_heats(args, __records):
+def fmt_heats(args, __records):
     tid = args.tid
     tres = args.resol[0]
     tmin = args.time_range[0]
@@ -177,12 +177,13 @@ def pr_heats(args, __records):
         if record.target_id == tid:
             records.append(record)
 
+    lines = []
     for record in records:
         pixels = heat_pixels_from_snapshots(record.snapshots,
                 [tmin, tmax], [amin, amax], [tres, ares])
 
         if args.output == 'stdout':
-            print(fmt_ascii_heatmap(pixels, [tmin, tmax], [amin, amax],
+            lines.append(fmt_ascii_heatmap(pixels, [tmin, tmax], [amin, amax],
                     [tres, ares], args.stdout_colorset, not
                     args.stdout_skip_colorset_example))
             continue
@@ -196,7 +197,11 @@ def pr_heats(args, __records):
                 if not args.abs_addr:
                     addr -= amin
 
-                print('%s\t%s\t%s' % (time, addr, pixel.heat))
+                lines.append('%s\t%s\t%s' % (time, addr, pixel.heat))
+    return '\n'.join(lines)
+
+def pr_heats(args, __records):
+    print(fmt_heats(args, __records))
 
 def set_missed_args(args, records):
     if args.tid and args.time_range and args.address_range:
