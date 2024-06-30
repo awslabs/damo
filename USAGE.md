@@ -742,6 +742,17 @@ starting from `139,798,348,038,144`.
     93956.067597-93961.036500
     93966.101779-93966.910657
 
+### holistic
+
+Note: This is an experimental feature at the moment.  Many changes would be
+made, or the support can be dropped in future.
+
+The `holistic` type shows holistic view of the recorded access pattern, memory
+footprints, and CPU consuming functions.  As of v2.4.1, it shows access heatmap
+and distributions of working set size and memory footprints.  It will further
+updated to provide more detailed information in a concise manner, and add the
+hot functions information.
+
 `damo replay` (Replay Recorded Data Access Pattern)
 ---------------------------------------------------
 
