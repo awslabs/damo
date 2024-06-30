@@ -185,7 +185,7 @@ def pr_heats(args, __records):
             print(fmt_ascii_heatmap(pixels, [tmin, tmax], [amin, amax],
                     [tres, ares], args.stdout_colorset, not
                     args.stdout_skip_colorset_example))
-            return
+            continue
 
         for row in pixels:
             for pixel in row:
