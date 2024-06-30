@@ -154,11 +154,6 @@ def fmt_ascii_heatmap(pixels, time_range, addr_range, resols, colorset,
             float(time_range[1] - time_range[0]) / len(pixels), False)))
     return '\n'.join(lines)
 
-def heatmap_plot_ascii(pixels, time_range, addr_range, resols, colorset,
-        print_colorset):
-    print(fmt_ascii_heatmap(
-        pixels, time_range, addr_range, resols, colorset, print_colorset))
-
 def pr_heats(args, __records):
     tid = args.tid
     tres = args.resol[0]
