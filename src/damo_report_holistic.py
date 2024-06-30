@@ -2,9 +2,12 @@
 
 import argparse
 
+import _damo_dist
+import _damo_fmt_str
 import _damo_records
 import damo_heatmap
 import damo_record_info
+import damo_wss
 
 def main(args):
     if args.footprints is None:
@@ -44,6 +47,27 @@ def main(args):
                         stdout_skip_colorset_example=False,
                         ),
                     records)
+
+    print()
+    print('Working Set Size Distribution')
+    print('=============================')
+    print()
+    _damo_records.adjust_records(
+            records, aggregate_interval=1, nr_snapshots_to_skip=20)
+    for sort_key in ['size', 'time']:
+        print('Sorted by %s' % sort_key)
+        print('--------------')
+        print()
+        wss_dists = damo_wss.get_wss_dists(
+                records, acc_thres=1, sz_thres=1, do_sort=sort_key,
+                collapse_targets=True)
+        for tid, dists in wss_dists.items():
+            # because collapsed targets, only one iteration will be executed here
+            _damo_dist.pr_dists(
+                    'wss', dists, range(0, 101, 25), pr_all=False,
+                    format_fn=_damo_fmt_str.format_sz, raw_number=False,
+                    nr_cols_bar=59)
+        print()
 
 def set_argparser(parser):
     parser.add_argument(
