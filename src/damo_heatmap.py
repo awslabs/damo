@@ -306,16 +306,19 @@ def main(args=None):
         return
 
     set_missed_args(args, records)
+    if args.output in ['stdout', 'raw']:
+        pr_heats(args, records)
+        return
+
+    # use gnuplot-based image plot
     orig_stdout = sys.stdout
-    if args.output and not args.output in ['stdout', 'raw']:
-        tmp_path = tempfile.mkstemp()[1]
-        tmp_file = open(tmp_path, 'w')
-        sys.stdout = tmp_file
+    tmp_path = tempfile.mkstemp()[1]
+    tmp_file = open(tmp_path, 'w')
+    sys.stdout = tmp_file
 
     pr_heats(args, records)
 
-    if args.output and not args.output in ['stdout', 'raw']:
-        sys.stdout = orig_stdout
-        tmp_file.flush()
-        tmp_file.close()
-        plot_heatmap(tmp_path, args.output, args)
+    sys.stdout = orig_stdout
+    tmp_file.flush()
+    tmp_file.close()
+    plot_heatmap(tmp_path, args.output, args)
