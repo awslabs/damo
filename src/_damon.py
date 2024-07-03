@@ -1052,6 +1052,11 @@ def read_feature_supports_file():
             feature_supports = json.load(f)
     except Exception as e:
         return 'reading feature supports failed (%s)' % e
+    if sorted(features) != sorted(feature_supports.keys()):
+        # The feature_supports_file is old.  E.g., The file has written by old
+        # version of damo, and then being read by new version.
+        # e.g., https://github.com/awslabs/damo/issues/103
+        return 'feature supports file is not updated'
     if not 'file_format_ver' in feature_supports:
         # The initial format
         set_feature_supports(feature_supports)
