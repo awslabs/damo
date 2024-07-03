@@ -1052,22 +1052,16 @@ def read_feature_supports_file():
             feature_supports = json.load(f)
     except Exception as e:
         return 'reading feature supports failed (%s)' % e
-    if sorted(features) != sorted(feature_supports.keys()):
-        # The feature_supports_file is old.  E.g., The file has written by old
-        # version of damo, and then being read by new version.
-        # e.g., https://github.com/awslabs/damo/issues/103
-        return 'feature supports file is not updated'
     if not 'file_format_ver' in feature_supports:
         # The initial format
-        set_feature_supports(feature_supports)
-        return None
+        return set_feature_supports(feature_supports)
     file_format_ver = feature_supports['file_format_ver']
     # support only the init version and current version for now.
     if file_format_ver != feature_support_file_format_ver:
         return 'unsupported format version %s' % file_format_ver
     if not damon_interface() in feature_supports:
         return 'no feature_supports for %s interface saved' % damon_interface()
-    set_feature_supports(feature_supports[damon_interface()])
+    return set_feature_supports(feature_supports[damon_interface()])
 
 def write_feature_supports_file():
     '''Return error string'''
@@ -1105,7 +1099,14 @@ def get_feature_supports():
     return _damon_fs.feature_supports, None
 
 def set_feature_supports(feature_supports):
+    if sorted(features) != sorted(feature_supports.keys()):
+        # The feature_supports_file is old.  E.g., The file has written by old
+        # version of damo, and then being read by new version.
+        # e.g., https://github.com/awslabs/damo/issues/103
+        return 'feature supports file is not updated'
+
     _damon_fs.feature_supports = feature_supports
+    return None
 
 def initialize(damon_interface, debug_damon,
         save_feature_supports, load_feature_supports):
