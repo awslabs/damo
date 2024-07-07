@@ -4,6 +4,7 @@ picked by human sense, so could be incomplete and missing many things.
 v2.4.2
 - Support 'diagnose' subcommand
 - Add hotspot functions on 'damo report holistic' output
+- 'damo reclaim': Support online and auto tuning
 
 v2.4.1
 - Implement the first version of 'holistic' report type
