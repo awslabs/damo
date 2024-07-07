@@ -90,14 +90,18 @@ def darc_commit():
     while read_param('commit_inputs') == 'Y':
         time.sleep(0.1)
 
-def darc_read_status():
+def darc_status():
+    status = {}
     for param in darc_essential_params + darc_optional_params:
-        param_file = os.path.join(darc_params_dir, param)
-        if not os.path.isfile(param_file):
+        val = read_param(param)
+        if val is None:
             continue
+        status[param] = val
+    return status
 
-        with open(param_file, 'r') as f:
-            print('%s: %s' % (param, f.read().strip()))
+def darc_read_status():
+    for param, val in darc_status().items():
+        print('%s: %s' % (param, val))
 
 def main(args):
     _damon.ensure_root_permission()
