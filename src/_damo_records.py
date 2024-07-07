@@ -1254,7 +1254,7 @@ def get_records(tried_regions_of=None, record_file=None, record_filter=None,
             return records, None
     else:
         if not os.path.isfile(request.record_file):
-            return None, '%s not found' % input_file
+            return None, '%s not found' % request.record_file
 
         records, err = parse_records_file(request.record_file)
         if err:
