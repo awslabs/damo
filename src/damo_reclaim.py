@@ -38,6 +38,9 @@ def set_param(param, val):
     if val == None:
         return
     path = os.path.join(darc_params_dir, param)
+    if not os.path.isfile(path):
+        print('warn: %s not exist; setup of it is skipped' % path)
+        return
     with open(path, 'w') as f:
         f.write('%s' % val)
 
