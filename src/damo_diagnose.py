@@ -33,7 +33,9 @@ def main(args):
 
     report['damon_lru_sort_status'] = damo_lru_sort.plrus_status()
 
-    print(json.dumps(report, indent=4))
+    if args.verbose is True:
+        print(json.dumps(report, indent=4))
 
 def set_argparser(parser):
-    return
+    parser.add_argument('--verbose', action='store_true',
+                        help='make the output verbose')
