@@ -3,6 +3,7 @@
 import json
 
 import _damon
+import damo_reclaim
 
 def main(args):
     _damon.ensure_root_permission()
@@ -26,6 +27,8 @@ def main(args):
 
         report[damon_interface]['kdamonds'] = [
                 k.to_kvpairs() for k in _damon.current_kdamonds()]
+
+    report['damon_reclaim_status'] = damo_reclaim.darc_status()
 
     print(json.dumps(report, indent=4))
 
