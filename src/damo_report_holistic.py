@@ -103,6 +103,8 @@ def main(args):
     output = subprocess.check_output(cmd).decode()
     print('\n'.join(output.split('\n')[:30]))
 
+    print('# you can get above via \'damo report profile\'')
+
 def set_argparser(parser):
     parser.add_argument(
             '--access_pattern', metavar='<file>', default='damon.data',
