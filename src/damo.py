@@ -11,6 +11,7 @@ import sys
 import _damo_subcmds
 import damo_adjust
 import damo_convert_record_format
+import damo_diagnose
 import damo_features
 import damo_fmt_json
 import damo_lru_sort
@@ -84,6 +85,9 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='record_info',
             module=damo_record_info,
             msg='print basic information of a data accesses record file'),
+        _damo_subcmds.DamoSubCmd(name='diagnose',
+            module=damo_diagnose,
+            msg='generate a report on if DAMON is malfunctioning'),
         ]
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
