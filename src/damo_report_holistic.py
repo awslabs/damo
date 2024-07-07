@@ -82,7 +82,7 @@ def fmt_report(args):
                     records=args.footprints, metric=metric,
                     do_sort=sort_key == 'size')
             output = _damo_dist.fmt_dists(
-                    metric, dists, range(0, 101, 25), pr_all=False,
+                    metric, fp_dists, range(0, 101, 25), pr_all=False,
                     format_fn=_damo_fmt_str.format_sz, raw_number=False,
                     nr_cols_bar=59)
             lines.append(output)
