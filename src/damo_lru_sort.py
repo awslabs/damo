@@ -53,14 +53,25 @@ def plrus_enable(on):
         time.sleep(1)
     return
 
-def plrus_read_status():
-    for param in plrus_params:
-        param_file = os.path.join(plrus_params_dir, param)
-        if not os.path.isfile(param_file):
-            continue
+def read_param(param):
+    path = os.path.join(plrus_params_dir, param)
+    if not os.path.isfile(path):
+        return None
+    with open(path, 'r') as f:
+        return f.read().strip()
 
-        with open(param_file, 'r') as f:
-            print('%s: %s' % (param, f.read().strip()))
+def plrus_status():
+    status = {}
+    for param in plrus_params:
+        val = read_param(param)
+        if val is None:
+            continue
+        status[param] = val
+    return status
+
+def plrus_read_status():
+    for param, val in plrus_status().items():
+        print('%s: %s' % (param, val))
 
 def main(args):
     _damon.ensure_root_permission()
