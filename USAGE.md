@@ -781,6 +781,18 @@ convenient use of `damo` and debugging of DAMON or `damo` itself, `damo`
 supports more commands.  This section explains some of those that could be
 useful for some cases.
 
+`damo dianose`
+--------------
+
+Note: This is an experimental feature at the moment.  Some changes could be
+made, or the support can be dropped in future.
+
+`damo diagnose` prints the status of DAMON and any behaviors that suspicious to
+be bugs of DAMON.  Hence, the command can be useful for investigation of DAMON
+bugs.  When you report any issue for DAMON that not easy to be reproduced,
+providing the 'damo diagnose' output together with the issue report can be
+helpful.
+
 `damo version`
 --------------
 
