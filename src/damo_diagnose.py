@@ -24,6 +24,9 @@ def main(args):
             exit(1)
         report[damon_interface]['feature_supports'] = feature_supports
 
+        report[damon_interface]['kdamonds'] = [
+                k.to_kvpairs() for k in _damon.current_kdamonds()]
+
     print(json.dumps(report, indent=4))
 
 def set_argparser(parser):
