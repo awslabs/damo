@@ -1108,8 +1108,7 @@ def set_feature_supports(feature_supports):
     _damon_fs.feature_supports = feature_supports
     return None
 
-def initialize(damon_interface, debug_damon,
-        save_feature_supports, load_feature_supports):
+def set_damon_interface(damon_interface):
     global _damon_fs
     if damon_interface == 'sysfs':
         _damon_fs = _damon_sysfs
@@ -1122,6 +1121,13 @@ def initialize(damon_interface, debug_damon,
             _damon_fs = _damon_dbgfs
     if not _damon_fs.supported():
         return 'DAMON interface (%s) not supported' % damon_interface
+    return None
+
+def initialize(damon_interface, debug_damon,
+        save_feature_supports, load_feature_supports):
+    err = set_damon_interface(damon_interface)
+    if err is not None:
+        return err
 
     if debug_damon:
         _damo_fs.debug_print_ops(True)
