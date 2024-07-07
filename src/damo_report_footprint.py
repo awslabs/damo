@@ -34,19 +34,13 @@ def set_argparser(parser):
                         help='print not percentiles but all footprint values')
     parser.description = 'Show distribution of memory footprint'
 
-def main(args):
-    if args.metric == 'all':
-        for metric in ['vsz', 'rss', 'sys_used']:
-            args.metric = metric
-            main(args)
-        return
-
-    footprint_snapshots = _damo_records.load_mem_footprint(args.input)
+def get_dists(records, metric, do_sort):
     dists = []
+    footprint_snapshots = _damo_records.load_mem_footprint(records)
     for snapshot in footprint_snapshots:
         footprint_bytes = 0
         for pid, fp in snapshot.footprints.items():
-            if args.metric == 'sys_used':
+            if metric == 'sys_used':
                 if pid is not None:
                     continue
                 footprint_bytes = (fp.total - fp.free) * 1024
@@ -54,14 +48,23 @@ def main(args):
             if pid is None:
                 continue
             # todo: get real page size of the system
-            if args.metric == 'vsz':
+            if metric == 'vsz':
                 footprint_bytes += fp.size * 4096
-            elif args.metric == 'rss':
+            elif metric == 'rss':
                 footprint_bytes += fp.resident * 4096
         dists.append(footprint_bytes)
-
-    if args.sortby == 'size':
+    if do_sort:
         dists.sort()
+    return dists
+
+def main(args):
+    if args.metric == 'all':
+        for metric in ['vsz', 'rss', 'sys_used']:
+            args.metric = metric
+            main(args)
+        return
+
+    dists = get_dists(args.input, args.metric, args.sortby == 'size')
 
     percentiles = range(args.range[0], args.range[1], args.range[2])
     raw_number = args.raw_number
