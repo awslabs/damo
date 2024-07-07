@@ -40,11 +40,6 @@ def main(args):
             args.metric = metric
             main(args)
         return
-    percentiles = range(args.range[0], args.range[1], args.range[2])
-    sort_by_sz = True
-    if args.sortby == 'time':
-        sort_by_sz = False
-    raw_number = args.raw_number
 
     footprint_snapshots = _damo_records.load_mem_footprint(args.input)
     dists = []
@@ -68,6 +63,8 @@ def main(args):
     if args.sortby == 'size':
         dists.sort()
 
+    percentiles = range(args.range[0], args.range[1], args.range[2])
+    raw_number = args.raw_number
     if not args.plot:
         _damo_dist.pr_dists(
                 args.metric, dists, percentiles, args.all_footprint,
@@ -79,6 +76,10 @@ def main(args):
         f.write(_damo_dist.fmt_dists(
             args.metric, dists, percentiles, args.all_footprint,
             _damo_fmt_str.format_sz, True, 0))
+
+    sort_by_sz = True
+    if args.sortby == 'time':
+        sort_by_sz = False
 
     xlabel = 'runtime (percent)'
     if sort_by_sz:
