@@ -46,7 +46,7 @@ def fmt_report(args):
                         address_range=region,
                         output='stdout',
                         stdout_colorset='gray',
-                        stdout_skip_colorset_example=False,
+                        stdout_skip_colorset_example=True,
                         ),
                     records)
             lines.append(heatmap)
