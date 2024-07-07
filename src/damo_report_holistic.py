@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import argparse
+import subprocess
 
 import _damo_dist
 import _damo_fmt_str
@@ -90,6 +91,18 @@ def main(args):
         print()
     print('# you can get above via \'damo report footprints\'')
 
+    print()
+    print('Hotspot functions')
+    print('=================')
+    print()
+
+    if args.profile is None:
+        args.profile = args.access_pattern + '.profile'
+
+    cmd = ['perf', 'report', '-i', args.profile, '--stdio']
+    output = subprocess.check_output(cmd).decode()
+    print('\n'.join(output.split('\n')[:30]))
+
 def set_argparser(parser):
     parser.add_argument(
             '--access_pattern', metavar='<file>', default='damon.data',
@@ -97,4 +110,6 @@ def set_argparser(parser):
     parser.add_argument(
             '--footprints', metavar='<file>',
             help='memory footprints record file')
+    parser.add_argument(
+        '--profile', metavar='<file>', help='profile record file')
     parser.description = 'Show a holistic access pattern report'
