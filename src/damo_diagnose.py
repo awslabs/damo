@@ -4,6 +4,7 @@ import json
 
 import _damon
 import damo_reclaim
+import damo_lru_sort
 
 def main(args):
     _damon.ensure_root_permission()
@@ -29,6 +30,8 @@ def main(args):
                 k.to_kvpairs() for k in _damon.current_kdamonds()]
 
     report['damon_reclaim_status'] = damo_reclaim.darc_status()
+
+    report['damon_lru_sort_status'] = damo_lru_sort.plrus_status()
 
     print(json.dumps(report, indent=4))
 
