@@ -1,6 +1,10 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v2.4.2
+- Support 'diagnose' subcommand
+- Add hotspot functions on 'damo report holistic' output
+
 v2.4.1
 - Implement the first version of 'holistic' report type
 - Document source files hierarchy on CONTRIBUTING file
