@@ -39,6 +39,9 @@ def set_param(param, val):
         return
     path = os.path.join(darc_params_dir, param)
     if not os.path.isfile(path):
+        if not param in darc_optional_params:
+            print('%s not found' % path)
+            exit(1)
         print('warn: %s not exist; setup of it is skipped' % path)
         return
     with open(path, 'w') as f:
