@@ -68,6 +68,28 @@ def darc_enable(on):
         time.sleep(1)
     return
 
+def param_exists(param):
+    path = os.path.join(darc_params_dir, param)
+    if not os.path.isfile(path):
+        return False
+    return True
+
+def read_param(param):
+    path = os.path.join(darc_params_dir, param)
+    if not os.path.isfile(path):
+        return None
+    with open(path, 'r') as f:
+        return f.read().strip()
+
+def darc_commit():
+    if not darc_running():
+        return 'darc is not running'
+    if not param_exists('commit_inputs'):
+        return 'commit_inputs param not exists'
+    set_param('commit_inputs', 'Y')
+    while read_param('commit_inputs') == 'Y':
+        time.sleep(0.1)
+
 def darc_read_status():
     for param in darc_essential_params + darc_optional_params:
         param_file = os.path.join(darc_params_dir, param)
@@ -101,11 +123,18 @@ def main(args):
     set_param('monitor_region_end', args.monitor_region[1])
     set_param('skip_anon', 'Y' if args.skip_anon else 'N')
 
+    if args.action == 'commit':
+        err = darc_commit()
+        if err is not None:
+            print(err)
+            exit(1)
+        return
+
     darc_enable(args.action == 'enable')
 
 def set_argparser(parser):
-    parser.add_argument('action', type=str, nargs='?',
-            choices=['status', 'enable', 'disable'], default='status',
+    parser.add_argument('action', type=str, nargs='?', default='status',
+            choices=['status', 'enable', 'disable', 'commit'],
             help='read status, enable, or disable DAMON_RECLAIM')
     parser.add_argument('--min_age', type=int, metavar='<microseconds>',
             help='time threshold for cold memory regions identification (us)')
