@@ -5,13 +5,15 @@ import subprocess
 
 import _damo_dist
 import _damo_fmt_str
+import _damo_print
 import _damo_records
 import damo_heatmap
 import damo_record_info
 import damo_report_footprint
 import damo_wss
 
-def main(args):
+def fmt_report(args):
+    lines = []
     records, err = _damo_records.get_records(record_file=args.access_pattern)
     if err is not None:
         print('access pattern record file (%s) parsing failed (%s)' %
@@ -20,26 +22,26 @@ def main(args):
 
     guides = damo_record_info.get_guide_info(records)
 
-    print('Overall recorded access pattern')
-    print('===============================')
-    print()
+    lines.append('Overall recorded access pattern')
+    lines.append('===============================')
+    lines.append('')
     for guide in guides:
-        print(guide)
-    print()
-    print('# regions above are regions that access pattern recorded')
-    print('# you can get this via \'damo record_info\', too')
+        lines.append('%s' % guide)
+    lines.append('')
+    lines.append('# regions above are regions that access pattern recorded')
+    lines.append('# you can get this via \'damo record_info\', too')
 
-    print()
-    print('Heatmap')
-    print('=======')
-    print()
+    lines.append('')
+    lines.append('Heatmap')
+    lines.append('=======')
+    lines.append('')
     for guide in guides:
-        print('# target %d' % guide.tid)
+        lines.append('# target %d' % guide.tid)
         for region in guide.regions():
-            print('# address range %d-%d' % (region[0], region[1]))
-            damo_heatmap.pr_heats(
+            lines.append('# address range %d-%d' % (region[0], region[1]))
+            heatmap = damo_heatmap.fmt_heats(
                     argparse.Namespace(
-                        tid=guide.tid, resol=[20, 80],
+                        tid=guide.tid, resol=[10, 80],
                         time_range=[guide.start_time, guide.end_time],
                         address_range=region,
                         output='stdout',
@@ -47,63 +49,74 @@ def main(args):
                         stdout_skip_colorset_example=False,
                         ),
                     records)
-    print('# you can get above via \'damo report heatmap\'')
+            lines.append(heatmap)
+    lines.append('# you can get above via \'damo report heatmap\'')
 
-    print()
-    print('Working Set Size Distribution')
-    print('=============================')
-    print()
+    lines.append('')
+    lines.append('Working Set Size Distribution')
+    lines.append('=============================')
+    lines.append('')
     _damo_records.adjust_records(
             records, aggregate_interval=1, nr_snapshots_to_skip=20)
     for sort_key in ['size', 'time']:
-        print('Sorted by %s' % sort_key)
-        print('--------------')
-        print()
+        lines.append('Sorted by %s' % sort_key)
+        lines.append('--------------')
+        lines.append('')
         wss_dists = damo_wss.get_wss_dists(
                 records, acc_thres=1, sz_thres=1, do_sort=sort_key == 'size',
                 collapse_targets=True)
         for tid, dists in wss_dists.items():
             # because collapsed targets, only one iteration will be executed here
-            _damo_dist.pr_dists(
+            output = _damo_dist.fmt_dists(
                     'wss', dists, range(0, 101, 25), pr_all=False,
                     format_fn=_damo_fmt_str.format_sz, raw_number=False,
                     nr_cols_bar=59)
-        print()
-    print('# you can get above via \'damo report wss\'')
+            lines.append(output)
+        lines.append('')
+    lines.append('# you can get above via \'damo report wss\'')
 
-    print()
-    print('Memory Footprints Distribution')
-    print('==============================')
-    print()
+    lines.append('')
+    lines.append('Memory Footprints Distribution')
+    lines.append('==============================')
+    lines.append('')
 
     if args.footprints is None:
         args.footprints = args.access_pattern + '.mem_footprint'
 
     for sort_key in ['size', 'time']:
-        print('Sorted by %s' % sort_key)
-        print('--------------')
-        print()
-        damo_report_footprint.main(
-                argparse.Namespace(
-                    metric='all', input=args.footprints, range=[0, 101, 25],
-                    sortby=sort_key, plot=None, nr_cols_bar=59, raw_number=False,
-                    all_footprint=False))
-        print()
-    print('# you can get above via \'damo report footprints\'')
+        lines.append('Sorted by %s' % sort_key)
+        lines.append('--------------')
+        lines.append('')
+        for metric in ['vsz', 'rss', 'sys_used']:
+            fp_dists = damo_report_footprint.get_dists(
+                    records=args.footprints, metric=metric,
+                    do_sort=sort_key == 'size')
+            output = _damo_dist.fmt_dists(
+                    metric, dists, range(0, 101, 25), pr_all=False,
+                    format_fn=_damo_fmt_str.format_sz, raw_number=False,
+                    nr_cols_bar=59)
+            lines.append(output)
+        lines.append('')
+    lines.append('# you can get above via \'damo report footprints\'')
 
-    print()
-    print('Hotspot functions')
-    print('=================')
-    print()
+    lines.append('')
+    lines.append('Hotspot functions')
+    lines.append('=================')
+    lines.append('')
 
     if args.profile is None:
         args.profile = args.access_pattern + '.profile'
 
     cmd = ['perf', 'report', '-i', args.profile, '--stdio']
     output = subprocess.check_output(cmd).decode()
-    print('\n'.join(output.split('\n')[:30]))
+    lines.append('\n'.join(output.split('\n')[:30]))
 
-    print('# you can get above via \'damo report profile\'')
+    lines.append('# you can get above via \'damo report profile\'')
+
+    return '\n'.join(lines)
+
+def main(args):
+    _damo_print.pr_with_pager_if_needed(fmt_report(args))
 
 def set_argparser(parser):
     parser.add_argument(
