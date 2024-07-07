@@ -53,11 +53,16 @@ def fmt_report(args):
     lines.append('# you can get above via \'damo report heatmap\'')
 
     lines.append('')
-    lines.append('Working Set Size Distribution')
-    lines.append('=============================')
+    lines.append('Working Set Size and Memory Footprints Distribution')
+    lines.append('===================================================')
     lines.append('')
+
     _damo_records.adjust_records(
             records, aggregate_interval=1, nr_snapshots_to_skip=20)
+
+    if args.footprints is None:
+        args.footprints = args.access_pattern + '.mem_footprint'
+
     for sort_key in ['size', 'time']:
         lines.append('Sorted by %s' % sort_key)
         lines.append('--------------')
@@ -72,22 +77,7 @@ def fmt_report(args):
                     format_fn=_damo_fmt_str.format_sz, raw_number=False,
                     nr_cols_bar=59)
             lines.append(output)
-        lines.append('')
-    lines.append('# you can get above via \'damo report wss\'')
-
-    lines.append('')
-    lines.append('Memory Footprints Distribution')
-    lines.append('==============================')
-    lines.append('')
-
-    if args.footprints is None:
-        args.footprints = args.access_pattern + '.mem_footprint'
-
-    for sort_key in ['size', 'time']:
-        lines.append('Sorted by %s' % sort_key)
-        lines.append('--------------')
-        lines.append('')
-        for metric in ['vsz', 'rss', 'sys_used']:
+        for metric in ['rss', 'vsz', 'sys_used']:
             fp_dists = damo_report_footprint.get_dists(
                     records=args.footprints, metric=metric,
                     do_sort=sort_key == 'size')
@@ -97,7 +87,7 @@ def fmt_report(args):
                     nr_cols_bar=59)
             lines.append(output)
         lines.append('')
-    lines.append('# you can get above via \'damo report footprints\'')
+    lines.append('# you can get above via \'damo report wss\' and \'damo report footprints\'')
 
     lines.append('')
     lines.append('Hotspot functions')
