@@ -60,7 +60,7 @@ def main(args):
         print('--------------')
         print()
         wss_dists = damo_wss.get_wss_dists(
-                records, acc_thres=1, sz_thres=1, do_sort=sort_key,
+                records, acc_thres=1, sz_thres=1, do_sort=sort_key == 'size',
                 collapse_targets=True)
         for tid, dists in wss_dists.items():
             # because collapsed targets, only one iteration will be executed here
