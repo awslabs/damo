@@ -23,6 +23,8 @@ darc_optional_params = [
         'nr_quota_exceeds',
         # v6.3-rc1
         'skip_anon',
+        # v6.9-rc1
+        'quota_mem_pressure_us', 'quota_autotune_feedback',
         ]
 
 def chk_darc_sysfs():
