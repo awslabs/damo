@@ -20,6 +20,7 @@ darc_optional_params = [
         # v5.17-rc1
         'nr_reclaim_tried_regions', 'nr_reclaimed_regions',
         'bytes_reclaim_tried_regions', 'bytes_reclaimed_regions',
+        'nr_quota_exceeds',
         # v6.3-rc1
         'skip_anon',
         ]
