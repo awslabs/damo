@@ -32,6 +32,8 @@
   - Provide realtime holistic dashboard, like 'top'
     - shows heatmap, footprints, hot functions, for last N seconds
       - add option to add snapshot as (optional) alternate of heatmap
+- Integrate report and fmt_json into show
+  - Let's have a single command for making any output.
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type
