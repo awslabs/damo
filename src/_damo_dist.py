@@ -26,6 +26,8 @@ def get_percentile(dists, percentile):
     idx = int(percentile / 100.0 * len(dists))
     if idx == len(dists):
         idx -= 1
+    if idx == -1:
+        return '-1'
     return dists[idx]
 
 def fmt_dists(metric_name, dists, percentiles, pr_all, format_fn, raw_number,
