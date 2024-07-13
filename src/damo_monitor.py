@@ -51,7 +51,7 @@ def main(args):
     if args.report_type == 'heats':
         report_cmd += 'report heats --heatmap stdout --resol 10 80'.split()
     else:
-        report_cmd += ['report', 'wss']
+        report_cmd += ['report', args.report_type]
 
     nr_reports = 0
     while not args.count or nr_reports < args.count:
@@ -80,7 +80,8 @@ def main(args):
 def set_argparser(parser):
     parser.add_argument('target', type=str, metavar='<target>',
             help='monitoring target (command, pid or \'paddr\')')
-    parser.add_argument('--report_type', type=str, choices=['heats', 'wss'],
+    parser.add_argument(
+            '--report_type', type=str, choices=['heats', 'wss', 'holistic'],
             default='heats', help='report type')
     parser.add_argument('--delay', type=float, metavar='<seconds>', default=3,
             help='deplay between updates in seconds.')
