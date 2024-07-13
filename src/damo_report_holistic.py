@@ -41,8 +41,12 @@ def fmt_report_short(args):
     lines.append('')
     lines.append('# Memory Footprints Distribution')
 
-    _damo_records.adjust_records(
-            records, aggregate_interval=1, nr_snapshots_to_skip=20)
+    nr_snapshots = 0
+    for record in records:
+        nr_snapshots += len(record.snapshots)
+    if nr_snapshots > 200:
+        _damo_records.adjust_records(
+                records, aggregate_interval=1, nr_snapshots_to_skip=20)
 
     if args.footprints is None:
         args.footprints = args.access_pattern + '.mem_footprint'
@@ -128,8 +132,12 @@ def fmt_report(args):
     lines.append('===================================================')
     lines.append('')
 
-    _damo_records.adjust_records(
-            records, aggregate_interval=1, nr_snapshots_to_skip=20)
+    nr_snapshots = 0
+    for record in records:
+        nr_snapshots += len(record.snapshots)
+    if nr_snapshots > 200:
+        _damo_records.adjust_records(
+                records, aggregate_interval=1, nr_snapshots_to_skip=20)
 
     if args.footprints is None:
         args.footprints = args.access_pattern + '.mem_footprint'
