@@ -116,5 +116,5 @@ def set_argparser(parser):
             '--footprints', metavar='<file>',
             help='memory footprints record file')
     parser.add_argument(
-        '--profile', metavar='<file>', help='profile record file')
+            '--profile', metavar='<file>', help='profile record file')
     parser.description = 'Show a holistic access pattern report'
