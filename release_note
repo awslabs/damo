@@ -1,6 +1,10 @@
 This file records important changes that made in each release.  Those are
 picked by human sense, so could be incomplete and missing many things.
 
+v2.4.3
+- 'damo report': Shorten holistic output by default
+- 'damo monitor': Support holistic report type
+
 v2.4.2
 - Support 'diagnose' subcommand
 - Add hotspot functions on 'damo report holistic' output
