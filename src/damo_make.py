@@ -1,5 +1,19 @@
 # SPDX-License-Identifier: GPL-2.0
 
+'''
+Generate various outputs from DAMON outputs.  E.g.,
+
+damo make damon_params
+damo make snapshot
+damo make heatmap
+damo make dists wss
+damo make dists footprint
+damo make raw_pattern
+damo make record
+
+Note: this is not officially supported.  Can significantly changed or dropped.
+'''
+
 import _damo_subcmds
 import damo_mk_damon_params
 
