@@ -15,6 +15,7 @@ import damo_diagnose
 import damo_features
 import damo_fmt_json
 import damo_lru_sort
+import damo_make
 import damo_monitor
 import damo_reclaim
 import damo_record
@@ -62,6 +63,10 @@ subcmds = [
             msg='control DAMON_RECLAIM'),
         _damo_subcmds.DamoSubCmd(name='lru_sort', module=damo_lru_sort,
             msg='control DAMON_LRU_SORT'),
+
+        # For any outputs
+        _damo_subcmds.DamoSubCmd(
+            name='make', module=damo_make, msg='generate various outputs'),
 
         # For convenient use of damo and DAMON
         _damo_subcmds.DamoSubCmd(name='version',
