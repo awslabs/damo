@@ -74,5 +74,7 @@ def main(args=None):
     else:
         args.output = args.heatmap
         args.stdout_colorset = args.stdout_heatmap_color
+        args.stdout_skip_colorset_example = \
+                args.stdout_heatmap_skip_color_example
 
     damo_heatmap.main(args)
