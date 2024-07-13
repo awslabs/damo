@@ -22,6 +22,12 @@ def plot_dist(data_file, output_file, xlabel, ylabel):
     os.remove(data_file)
     return None
 
+def get_percentile(dists, percentile):
+    idx = int(percentile / 100.0 * len(dists))
+    if idx == len(dists):
+        idx -= 1
+    return dists[idx]
+
 def fmt_dists(metric_name, dists, percentiles, pr_all, format_fn, raw_number,
              nr_cols_bar):
     '''
@@ -53,10 +59,7 @@ def fmt_dists(metric_name, dists, percentiles, pr_all, format_fn, raw_number,
             val_per_col = 1
 
     for percentile in percentiles:
-        idx = int(percentile / 100.0 * len(dists))
-        if idx == len(dists):
-            idx -= 1
-        val = dists[idx]
+        val = get_percentile(dists, percentile)
         line = '%3d %15s' % (percentile, format_fn(val, raw_number))
         if nr_cols_bar > 0:
             cols = int(val / val_per_col)
