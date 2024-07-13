@@ -66,7 +66,8 @@ subcmds = [
 
         # For any outputs
         _damo_subcmds.DamoSubCmd(
-            name='make', module=damo_make, msg='generate various outputs'),
+            name='make', module=damo_make,
+            msg='EXPERIMENTAL.  generate various outputs'),
 
         # For convenient use of damo and DAMON
         _damo_subcmds.DamoSubCmd(name='version',
