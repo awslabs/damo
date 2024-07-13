@@ -6,7 +6,6 @@ this, you can monitor the data access patterns of your system or workloads and
 make data access-aware memory management optimizations.
 
 ![damo monitor demo for water_nsquared](images/damo_monitor_water_nsquared.gif)
-![damo monitor demo for water_nsquared](images/damo_monitor_holistic.gif)
 
 
 Demo Video
@@ -183,3 +182,11 @@ your workload more memory efficient with only modest performance overhead.
     $ sudo damo start --damos_access_rate 0 0 --damos_sz_region 4K max \
                         --damos_age 60s max --damos_action pageout \
                         <pid of your workload>
+
+Holistic Memory Usage Monitoring
+--------------------------------
+
+You can also show access pattern heatmap, memory footprints, and hotspot
+functions of the system and/or workloads all at once in live, like below.
+
+![damo monitor demo for water_nsquared](images/damo_monitor_holistic.gif)
