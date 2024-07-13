@@ -6,6 +6,7 @@ this, you can monitor the data access patterns of your system or workloads and
 make data access-aware memory management optimizations.
 
 ![damo monitor demo for water_nsquared](images/damo_monitor_water_nsquared.gif)
+![damo monitor demo for water_nsquared](images/damo_monitor_holistic.gif)
 
 
 Demo Video
