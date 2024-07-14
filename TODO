@@ -15,7 +15,6 @@
 - Optimize 'replay' performance
   - An approach for 2 MiB-granularity page management didn't show improvement
   - Optionally use C program like 'masim'
-- damo record: Let recording without access pattern
 - Let 'replay' further parse vmas and alloc/release memory
 - Unify wss and footprints report types
 - Fixup 'damo show' on schemes_tried_regions unsupported kernels
