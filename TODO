@@ -28,6 +28,8 @@
 - Integrate report and fmt_json into show
   - Let's have a single command for making any output.
   - Think more about better categorization
+- Create fmt_json successor
+  - Should support general DAMON parameters formatting
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type
