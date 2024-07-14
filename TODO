@@ -17,9 +17,6 @@
   - Optionally use C program like 'masim'
 - damo record: Let recording without access pattern
 - Let 'replay' further parse vmas and alloc/release memory
-- Implement yet another report type for holistic view
-  - Show heatmap, footprint, wss, profile at glance
-  - For profile, curses-based TUI might needed
 - Unify wss and footprints report types
 - Fixup 'damo show' on schemes_tried_regions unsupported kernels
   - Either make the warning clear, or support it using trace points
