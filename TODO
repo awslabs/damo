@@ -28,6 +28,11 @@
 - Integrate report and fmt_json into show
   - Let's have a single command for making any output.
   - Think more about better categorization
+  - Integrate status, report, monitor, and record_info at least.
+  - Integrate even record and reply with more discussions.
+    - record is another way of showing it in a format and saving it directly to
+      files.
+    - replay is another way of showing record with a side effect
 - Create fmt_json successor
   - Should support general DAMON parameters formatting
 - Show temperature histogram on holistic report
