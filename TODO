@@ -36,6 +36,9 @@
 - Create fmt_json successor
   - Should support general DAMON parameters formatting
 - Show temperature histogram on holistic report
+- record: Record vmas by default
+- status: Show kdamond cpu usage
+- heatmap: Support interactive zoom in/out/scrolling
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type

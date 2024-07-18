@@ -29,6 +29,7 @@ import damo_stop
 import damo_tune
 import damo_validate
 import damo_version
+import damo_read
 
 def pr_damo_version(args_not_use):
     print(damo_version.__version__)
@@ -88,6 +89,9 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='diagnose',
             module=damo_diagnose,
             msg='generate a report on if DAMON is malfunctioning'),
+        _damo_subcmds.DamoSubCmd(name='read',
+            module=damo_read,
+            msg='(EXPERIMENTAL) read DAMON/system results and status')
         ]
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
