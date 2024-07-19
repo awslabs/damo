@@ -7,6 +7,15 @@ Print basic information of the access monitoring results record file.
 import _damo_fmt_str
 import _damo_records
 
+class GuideRegion:
+    start_addr = None
+    end_addr = None
+    heats = None
+
+    def __init__(self, start_addr, end_addr):
+        self.start_addr = start_addr
+        self.end_addr = end_addr
+
 class GuideInfo:
     tid = None
     start_time = None
