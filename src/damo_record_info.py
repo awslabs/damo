@@ -12,6 +12,9 @@ class GuideRegion:
     end_addr = None
     heats = None
 
+    def heat_per_byte(self):
+        return float(self.heats) / (self.end_addr - self.start_addr)
+
     def __init__(self, start_addr, end_addr):
         self.start_addr = start_addr
         self.end_addr = end_addr
