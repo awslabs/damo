@@ -55,10 +55,11 @@ class GuideInfo:
         lines.append('time: %d-%d (%s)' % (self.start_time, self.end_time,
                     _damo_fmt_str.format_time_ns(self.end_time - self.start_time,
                         False)))
-        for idx, region in enumerate(self.regions()):
+        for idx, region in enumerate(self.contig_regions):
             lines.append('region\t%2d: %020d-%020d (%s)' %
-                    (idx, region[0], region[1],
-                        _damo_fmt_str.format_sz(region[1] - region[0], False)))
+                         (idx, region.start_addr, region.end_addr,
+                          _damo_fmt_str.format_sz(
+                              region.end_addr - region.start_addr, False)))
         return '\n'.join(lines)
 
 def is_overlap(region1, region2):
