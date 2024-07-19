@@ -219,8 +219,11 @@ def set_missed_args(args, records):
         args.time_range = [guide.start_time, guide.end_time]
 
     if not args.address_range:
-        args.address_range = sorted(guide.regions(), key=lambda x: x[1] - x[0],
+        hottest_contig_region = sorted(
+                guide.contig_regions, key=lambda x: x.heat_per_byte(),
                 reverse=True)[0]
+        args.address_range = [hottest_contig_region.start_addr,
+                              hottest_contig_region.end_addr]
 
 def plot_range(orig_range, use_absolute_val):
     plot_range = [x for x in orig_range]
