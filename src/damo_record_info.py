@@ -23,6 +23,7 @@ class GuideInfo:
     lowest_addr = None
     highest_addr = None
     gaps = None
+    contig_regions = None  # list of GuideRegion objects
 
     def __init__(self, tid, start_time):
         self.tid = tid
@@ -114,6 +115,28 @@ def get_guide_info(records):
                 guide.gaps = gaps
             else:
                 guide.gaps = overlapping_regions(guide.gaps, gaps)
+
+    for tid, guide in guides.items():
+        guide_regions = []
+        for start, end in guide.regions():
+            guide_regions.append(GuideRegion(start, end))
+        guide.contig_regions = guide_regions
+
+        for record in records:
+            if record.target_id != tid:
+                continue
+            for snapshot in record.snapshots:
+                for region in snapshot.regions:
+                    if region.nr_accesses.samples == 0:
+                        continue
+                    for gregion in guide.contig_regions:
+                        if (region.end < gregion.start_addr or
+                            gregion.end_addr < region.start):
+                            continue
+                        if gregion.heats is None:
+                            gregion.heats = 0
+                        gregion.heats += ((region.end - region.start) *
+                                          region.nr_accesses.samples)
 
     return sorted(list(guides.values()), key=lambda x: x.total_space(),
                     reverse=True)
