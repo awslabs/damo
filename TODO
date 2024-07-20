@@ -38,6 +38,11 @@
 - Show temperature histogram on holistic report
 - status: Show kdamond cpu usage
 - heatmap: Support interactive zoom in/out/scrolling
+- implement new workflow commands
+  - args: Format complext command arguments like DAMON parameters in json and
+    snapshot formatter
+  - collect: Collect DAMON status/output and System status
+  - read: Visualize collected data
 
 - Deprecate old features
   - Deprecate heats report type in favor of heatmap report type
