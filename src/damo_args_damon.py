@@ -23,19 +23,13 @@ def main(args):
         print(json.dumps({'kdamonds':
                           [k.to_kvpairs(args.raw) for k in kdamonds]},
                          indent=4))
-    elif args.format == 'text':
-        for idx, k in enumerate(kdamonds):
-            print('kdamond %d' % idx)
-            text = k.to_str(args.raw)
-            for line in text.split('\n'):
-                print('    %s' % line)
 
 def set_argparser(parser):
     _damon_args.set_argparser(parser, add_record_options=False)
     parser.description = ' '.join([
         'format DAMON parameters'])
     parser.add_argument(
-            '--format', choices=['json', 'text'], default='json',
+            '--format', choices=['json'], default='json',
             help='format of the output')
     parser.add_argument(
             '--raw', action='store_true',
