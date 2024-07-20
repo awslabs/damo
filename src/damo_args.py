@@ -1,8 +1,12 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import _damo_subcmds
+import damo_args_damon
 
-subcmds = []
+subcmds = [
+        _damo_subcmds.DamoSubCmd(
+            name='damon', module=damo_args_damon, msg='DAMON parameters'),
+        ]
 
 def main(args):
     for subcmd in subcmds:
