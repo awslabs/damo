@@ -10,6 +10,7 @@ import sys
 
 import _damo_subcmds
 import damo_adjust
+import damo_args
 import damo_convert_record_format
 import damo_diagnose
 import damo_features
@@ -91,7 +92,11 @@ subcmds = [
             msg='generate a report on if DAMON is malfunctioning'),
         _damo_subcmds.DamoSubCmd(name='read',
             module=damo_read,
-            msg='(EXPERIMENTAL) read DAMON/system results and status')
+            msg='(EXPERIMENTAL) read DAMON/system results and status'),
+        _damo_subcmds.DamoSubCmd(name='args',
+            module=damo_args,
+            msg='(EXPERIMENTAL) generate complex arguments for other commands')
+
         ]
 
 class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
