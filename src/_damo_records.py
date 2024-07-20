@@ -686,12 +686,16 @@ class ProcVmas:
         if pid is None:
             return
 
-        with open('/proc/%s/maps' % pid, 'r') as f:
-            for line in f:
-                fields = line.split()
-                start, end = [int(addr, 16) for addr in fields[0].split('-')]
-                name = fields[-1]
-                self.vmas.append(Vma(start, end, name))
+        try:
+            with open('/proc/%s/maps' % pid, 'r') as f:
+                for line in f:
+                    fields = line.split()
+                    start, end = [int(addr, 16) for addr in fields[0].split('-')]
+                    name = fields[-1]
+                    self.vmas.append(Vma(start, end, name))
+        except:
+            # the process may terminated.
+            return
 
     def to_kvpairs(self):
         kvpairs = {'pid': self.pid}
