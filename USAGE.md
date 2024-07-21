@@ -889,3 +889,41 @@ Note that starting DAMON with the partial DAMON parameter command line option
 and then getting the DAMON parameters in the json format using `damo status`
 could also be one way for easily starting write of the json format
 specification.
+
+`damo args`
+-----------
+
+Note: This is an experimental feature at the moment.  Some changes could be
+made, or the support can be dropped in future.
+
+`damo args` helps building complex command line arguments.  Currently supports
+generating DAMON parameters in json and yaml format.  This command aims to
+succeed `damo fmt_json` in future.  For example:
+
+```
+$ sudo ./damo args damon --format json
+{
+    "kdamonds": [
+        {
+            "state": null,
+            "pid": null,
+            "contexts": [
+                {
+                    "ops": "paddr",
+                    "targets": [
+[...]
+}
+$ sudo ./damo args damon --format yaml
+kdamonds:
+- !!python/object/apply:collections.OrderedDict
+  - - - state
+      - null
+    - - pid
+      - null
+    - - contexts
+      - - !!python/object/apply:collections.OrderedDict
+          - - - ops
+              - paddr
+            - - targets
+[...]
+```
