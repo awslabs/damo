@@ -4,6 +4,8 @@ picked by human sense, so could be incomplete and missing many things.
 v2.4.4
 - 'damo report heatmap': Select hottest region as default plot target region
 - 'damo record': Record vmas by default
+- Introduce 'damo args' command
+  - Supports formatting DAMON parameters in json and yaml formats
 
 v2.4.3
 - 'damo report': Shorten holistic output by default
