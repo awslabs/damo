@@ -103,7 +103,14 @@ class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
     def _format_action(self, action):
         parts = super(argparse.RawDescriptionHelpFormatter,
                 self)._format_action(action)
-        # skip sub parsers help
+        # by default, the help message shows command metavar, like below.  Hide
+        # it.
+        #
+        # $ ./damo -h
+        # [...]
+        # command:
+        #   <command>  # <- This looks weird
+        #     start               start DAMON with given parameters
         if action.nargs == argparse.PARSER:
             parts = '\n'.join(parts.split('\n')[1:])
         return parts
