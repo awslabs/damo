@@ -33,8 +33,6 @@
     - record is another way of showing it in a format and saving it directly to
       files.
     - replay is another way of showing record with a side effect
-- Create fmt_json successor
-  - Should support general DAMON parameters formatting
 - Show temperature histogram on holistic report
 - status: Show kdamond cpu usage
 - heatmap: Support interactive zoom in/out/scrolling
