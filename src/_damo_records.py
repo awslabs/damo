@@ -818,6 +818,27 @@ class ProcStatsSnapshot:
         self.proc_stats = [ProcStat.from_kvpairs(kvp)
                          for kvp in kvapirs['proc_stats']]
 
+def record_proc_stats(kdamonds, snapshots):
+    pids = []
+    for kdamond in kdamonds:
+        pids.append(kdamond.pid)
+        for ctx in kdamond.contexts:
+            for target in ctx.targets:
+                if target.pid is None:
+                    continue
+                pids.append(target.pid)
+    snapshots.append(ProcStatsSnapshot(pids))
+
+def save_proc_stats(snapshots, filepath, file_permission):
+    with open(filepath, 'w') as f:
+        json.dump([s.to_kvpairs() for s in snapshots], f, indent=4)
+    os.chmod(filepath, file_permission)
+
+def load_proc_stats(filepath):
+    with open(filepath, 'r') as f:
+        kvpairs = json.load(f)
+    return [ProcStatsSnapshot.from_kvpairs(x) for x in kvpairs]
+
 def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
 
