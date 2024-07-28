@@ -923,6 +923,9 @@ class RecordingHandle:
     # for vmas recording
     vmas_snapshots = None
 
+    # for /proc/<pid>/stat recording
+    proc_stats = None
+
     def __init__(self, tracepoint, file_path, file_format, file_permission,
                  monitoring_intervals,
                  do_profile,
@@ -943,6 +946,8 @@ class RecordingHandle:
         if record_vmas is True:
             self.vmas_snapshots = []
 
+        self.proc_stats = []
+
 def start_recording(handle):
     if handle.tracepoint is not None:
         handle.perf_pipe = subprocess.Popen(
@@ -961,6 +966,8 @@ def start_recording(handle):
                                  handle.mem_footprint_snapshots)
         if handle.vmas_snapshots is not None:
             record_proc_vmas(handle.kdamonds, handle.vmas_snapshots)
+
+        record_proc_stats(handle.kdamonds, handle.proc_stats)
         time.sleep(1)
 
 def finish_recording(handle):
@@ -995,6 +1002,8 @@ def finish_recording(handle):
     if handle.vmas_snapshots is not None:
         save_proc_vmas(handle.vmas_snapshots, '%s.vmas' % handle.file_path,
                        handle.file_permission)
+    save_proc_stats(handle.proc_stats, '%s.proc_stats' % handle.file_path,
+                    handle.file_permission)
 
 # for snapshot
 
