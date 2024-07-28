@@ -753,6 +753,46 @@ def load_proc_vmas(filepath):
         kvpairs = json.load(f)
     return [ProcVmasSnapshot.from_kvpairs(x) for x in kvpairs]
 
+class ProcStat:
+    pid = None
+    tcomm = None
+    state = None
+    utime = None
+    stime = None
+
+    def __init__(self, pid):
+        if pid is None:
+            return
+        try:
+            with open('/proc/%s/stat' % pid, 'r') as f:
+                fields = f.read().split()
+                self.pid = pid
+                self.tcomm = fields[1]
+                self.state = fields[2]
+                self.utime = fields[13]
+                self.stime = fields[14]
+        except Exception:
+            # the process may finished already
+            pass
+
+    def to_kvpairs(self):
+        return {
+                'pid': self.pid,
+                'tcomm': self.tcomm,
+                'state': self.state,
+                'utime': self.utime,
+                'stime': self.stime,
+                }
+
+    @classmethod
+    def from_kvpairs(cls, kvpairs):
+        self = cls(None)
+        self.pid = kvpairs['pid']
+        self.tcomm = kvpairs['tcomm']
+        self.state = kvpairs['state']
+        self.utime = kvpairs['utime']
+        self.stime = kvpairs['stime']
+
 def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
 
