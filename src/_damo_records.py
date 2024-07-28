@@ -793,6 +793,31 @@ class ProcStat:
         self.utime = kvpairs['utime']
         self.stime = kvpairs['stime']
 
+class ProcStatsSnapshot:
+    time = None
+    proc_stats = None
+
+    def __init__(self, pids):
+        if pids is None:
+            return
+
+        self.time = time.time()
+        self.proc_stats = []
+        for pid in pids:
+            self.proc_stats.append(ProcStat(pid))
+
+    def to_kvpairs(self):
+        kvpairs = {'time': self.time}
+        kvpairs['proc_stats'] = [p.to_kvpairs() for p in self.proc_stats]
+        return kvpairs
+
+    @classmethod
+    def from_kvpairs(cls, kvpairs):
+        self = cls(None)
+        self.time = kvpairs['time']
+        self.proc_stats = [ProcStat.from_kvpairs(kvp)
+                         for kvp in kvapirs['proc_stats']]
+
 def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
 
