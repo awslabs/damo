@@ -491,6 +491,17 @@ pattern record file (specified by `--out` option of `damo record`) except
 having `.vmas` suffix.  Hence, `damon.data.vmas` is the default name of the
 memory mapping information.
 
+### Recording CPU Usages
+
+Note: This is an experimental feature at the moment.  Some changes could be
+made, or the support can be dropped in future.
+
+`damo record` command records CPU usages of monitoring target processes and
+kdamonds by default.  The record data is saved as a json file of the name same
+to the access pattern record file (specified by `--out` option of `damo
+record`) except having `.proc_stats` suffix.  Hence, `damon.data.proc_stats` is
+the default name of the CPU usage information.
+
 `damo report` (Visualizing Recorded Data Access Pattern)
 --------------------------------------------------------
 
