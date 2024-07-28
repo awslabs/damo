@@ -94,6 +94,8 @@ def main(args):
                 for idx, k in enumerate(kdamonds)]
         # TODO: Support multiple kdamonds, multiple contexts
         monitoring_intervals = kdamonds[0].contexts[0].intervals
+        now_kdamonds = _damon.current_kdamonds()
+        kdamonds[0].pid = now_kdamonds[0].pid
     else:
         if not _damon.any_kdamond_running():
             print('DAMON is not turned on')
