@@ -3,6 +3,7 @@ picked by human sense, so could be incomplete and missing many things.
 
 v2.4.5
 - 'damo record': Record CPU usages of kdamonds and target processes
+- Update 'damo args --format=yaml` output
 
 v2.4.4
 - 'damo report heatmap': Select hottest region as default plot target region
