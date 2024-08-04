@@ -926,11 +926,13 @@ class RecordingHandle:
     # for /proc/<pid>/stat recording
     proc_stats = None
 
+    timeout = None
+
     def __init__(self, tracepoint, file_path, file_format, file_permission,
                  monitoring_intervals,
                  do_profile,
                  kdamonds, add_child_tasks, record_mem_footprint,
-                 record_vmas=False):
+                 record_vmas=False, timeout=None):
         self.tracepoint = tracepoint
         self.file_path = file_path
         self.file_format = file_format
@@ -948,6 +950,8 @@ class RecordingHandle:
 
         self.proc_stats = []
 
+        self.timeout = timeout
+
 def start_recording(handle):
     if handle.tracepoint is not None:
         handle.perf_pipe = subprocess.Popen(
@@ -956,6 +960,8 @@ def start_recording(handle):
     if handle.do_profile:
         cmd = [PERF, 'record', '-o', '%s.profile' % handle.file_path]
         handle.perf_profile_pipe = subprocess.Popen(cmd)
+
+    start_time = time.time()
     while (poll_target_pids(handle.kdamonds) or
            _damon.any_kdamond_running()):
         if handle.add_child_tasks is True:
@@ -968,6 +974,9 @@ def start_recording(handle):
             record_proc_vmas(handle.kdamonds, handle.vmas_snapshots)
 
         record_proc_stats(handle.kdamonds, handle.proc_stats)
+        if (handle.timeout is not None and
+            time.time() - start_time >= handle.timeout):
+            break
         time.sleep(1)
 
 def finish_recording(handle):
