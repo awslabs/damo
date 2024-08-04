@@ -122,7 +122,7 @@ def main(args):
             # for children processes recording and memory footprint
             kdamonds=kdamonds, add_child_tasks=args.include_child_tasks,
             record_mem_footprint=args.footprint,
-            record_vmas=args.vmas)
+            record_vmas=args.vmas, timeout=None)
     data_for_cleanup.record_handle = record_handle
 
     print('Press Ctrl+C to stop')
