@@ -932,7 +932,7 @@ class RecordingHandle:
                  monitoring_intervals,
                  do_profile,
                  kdamonds, add_child_tasks, record_mem_footprint,
-                 record_vmas=False, timeout=None):
+                 record_vmas, timeout):
         self.tracepoint = tracepoint
         self.file_path = file_path
         self.file_format = file_format
