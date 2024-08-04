@@ -30,8 +30,9 @@ pattern of your workload.
     $ # ensure DAMON is enabled on your kernel
     $ # install damo using packaging systems listed above,
     $ # or cloning the source repo and updating $PATH.
-    $ sudo damo show $(pidof <your workload>)
-    $ sudo damo record $(pidof <your workload>)
+    $ sudo damo start $(pidof <your workload>)
+    $ sudo damo show
+    $ sudo damo record ongoing
     $ sudo damo report heats --heatmap stdout --stdout_heatmap_color emotion
 
 The second and last commands will show the access pattern of your workload,
