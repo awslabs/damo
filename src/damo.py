@@ -70,7 +70,9 @@ subcmds = [
             module=_damo_subcmds.DamoSubCmdModule(None, pr_damo_version),
             msg='print the version number'),
         _damo_subcmds.DamoSubCmd(name='fmt_json', module=damo_fmt_json,
-            msg='convert damo-start cmdline option to DAMON json input'),
+            msg=' '.join(
+                ['(WILL BE DEPRECATED)',
+                 'convert damo-start cmdline option to DAMON json input'])),
         _damo_subcmds.DamoSubCmd(name='schemes', module=damo_schemes,
             msg='apply operation schemes'),
         _damo_subcmds.DamoSubCmd(name='monitor', module=damo_monitor,

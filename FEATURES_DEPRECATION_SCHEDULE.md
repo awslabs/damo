@@ -5,6 +5,12 @@ Below are features that deprecated, or will be deprecated.  If you depend on
 any of those, please [report](REPORTING.md).
 
 
+`damo fmt_json`
+---------------
+
+Will be deprecated.  Use `damo args --format json` instead.
+
+
 `--damon_interface`
 -------------------
 
