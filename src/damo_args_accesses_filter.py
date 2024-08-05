@@ -2,18 +2,12 @@
 
 import collections
 import json
-import sys
 
 import _damo_yaml
 import _damo_records
 import damo_args_damon
 
 def main(args):
-    if args.format == 'yaml':
-        if not 'yaml' in sys.modules:
-            print('yaml module import failed')
-            exit(1)
-
     filter_, err = _damo_records.args_to_filter(args)
     if err is not None:
         print('converting arguments to filter failed (%s)' % err)
