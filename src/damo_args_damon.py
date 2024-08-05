@@ -2,17 +2,12 @@
 
 import collections
 import json
-import sys
 
 import _damo_yaml
 import _damon
 import _damon_args
 
 def main(args):
-    if args.format == 'yaml':
-        if not 'yaml' in sys.modules:
-            print('yaml module import failed')
-            exit(1)
     _damon.ensure_root_permission()
 
     kdamonds, err = _damon_args.kdamonds_for(args)
