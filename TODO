@@ -33,6 +33,18 @@
     snapshot formatter
   - collect: Collect DAMON status/output and System status
   - read: Visualize collected data
+  - Maybe we could extend record/report, deprecate show and some options.
+    - extend record for snapshot capturing
+      - damo record --shots <count> <delay>
+        - if <delay> is zero, the conventional record.
+    - extend report for snapshot showing
+      - damo report accesses --filter <filter> --format <format>
+      - extend 'damo args' for <filter> and <format>
+    - deprecate monitor
+      1. extend report for recording together
+      2. extend report for repeating multiple times
+      3. finally deprecate monitor
+- deprecate DAMON parameters options
 - Provide virtual memory mapping information
   - shows when what virtual address has mappend and unmapped
 
