@@ -26,13 +26,11 @@ def main(args):
                 s.stats = None
                 s.tried_regions = None
 
+    kvpairs = {'kdamonds': [k.to_kvpairs(args.raw) for k in kdamonds]}
     if args.format == 'json':
-        print(json.dumps({'kdamonds':
-                          [k.to_kvpairs(args.raw) for k in kdamonds]},
-                         indent=4))
+        print(json.dumps(kvpairs, indent=4))
     elif args.format == 'yaml':
-        print(_damo_yaml.dump({'kdamonds': [k.to_kvpairs(args.raw) for k in
-                                           kdamonds]}))
+        print(_damo_yaml.dump(kvpairs))
 
 def set_argparser(parser):
     _damon_args.set_argparser(parser, add_record_options=False)
