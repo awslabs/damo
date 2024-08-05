@@ -1322,6 +1322,26 @@ class RecordFilter:
         self.address_ranges = address_ranges
         self.snapshot_sz_ranges = snapshot_sz_ranges
 
+    def to_kvpairs(self, raw):
+        kvpairs = {'access_pattern': self.access_pattern.to_kvpairs(raw)}
+        if self.address_ranges is None:
+            address_ranges = None
+        else:
+            address_ranges = [
+                    [_damo_fmt_str.format_sz(start, raw),
+                     _damo_fmt_str.format_sz(end, raw)]
+                    for start, end in self.address_ranges]
+        kvpairs['address_ranges'] = address_ranges
+        if self.snapshot_sz_ranges is None:
+            snapshot_sz_ranges = None
+        else:
+            snapshot_sz_ranges = [
+                    [_damo_fmt_str.format_sz(start, raw),
+                     _damo_fmt_str.format_sz(end, raw)]
+                    for start, end in self.snapshot_sz_ranges]
+        kvpairs['snapshot_sz_ranges'] = snapshot_sz_ranges
+        return kvpairs
+
 class RecordGetRequest:
     # TODO: Extend to be used for recording
 
