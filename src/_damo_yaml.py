@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import collections
+import sys
 
 try:
     import yaml
@@ -50,5 +51,8 @@ def dump(kvpairs):
     OrderedDumper.add_representer(
             collections.OrderedDict, ordered_dict_representer)
 
+    if not 'yaml' in sys.modules:
+        return None, 'yaml module is not imported'
+
     return yaml.dump(kvpairs, Dumper=OrderedDumper, default_flow_style=False,
-                     sort_keys=False)
+                     sort_keys=False), None

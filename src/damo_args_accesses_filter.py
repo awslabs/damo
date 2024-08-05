@@ -23,7 +23,11 @@ def main(args):
     if args.format == 'json':
         print(json.dumps(kvpairs, indent=4))
     elif args.format == 'yaml':
-        print(_damo_yaml.dump(kvpairs))
+        text, err = _damo_yaml.dump(kvpairs)
+        if err is not None:
+            print('yaml dump failed (%s)' % err)
+            exit(1)
+        print(text)
 
 def set_argparser(parser):
     parser.description = ' '.join([
