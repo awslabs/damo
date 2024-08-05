@@ -2,10 +2,14 @@
 
 import _damo_subcmds
 import damo_args_damon
+import damo_args_accesses_filter
 
 subcmds = [
         _damo_subcmds.DamoSubCmd(
             name='damon', module=damo_args_damon, msg='DAMON parameters'),
+        _damo_subcmds.DamoSubCmd(
+            name='accesses_filter', module=damo_args_accesses_filter,
+            msg='DAMON monitoring results filter'),
         ]
 
 def main(args):
