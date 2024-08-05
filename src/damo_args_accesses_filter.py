@@ -4,13 +4,7 @@ import collections
 import json
 import sys
 
-try:
-    import yaml
-except ModuleNotFoundError as e:
-    # do nothing.  The yaml using functions should handle the exception
-    # properly.
-    pass
-
+import _damo_yaml
 import _damo_records
 import damo_args_damon
 
@@ -29,7 +23,7 @@ def main(args):
     if args.format == 'json':
         print(json.dumps(kvpairs, indent=4))
     elif args.format == 'yaml':
-        print(yaml.dump(kvpairs))
+        print(_damo_yaml.dump(kvpairs))
 
 def set_argparser(parser):
     parser.description = ' '.join([
