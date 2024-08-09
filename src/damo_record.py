@@ -151,8 +151,6 @@ def set_argparser(parser):
     parser.add_argument('--no_footprint', action='store_false',
                         dest='footprint',
                         help='do not record memory footprint')
-    parser.add_argument('--footprint', action='store_true',
-                        help='record memory footprint')
     parser.add_argument('--no_vmas', action='store_false', dest='vmas',
                         help='record virtual memory areas (/proc/<pid>/maps)')
     parser.add_argument('--vmas', action='store_true',
