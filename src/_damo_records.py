@@ -903,13 +903,19 @@ def poll_target_pids(kdamonds):
     return False
 
 class RecordingHandle:
-    # for tracepoint recording
-    tracepoint = None
     file_path = None
     file_format = None
     file_permission = None
+
+    # for access patterns tracing
+    tracepoint = None
     monitoring_intervals = None
     perf_pipe = None
+
+    # for access patterns snapshot
+    # TODO: extend for multi shots
+    snapshot_request = None
+    snapshot_records = None
 
     # for CPU clock event recording
     do_profile = None
@@ -977,24 +983,39 @@ def start_recording(handle):
         if (handle.timeout is not None and
             time.time() - start_time >= handle.timeout):
             break
+
+        if handle.snapshots_request:
+            handle.snapshot_records, err = get_snapshot_records_of(
+                    handle.snapshot_request)
+            if err is not None:
+                print('failed getting snapshot')
+                exit(1)
+            else:
+                break
+
         time.sleep(1)
 
 def finish_recording(handle):
-    try:
-        handle.perf_pipe.send_signal(signal.SIGINT)
-        handle.perf_pipe.wait()
-    except:
-        # perf might already finished
-        pass
+    if handle.perf_pipe:
+        try:
+            handle.perf_pipe.send_signal(signal.SIGINT)
+            handle.perf_pipe.wait()
+        except:
+            # perf might already finished
+            pass
 
-    if handle.file_format == file_type_perf_data:
-        os.chmod(handle.file_path, handle.file_permission)
-    else:
-        err = update_records_file(handle.file_path, handle.file_format,
-                handle.file_permission, handle.monitoring_intervals)
-        if err != None:
-            print('converting format from perf_data to %s failed (%s)' %
-                    (handle.file_format, err))
+        if handle.file_format == file_type_perf_data:
+            os.chmod(handle.file_path, handle.file_permission)
+        else:
+            err = update_records_file(handle.file_path, handle.file_format,
+                    handle.file_permission, handle.monitoring_intervals)
+            if err != None:
+                print('converting format from perf_data to %s failed (%s)' %
+                        (handle.file_format, err))
+
+    if handle.snapshot_records:
+        write_damon_records(handle.snapshot_records, handle.file_path,
+                            handle.file_format, handle.file_permission)
 
     if handle.perf_profile_pipe is not None:
         try:
