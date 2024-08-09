@@ -482,13 +482,12 @@ used for the purpose.
 Note: This is an experimental feature at the moment.  Some changes could be
 made, or the support can be dropped in future.
 
-Users can record virtual memory mapping information of the record target
-processes by adding `--vmas` command line option to the `damo record` command.
-Internally, it parses `/proc/<pid>/maps` files of the monitoring target
-processes, and save the results as a json file of the name same to the access
-pattern record file (specified by `--out` option of `damo record`) except
-having `.vmas` suffix.  Hence, `damon.data.vmas` is the default name of the
-memory mapping information.
+`damo record` command records virtual memory mapping information of the record
+target processes.  Internally, it parses `/proc/<pid>/maps` files of the
+monitoring target processes, and save the results as a json file of the name
+same to the access pattern record file (specified by `--out` option of `damo
+record`) except having `.vmas` suffix.  Hence, `damon.data.vmas` is the default
+name of the memory mapping information.
 
 ### Recording CPU Usages
 
