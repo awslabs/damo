@@ -550,15 +550,17 @@ def set_monitoring_attrs_pinpoint_argparser(parser):
     parser.add_argument('-m', '--maxr', metavar='<# regions>',
             default=1000, help='maximum number of regions')
 
-def set_monitoring_attrs_argparser(parser):
+def set_monitoring_attrs_argparser(parser, hide_help=False):
     # for easier total setup
     parser.add_argument('--monitoring_intervals', nargs=3,
-            default=['5ms', '100ms', '1s'],
-            metavar=('<sample>', '<aggr>', '<update>'),
-            help='monitoring intervals (us)')
+                        default=['5ms', '100ms', '1s'],
+                        metavar=('<sample>', '<aggr>', '<update>'),
+                        help='monitoring intervals (us)'
+                        if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--monitoring_nr_regions_range', nargs=2,
-            metavar=('<min>', '<max>'), default=[10, 1000],
-            help='min/max number of monitoring regions')
+                        metavar=('<min>', '<max>'), default=[10, 1000],
+                        help='min/max number of monitoring regions'
+                        if not hide_help else argparse.SUPPRESS)
 
 def set_monitoring_argparser(parser):
     parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
