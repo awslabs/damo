@@ -148,8 +148,6 @@ def set_argparser(parser):
                         help='record schemes tried to be applied regions')
     parser.add_argument('--no_profile', action='store_false', dest='profile',
                         help='do not record profiling information')
-    parser.add_argument('--profile', action='store_true',
-                        help='record profiling information together')
     parser.add_argument('--no_footprint', action='store_false',
                         dest='footprint',
                         help='do not record memory footprint')
