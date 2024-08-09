@@ -32,7 +32,7 @@ def main(args):
         print(text)
 
 def set_argparser(parser):
-    _damon_args.set_argparser(parser, add_record_options=False)
+    _damon_args.set_argparser(parser, add_record_options=False, min_help=False)
     parser.description = ' '.join([
         'format DAMON parameters'])
     parser.add_argument(
