@@ -562,16 +562,22 @@ def set_monitoring_attrs_argparser(parser, hide_help=False):
                         help='min/max number of monitoring regions'
                         if not hide_help else argparse.SUPPRESS)
 
-def set_monitoring_argparser(parser):
+def set_monitoring_argparser(parser, hide_help=False):
     parser.add_argument('--ops', choices=['vaddr', 'paddr', 'fvaddr'],
-            help='monitoring operations set')
+                        help='monitoring operations set'
+                        if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--target_pid', type=int, metavar='<pid>',
-            help='pid of monitoring target process')
+                        help='pid of monitoring target process'
+                        if not hide_help else argparse.SUPPRESS)
     parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
-            type=str, default='', help='monitoring target address regions')
-    parser.add_argument('--numa_node', metavar='<node id>', type=int,
-            help='if target is \'paddr\', limit it to the numa node')
-    set_monitoring_attrs_argparser(parser)
+                        type=str, default='',
+                        help='monitoring target address regions'
+                        if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--numa_node', metavar='<node id>', type=int,
+            help='if target is \'paddr\', limit it to the numa node'
+            if not hide_help else argparse.SUPPRESS)
+    set_monitoring_attrs_argparser(parser, hide_help)
 
 def set_damos_argparser(parser):
     parser.add_argument('--damos_action', metavar='<action>', nargs='+',
