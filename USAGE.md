@@ -463,10 +463,9 @@ record` output compatible tools.
 Note: This is an experimental feature at the moment.  Some changes could be
 made, or the support can be dropped in future.
 
-Users can record memory usage information of the record target processes and
-the system together with the access pattern by adding `--footprint` command
-line option to the `damo record` command.  Internally, it parses
-`/proc/meminfo` and `/proc/<pid>/statm` files for the monitoring target
+`damo record` command records memory usage information of the record target
+processes and the system together with the access pattern.  Internally, it
+parses `/proc/meminfo` and `/proc/<pid>/statm` files for the monitoring target
 processes, and save the results as a json file of the name same to the access
 pattern record file (specified by `--out` option of `damo record`) except
 having `.mem_footprint` suffix.  Hence, `damon.data.mem_footprint` is the
