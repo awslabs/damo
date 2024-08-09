@@ -537,18 +537,28 @@ def set_common_argparser(parser):
     parser.add_argument('--debug_damon', action='store_true',
             help='Print debugging log')
 
-def set_monitoring_attrs_pinpoint_argparser(parser):
+def set_monitoring_attrs_pinpoint_argparser(parser, hide_help=False):
     # for easier pinpoint setup
-    parser.add_argument('-s', '--sample', metavar='<microseconds>',
-            default=5000, help='sampling interval (us)')
-    parser.add_argument('-a', '--aggr', metavar='<microseconds>',
-            default=100000, help='aggregate interval (us)')
-    parser.add_argument('-u', '--updr', metavar='<microseconds>',
-            default=1000000, help='regions update interval (us)')
-    parser.add_argument('-n', '--minr', metavar='<# regions>',
-            default=10, help='minimal number of regions')
-    parser.add_argument('-m', '--maxr', metavar='<# regions>',
-            default=1000, help='maximum number of regions')
+    parser.add_argument(
+            '-s', '--sample', metavar='<microseconds>',
+            default=5000, help='sampling interval (us)'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '-a', '--aggr', metavar='<microseconds>',
+            default=100000, help='aggregate interval (us)'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '-u', '--updr', metavar='<microseconds>',
+            default=1000000, help='regions update interval (us)'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '-n', '--minr', metavar='<# regions>',
+            default=10, help='minimal number of regions'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '-m', '--maxr', metavar='<# regions>',
+            default=1000, help='maximum number of regions'
+            if not hide_help else argparse.SUPPRESS)
 
 def set_monitoring_attrs_argparser(parser, hide_help=False):
     # for easier total setup
@@ -681,5 +691,5 @@ def set_argparser(parser, add_record_options, min_help=False):
         parser.add_argument('-o', '--out', metavar='<file path>', type=str,
                 default='damon.data', help='output file path')
     set_common_argparser(parser)
-    set_monitoring_attrs_pinpoint_argparser(parser)
+    set_monitoring_attrs_pinpoint_argparser(parser, min_help)
     return parser
