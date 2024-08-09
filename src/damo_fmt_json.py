@@ -13,7 +13,7 @@ import _damon_args
 def main(args):
     _damo_deprecation_notice.will_be_deprecated(
             feature='"damo fmt_json"', deadline='2024-11',
-            additional_notice='Use "damo args --format json" instead.')
+            additional_notice='Use "damo args damon --format json" instead.')
     _damon.ensure_root_permission()
 
     kdamonds, err = _damon_args.kdamonds_for(args)
