@@ -636,10 +636,10 @@ def set_damos_argparser(parser):
             metavar='<integer>',
             help='number of filters for each scheme (in order)')
 
-def set_argparser(parser, add_record_options):
+def set_argparser(parser, add_record_options, min_help=False):
     if parser == None:
         parser = argparse.ArgumentParser()
-    set_monitoring_argparser(parser)
+    set_monitoring_argparser(parser, min_help)
     set_damos_argparser(parser)
     parser.add_argument('-c', '--schemes', metavar='<json string or file>',
 	    help='data access monitoring-based operation schemes')
