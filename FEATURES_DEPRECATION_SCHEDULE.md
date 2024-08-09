@@ -8,7 +8,7 @@ any of those, please [report](REPORTING.md).
 `damo fmt_json`
 ---------------
 
-Will be deprecated.  Use `damo args --format json` instead.
+Will be deprecated by 2024-11.  Use `damo args damon --format json` instead.
 
 
 `--damon_interface`
