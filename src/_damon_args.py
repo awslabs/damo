@@ -692,4 +692,10 @@ def set_argparser(parser, add_record_options, min_help=False):
                 default='damon.data', help='output file path')
     set_common_argparser(parser)
     set_monitoring_attrs_pinpoint_argparser(parser, min_help)
+    if min_help:
+        if parser.epilog is None:
+            parser.epilog = ''
+        parser.epilog += ' '.join([
+            "DAMON parameters options from 'damo args damon' are also",
+            "supported. Do 'damo args damon -h' for the options."])
     return parser
