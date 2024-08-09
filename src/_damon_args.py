@@ -579,68 +579,91 @@ def set_monitoring_argparser(parser, hide_help=False):
             if not hide_help else argparse.SUPPRESS)
     set_monitoring_attrs_argparser(parser, hide_help)
 
-def set_damos_argparser(parser):
+def set_damos_argparser(parser, hide_help):
     parser.add_argument('--damos_action', metavar='<action>', nargs='+',
-            action='append', default=[],
-            help='damos action to apply to the target regions')
+                        action='append', default=[],
+                        help='damos action to apply to the target regions'
+                        if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--damos_sz_region', metavar=('<min>', '<max>'),
+                        nargs=2, default=[], action='append',
+                        help='min/max size of damos target regions (bytes)'
+                        if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--damos_access_rate', metavar=('<min>', '<max>'),
             nargs=2, default=[], action='append',
-            help='min/max size of damos target regions (bytes)')
-    parser.add_argument('--damos_access_rate', metavar=('<min>', '<max>'),
-            nargs=2, default=[], action='append',
-            help='min/max access rate of damos target regions (percent)')
-    parser.add_argument('--damos_age', metavar=('<min>', '<max>'), nargs=2,
+            help='min/max access rate of damos target regions (percent)'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--damos_age', metavar=('<min>', '<max>'), nargs=2,
             default=[], action='append',
-            help='min/max age of damos target regions (microseconds)')
+            help='min/max age of damos target regions (microseconds)'
+            if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--damos_apply_interval', metavar='<microseconds>',
-            action='append', default=[],
-            help='the apply interval for the scheme')
-    parser.add_argument('--damos_quotas', default=[],
+                        action='append', default=[],
+                        help='the apply interval for the scheme'
+                        if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--damos_quotas', default=[],
             metavar='<quota parameter>', nargs='+', action='append',
             help=' '.join([
             'damos quotas (<time (ms)> [<size (bytes)> [<reset interval (ms)>',
                 '[<size priority weight (permil)>',
                 '[<access rate priority weight> (permil)',
-                '[<age priority weight> (permil)]]]]])']))
+                '[<age priority weight> (permil)]]]]])'])
+            if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--damos_quota_interval', default=[],
                         metavar='<milliseconds>', action='append',
-                        help='quota reset interval')
+                        help='quota reset interval'
+                        if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--damos_quota_time', default=[],
                         metavar='<milliseconds>', action='append',
-                        help='time quota')
+                        help='time quota'
+                        if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--damos_quota_space', default=[], metavar='<bytes>',
-                        action='append', help='space quota')
+                        action='append', help='space quota'
+                        if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--damos_quota_weights', default=[],
                         metavar='<permil>', nargs=3, action='append',
-                        help='quota\'s prioritization weights')
-    parser.add_argument('--damos_quota_goal', nargs='+', action='append',
+                        help='quota\'s prioritization weights'
+                        if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--damos_quota_goal', nargs='+', action='append',
             default=[],
             metavar='<metric or value>',
             help=' '.join([
                 'damos quota goal (<metric> <target value> [current value]).',
                 '<metric> should be {%s}.' %
-                ','.join(_damon.qgoal_metrics)]))
-    parser.add_argument('--damos_nr_quota_goals', type=int, nargs='+',
+                ','.join(_damon.qgoal_metrics)])
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--damos_nr_quota_goals', type=int, nargs='+',
             default=[], metavar='<integer>',
-            help='number of quota goals for each scheme (in order)')
-    parser.add_argument('--damos_wmarks', nargs=5, action='append', default=[],
+            help='number of quota goals for each scheme (in order)'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--damos_wmarks', nargs=5, action='append', default=[],
             metavar=('<metric (none|free_mem_rate)>', '<interval (us)>',
                 '<high mark (permil)>', '<mid mark (permil)>',
                 '<low mark (permil)>'),
-            help='damos watermarks')
-    parser.add_argument('--damos_filter', nargs='+', action='append',
+            help='damos watermarks'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--damos_filter', nargs='+', action='append',
             default=[],
             metavar='<filter argument>',
-            help='damos filter (type, matching, and optional arguments')
-    parser.add_argument('--damos_nr_filters', type=int, nargs='+', default=[],
+            help='damos filter (type, matching, and optional arguments'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--damos_nr_filters', type=int, nargs='+', default=[],
             metavar='<integer>',
-            help='number of filters for each scheme (in order)')
+            help='number of filters for each scheme (in order)'
+            if not hide_help else argparse.SUPPRESS)
 
 def set_argparser(parser, add_record_options, min_help=False):
     if parser == None:
         parser = argparse.ArgumentParser()
     set_monitoring_argparser(parser, min_help)
-    set_damos_argparser(parser)
+    set_damos_argparser(parser, min_help)
     parser.add_argument('-c', '--schemes', metavar='<json string or file>',
 	    help='data access monitoring-based operation schemes')
     parser.add_argument('--kdamonds', metavar='<json/yaml string or file>',
