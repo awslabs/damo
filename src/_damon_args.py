@@ -669,7 +669,7 @@ def set_damos_argparser(parser, hide_help):
             help='number of filters for each scheme (in order)'
             if not hide_help else argparse.SUPPRESS)
 
-def set_argparser(parser, add_record_options, min_help=False):
+def set_argparser(parser, add_record_options, min_help=True):
     if parser == None:
         parser = argparse.ArgumentParser()
     set_monitoring_argparser(parser, min_help)
