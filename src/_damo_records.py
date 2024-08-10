@@ -118,6 +118,19 @@ class DamonRecord:
 
 # for monitoring results manipulation
 
+def merge_records(records):
+    merged_records = []
+    for record in records:
+        merged = False
+        for merged_record in merged_records:
+            if merged_record.can_merge(record):
+                merged_record.merge(record)
+                merged = True
+                break
+        if not merged:
+            merged_records.append(record)
+    return merged_records
+
 def regions_intersect(r1, r2):
     return not (r1.end <= r2.start or r2.end <= r1.start)
 
