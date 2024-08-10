@@ -984,7 +984,7 @@ def start_recording(handle):
             time.time() - start_time >= handle.timeout):
             break
 
-        if handle.snapshots_request:
+        if handle.snapshot_request:
             handle.snapshot_records, err = get_snapshot_records_of(
                     handle.snapshot_request)
             if err is not None:
