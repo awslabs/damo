@@ -938,9 +938,10 @@ class RecordingHandle:
     perf_pipe = None
 
     # for access patterns snapshot
-    # TODO: extend for multi shots
     snapshot_request = None
     snapshot_records = None
+    snapshot_count = None
+    snapshot_interval_sec = None
 
     # for CPU clock event recording
     do_profile = None
@@ -993,6 +994,11 @@ def start_recording(handle):
         handle.perf_profile_pipe = subprocess.Popen(cmd)
 
     start_time = time.time()
+    nr_snapshots_to_take = handle.snapshot_count
+    if handle.snapshot_interval_sec:
+        sleep_time = handle.snapshot_interval_sec
+    else:
+        sleep_time = 1
     while (poll_target_pids(handle.kdamonds) or
            _damon.any_kdamond_running()):
         if handle.add_child_tasks is True:
@@ -1010,15 +1016,21 @@ def start_recording(handle):
             break
 
         if handle.snapshot_request:
-            handle.snapshot_records, err = get_snapshot_records_of(
+            if handle.snapshot_records is None:
+                handle.snapshot_records = []
+            snapshot_records, err = get_snapshot_records_of(
                     handle.snapshot_request)
             if err is not None:
                 print('failed getting snapshot')
                 exit(1)
-            else:
+            handle.snapshot_records += snapshot_records
+            nr_snapshots_to_take -= 1
+            if nr_snapshots_to_take == 0:
+                handle.snapshot_records = merge_records(
+                        handle.snapshot_records)
                 break
 
-        time.sleep(1)
+        time.sleep(sleep_time)
 
 def finish_recording(handle):
     if handle.perf_pipe:
