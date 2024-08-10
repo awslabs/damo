@@ -69,6 +69,25 @@ def handle_args(args):
         print(err)
         exit(-3)
 
+def mk_handle(args, kdamonds, monitoring_intervals):
+    if args.schemes_target_regions == False:
+        tracepoint = _damo_records.perf_event_damon_aggregated
+    else:
+        tracepoint = _damo_records.perf_event_damos_before_apply
+
+    return _damo_records.RecordingHandle(
+            # for access pattern monitoring
+            tracepoint=tracepoint, file_path=args.out,
+            file_format=args.output_type,
+            file_permission=args.output_permission,
+            monitoring_intervals=monitoring_intervals,
+            # for perf profile
+            do_profile=args.profile is True,
+            # for children processes recording and memory footprint
+            kdamonds=kdamonds, add_child_tasks=args.include_child_tasks,
+            record_mem_footprint=args.footprint,
+            record_vmas=args.vmas, timeout=None)
+
 def main(args):
     global data_for_cleanup
 
@@ -106,23 +125,8 @@ def main(args):
                 0].contexts[0].intervals
         kdamonds = data_for_cleanup.orig_kdamonds
 
-    if args.schemes_target_regions == False:
-        tracepoint = _damo_records.perf_event_damon_aggregated
-    else:
-        tracepoint = _damo_records.perf_event_damos_before_apply
+    record_handle = mk_handle(args, kdamonds, monitoring_intervals)
 
-    record_handle = _damo_records.RecordingHandle(
-            # for access pattern monitoring
-            tracepoint=tracepoint, file_path=args.out,
-            file_format=args.output_type,
-            file_permission=args.output_permission,
-            monitoring_intervals=monitoring_intervals,
-            # for perf profile
-            do_profile=args.profile is True,
-            # for children processes recording and memory footprint
-            kdamonds=kdamonds, add_child_tasks=args.include_child_tasks,
-            record_mem_footprint=args.footprint,
-            record_vmas=args.vmas, timeout=None)
     data_for_cleanup.record_handle = record_handle
 
     print('Press Ctrl+C to stop')
