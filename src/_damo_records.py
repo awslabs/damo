@@ -104,6 +104,18 @@ class DamonRecord:
         ordered_dict['snapshots'] = [s.to_kvpairs(raw) for s in self.snapshots]
         return ordered_dict
 
+    def can_merge(self, other):
+        return (
+                self.kdamond_idx == other.kdamond_idx and
+                self.context_idx == other.context_idx and
+                self.intervals == other.intervals and
+                self.scheme_idx == other.scheme_idx and
+                self.target_id == other.target_id)
+
+    def merge(self, other):
+        self.snapshots += other.snapshots
+        self.snapshots.sort(key=lambda s: s.start_time)
+
 # for monitoring results manipulation
 
 def regions_intersect(r1, r2):
