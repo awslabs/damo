@@ -75,7 +75,7 @@ def mk_handle(args, kdamonds, monitoring_intervals):
     else:
         tracepoint = _damo_records.perf_event_damos_before_apply
 
-    return _damo_records.RecordingHandle(
+    handle = _damo_records.RecordingHandle(
             # for access pattern monitoring
             tracepoint=tracepoint, file_path=args.out,
             file_format=args.output_type,
@@ -87,6 +87,24 @@ def mk_handle(args, kdamonds, monitoring_intervals):
             kdamonds=kdamonds, add_child_tasks=args.include_child_tasks,
             record_mem_footprint=args.footprint,
             record_vmas=args.vmas, timeout=None)
+
+    if args.snapshot is not None:
+        handle.tracepoint = None
+        tried_regions_of = None
+        if args.schemes_target_regions:
+            tried_regions_of = []
+            for kidx, kd in enumerate(kdamonds):
+                for cidx, ctx in enumerate(kd.contexts):
+                    for sidx, scheme in enumerate(ctx.schemes):
+                        tried_regions_of.append([kidx, cidx, sidx])
+        handle.snapshot_request = _damo_records.RecordGetRequest(
+                tried_regions_of=tried_regions_of, record_file=None,
+                record_filter=None, total_sz_only=False,
+                dont_merge_regions=False)
+        handle.snapshot_interval_sec = args.snapshot[0]
+        handle.snapshot_count = args.snapshot[1]
+
+    return handle
 
 def main(args):
     global data_for_cleanup
@@ -157,5 +175,7 @@ def set_argparser(parser):
                         help='do not record memory footprint')
     parser.add_argument('--no_vmas', action='store_false', dest='vmas',
                         help='record virtual memory areas (/proc/<pid>/maps)')
+    parser.add_argument('--snapshot', metavar=('<delay>', '<count>'), nargs=2,
+                        type=float, help='record accesses as snapshots')
     parser.description = 'Record monitoring results'
     return parser
