@@ -34,9 +34,10 @@
   - collect: Collect DAMON status/output and System status
   - read: Visualize collected data
   - Maybe we could extend record/report, deprecate show and some options.
-    - extend record for snapshot capturing
+    - extend record for snapshot capturing (done: --snapshot)
       - damo record --shots <count> <delay>
         - if <delay> is zero, the conventional record.
+          - simply do conventional record if --snapshot is not given.
     - extend report for snapshot showing
       - damo report accesses --filter <filter> --format <format>
       - extend 'damo args' for <filter> and <format>
@@ -45,6 +46,7 @@
       2. extend report for repeating multiple times
       3. finally deprecate monitor
 - deprecate DAMON parameters options
+  - Done by simply suppressing the help message
 - Provide virtual memory mapping information
   - shows when what virtual address has mappend and unmapped
 
