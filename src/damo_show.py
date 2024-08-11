@@ -422,54 +422,54 @@ def sorted_regions(regions, sort_fields, sort_dsc_keys, temperature_weights):
 def fmt_records(fmt, args, records):
     sorted_access_patterns = SortedAccessPatterns(records)
     region_box_args = RegionBox(sorted_access_patterns,
-            RegionBoxAttr(args.region_box_values[0],
-                args.region_box_min_max_length,
-                args.region_box_scales[0] == 'log'), args.region_box_align,
-            RegionBoxAttr(args.region_box_values[1],
-                [0, 9], args.region_box_scales[1] == 'log'),
-            args.region_box_colorset,
-            RegionBoxAttr(args.region_box_values[2],
-                args.region_box_min_max_height,
-                args.region_box_scales[2] == 'log'))
+            RegionBoxAttr(fmt.region_box_values[0],
+                fmt.region_box_min_max_length,
+                fmt.region_box_scales[0] == 'log'), fmt.region_box_align,
+            RegionBoxAttr(fmt.region_box_values[1],
+                [0, 9], fmt.region_box_scales[1] == 'log'),
+            fmt.region_box_colorset,
+            RegionBoxAttr(fmt.region_box_values[2],
+                fmt.region_box_min_max_height,
+                fmt.region_box_scales[2] == 'log'))
 
     outputs = []
     for record in records:
         outputs.append(
                 format_output(
-                    args.format_record_head, record_formatters,
-                    args.min_chars_for, args.raw_number, region_box_args,
+                    fmt.format_record_head, record_formatters,
+                    fmt.min_chars_for, fmt.raw_number, region_box_args,
                     record))
         snapshots = record.snapshots
 
         for sidx, snapshot in enumerate(snapshots):
             outputs.append(
                     format_output(
-                        args.format_snapshot_head, snapshot_formatters,
-                        args.min_chars_for, args.raw_number, region_box_args,
+                        fmt.format_snapshot_head, snapshot_formatters,
+                        fmt.min_chars_for, fmt.raw_number, region_box_args,
                         record, snapshot))
             for r in snapshot.regions:
                 r.nr_accesses.add_unset_unit(record.intervals)
                 r.age.add_unset_unit(record.intervals)
             for idx, r in enumerate(
-                    sorted_regions(snapshot.regions, args.sort_regions_by,
-                        args.sort_regions_dsc, args.temperature_weights)):
+                    sorted_regions(snapshot.regions, fmt.sort_regions_by,
+                        fmt.sort_regions_dsc, fmt.temperature_weights)):
                 outputs.append(
                         format_output(
-                            args.format_region, region_formatters,
-                            args.min_chars_for, args.raw_number,
+                            fmt.format_region, region_formatters,
+                            fmt.min_chars_for, fmt.raw_number,
                             region_box_args, record, snapshot, r, idx))
             outputs.append(
                     format_output(
-                        args.format_snapshot_tail, snapshot_formatters,
-                        args.min_chars_for, args.raw_number, region_box_args,
+                        fmt.format_snapshot_tail, snapshot_formatters,
+                        fmt.min_chars_for, fmt.raw_number, region_box_args,
                         record, snapshot))
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
                 outputs.append('')
         outputs.append(
                 format_output(
-                    args.format_record_tail, record_formatters,
-                    args.min_chars_for, args.raw_number, region_box_args,
+                    fmt.format_record_tail, record_formatters,
+                    fmt.min_chars_for, fmt.raw_number, region_box_args,
                     record))
     outputs = [o for o in outputs if o is not None]
     return '\n'.join(outputs)
