@@ -4,7 +4,11 @@ picked by human sense, so could be incomplete and missing many things.
 v2.4.7
 - Hide DAMON parameter options from help messages of commands except
   'damo args damon'.
-- Support snapshots recording (damo record --snapshot)
+- Support snapshots recording (damo record --snapshot).
+- 'damo show': Support json format formatting parameters.
+- 'damo args': Support access formatting parameters
+  ('damo args accesses_format').
+- Hide detailed formatting parmeter options from help message of 'damo show'.
 
 v2.4.6
 - Mark 'damo fmt_json' as will-be-deprecated.
