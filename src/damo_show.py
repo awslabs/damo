@@ -419,7 +419,7 @@ def sorted_regions(regions, sort_fields, sort_dsc_keys, temperature_weights):
                     key=lambda r: temperature_of(r, temperature_weights))
     return regions
 
-def fmt_records(fmt, args, records):
+def fmt_records(fmt, records):
     sorted_access_patterns = SortedAccessPatterns(records)
     region_box_args = RegionBox(sorted_access_patterns,
             RegionBoxAttr(fmt.region_box_values[0],
@@ -474,12 +474,12 @@ def fmt_records(fmt, args, records):
     outputs = [o for o in outputs if o is not None]
     return '\n'.join(outputs)
 
-def pr_records(fmt, args, records):
+def pr_records(fmt, records):
     if fmt.json:
         _damo_print.pr_with_pager_if_needed(
                 json.dumps([r.to_kvpairs(fmt.raw_number) for r in records],
                            indent=4))
-    _damo_print.pr_with_pager_if_needed(fmt_records(fmt, args, records))
+    _damo_print.pr_with_pager_if_needed(fmt_records(fmt, records))
 
 class RecordsVisualizationFormat:
     sort_regions_by = None
@@ -618,7 +618,7 @@ def main(args):
     fmt = set_formats(args, records)
     for record in records:
         try:
-            pr_records(fmt, args, records)
+            pr_records(fmt, records)
         except BrokenPipeError as e:
             # maybe user piped to 'less' like pager, and quit from it
             pass
