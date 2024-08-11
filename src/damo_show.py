@@ -504,6 +504,29 @@ class RecordsVisualizationFormat:
     raw_number = None
     json = None
 
+    @classmethod
+    def from_args(cls, args):
+        self = cls()
+        self.sort_regions_by = args.sort_regions_by
+        self.sort_regions_dsc = args.sort_regions_dsc
+        self.temperature_weights = args.temperature_weights
+        self.dont_merge_regions = args.dont_merge_regions
+        self.format_record_head = args.format_record_head
+        self.format_record_tail = args.format_record_tail
+        self.format_snapshot_head = args.format_snapshot_head
+        self.format_snapshot_tail = args.format_snapshot_tail
+        self.format_region = args.format_region
+        self.region_box_values = args.region_box_values
+        self.region_box_min_max_height = args.region_box_min_max_height
+        self.region_box_min_max_length = args.region_box_min_max_length
+        self.region_box_colorset = args.region_box_colorset
+        self.region_box_scales = args.region_box_scales
+        self.region_box_align = args.region_box_align
+        self.min_chars_for = args.min_chars_for
+        self.raw_number = args.raw_number
+        self.json = args.json
+        return self
+
 def set_formats(args, records):
     if args.style == 'simple-boxes':
         args.format_region = '<box> size <size> access rate <access rate> age <age>'
