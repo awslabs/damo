@@ -527,6 +527,12 @@ class RecordsVisualizationFormat:
         self.json = args.json
         return self
 
+    def total_sz_only():
+        return (
+                args.format_snapshot_head == '' and
+                args.format_region == '' and
+                args.format_snapshot_tail == '<total bytes>')
+
 def set_formats(args, records):
     if args.style == 'simple-boxes':
         args.format_region = '<box> size <size> access rate <access rate> age <age>'
