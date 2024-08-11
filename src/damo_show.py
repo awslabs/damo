@@ -533,6 +533,52 @@ class RecordsVisualizationFormat:
                 args.format_region == '' and
                 args.format_snapshot_tail == '<total bytes>')
 
+    def to_kvpairs(self, raw):
+        return {
+                'sort_regions_by': self.sort_regions_by,
+                'sort_regions_dsc': self.sort_regions_dsc,
+                'temperature_weights': self.temperature_weights,
+                'dont_merge_regions': self.dont_merge_regions,
+                'format_record_head': self.format_record_head,
+                'format_record_tail': self.format_record_tail,
+                'format_snapshot_head': self.format_snapshot_head,
+                'format_snapshot_tail': self.format_snapshot_tail,
+                'format_region': self.format_region,
+                'region_box_values': self.region_box_values,
+                'region_box_min_max_height': self.region_box_min_max_height,
+                'region_box_min_max_length': self.region_box_min_max_length,
+                'region_box_colorset': self.region_box_colorset,
+                'region_box_scales': self.region_box_scales,
+                'region_box_align': self.region_box_align,
+                'min_chars_for': self.min_chars_for,
+                'raw_number': self.raw_number,
+                'json': self.json,
+                }
+
+    @classmethod
+    def from_kvpairs(cls, kvpairs):
+        self = cls()
+        self.sort_regions_by = kvpairs['sort_regions_by']
+        self.sort_regions_dsc = kvpairs['sort_regions_dsc']
+        self.temperature_weights = kvpairs['temperature_weights']
+        self.dont_merge_regions = kvpairs['dont_merge_regions']
+        self.format_record_head = kvpairs['format_record_head']
+        self.format_record_tail = kvpairs['format_record_tail']
+        self.format_snapshot_head = kvpairs['format_snapshot_head']
+        self.format_snapshot_tail = kvpairs['format_snapshot_tail']
+        self.format_region = kvpairs['format_region']
+        self.region_box_values = kvpairs['region_box_values']
+        self.region_box_min_max_height = kvpairs['region_box_min_max_height']
+        self.region_box_min_max_length = kvpairs['region_box_min_max_length']
+        self.region_box_colorset = kvpairs['region_box_colorset']
+        self.region_box_scales = kvpairs['region_box_scales']
+        self.region_box_align = kvpairs['region_box_align']
+        self.min_chars_for = kvpairs['min_chars_for']
+        self.raw_number = kvpairs['raw_number']
+        self.json = kvpairs['json']
+        return self
+
+
 def set_formats(args, records):
     if args.style == 'simple-boxes':
         args.format_region = '<box> size <size> access rate <access rate> age <age>'
