@@ -7,6 +7,9 @@ import _damo_yaml
 import damo_show
 
 def main(args):
+    handled = damo_show.handle_ls_keywords(args)
+    if handled:
+        return
     fmt = damo_show.set_formats(args)
     kvpairs = fmt.to_kvpairs(raw=args.raw)
 
