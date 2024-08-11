@@ -569,19 +569,7 @@ def main(args):
             # maybe user piped to 'less' like pager, and quit from it
             pass
 
-def set_argparser(parser):
-    _damon_args.set_common_argparser(parser)
-
-    # what to show
-    _damo_records.set_filter_argparser(parser)
-
-    parser.add_argument('--input_file', metavar='<file>',
-            help='source of the access pattern to show')
-    parser.add_argument('--tried_regions_of', nargs=3, type=int,
-            action='append',
-            metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
-            help='show tried regions of given schemes')
-
+def add_fmt_args(parser):
     # how to show, in simple selection
     parser.add_argument(
             '--style', choices=['detailed', 'simple-boxes'],
@@ -661,6 +649,20 @@ def set_argparser(parser):
             help='list available snapshot format keywords')
     parser.add_argument('--ls_region_format_keywords', action='store_true',
             help='list available region format keywords')
+
+def set_argparser(parser):
+    _damon_args.set_common_argparser(parser)
+
+    # what to show
+    _damo_records.set_filter_argparser(parser)
+
+    parser.add_argument('--input_file', metavar='<file>',
+            help='source of the access pattern to show')
+    parser.add_argument('--tried_regions_of', nargs=3, type=int,
+            action='append',
+            metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
+            help='show tried regions of given schemes')
+    add_fmt_args(parser)
 
     parser.description = 'Show DAMON-monitored access pattern'
     parser.epilog='If --input_file is not provided, capture snapshot'
