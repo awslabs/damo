@@ -904,6 +904,11 @@ time of the release.  Later one would have more features and bug fixes.
 `damo fmt_json`
 ---------------
 
+Note: This command will be deprecated by 2024-11.  Use
+`damo args damon --format json` instead.  Please report your usecase to GitHub
+[issues](https://github.com/awslabs/damo/issues), sj@kernel.org,
+damon@lists.linux.dev and/or linux-mm@kvack.org if you depend on this command.
+
 As mentioned for `damo start` above, DAMON control commands including `start`,
 `tune`, and additionally `record` allows passing DAMON parameters or DAMOS
 specification all at once via json or yaml formats.  That's for making
@@ -928,4 +933,3 @@ Note that starting DAMON with the partial DAMON parameter command line option
 and then getting the DAMON parameters in the json format using `damo status`
 could also be one way for easily starting write of the json format
 specification.
-
