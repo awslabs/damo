@@ -498,7 +498,7 @@ def fmt_records(args, records):
                         record, snapshot))
 
             if sidx < len(snapshots) - 1 and not args.total_sz_only:
-                print('')
+                outputs.append('')
         outputs.append(
                 format_output(
                     args.format_record_tail, record_formatters,
