@@ -481,6 +481,29 @@ def pr_records(args, records):
                            indent=4))
     _damo_print.pr_with_pager_if_needed(fmt_records(args, records))
 
+class RecordsVisualizationFormat:
+    sort_regions_by = None
+    sort_regions_dsc = None
+    temperature_weights = None
+    dont_merge_regions = None
+
+    format_record_head = None
+    format_record_tail = None
+    format_snapshot_head = None
+    format_snapshot_tail = None
+    format_region = None
+
+    region_box_values = None
+    region_box_min_max_height = None
+    region_box_min_max_length = None
+    region_box_colorset = None
+    region_box_scales = None
+    region_box_align = None
+
+    min_chars_for = None
+    raw_number = None
+    json = None
+
 def set_formats(args, records):
     if args.style == 'simple-boxes':
         args.format_region = '<box> size <size> access rate <access rate> age <age>'
