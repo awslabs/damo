@@ -451,13 +451,7 @@ def sorted_regions(regions, sort_fields, sort_dsc_keys, temperature_weights):
                     key=lambda r: temperature_of(r, temperature_weights))
     return regions
 
-def pr_records(args, records):
-    if args.json:
-        _damo_print.pr_with_pager_if_needed(
-                json.dumps([r.to_kvpairs(args.raw_number) for r in records],
-                           indent=4))
-        return
-
+def fmt_records(args, records):
     set_formats(args, records)
     sorted_access_patterns = SortedAccessPatterns(records)
     region_box_args = RegionBox(sorted_access_patterns,
@@ -511,7 +505,14 @@ def pr_records(args, records):
                     args.min_chars_for, args.raw_number, region_box_args,
                     record))
     outputs = [o for o in outputs if o is not None]
-    _damo_print.pr_with_pager_if_needed('\n'.join(outputs))
+    return '\n'.join(outputs)
+
+def pr_records(args, records):
+    if args.json:
+        _damo_print.pr_with_pager_if_needed(
+                json.dumps([r.to_kvpairs(args.raw_number) for r in records],
+                           indent=4))
+    _damo_print.pr_with_pager_if_needed(fmt_records(args, records))
 
 def handle_ls_keywords(args):
     if args.ls_record_format_keywords:
