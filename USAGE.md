@@ -851,6 +851,36 @@ convenient use of `damo` and debugging of DAMON or `damo` itself, `damo`
 supports more commands.  This section explains some of those that could be
 useful for some cases.
 
+`damo args`
+-----------
+
+Some commands including `damo start` and `damo show` have long lists of command
+line options.  Those makes flexible usage of `damo`, but makes the help message
+too verbose.  For easy handling of such arguments, `damo args` receives such
+command line options and outputs compiled parameters.  The output is in a
+format like json, which users can read and modify using dedicatd editors.  The
+output can also be passed to relevant commands instead of the command line
+options.
+
+### `damo args damon`
+
+As mentioned for `damo start` above, DAMON control commands including `start`,
+`tune`, and additionally `record` allows passing DAMON parameters or DAMOS
+specification all at once via json or yaml formats.  That's for making
+specifying and managing complex requests easier, but writing the whole json or
+yaml manually could be annoying, while the partial DAMON/DAMOS parameters setup
+command line options are easy for simple use case.  To help formatting the json
+or yaml input easier, `damo args damon` receives the partial DMAON/DAMOS
+parameters setup options and print out resulting json format Kdamond
+parameters.  For example,
+
+    # damo args json --damos_action stat
+
+prints json format DAMON parameters specification that will be result in a
+DAMON configuration that same to one that can be made with `damo start
+--damos_action stat`.  In other words, `damo start $(damo args damon
+--damos_action stat)` will be same to `damo start --damos_action stat`.
+
 `damo dianose`
 --------------
 
@@ -899,32 +929,3 @@ and then getting the DAMON parameters in the json format using `damo status`
 could also be one way for easily starting write of the json format
 specification.
 
-`damo args`
------------
-
-Some commands including `damo start` and `damo show` have long lists of command
-line options.  Those makes flexible usage of `damo`, but makes the help message
-too verbose.  For easy handling of such arguments, `damo args` receives such
-command line options and outputs compiled parameters.  The output is in a
-format like json, which users can read and modify using dedicatd editors.  The
-output can also be passed to relevant commands instead of the command line
-options.
-
-### `damo args damon`
-
-As mentioned for `damo start` above, DAMON control commands including `start`,
-`tune`, and additionally `record` allows passing DAMON parameters or DAMOS
-specification all at once via json or yaml formats.  That's for making
-specifying and managing complex requests easier, but writing the whole json or
-yaml manually could be annoying, while the partial DAMON/DAMOS parameters setup
-command line options are easy for simple use case.  To help formatting the json
-or yaml input easier, `damo args damon` receives the partial DMAON/DAMOS
-parameters setup options and print out resulting json format Kdamond
-parameters.  For example,
-
-    # damo args json --damos_action stat
-
-prints json format DAMON parameters specification that will be result in a
-DAMON configuration that same to one that can be made with `damo start
---damos_action stat`.  In other words, `damo start $(damo args damon
---damos_action stat)` will be same to `damo start --damos_action stat`.
