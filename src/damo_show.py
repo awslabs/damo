@@ -579,8 +579,26 @@ class RecordsVisualizationFormat:
         self.json = kvpairs['json']
         return self
 
+    def runtime_update(self, records):
+        if self.format_record_head == None:
+            if len(records) > 1:
+                self.format_record_head = default_record_head_format
+            else:
+                self.format_record_head = ''
 
-def set_formats(args, records):
+        if self.format_snapshot_head == None:
+            need_snapshot_head = False
+            for record in records:
+                if len(record.snapshots) > 1:
+                    need_snapshot_head = True
+                    break
+            if need_snapshot_head:
+                self.format_snapshot_head = default_snapshot_head_format
+            else:
+                self.format_snapshot_head = ''
+
+
+def set_formats(args):
     if args.style == 'simple-boxes':
         args.format_region = '<box> size <size> access rate <access rate> age <age>'
         args.region_box_min_max_height = [1, 1]
@@ -590,23 +608,6 @@ def set_formats(args, records):
 
     args.region_box_values = [v if v != 'none' else None
             for v in args.region_box_values]
-
-    if args.format_record_head == None:
-        if len(records) > 1:
-            args.format_record_head = default_record_head_format
-        else:
-            args.format_record_head = ''
-
-    if args.format_snapshot_head == None:
-        need_snapshot_head = False
-        for record in records:
-            if len(record.snapshots) > 1:
-                need_snapshot_head = True
-                break
-        if need_snapshot_head:
-            args.format_snapshot_head = default_snapshot_head_format
-        else:
-            args.format_snapshot_head = ''
 
     if args.total_sz_only:
         args.format_snapshot_head = ''
@@ -669,7 +670,8 @@ def main(args):
                 fmt_string = f.read()
         fmt = RecordsVisualizationFormat.from_kvpairs(json.loads(fmt_string))
     else:
-        fmt = set_formats(args, records)
+        fmt = set_formats(args)
+    fmt.runtime_update(records)
     for record in records:
         try:
             pr_records(fmt, records)
