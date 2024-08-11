@@ -388,48 +388,6 @@ def format_output(template, formatters, min_chars, raw, region_box_args,
     return format_template(template, formatters, min_chars, index, region,
         snapshot, record, raw, region_box_args)
 
-def set_formats(args, records):
-    if args.style == 'simple-boxes':
-        args.format_region = '<box> size <size> access rate <access rate> age <age>'
-        args.region_box_min_max_height = [1, 1]
-        args.region_box_min_max_length = [1, 40]
-        args.region_box_align = 'right'
-        args.region_box_colorset = 'emotion'
-
-    args.region_box_values = [v if v != 'none' else None
-            for v in args.region_box_values]
-
-    if args.format_record_head == None:
-        if len(records) > 1:
-            args.format_record_head = default_record_head_format
-        else:
-            args.format_record_head = ''
-
-    if args.format_snapshot_head == None:
-        need_snapshot_head = False
-        for record in records:
-            if len(record.snapshots) > 1:
-                need_snapshot_head = True
-                break
-        if need_snapshot_head:
-            args.format_snapshot_head = default_snapshot_head_format
-        else:
-            args.format_snapshot_head = ''
-
-    if args.total_sz_only:
-        args.format_snapshot_head = ''
-        args.format_region = ''
-        args.format_snapshot_tail = '<total bytes>'
-
-    if args.region_box:
-        if args.region_box_min_max_height[1] > 1:
-            args.format_region = '<box>%s' % default_region_format
-        else:
-            args.format_region = '<box>\n%s' % default_region_format
-        if args.format_snapshot_tail.find('<region box description>') == -1:
-            args.format_snapshot_tail = ('%s\n<region box description>' %
-                    args.format_record_tail)
-
 def temperature_of(region, weights):
     sz_weight, access_rate_weight, age_weight = weights
     sz_score = region.size() * sz_weight
@@ -522,6 +480,48 @@ def pr_records(args, records):
                 json.dumps([r.to_kvpairs(args.raw_number) for r in records],
                            indent=4))
     _damo_print.pr_with_pager_if_needed(fmt_records(args, records))
+
+def set_formats(args, records):
+    if args.style == 'simple-boxes':
+        args.format_region = '<box> size <size> access rate <access rate> age <age>'
+        args.region_box_min_max_height = [1, 1]
+        args.region_box_min_max_length = [1, 40]
+        args.region_box_align = 'right'
+        args.region_box_colorset = 'emotion'
+
+    args.region_box_values = [v if v != 'none' else None
+            for v in args.region_box_values]
+
+    if args.format_record_head == None:
+        if len(records) > 1:
+            args.format_record_head = default_record_head_format
+        else:
+            args.format_record_head = ''
+
+    if args.format_snapshot_head == None:
+        need_snapshot_head = False
+        for record in records:
+            if len(record.snapshots) > 1:
+                need_snapshot_head = True
+                break
+        if need_snapshot_head:
+            args.format_snapshot_head = default_snapshot_head_format
+        else:
+            args.format_snapshot_head = ''
+
+    if args.total_sz_only:
+        args.format_snapshot_head = ''
+        args.format_region = ''
+        args.format_snapshot_tail = '<total bytes>'
+
+    if args.region_box:
+        if args.region_box_min_max_height[1] > 1:
+            args.format_region = '<box>%s' % default_region_format
+        else:
+            args.format_region = '<box>\n%s' % default_region_format
+        if args.format_snapshot_tail.find('<region box description>') == -1:
+            args.format_snapshot_tail = ('%s\n<region box description>' %
+                    args.format_record_tail)
 
 def handle_ls_keywords(args):
     if args.ls_record_format_keywords:
