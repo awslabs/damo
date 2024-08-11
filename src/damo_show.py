@@ -569,6 +569,8 @@ def set_formats(args, records):
             args.format_snapshot_tail = ('%s\n<region box description>' %
                     args.format_record_tail)
 
+    return RecordsVisualizationFormat.from_args(args)
+
 def handle_ls_keywords(args):
     if args.ls_record_format_keywords:
         print('\n\n'.join(['%s' % f for f in record_formatters]))
