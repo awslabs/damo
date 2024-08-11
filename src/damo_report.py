@@ -13,7 +13,7 @@ import damo_wss
 
 subcmds = [
         _damo_subcmds.DamoSubCmd(name='raw', module=damo_report_raw,
-            msg='human readable raw data'),
+            msg='human readable raw data of access patterns'),
         _damo_subcmds.DamoSubCmd(name='heatmap', module=damo_heatmap,
             msg='heatmap of access patterns'),
         _damo_subcmds.DamoSubCmd(name='heats', module=damo_heats,
@@ -21,9 +21,9 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(name='wss', module=damo_wss,
             msg='working set size'),
         _damo_subcmds.DamoSubCmd(name='nr_regions', module=damo_nr_regions,
-            msg='number of regions'),
+            msg='number of DAMON-regions'),
         _damo_subcmds.DamoSubCmd(name='profile', module=damo_report_profile,
-            msg='profile report for specific access pattern'),
+            msg='hotspots for specific access pattern'),
         _damo_subcmds.DamoSubCmd(name='times', module=damo_report_times,
             msg='times of record having specific access pattern'),
         _damo_subcmds.DamoSubCmd(
@@ -43,7 +43,7 @@ def set_argparser(parser):
     subparsers = parser.add_subparsers(title='report type', dest='report_type',
             metavar='<report type>', help='the type of the report to generate')
     subparsers.required = True
-    parser.description = 'Format a report for recorded DAMON monitoring results'
+    parser.description = "Format a report for 'damo record' generated data"
 
     for subcmd in subcmds:
         subcmd.add_parser(subparsers)
