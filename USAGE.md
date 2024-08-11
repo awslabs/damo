@@ -902,9 +902,6 @@ specification.
 `damo args`
 -----------
 
-Note: This is an experimental feature at the moment.  Some changes could be
-made, or the support can be dropped in future.
-
 `damo args` helps building complex command line arguments.  Currently supports
 generating DAMON parameters in json and yaml format.  This command aims to
 succeed `damo fmt_json` in future.  For example:
