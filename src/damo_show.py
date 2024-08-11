@@ -474,7 +474,7 @@ def fmt_records(args, records):
     outputs = [o for o in outputs if o is not None]
     return '\n'.join(outputs)
 
-def pr_records(args, records):
+def pr_records(fmt, args, records):
     if args.json:
         _damo_print.pr_with_pager_if_needed(
                 json.dumps([r.to_kvpairs(args.raw_number) for r in records],
@@ -609,10 +609,10 @@ def main(args):
         print('some records lack the intervals information')
         exit(1)
 
-    set_formats(args, records)
+    fmt = set_formats(args, records)
     for record in records:
         try:
-            pr_records(args, records)
+            pr_records(fmt, args, records)
         except BrokenPipeError as e:
             # maybe user piped to 'less' like pager, and quit from it
             pass
