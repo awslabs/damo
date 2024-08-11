@@ -614,20 +614,14 @@ def set_argparser(parser):
     parser.add_argument('--format_record_tail', metavar='<template>',
             default='',
             help='output format to show at the end of each record')
-    parser.add_argument('--ls_record_format_keywords', action='store_true',
-            help='list available record format keywords')
     parser.add_argument('--format_snapshot_head', metavar='<template>',
             help='output format to show at the beginning of each snapshot')
     parser.add_argument('--format_snapshot_tail', metavar='<template>',
             default='total size: <total bytes>',
             help='output format to show at the end of each snapshot')
-    parser.add_argument('--ls_snapshot_format_keywords', action='store_true',
-            help='list available snapshot format keywords')
     parser.add_argument('--format_region', metavar='<template>',
             default=default_region_format,
             help='output format to show for each memory region')
-    parser.add_argument('--ls_region_format_keywords', action='store_true',
-            help='list available region format keywords')
     parser.add_argument('--region_box_values',
             choices=['size', 'access_rate', 'age', 'none'], nargs=3,
             default=['age', 'access_rate', 'size'],
@@ -661,6 +655,12 @@ def set_argparser(parser):
             help='use machine-friendly raw numbers')
     parser.add_argument('--json', action='store_true',
             help='print in json format')
+    parser.add_argument('--ls_record_format_keywords', action='store_true',
+            help='list available record format keywords')
+    parser.add_argument('--ls_snapshot_format_keywords', action='store_true',
+            help='list available snapshot format keywords')
+    parser.add_argument('--ls_region_format_keywords', action='store_true',
+            help='list available region format keywords')
 
     parser.description = 'Show DAMON-monitored access pattern'
     parser.epilog='If --input_file is not provided, capture snapshot'
