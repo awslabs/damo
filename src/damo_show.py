@@ -464,7 +464,7 @@ def fmt_records(fmt, args, records):
                         fmt.min_chars_for, fmt.raw_number, region_box_args,
                         record, snapshot))
 
-            if sidx < len(snapshots) - 1 and not args.total_sz_only:
+            if sidx < len(snapshots) - 1 and not fmt.total_sz_only():
                 outputs.append('')
         outputs.append(
                 format_output(
