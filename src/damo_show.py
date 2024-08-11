@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0
 
+import argparse
 import json
 import math
 import os
@@ -679,7 +680,7 @@ def main(args):
             # maybe user piped to 'less' like pager, and quit from it
             pass
 
-def add_fmt_args(parser):
+def add_fmt_args(parser, hide_help=False):
     # how to show, in simple selection
     parser.add_argument(
             '--style', choices=['detailed', 'simple-boxes'],
@@ -707,44 +708,65 @@ def add_fmt_args(parser):
 
     # don't set default for record head and snapshot head because it depends on
     # given number of record and snapshots.  Decide those in set_formats().
-    parser.add_argument('--format_record_head', metavar='<template>',
-            help='output format to show at the beginning of each record')
+    parser.add_argument(
+            '--format_record_head', metavar='<template>',
+            help='output format to show at the beginning of each record'
+            if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--format_record_tail', metavar='<template>',
-            default='',
-            help='output format to show at the end of each record')
-    parser.add_argument('--format_snapshot_head', metavar='<template>',
-            help='output format to show at the beginning of each snapshot')
-    parser.add_argument('--format_snapshot_tail', metavar='<template>',
+                        default='',
+                        help='output format to show at the end of each record'
+                        if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--format_snapshot_head', metavar='<template>',
+            help='output format to show at the beginning of each snapshot'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--format_snapshot_tail', metavar='<template>',
             default='total size: <total bytes>',
-            help='output format to show at the end of each snapshot')
+            help='output format to show at the end of each snapshot'
+            if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--format_region', metavar='<template>',
-            default=default_region_format,
-            help='output format to show for each memory region')
-    parser.add_argument('--region_box_values',
+                        default=default_region_format,
+                        help='output format to show for each memory region'
+                        if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--region_box_values',
             choices=['size', 'access_rate', 'age', 'none'], nargs=3,
             default=['age', 'access_rate', 'size'],
-            help='values to show via the <box>\'s length, color, and height')
-    parser.add_argument('--region_box_min_max_length', nargs=2, type=int,
+            help='values to show via the <box>\'s length, color, and height'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--region_box_min_max_length', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 30],
-            help='minimum and maximum number of the region box\' length')
-    parser.add_argument('--region_box_min_max_height', nargs=2, type=int,
+            help='minimum and maximum number of the region box\' length'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--region_box_min_max_height', nargs=2, type=int,
             metavar=('<min>', '<max>'), default=[1, 5],
-            help='minimum and maximum number of region box\' height')
-    parser.add_argument('--region_box_colorset', default='gray',
+            help='minimum and maximum number of region box\' height'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--region_box_colorset', default='gray',
             choices=['gray', 'flame', 'emotion'],
-            help='colorset to use for region box')
-    parser.add_argument('--region_box_scales', choices=['linear', 'log'],
+            help='colorset to use for region box'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--region_box_scales', choices=['linear', 'log'],
             nargs=3, default=['log', 'linear', 'log'],
-            help='scale of region box\' length, color, and height')
+            help='scale of region box\' length, color, and height'
+            if not hide_help else argparse.SUPPRESS)
     parser.add_argument(
             '--region_box_align', choices=['left', 'right'], default='left',
-            help='where to align the region box')
-    parser.add_argument('--min_chars_for', nargs=2,
+            help='where to align the region box'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--min_chars_for', nargs=2,
             metavar=('<keyword>', '<number>'), action='append',
             default=[['<index>', 3],
                 ['<start address>', 12],['<end address>', 11],
                 ['<size>', 11], ['<access rate>', 5]],
-            help='minimum character for each keyword of the format')
+            help='minimum character for each keyword of the format'
+            if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--region_box', action='store_true',
             help='show region access pattern as a box')
     parser.add_argument('--total_sz_only', action='store_true',
@@ -754,13 +776,29 @@ def add_fmt_args(parser):
     parser.add_argument('--json', action='store_true',
             help='print in json format')
     parser.add_argument('--ls_record_format_keywords', action='store_true',
-            help='list available record format keywords')
+                        help='list available record format keywords'
+                        if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--ls_snapshot_format_keywords', action='store_true',
-            help='list available snapshot format keywords')
+                        help='list available snapshot format keywords'
+                        if not hide_help else argparse.SUPPRESS)
     parser.add_argument('--ls_region_format_keywords', action='store_true',
-            help='list available region format keywords')
+                        help='list available region format keywords'
+                        if not hide_help else argparse.SUPPRESS)
+    if hide_help:
+        if parser.epilog is None:
+            parser.epilog = ''
+        else:
+            parser.epilog += ' '
+        parser.epilog += ' '.join([
+            "Accesses format options from 'damo args accesses_format' are",
+            "also supported. Do 'damo args accesses_format -h' for the",
+            "options.",
+            ])
 
 def set_argparser(parser):
+    parser.description = 'Show DAMON-monitored access pattern'
+    parser.epilog='If --input_file is not provided, capture snapshot.'
+
     _damon_args.set_common_argparser(parser)
 
     # what to show
@@ -772,9 +810,7 @@ def set_argparser(parser):
             action='append',
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
-    add_fmt_args(parser)
+    add_fmt_args(parser, hide_help=True)
     parser.add_argument('--format', metavar='<json string>',
                         help='visualization format in json format')
 
-    parser.description = 'Show DAMON-monitored access pattern'
-    parser.epilog='If --input_file is not provided, capture snapshot'
