@@ -2,6 +2,7 @@
 
 import json
 import math
+import os
 
 import _damo_ascii_color
 import _damo_fmt_str
@@ -661,7 +662,14 @@ def main(args):
         print('some records lack the intervals information')
         exit(1)
 
-    fmt = set_formats(args, records)
+    if args.format is not None:
+        fmt_string = args.format
+        if os.path.isfile(fmt_string):
+            with open(fmt_string, 'r') as f:
+                fmt_string = f.read()
+        fmt = RecordsVisualizationFormat.from_kvpairs(json.loads(fmt_string))
+    else:
+        fmt = set_formats(args, records)
     for record in records:
         try:
             pr_records(fmt, records)
@@ -763,6 +771,8 @@ def set_argparser(parser):
             metavar=('<kdamond idx>', '<context idx>', '<scheme idx>'),
             help='show tried regions of given schemes')
     add_fmt_args(parser)
+    parser.add_argument('--format', metavar='<json string>',
+                        help='visualization format in json format')
 
     parser.description = 'Show DAMON-monitored access pattern'
     parser.epilog='If --input_file is not provided, capture snapshot'
