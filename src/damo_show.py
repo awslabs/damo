@@ -389,6 +389,16 @@ def format_output(template, formatters, min_chars, raw, region_box_args,
         snapshot, record, raw, region_box_args)
 
 def set_formats(args, records):
+    if args.style == 'simple-boxes':
+        args.format_region = '<box> size <size> access rate <access rate> age <age>'
+        args.region_box_min_max_height = [1, 1]
+        args.region_box_min_max_length = [1, 40]
+        args.region_box_align = 'right'
+        args.region_box_colorset = 'emotion'
+
+    args.region_box_values = [v if v != 'none' else None
+            for v in args.region_box_values]
+
     if args.format_record_head == None:
         if len(records) > 1:
             args.format_record_head = default_record_head_format
@@ -530,16 +540,6 @@ def main(args):
     handled = handle_ls_keywords(args)
     if handled:
         return
-
-    if args.style == 'simple-boxes':
-        args.format_region = '<box> size <size> access rate <access rate> age <age>'
-        args.region_box_min_max_height = [1, 1]
-        args.region_box_min_max_length = [1, 40]
-        args.region_box_align = 'right'
-        args.region_box_colorset = 'emotion'
-
-    args.region_box_values = [v if v != 'none' else None
-            for v in args.region_box_values]
 
     record_filter, err = _damo_records.args_to_filter(args)
     if err != None:
