@@ -462,7 +462,6 @@ def sorted_regions(regions, sort_fields, sort_dsc_keys, temperature_weights):
     return regions
 
 def fmt_records(args, records):
-    set_formats(args, records)
     sorted_access_patterns = SortedAccessPatterns(records)
     region_box_args = RegionBox(sorted_access_patterns,
             RegionBoxAttr(args.region_box_values[0],
@@ -562,6 +561,7 @@ def main(args):
         print('some records lack the intervals information')
         exit(1)
 
+    set_formats(args, records)
     for record in records:
         try:
             pr_records(args, records)
