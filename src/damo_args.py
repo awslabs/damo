@@ -3,6 +3,7 @@
 import _damo_subcmds
 import damo_args_damon
 import damo_args_accesses_filter
+import damo_args_accesses_format
 
 subcmds = [
         _damo_subcmds.DamoSubCmd(
@@ -10,6 +11,9 @@ subcmds = [
         _damo_subcmds.DamoSubCmd(
             name='accesses_filter', module=damo_args_accesses_filter,
             msg='DAMON monitoring results filter'),
+        _damo_subcmds.DamoSubCmd(
+            name='accesses_format', module=damo_args_accesses_format,
+            msg='DAMON monitoring results visualization format'),
         ]
 
 def main(args):
