@@ -17,9 +17,9 @@ setuptools.setup(
     description="DAMON user-space tool",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/awslabs/damo",
+    url="https://github.com/damonitor/damo",
     project_urls={
-        "Bug Tracker": "https://github.com/awslabs/damo/issues",
+        "Bug Tracker": "https://github.com/damonitor/damo/issues",
         "DAMON": "https://damonitor.github.io",
     },
     classifiers=[

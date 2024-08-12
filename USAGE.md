@@ -2,7 +2,7 @@ This document describes the detailed usage of `damo`.  This doesn't cover all
 details of `damo` but only major features.  This document may not complete and
 up to date sometimes.  Please don't hesitate at asking questions and
 improvement of this document via GitHub
-[issues](https://github.com/awslabs/damo/issues) or
+[issues](https://github.com/damonitor/damo/issues) or
 [mails](https://lore.kernel.org/damon).
 
 
@@ -214,7 +214,7 @@ schemes part of the `--kdamonds` input.
 
 You could get some example json format input for `--schemes` option from
 any `.json` files in `damon-tests`
-[repo](https://github.com/awslabs/damon-tests/tree/next/perf/schemes).
+[repo](https://github.com/damonitor/damon-tests/tree/next/perf/schemes).
 
 `damo tune`
 -----------
@@ -906,7 +906,7 @@ time of the release.  Later one would have more features and bug fixes.
 
 Note: This command will be deprecated by 2024-11.  Use
 `damo args damon --format json` instead.  Please report your usecase to GitHub
-[issues](https://github.com/awslabs/damo/issues), sj@kernel.org,
+[issues](https://github.com/damonitor/damo/issues), sj@kernel.org,
 damon@lists.linux.dev and/or linux-mm@kvack.org if you depend on this command.
 
 As mentioned for `damo start` above, DAMON control commands including `start`,

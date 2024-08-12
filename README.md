@@ -88,14 +88,14 @@ also install less stable but more fresh `damo` from source code.  For that,
 fetch the `next` branch of the source tree and use `damo` executable file in
 the tree.
 
-    $ git clone https://github.com/awslabs/damo -b next
+    $ git clone https://github.com/damonitor/damo -b next
 
 
 How can I participate in the development of `damo`?
 ---------------------------------------------------
 
 Please refer to
-[CONTRIBUTING](https://github.com/awslabs/damo/blob/next/CONTRIBUTING) file.
+[CONTRIBUTING](https://github.com/damonitor/damo/blob/next/CONTRIBUTING) file.
 
 
 Why some features are not documented on [USAGE.md](USAGE.md) file?

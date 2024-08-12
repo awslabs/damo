@@ -19,8 +19,8 @@ cp "$readme_original" "$readme"
 sed -i '/water_nsquared.gif/d' "$readme"
 
 # Change images addresses
-sed -i "s/images\/masim_zigzag_heatmap_ascii.png/https:\/\/raw.githubusercontent.com\/awslabs\/damo\/$version\/images\/masim_zigzag_heatmap_ascii.png/" "$readme"
-sed -i "s/images\/masim_stairs_heatmap_ascii.png/https:\/\/raw.githubusercontent.com\/awslabs\/damo\/$version\/images\/masim_stairs_heatmap_ascii.png/" "$readme"
+sed -i "s/images\/masim_zigzag_heatmap_ascii.png/https:\/\/raw.githubusercontent.com\/damonitor\/damo\/$version\/images\/masim_zigzag_heatmap_ascii.png/" "$readme"
+sed -i "s/images\/masim_stairs_heatmap_ascii.png/https:\/\/raw.githubusercontent.com\/damonitor\/damo\/$version\/images\/masim_stairs_heatmap_ascii.png/" "$readme"
 
 # Change CONTRIBUTING
-sed -i "s/(USAGE.md)/(https:\/\/github.com\/awslabs\/damo\/blob\/$version\/USAGE.md)/" "$readme"
+sed -i "s/(USAGE.md)/(https:\/\/github.com\/damonitor\/damo\/blob\/$version\/USAGE.md)/" "$readme"

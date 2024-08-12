@@ -30,7 +30,7 @@ via below command from the root of DAMO.
 
 If you want to run wider range of tests, or have interests in not only DAMO but
 also DAMON, you could also run DAMON tests suite
-(https://github.com/awslabs/damon-tests) on your system.  It might reveal some
+(https://github.com/damonitor/damon-tests) on your system.  It might reveal some
 issues in DAMO or DAMON.
 
 TODO list
