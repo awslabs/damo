@@ -8,6 +8,21 @@ make data access-aware memory management optimizations.
 ![damo monitor demo for water_nsquared](images/damo_monitor_water_nsquared.gif)
 
 
+Official Repositories
+---------------------
+
+Official git repos for `damo` are hosted on kernel.org and GitHub:
+
+- kernel.org: https://git.kernel.org/pub/scm/linux/kernel/git/sj/damo.git
+- GitHub: https://github.com/damonitor/damo
+
+Note that the repo under awslabs GitHub organization
+(https://github.com/awslabs/damo) was used as the official repo
+before.  It
+[will](https://lore.kernel.org/20240813232158.83903-1-sj@kernel.org) be no more
+official repo that maintained by DAMON maintainer after 2024-09-05.
+
+
 Demo Video
 ==========
 
