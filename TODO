@@ -45,6 +45,11 @@
       1. extend report for recording together
       2. extend report for repeating multiple times
       3. finally deprecate monitor
+- Record DAMON status
+- Report DAMON status
+- Deprecate 'damo status'
+- Implement single report formatter
+  - Extend 'report access' format arguments for wss, memfootprint, etc
 - deprecate DAMON parameters options
   - Done by simply suppressing the help message
 - Provide virtual memory mapping information
