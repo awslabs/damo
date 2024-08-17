@@ -4,6 +4,7 @@ import _damo_subcmds
 import damo_heatmap
 import damo_heats
 import damo_nr_regions
+import damo_report_access
 import damo_report_footprint
 import damo_report_holistic
 import damo_report_profile
@@ -14,6 +15,8 @@ import damo_wss
 subcmds = [
         _damo_subcmds.DamoSubCmd(name='raw', module=damo_report_raw,
             msg='human readable raw data of access patterns'),
+        _damo_subcmds.DamoSubCmd(name='access', module=damo_report_access,
+            msg='access patterns'),
         _damo_subcmds.DamoSubCmd(name='heatmap', module=damo_heatmap,
             msg='heatmap of access patterns'),
         _damo_subcmds.DamoSubCmd(name='heats', module=damo_heats,
