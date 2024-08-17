@@ -1,13 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
-import argparse
-import json
-import math
 import os
 
-import _damo_ascii_color
-import _damo_fmt_str
-import _damo_print
 import _damo_records
 import _damon
 import _damon_args
