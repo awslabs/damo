@@ -73,4 +73,3 @@ def set_argparser(parser):
     damo_report_access.add_fmt_args(parser, hide_help=True)
     parser.add_argument('--format', metavar='<json string>',
                         help='visualization format in json format')
-
