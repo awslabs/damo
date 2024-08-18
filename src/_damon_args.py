@@ -225,6 +225,35 @@ def damos_options_to_scheme(sz_region, access_rate, age, action,
     except Exception as e:
         return None, 'Wrong \'--damos_*\' argument (%s)' % e
 
+def convert_add_damos_filter_out_args_to_damos_filter_args(args):
+    '''
+    Convert --damos_filter_out arguments to --damos_filter arguments form, and
+    append to --damos_filter so that existing --damos_filter handling code can
+    just reused.
+
+    --damos_filter_out receives three arguments: type, matching, and optional
+    arguments for the type of filter (memcg path for memcg type).  Those are
+    same to --damos_filter, but 'matching' is optional.  The default value is
+    'matching'.
+    '''
+    for filter_out_args in args.damos_filter_out:
+        if len(filter_out_args) < 1:
+            return '--damos_filter_out with no argument'
+        ftype = filter_out_args[0]
+        if len(filter_out_args) == 1:
+            fmatching = 'matching'
+            optional_args = filter_out_args[1:]
+        else:
+            # second field would be nomatching, or optional args
+            if filter_out_args[1] == 'nomatching':
+                fmatching = 'nomatching'
+                optional_args = filter_out_args[2:]
+            else:
+                fmatching = 'matching'
+                optional_args = filter_out_args[1:]
+        args.damos_filter.append([ftype, fmatching] + optional_args)
+    return None
+
 def damos_options_to_schemes(args):
     if args.damos_quota_interval:
         for i, interval in enumerate(args.damos_quota_interval):
@@ -258,6 +287,10 @@ def damos_options_to_schemes(args):
         return [], 'wrong --damos_nr_quota_goals'
     if len(args.damos_wmarks) > nr_schemes:
         return [], 'too much --damos_wmarks'
+    if len(args.damos_filter_out) > 0:
+        err = convert_add_damos_filter_out_args_to_damos_filter_args(args)
+        if err is not None:
+            return [], 'converting damos_filter_out failed (%s)' % err
     # for multiple schemes, number of filters per scheme is required
     if len(args.damos_filter) > 0 and nr_schemes > 1:
         if len(args.damos_nr_filters) == 0:
@@ -659,6 +692,12 @@ def set_damos_argparser(parser, hide_help):
             if not hide_help else argparse.SUPPRESS)
     parser.add_argument(
             '--damos_filter', nargs='+', action='append',
+            default=[],
+            metavar='<filter argument>',
+            help='damos filter (type, matching, and optional arguments)'
+            if not hide_help else argparse.SUPPRESS)
+    parser.add_argument(
+            '--damos_filter_out', nargs='+', action='append',
             default=[],
             metavar='<filter argument>',
             help='damos filter (type, matching, and optional arguments)'
