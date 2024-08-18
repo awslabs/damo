@@ -112,9 +112,9 @@ class TestDamonArgs(unittest.TestCase):
                     ],
                 damos_filter_out=[
                     ['anon'],
-                    ['anon', 'nomatching'],
+                    ['not', 'anon'],
                     ['memcg', '/path/to/a'],
-                    ['memcg', 'nomatching', '/path/to/a'],
+                    ['not', 'memcg', '/path/to/a'],
                     ]
                 )
         _damon_args.convert_add_damos_filter_out_args_to_damos_filter_args(

@@ -239,19 +239,16 @@ def convert_add_damos_filter_out_args_to_damos_filter_args(args):
     for filter_out_args in args.damos_filter_out:
         if len(filter_out_args) < 1:
             return '--damos_filter_out with no argument'
-        ftype = filter_out_args[0]
-        if len(filter_out_args) == 1:
-            fmatching = 'matching'
-            optional_args = filter_out_args[1:]
+        if filter_out_args[0] == 'not':
+            fmatching = 'nomatching'
+            filter_out_args = filter_out_args[1:]
+            if len(filter_out_args) < 1:
+                return 'filter type not given'
         else:
-            # second field would be nomatching, or optional args
-            if filter_out_args[1] == 'nomatching':
-                fmatching = 'nomatching'
-                optional_args = filter_out_args[2:]
-            else:
-                fmatching = 'matching'
-                optional_args = filter_out_args[1:]
-        args.damos_filter.append([ftype, fmatching] + optional_args)
+            fmatching = 'matching'
+        ftype = filter_out_args[0]
+        ftype_args = filter_out_args[1:]
+        args.damos_filter.append([ftype, fmatching] + ftype_args)
     return None
 
 def damos_options_to_schemes(args):
@@ -700,7 +697,7 @@ def set_damos_argparser(parser, hide_help):
             '--damos_filter_out', nargs='+', action='append',
             default=[],
             metavar='<filter argument>',
-            help='damos filter (type, matching, and optional arguments)'
+            help='damos filter (matching, type, and optional arguments)'
             if not hide_help else argparse.SUPPRESS)
     parser.add_argument(
             '--damos_nr_filters', type=int, nargs='+', default=[],
