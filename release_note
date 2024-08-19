@@ -6,6 +6,7 @@ v2.4.8
   (https://lore.kernel.org/20240813232158.83903-1-sj@kernel.org)
 - Add a new report type, 'access'
   - Work same to 'show' (some behaviors will be changed in future)
+- Support --damos_filter_out option for DAMOS-control commands
 
 v2.4.7
 - Hide DAMON parameter options from help messages of commands except
