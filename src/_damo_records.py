@@ -34,7 +34,7 @@ class DamonSnapshot:
         self.end_time = end_time
         self.regions = regions
         self.total_bytes = total_bytes
-        if self.total_bytes == None:
+        if self.total_bytes is None:
             self.update_total_bytes()
 
     @classmethod
@@ -44,7 +44,7 @@ class DamonSnapshot:
                 _damo_fmt_str.text_to_ns(kv['end_time']),
                 [_damon.DamonRegion.from_kvpairs(r) for r in kv['regions']],
                 _damo_fmt_str.text_to_bytes(kv['total_bytes'])
-                if 'total_bytes' in kv and kv['total_bytes'] != None
+                if 'total_bytes' in kv and kv['total_bytes'] is not None
                 else None)
 
     def to_kvpairs(self, raw=False):
@@ -55,7 +55,7 @@ class DamonSnapshot:
                 self.end_time, raw)),
             ('regions', [r.to_kvpairs() for r in self.regions]),
             ('total_bytes', _damo_fmt_str.format_sz(self.total_bytes, raw)
-                if self.total_bytes != None else None),
+                if self.total_bytes is not None else None),
             ])
 
 class DamonRecord:
@@ -86,7 +86,7 @@ class DamonRecord:
 
         record = DamonRecord(kv['kdamond_idx'], kv['context_idx'],
                 _damon.DamonIntervals.from_kvpairs(kv['intervals'])
-                if kv['intervals'] != None else None,
+                if kv['intervals'] is not None else None,
                 kv['scheme_idx'], kv['target_id'])
         record.snapshots = [DamonSnapshot.from_kvpairs(s)
                 for s in kv['snapshots']]
@@ -98,7 +98,7 @@ class DamonRecord:
         ordered_dict['kdamond_idx'] = self.kdamond_idx
         ordered_dict['context_idx'] = self.context_idx
         ordered_dict['intervals'] = (self.intervals.to_kvpairs(raw)
-                if self.intervals != None else None)
+                if self.intervals is not None else None)
         ordered_dict['scheme_idx'] = self.scheme_idx
         ordered_dict['target_id'] = self.target_id
         ordered_dict['snapshots'] = [s.to_kvpairs(raw) for s in self.snapshots]
@@ -192,7 +192,7 @@ def adjusted_snapshots(snapshots, aggregate_interval_us):
 
 def adjust_records(records, aggregate_interval, nr_snapshots_to_skip):
     for record in records:
-        if record.intervals != None:
+        if record.intervals is not None:
             record.intervals.aggr = aggregate_interval
         record.snapshots = adjusted_snapshots(
                 record.snapshots[nr_snapshots_to_skip:], aggregate_interval)
@@ -316,7 +316,7 @@ def parse_perf_script(script_output, monitoring_intervals):
 
     for line in script_output.split('\n'):
         region, end_time, target_id, nr_regions = parse_perf_script_line(line)
-        if region == None:
+        if region is None:
             continue
 
         record = record_of(target_id, records, monitoring_intervals)
@@ -327,7 +327,7 @@ def parse_perf_script(script_output, monitoring_intervals):
             if start_time > end_time:
                 return None, 'trace is not time-sorted'
 
-        if snapshot == None:
+        if snapshot is None:
             snapshot = DamonSnapshot(start_time, end_time, [], None)
             record.snapshots.append(snapshot)
         snapshot = record.snapshots[-1]
@@ -413,7 +413,7 @@ def parse_records_file(record_file, monitoring_intervals=None):
         except:
             # Should be record format file
             pass
-    if perf_script_output != None:
+    if perf_script_output is not None:
         return parse_perf_script(perf_script_output, monitoring_intervals)
     else:
         return None, 'parsing %s failed' % record_file
@@ -506,7 +506,7 @@ def write_damon_records(records, file_path, file_type, file_permission=None):
     elif file_type == file_type_perf_script:
         write_perf_script(records, file_path)
 
-    if file_permission != None:
+    if file_permission is not None:
         os.chmod(file_path, file_permission)
     return None
 
@@ -868,7 +868,7 @@ def add_childs_target(kdamonds):
     current_targets = kdamonds[0].contexts[0].targets
 
     for target in current_targets:
-        if target.pid == None:
+        if target.pid is None:
             continue
         try:
             childs_pids = subprocess.check_output(
@@ -1046,7 +1046,7 @@ def finish_recording(handle):
         else:
             err = update_records_file(handle.file_path, handle.file_format,
                     handle.file_permission, handle.monitoring_intervals)
-            if err != None:
+            if err is not None:
                 print('converting format from perf_data to %s failed (%s)' %
                         (handle.file_format, err))
 
@@ -1103,7 +1103,7 @@ def find_install_scheme(scheme_to_find):
             indices.append([kidx, cidx, len(ctx.schemes) - 1])
     if installed:
         err = _damon.commit(kdamonds)
-        if err != None:
+        if err is not None:
             return (False, [],
                     'committing scheme installed kdamonds failed: %s' % err)
     return installed, indices, None
@@ -1124,7 +1124,7 @@ def tried_regions_to_snapshot(scheme, intervals, merge_regions):
                 last_region.end = tried_region.end
                 continue
         regions.append(tried_region)
-    if scheme.tried_bytes != None:
+    if scheme.tried_bytes is not None:
         total_bytes = scheme.tried_bytes
     else:
         total_bytes = None
@@ -1219,21 +1219,21 @@ def update_get_snapshot_records(kdamond_idxs, scheme_idxs,
         err = _damon.update_schemes_tried_bytes(kdamond_idxs)
         # update_schemes_tried_bytes() can error if the feature is not
         # supported.  Then, full record will be returned
-        if err == None:
+        if err is None:
             records = tried_regions_to_records_of(scheme_idxs, merge_regions)
             return records, None
 
     err = 'assumed error'
     nr_tries = 0
-    while err != None and nr_tries < 5:
+    while err is not None and nr_tries < 5:
         nr_tries += 1
 
         err = _damon.update_schemes_tried_regions(kdamond_idxs)
 
-        if err != None:
+        if err is not None:
             time.sleep(random.randrange(
                 2**(nr_tries - 1), 2**nr_tries) / 100)
-    if err != None:
+    if err is not None:
         return None, 'updating schemes tried regions fail: %s' % err
 
     records = tried_regions_to_records_of(scheme_idxs, merge_regions)
@@ -1248,7 +1248,7 @@ def get_snapshot_records(monitor_scheme, total_sz_only, merge_regions):
     orig_kdamonds = _damon.current_kdamonds()
 
     err = install_target_regions_if_needed(orig_kdamonds)
-    if err != None:
+    if err is not None:
         return None, 'vaddr region install failed (%s)' % err
 
     installed, idxs, err = find_install_scheme(monitor_scheme)
@@ -1262,7 +1262,7 @@ def get_snapshot_records(monitor_scheme, total_sz_only, merge_regions):
         uninstall_err = _damon.commit(orig_kdamonds)
         if uninstall_err:
             errmsg = 'monitoring scheme uninstall failed: %s' % uninstall_err
-            if err != None:
+            if err is not None:
                 err += ', %s' % errmsg
             else:
                 err = errmsg
@@ -1291,7 +1291,7 @@ def filter_by_pattern(record, access_pattern):
             if sz < sz_bytes[0] or sz_bytes[1] < sz:
                 continue
             intervals = record.intervals
-            if intervals == None:
+            if intervals is None:
                 filtered.append(region)
                 continue
             region.nr_accesses.add_unset_unit(intervals)
@@ -1346,7 +1346,7 @@ def get_snapshot_records_of(request):
     '''
     get records containing single snapshot from running kdamonds
     '''
-    if request.tried_regions_of == None:
+    if request.tried_regions_of is None:
         filters = []
         if request.record_filter:
             addr_ranges = request.record_filter.address_ranges
@@ -1427,9 +1427,9 @@ def get_records(tried_regions_of=None, record_file=None, record_filter=None,
     request = RecordGetRequest(
             tried_regions_of, record_file, record_filter,
             total_sz_only, dont_merge_regions)
-    if request.record_file == None:
+    if request.record_file is None:
         records, err = get_snapshot_records_of(request)
-        if err != None:
+        if err is not None:
             return None, err
         if _damon.feature_supported('schemes_filters_addr'):
             # get_snapshot_records_of() has already handled address filter
@@ -1484,17 +1484,17 @@ def args_to_filter(args):
             _damon.unit_usec)
 
     addr_range = None
-    if args.address != None:
+    if args.address is not None:
         addr_range, err = parse_sort_bytes_ranges_input(
                 args.address)
-        if err != None:
+        if err is not None:
             return None, 'wrong --address input (%s)' % err
 
     snapshot_sz_ranges = None
     if args.sz_snapshot is not None:
         snapshot_sz_ranges, err = parse_sort_bytes_ranges_input(
                 args.sz_snapshot)
-        if err != None:
+        if err is not None:
             return None, 'wrong --sz_snapshot input (%s)' % err
 
     return RecordFilter(access_pattern, addr_range, snapshot_sz_ranges), None
