@@ -50,12 +50,8 @@
 - Deprecate 'damo status'
 - Implement single report formatter
   - Extend 'report access' format arguments for wss, memfootprint, etc
-- deprecate DAMON parameters options
-  - Done by simply suppressing the help message
 - Provide virtual memory mapping information
   - shows when what virtual address has mappend and unmapped
-- Add --damos_filter_out with matching by default
-  (https://github.com/damonitor/damo/issues/1)
 
 - Deprecate old features
   - Deprecate fmt_json in favor of 'args damon'
