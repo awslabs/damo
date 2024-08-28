@@ -1,3 +1,16 @@
+THIS REPO IS DEPRECATED
+=======================
+
+This repo (https://github.com/awslabs/damo) was one of the official GitHub
+repos for damo.  However, after 2024-09-05, this has been[1] no longer the
+official GitHub repo.  Please use the new official GitHub repo
+(https://github.com/damonitor/damo) or the kernel.org repo
+(https://git.kernel.org/pub/scm/linux/kernel/git/sj/damo.git/) instead.
+
+[1] https://lore.kernel.org/20240813232158.83903-1-sj@kernel.org
+
+---
+
 DAMO: Data Access Monitoring Operator
 =====================================
 

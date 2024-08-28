@@ -118,6 +118,19 @@ class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
         return parts
 
 def main():
+    print('''
+Seems you retrieved 'damo' from awslabs GitHub repo
+(https://github.com/awslabs/damo), which has been no longer the official GitHub
+repo for damo[1] after 2024-09-05.
+
+Please use the new official GitHub repo (https://github.com/damonitor/damo) or
+the kernel.org repo
+(https://git.kernel.org/pub/scm/linux/kernel/git/sj/damo.git/).
+
+[1] https://lore.kernel.org/20240813232158.83903-1-sj@kernel.org
+''')
+    exit(1)
+
     parser = argparse.ArgumentParser(formatter_class=SubCmdHelpFormatter)
     parser.description = 'Control DAMON and show its results'
 
