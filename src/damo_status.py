@@ -60,9 +60,9 @@ def update_pr_schemes_stats(json_format, raw_nr, damos_stat_fields):
         if len(stats) > 1:
             print()
 
-def pr_kdamonds_summary(json_format, raw_nr):
+def pr_kdamonds_summary(json_format, raw_nr, show_cpu):
     kdamonds = _damon.current_kdamonds()
-    summary = [k.summary_str() for k in kdamonds]
+    summary = [k.summary_str(show_cpu) for k in kdamonds]
     if json_format:
         print(json.dumps(summary, indent=4))
         return
@@ -71,13 +71,13 @@ def pr_kdamonds_summary(json_format, raw_nr):
     for idx, line in enumerate(summary):
         print('%d\t%s' % (idx, line))
 
-def pr_kdamonds(kdamonds, json_format, raw_nr):
+def pr_kdamonds(kdamonds, json_format, raw_nr, show_cpu):
     if json_format:
         print(json.dumps([k.to_kvpairs(raw_nr) for k in kdamonds], indent=4))
     else:
         for idx, k in enumerate(kdamonds):
             print('kdamond %d' % idx)
-            print(_damo_fmt_str.indent_lines( k.to_str(raw_nr), 4))
+            print(_damo_fmt_str.indent_lines( k.to_str(raw_nr, show_cpu), 4))
 
 def main(args):
     _damon.ensure_root_and_initialized(args)
@@ -88,7 +88,7 @@ def main(args):
         return pr_damon_parameters(args.json, args.raw)
 
     if args.kdamonds_summary:
-        return pr_kdamonds_summary(args.json, args.raw)
+        return pr_kdamonds_summary(args.json, args.raw, args.show_cpu_usage)
 
     if args.damos_stats:
         return update_pr_schemes_stats(args.json, args.raw,
@@ -100,13 +100,15 @@ def main(args):
     if err != None:
         print('cannot update and read kdamonds: %s' % err)
         exit(1)
-    pr_kdamonds(kdamonds, args.json, args.raw)
+    pr_kdamonds(kdamonds, args.json, args.raw, args.show_cpu_usage)
 
 def set_argparser(parser):
     parser.add_argument('--json', action='store_true', default=False,
             help='print output in json format')
     parser.add_argument('--raw', action='store_true', default=False,
             help='print raw numbers')
+    parser.add_argument('--show_cpu_usage', action='store_true', default=False,
+            help='show cpu usage for kdamond')
     parser.add_argument('--kdamonds_summary', action='store_true',
             help='print kdamond summary only')
     parser.add_argument('--damos_stats', action='store_true',

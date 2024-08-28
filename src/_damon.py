@@ -10,6 +10,7 @@ import json
 import os
 import random
 import time
+import subprocess
 
 import _damo_fmt_str
 
@@ -951,11 +952,14 @@ class Kdamond:
         for ctx in self.contexts:
             ctx.kdamond = self
 
-    def summary_str(self):
-        return 'state: %s, pid: %s' % (self.state, self.pid)
+    def summary_str(self, show_cpu=False):
+        ret = 'state: %s, pid: %s' % (self.state, self.pid)
+        if show_cpu:
+            ret += ', cpu usage: %s' % self.get_cpu_usage()
+        return ret
 
-    def to_str(self, raw):
-        lines = [self.summary_str()]
+    def to_str(self, raw, show_cpu=False):
+        lines = [self.summary_str(show_cpu)]
         for idx, ctx in enumerate(self.contexts):
             lines.append('context %d' % idx)
             lines.append(_damo_fmt_str.indent_lines(ctx.to_str(raw), 4))
@@ -969,6 +973,15 @@ class Kdamond:
 
     def __hash__(self):
         return hash(self.__str__())
+    
+    def get_cpu_usage(self):
+        if self.state == "off":
+            return "0.0"
+        try:
+            res = subprocess.check_output(['ps', '-p', self.pid, '-o', '%cpu'], text=True)
+            return res.split("\n")[1].strip()
+        except:
+            return "(error)"
 
     @classmethod
     def from_kvpairs(cls, kv):
