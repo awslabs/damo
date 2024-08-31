@@ -28,23 +28,16 @@
 - Show temperature histogram on holistic report
 - status: Show kdamond cpu usage
 - heatmap: Support interactive zoom in/out/scrolling
-- implement new workflow commands
+- extend/unify common workflow commands
   - args: Format complext command arguments like DAMON parameters in json and
     snapshot formatter
-  - collect: Collect DAMON status/output and System status
-  - read: Visualize collected data
-  - Maybe we could extend record/report, deprecate show and some options.
+  - extend record/report, deprecate show and status.
     - extend record for snapshot capturing (done: --snapshot)
-      - damo record --shots <count> <delay>
-        - if <delay> is zero, the conventional record.
-          - simply do conventional record if --snapshot is not given.
-    - extend report for snapshot showing
-      - damo report accesses --filter <filter> --format <format>
-      - extend 'damo args' for <filter> and <format>
+      - damo record --snapshot <delay> <count> (done)
+    - extend report to do record
+      - damo report <action> --record <record option in json>
+    - allow report repeating
     - deprecate monitor
-      1. extend report for recording together
-      2. extend report for repeating multiple times
-      3. finally deprecate monitor
 - Record DAMON status
 - Report DAMON status
 - Deprecate 'damo status'
