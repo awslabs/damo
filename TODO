@@ -55,11 +55,7 @@
 
 - Deprecate old features
   - Deprecate fmt_json in favor of 'args damon'
-    - wait inputs for 'args damon' for 1 week
-    - mark 'args damon' non-experimental
-    - mark 'fmt_json' as will-be-deprecated, wait inputs for one month
-    - fully deprecate 'fmt_json', wait inputs for one quota
-    - remove 'fmt_json'
+    - notified as will-be-deprecated by 2024-11
   - Deprecate heats report type in favor of heatmap report type
   - Deprecate translate_damos (done.)
   - Deprecate single line per-scheme (done.  code moved to _damon_deprecated)
