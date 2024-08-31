@@ -86,7 +86,7 @@ def mk_handle(args, kdamonds, monitoring_intervals):
             # for children processes recording and memory footprint
             kdamonds=kdamonds, add_child_tasks=args.include_child_tasks,
             record_mem_footprint=args.footprint,
-            record_vmas=args.vmas, timeout=None)
+            record_vmas=args.vmas, timeout=args.timeout)
 
     if args.snapshot is not None:
         handle.tracepoint = None
@@ -177,5 +177,7 @@ def set_argparser(parser):
                         help='record virtual memory areas (/proc/<pid>/maps)')
     parser.add_argument('--snapshot', metavar=('<delay>', '<count>'), nargs=2,
                         type=float, help='record accesses as snapshots')
+    parser.add_argument('--timeout', type=float, metavar='<seconds>',
+                        help='stop recording after the given seconds')
     parser.description = 'Record monitoring results'
     return parser
