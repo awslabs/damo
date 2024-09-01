@@ -813,4 +813,3 @@ def set_argparser(parser):
     add_fmt_args(parser, hide_help=True)
     parser.add_argument('--format', metavar='<json string>',
                         help='visualization format in json format')
-
