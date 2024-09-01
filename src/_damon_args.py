@@ -732,4 +732,3 @@ def set_argparser(parser, add_record_options, min_help=True):
         parser.epilog += ' '.join([
             "DAMON parameters options from 'damo args damon' are also",
             "supported. Do 'damo args damon -h' for the options."])
-    return parser

@@ -23,4 +23,4 @@ def set_argparser(parser):
     parser.description = 'Update DAMON parameters'
     parser.add_argument('--quota_goals_only', action='store_true',
             help='commit quota goals change only')
-    return _damon_args.set_argparser(parser, add_record_options=False)
+    _damon_args.set_argparser(parser, add_record_options=False)
