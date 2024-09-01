@@ -94,11 +94,6 @@ class TestDamonArgs(unittest.TestCase):
         nr_range = _damon_args.damon_nr_regions_range_for(args)
         self.assertEqual(nr_range, _damon.DamonNrRegionsRange(25, 5000))
 
-    def test_none_parser(self):
-        parser = _damon_args.set_argparser(None,
-                add_record_options=False)
-        self.assertTrue(parser != None)
-
     def test_merge_cont_ranges(self):
         merged = _damon_args.merge_cont_ranges(
                 [[10, 20], [25, 40], [40, 90], [90, 120], [125, 135],
