@@ -16,6 +16,6 @@ def main(args):
         exit(1)
 
 def set_argparser(parser):
-    _damon_args.set_argparser(parser, add_record_options=False)
+    _damon_args.set_argparser(parser, add_record_options=False, min_help=True)
     parser.description = 'Start DAMON with specified parameters'
     return parser

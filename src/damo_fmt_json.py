@@ -38,7 +38,7 @@ def main(args):
         indent=4))
 
 def set_argparser(parser):
-    _damon_args.set_argparser(parser, add_record_options=False)
+    _damon_args.set_argparser(parser, add_record_options=False, min_help=True)
     parser.add_argument('--schemes_only', action='store_true',
             help='print schemes part only')
     parser.add_argument('--raw', action='store_true',

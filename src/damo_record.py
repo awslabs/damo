@@ -152,7 +152,7 @@ def main(args):
     cleanup_exit(0)
 
 def set_argparser(parser):
-    _damon_args.set_argparser(parser, add_record_options=True)
+    _damon_args.set_argparser(parser, add_record_options=True, min_help=True)
     parser.add_argument('--output_type',
                         choices=_damo_records.file_types,
                         default=_damo_records.file_type_json_compressed,

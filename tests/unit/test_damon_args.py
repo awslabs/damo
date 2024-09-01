@@ -24,7 +24,8 @@ class TestDamonArgs(unittest.TestCase):
                 'vaddr': True})
 
         parser = argparse.ArgumentParser()
-        _damon_args.set_argparser(parser, add_record_options=False)
+        _damon_args.set_argparser(
+                parser, add_record_options=False, min_help=True)
 
         args = parser.parse_args(
                 ('--sample 5000 --aggr 100000 --updr 1000000 ' +
@@ -56,7 +57,8 @@ class TestDamonArgs(unittest.TestCase):
             _damon.DamonNrRegionsRange(10, 1000), []))
 
         parser = argparse.ArgumentParser()
-        _damon_args.set_argparser(parser, add_record_options=False)
+        _damon_args.set_argparser(
+                parser, add_record_options=False, min_help=True)
 
         args = parser.parse_args(
                 ('--sample 5ms --aggr 100ms --updr 1s ' +

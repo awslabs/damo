@@ -55,4 +55,4 @@ def main(args):
     cleanup_exit(0)
 
 def set_argparser(parser):
-    _damon_args.set_argparser(parser, add_record_options=False)
+    _damon_args.set_argparser(parser, add_record_options=False, min_help=True)
