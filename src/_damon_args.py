@@ -705,7 +705,7 @@ def set_damos_argparser(parser, hide_help):
             help='number of filters for each scheme (in order)'
             if not hide_help else argparse.SUPPRESS)
 
-def set_argparser(parser, add_record_options, min_help=True):
+def set_argparser(parser, add_record_options, min_help):
     set_monitoring_argparser(parser, min_help)
     set_damos_argparser(parser, min_help)
     parser.add_argument('-c', '--schemes', metavar='<json string or file>',
