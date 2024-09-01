@@ -35,7 +35,11 @@
     - extend record for snapshot capturing (done: --snapshot)
       - damo record --snapshot <delay> <count> (done)
     - extend report to do record
-      - damo report <action> --record <record option in json>
+      - damo report --input record <deductible target> <timeout>
+      - damo report --input snapshot <delay> <count>
+      - If --input is not given, and a kdamond is running, snapshot once
+      - If --input is not given, no kdamond is running, use damon.data if
+        exists
     - allow report repeating
     - deprecate monitor
 - Record DAMON status
