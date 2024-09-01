@@ -706,8 +706,6 @@ def set_damos_argparser(parser, hide_help):
             if not hide_help else argparse.SUPPRESS)
 
 def set_argparser(parser, add_record_options, min_help=True):
-    if parser == None:
-        parser = argparse.ArgumentParser()
     set_monitoring_argparser(parser, min_help)
     set_damos_argparser(parser, min_help)
     parser.add_argument('-c', '--schemes', metavar='<json string or file>',
