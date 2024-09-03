@@ -23,11 +23,15 @@ The patches and pull requests should have proper 'Signed-off-by:' tags[4] on
 the commit messages.  The tag will be considered the same as that of the linux
 kernel development process[3].
 
+Note that we had used a GitHub repo under awslabs organization as the official
+one[5], but it is no longer the official one[6].
 
 [1] https://https://git.kernel.org/pub/scm/linux/kernel/git/sj/damo.git/
 [2] https://github.com/damonitor/damo
 [3] https://docs.kernel.org/process/index.html
 [4] https://docs.kernel.org/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+[5] https://github.com/awslabs/damo
+[6] https://lore.kernel.org/20240813232158.83903-1-sj@kernel.org
 
 
 What To Do, First?
