@@ -1,18 +1,33 @@
 General Process
 ===============
 
-For contributions, please refer to the linux kernel development process[1] and
-send patches to sj@kernel.org or pull-requests via Github.  The contributions
-should have proper 'Signed-off-by:' tags[2].  The tag will be considered the
-same as that of the linux kernel development process.
+There are two official git repos for 'damo' that are hosted on kernel.org[1]
+and GitHub[2], respectively.  The two repos are updated and managed directly by
+the maintainer.  On the repos, two branches exist: 'master' and 'next'.
+Changes first merged in 'next', get tested, and finally merged in 'master', if
+the tests show no problem.  So, please base your contributions on 'next' branch
+of one of the repos.
 
-There are two branches, 'master' and 'next'.  Changes first merged in 'next',
-get tested, and finally merged in 'master', if the tests show no problem.  So,
-please base your work on 'next'.
+For contributions, we support both the email-based workflows like that of Linux
+kernel and the GitHub-based workflow.
+
+If you prefer the email-based workflow, send patches, issues, or comments to
+sj@kernel.org Cc-ing damon@lists.linux.dev.  It is also recommended to further
+Cc linux-mm@kvack.org and/or linux-kernel@vger.kernel.org if you don't mind.
+General rules for Linux kernel contribution process[3] are similarly applied.
+
+If you prefer the GitHub workflow, use Pull Requests and Issues features on the
+GitHub official repo[2].
+
+The patches and pull requests should have proper 'Signed-off-by:' tags[4] on
+the commit messages.  The tag will be considered the same as that of the linux
+kernel development process[3].
 
 
-[1] https://docs.kernel.org/process/index.html
-[2] https://docs.kernel.org/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+[1] https://https://git.kernel.org/pub/scm/linux/kernel/git/sj/damo.git/
+[2] https://github.com/damonitor/damo
+[3] https://docs.kernel.org/process/index.html
+[4] https://docs.kernel.org/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
 
 
 What To Do, First?
